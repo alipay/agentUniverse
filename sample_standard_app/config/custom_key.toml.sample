@@ -1,0 +1,4 @@
+# Example file of custom_key.toml. Rename to custom_key.toml while using.
+[KEY_LIST]
+# Perform a full component scan and registration for all the paths under this list.
+example_key = 'AnExampleKey'

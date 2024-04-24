@@ -1,0 +1,15 @@
+info:
+  name: 'demo_reviewing_agent'
+  description: 'demo reviewing agent'
+profile:
+  llm_model:
+    name: 'demo_llm'
+    model_name: 'gpt-3.5-turbo'
+    temperature: 0.5
+plan:
+  planner:
+    name: 'reviewing_planner'
+metadata:
+  type: 'AGENT'
+  module: 'agentuniverse.agent.default.reviewing_agent'
+  class: 'ReviewingAgent'
