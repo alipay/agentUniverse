@@ -44,7 +44,7 @@ class ChatMemory(Memory):
                                                       input_key=self.input_key, output_key=self.output_key,
                                                       max_token_limit=self.max_tokens, messages=self.messages)
         elif self.type == MemoryTypeEnum.LONG_TERM:
-            return AuCoConversationSummaryBufferMemory(llm=self.llm.as_langchain(), memory_key=self.memory_key,
+            return AuConversationSummaryBufferMemory(llm=self.llm.as_langchain(), memory_key=self.memory_key,
                                                         input_key=self.input_key, output_key=self.output_key,
                                                         max_token_limit=self.max_tokens, messages=self.messages)
 
