@@ -29,7 +29,7 @@ setuptools.setup(
                 "by multi-agent base on large language model.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://gitee.com/agentUniverse/agentUniverse",
+    url="https://github.com/alipay/agentUniverse",
     packages=setuptools.find_packages(),
     package_data={
             '': ['*.yaml'],
