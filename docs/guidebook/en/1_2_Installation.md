@@ -25,7 +25,7 @@ Or add the following content to your `pyproject.toml` file:
 [tool.poetry.dependencies]
 agentUniverse = "^0.0.3"
 ```
-A standard project's `pyproject.toml` can be found [here](https://gitee.com/agentUniverse/agentUniverse-Guides/blob/master/sample_standard_app/pyproject.toml).
+A standard project's `pyproject.toml` can be found [here](../../../sample_standard_app/pyproject.toml).
 
 Use the `poetry update` command to update dependencies:
 ```shell

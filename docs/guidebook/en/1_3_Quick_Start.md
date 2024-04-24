@@ -12,10 +12,7 @@ we will show you how to:
 - python 3.10+
 
 ### Application Preparation
-We provide a standard project template which you can access [here](https://gitee.com/agentUniverse/agentUniverse-Guides/blob/master/sample_standard_app) . You can also download it using the following command:
-```shell    
-git clone https://gitee.com/agentUniverse/agentUniverse-Guides.git
-```
+We provide a standard project template which you can access [here](../../../sample_standard_app) . 
 
 The "sample_standard_app" folder contains a standard project template that you can modify according to your own needs. You can also copy the "sample_standard_app" folder to use as the root directory of your application project.
 
