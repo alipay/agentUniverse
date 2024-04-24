@@ -1,0 +1,17 @@
+info:
+  name: 'demo_rag_agent'
+  description: 'demo rag agent'
+profile:
+  llm_model:
+    name: 'default_openai_llm'
+    model_name: 'gpt-4'
+plan:
+  planner:
+    name: 'rag_planner'
+action:
+  tool:
+    - 'demo_tool'
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
+  class: 'DemoRagAgent'
