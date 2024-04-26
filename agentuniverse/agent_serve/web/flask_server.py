@@ -6,7 +6,7 @@ from werkzeug.exceptions import HTTPException
 from ..service_instance import ServiceInstance, ServiceNotFoundError
 from .request_task import RequestTask
 from .web_util import request_param, service_run_queue, make_standard_response
-from agentuniverse.base.util.logging.logging_util import LOGGER
+from ...base.util.logging.logging_util import LOGGER
 
 
 app = Flask(__name__)
