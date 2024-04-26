@@ -15,7 +15,7 @@ app.config['JSON_AS_ASCII'] = False
 
 @app.route("/echo")
 def echo():
-    return 'Welcome to AntFinAgentFramework!!!'
+    return 'Welcome to agentUniverse!!!'
 
 
 @app.route("/liveness")
