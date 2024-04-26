@@ -12,14 +12,11 @@ from agentuniverse.llm.openai_llm import OpenAILLM
 
 
 class DefaultOpenAILLM(OpenAILLM):
-    """The AgentUniverse default openai llm module.
+    """The agentUniverse default openai llm module.
 
     LLM parameters, such as name/description/model_name/max_tokens,
     are injected into this class by the default_openai_llm.yaml configuration.
     """
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
 
     def call(self, messages: list, **kwargs: Any) -> LLMOutput:
         """ The call method of the LLM.

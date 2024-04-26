@@ -116,3 +116,23 @@ class LLM(ComponentBase):
             self.max_retries = kwargs['max_retries']
         if 'streaming' in kwargs and kwargs['streaming']:
             self.streaming = kwargs['streaming']
+
+    @abstractmethod
+    def max_context_length(self) -> int:
+        """Max context length.
+
+        The total length of input tokens and generated tokens is limited by the model's context length.
+        """
+
+    @abstractmethod
+    def get_num_tokens(self, text: str) -> int:
+        """Get the number of tokens present in the text.
+
+        Useful for checking if an input will fit in a model's context window.
+
+        Args:
+            text: The string input to tokenize.
+
+        Returns:
+            The integer number of tokens in the text.
+        """

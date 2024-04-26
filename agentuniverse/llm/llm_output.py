@@ -5,6 +5,8 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: llm_output.py
+from typing import Any
+
 from pydantic import BaseModel
 
 
@@ -13,3 +15,6 @@ class LLMOutput(BaseModel):
 
     """The text of the llm output."""
     text: str
+
+    """The raw data of the llm output."""
+    raw: Any

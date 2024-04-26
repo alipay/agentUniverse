@@ -34,6 +34,7 @@ class ChatMemory(Memory):
     input_key: Optional[str] = None
     output_key: Optional[str] = None
     messages: Optional[List[Message]] = None
+    prompt_version: Optional[str] = None
 
     def as_langchain(self) -> BaseChatMemory:
         """Convert the AgentUniverse(AU) chat memory class to the langchain chat memory class."""
@@ -41,12 +42,13 @@ class ChatMemory(Memory):
             raise ValueError("Must set `llm` when using langchain memory.")
         if self.type is None or self.type == MemoryTypeEnum.SHORT_TERM:
             return AuConversationTokenBufferMemory(llm=self.llm.as_langchain(), memory_key=self.memory_key,
-                                                      input_key=self.input_key, output_key=self.output_key,
-                                                      max_token_limit=self.max_tokens, messages=self.messages)
+                                                   input_key=self.input_key, output_key=self.output_key,
+                                                   max_token_limit=self.max_tokens, messages=self.messages)
         elif self.type == MemoryTypeEnum.LONG_TERM:
             return AuConversationSummaryBufferMemory(llm=self.llm.as_langchain(), memory_key=self.memory_key,
-                                                        input_key=self.input_key, output_key=self.output_key,
-                                                        max_token_limit=self.max_tokens, messages=self.messages)
+                                                     input_key=self.input_key, output_key=self.output_key,
+                                                     max_token_limit=self.max_tokens, messages=self.messages,
+                                                     prompt_version=self.prompt_version)
 
     def set_by_agent_model(self, **kwargs) -> None:
         """ Assign values of parameters to the ChatMemory model in the agent configuration."""
@@ -72,4 +74,6 @@ class ChatMemory(Memory):
             self.input_key = component_configer.input_key
         if component_configer.output_key:
             self.output_key = component_configer.output_key
+        if component_configer.prompt_version:
+            self.prompt_version = component_configer.prompt_version
         return self

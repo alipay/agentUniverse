@@ -9,49 +9,27 @@ from typing import List, Optional, Dict, Any
 
 from langchain.chains import LLMChain
 from langchain_core.messages import BaseMessage, get_buffer_string
-from langchain_core.prompts import BasePromptTemplate
 from langchain.memory import ConversationSummaryBufferMemory, ConversationTokenBufferMemory
 from langchain.memory.summary import SummarizerMixin
 
 from agentuniverse.agent.memory.enum import ChatMessageEnum
 from agentuniverse.agent.memory.message import Message
-from agentuniverse.agent.memory.prompt import SUMMARY_PROMPT
+from agentuniverse.prompt.prompt import Prompt
+from agentuniverse.prompt.prompt_manager import PromptManager
 
 
-class AuSummarizerMixin(SummarizerMixin):
-    """Mixin for the AgentUniverse(AU) memory summarizer.
-
-    Long term memory: summarize memories in multiple rounds of conversations.
-
-    Attributes:
-        prompt (BasePromptTemplate): The prompt to use when generating the summary.
-    """
-
-    prompt: BasePromptTemplate = SUMMARY_PROMPT
-
-    def predict_new_summary(
-            self, messages: List[BaseMessage], existing_summary: str
-    ) -> str:
-        """Predict new summary, summarize memories in multiple rounds of conversations."""
-        new_lines = get_buffer_string(
-            messages,
-            human_prefix=self.human_prefix,
-            ai_prefix=self.ai_prefix,
-        )
-        chain = LLMChain(llm=self.llm, prompt=self.prompt)
-        return chain.predict(summary=existing_summary, new_lines=new_lines)
-
-
-class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory, AuSummarizerMixin):
+class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory, SummarizerMixin):
     """Long term memory to store conversation memory.
 
-    If memories exceeds the max tokens limit, memories are compressed by the AuSummarizerMixin.
+    If memories exceeds the max tokens limit,
+    memories will be compressed by the AuConversationSummaryBufferMemory.predict_new_summary method.
 
     Attributes:
         messages (List[BaseMessage]): List of BaseMessage to save.
     """
 
     messages: Optional[List[Message]] = None
+    prompt_version: Optional[str] = None
 
     def __init__(self, **kwargs):
         """The __init__ method.
@@ -116,6 +94,7 @@ class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory, AuSumma
 
     def save_context(self, inputs: Dict[str, Any], outputs: Dict[str, str]) -> None:
         """Save context from the conversation to buffer and prune memories"""
+
         def message_to_dict(message):
             return {
                 "content": message.content,
@@ -126,6 +105,20 @@ class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory, AuSumma
         message_list = self.load_memory
         messages_dicts = [message_to_dict(message) for message in message_list]
         inputs[self.memory_key] = messages_dicts
+
+    def predict_new_summary(
+            self, messages: List[BaseMessage], existing_summary: str
+    ) -> str:
+        """Predict new summary, summarize memories in multiple rounds of conversations."""
+        new_lines = get_buffer_string(
+            messages,
+            human_prefix=self.human_prefix,
+            ai_prefix=self.ai_prefix,
+        )
+        prompt_version = self.prompt_version if self.prompt_version else 'chat_memory.summarizer_cn'
+        prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
+        chain = LLMChain(llm=self.llm, prompt=prompt.as_langchain())
+        return chain.predict(summary=existing_summary, new_lines=new_lines)
 
 
 class AuConversationTokenBufferMemory(ConversationTokenBufferMemory):
@@ -191,6 +184,7 @@ class AuConversationTokenBufferMemory(ConversationTokenBufferMemory):
 
     def save_context(self, inputs: Dict[str, Any], outputs: Dict[str, str]) -> None:
         """Save context from the conversation to buffer and truncate part of memories."""
+
         def message_to_dict(message):
             return {
                 "content": message.content,

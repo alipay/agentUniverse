@@ -1,0 +1,8 @@
+combine: |
+  Write a detailed summary of the following text separated by triple backticks.
+  And the output needs to cover the main points of the text, the data, and any important details.
+  Note: The result must be output in English.
+  ```{text}```
+metadata:
+  type: 'PROMPT'
+  version: 'prompt_processor.combine_en'

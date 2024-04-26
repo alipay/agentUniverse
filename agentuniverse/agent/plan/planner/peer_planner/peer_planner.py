@@ -116,8 +116,12 @@ class PeerPlanner(Planner):
                 else:
                     planning_result = planningAgent.run(**input_object.to_dict())
 
-                LOGGER.info(f"Planning agent execution result is {planning_result.to_json_str()}.")
                 input_object.add_data('planning_result', planning_result)
+                # add planning agent log info
+                logger_info = f"\nPlanning agent execution result is :\n"
+                for index, one_framework in enumerate(planning_result.get_data('framework')):
+                    logger_info += f"[{index + 1}] {one_framework} \n"
+                LOGGER.info(logger_info)
 
             if not executing_result or jump_step in ["planning", "executing"]:
                 if not executingAgent:
@@ -126,8 +130,14 @@ class PeerPlanner(Planner):
                 else:
                     executing_result = executingAgent.run(**input_object.to_dict())
 
-                LOGGER.info(f"Executing agent execution result is {executing_result.to_json_str()}.")
                 input_object.add_data('executing_result', executing_result)
+                # add executing agent log info
+                logger_info = f"\nExecuting agent execution result is :\n"
+                for index, one_exec_res in enumerate(executing_result.get_data('executing_result')):
+                    one_exec_log_info = f"[{index + 1}] input: {one_exec_res['input']}\n"
+                    one_exec_log_info += f"[{index + 1}] output: {one_exec_res['output']}\n"
+                    logger_info += one_exec_log_info
+                LOGGER.info(logger_info)
 
             if not expressing_result or jump_step in ["planning", "executing", "expressing"]:
                 if not expressingAgent:
@@ -136,8 +146,11 @@ class PeerPlanner(Planner):
                 else:
                     expressing_result = expressingAgent.run(**input_object.to_dict())
 
-                LOGGER.info(f"Expressing agent execution result is {expressing_result.to_json_str()}.")
                 input_object.add_data('expressing_result', expressing_result)
+                # add expressing agent log info
+                logger_info = f"\nExpressing agent execution result is :\n"
+                logger_info += f"{expressing_result.get_data('output')}"
+                LOGGER.info(logger_info)
 
             if not reviewing_result or jump_step in ["planning", "executing", "expressing", "reviewing"]:
                 if not reviewingAgent:
@@ -152,9 +165,14 @@ class PeerPlanner(Planner):
                     return result
                 else:
                     reviewing_result = reviewingAgent.run(**input_object.to_dict())
-
-                    LOGGER.info(f"Reviewing agent execution result is {reviewing_result.to_json_str()}.")
                     input_object.add_data('evaluator_result', reviewing_result)
+
+                    # add reviewing agent log info
+                    logger_info = f"\nReviewing agent execution result is :\n"
+                    reviewing_info_str = f"review suggestion: {reviewing_result.get_data('suggestion')} \n"
+                    reviewing_info_str += f"useful: {reviewing_result.get_data('is_useful')} \n"
+                    LOGGER.info(logger_info + reviewing_info_str)
+
                     if reviewing_result.get_data('score') and reviewing_result.get_data('score') >= eval_threshold:
                         loopResults.append({
                             "planning_result": planning_result,

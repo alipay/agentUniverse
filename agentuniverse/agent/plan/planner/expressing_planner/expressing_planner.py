@@ -13,10 +13,11 @@ from langchain_core.prompts import PromptTemplate
 
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
-from agentuniverse.agent.plan.planner.expressing_planner.prompt import target, instruction, introduction
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
+from agentuniverse.prompt.prompt import Prompt
+from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
 
 
@@ -65,8 +66,14 @@ class ExpressingPlanner(Planner):
                                                                target=profile.get('target'),
                                                                instruction=user_instruction)
 
-        system_prompt_model: AgentPromptModel = AgentPromptModel(introduction=introduction, target=target,
-                                                                 instruction=expert_framework + instruction)
-        self.prompt.build_prompt_template(user_prompt_model, system_prompt_model,
-                                          self.prompt_assemble_order)
+        # get the prompt by the prompt version
+        prompt_version: str = profile.get('prompt_version') or 'expressing_planner.default_cn'
+        prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
+
+        system_prompt_model: AgentPromptModel = AgentPromptModel(introduction=prompt.introduction,
+                                                                 target=prompt.target,
+                                                                 instruction=expert_framework + prompt.instruction)
+
+        self.prompt.build_prompt(user_prompt_model, system_prompt_model,
+                                 self.prompt_assemble_order)
         process_llm_token(self.prompt.as_langchain(), profile, planner_input)

@@ -1,0 +1,7 @@
+summary: |
+  写下这段文字的详细摘要，输出结果中需要涵盖文本的要点、数据以及任何重要的细节。
+  注意：结果输出时必须用中文。
+  {text}
+metadata:
+  type: 'PROMPT'
+  version: 'prompt_processor.summary_cn'
