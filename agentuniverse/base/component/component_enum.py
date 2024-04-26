@@ -18,6 +18,7 @@ class ComponentEnum(Enum):
     DEFAULT = "DEFAULT"
     SERVICE = "SERVICE"
     MEMORY = "MEMORY"
+    PROMPT = "PROMPT"
 
     @staticmethod
     def to_value_list():

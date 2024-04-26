@@ -1,11 +1,3 @@
-# !/usr/bin/env python3
-# -*- coding:utf-8 -*-
-
-# @Time    : 2024/04/24 16:19
-# @Author  : weizhongjie.wezj
-# @Email   : weizhongjie.wzj@antgroup.com
-# @FileName: request_task.py
-
 import traceback
 
 from flask import Flask, Response
@@ -34,13 +26,14 @@ def liveness():
 
 @app.route("/service_run", methods=['POST'])
 @request_param
-def service_run(service_id: str, params: dict):
+def service_run(service_id: str, params: dict, saved: bool = False):
     """Synchronous invocation of an agent service.
 
     Request Args:
         service_id(`str`): The id of the agent service. Format like
             {appname}.service.{service_name}.
         params(`dict`): Json style params passed to service.
+        saved(`bool`): Save the request and result into database.
 
     Return:
         Returns a dict containing two keys: success and result.
@@ -50,7 +43,7 @@ def service_run(service_id: str, params: dict):
         result of the task.
     """
     params = {} if params is None else params
-    request_task = RequestTask(ServiceInstance(service_id).run, **params)
+    request_task = RequestTask(ServiceInstance(service_id).run, saved, **params)
     result = request_task.run()
     return make_standard_response(success=True, result=result,
                                   request_id=request_task.request_id)
@@ -58,20 +51,21 @@ def service_run(service_id: str, params: dict):
 
 @app.route("/service_run_stream", methods=['POST'])
 @request_param
-def service_run_stream(service_id: str, params: dict):
+def service_run_stream(service_id: str, params: dict, saved: bool = False):
     """Synchronous invocation of an agent service, return in stream form.
 
     Request Args:
         service_id(`str`): The id of the agent service. Format like
             {appname}.service.{service_name}.
         params(`dict`): Json style params passed to service.
+        saved(`bool`): Save the request and result into database.
 
     Return:
         A SSE(Server-Sent Event) stream.
     """
     params = {} if params is None else params
     params['service_id'] = service_id
-    task = RequestTask(service_run_queue, False, **params)
+    task = RequestTask(service_run_queue, saved, **params)
     response = Response(task.stream_run(), mimetype="text/event-stream")
     response.headers['X-Request-ID'] = task.request_id
     return response
@@ -79,7 +73,7 @@ def service_run_stream(service_id: str, params: dict):
 
 @app.route("/service_run_async", methods=['POST'])
 @request_param
-def service_run_async(service_id: str, params: dict):
+def service_run_async(service_id: str, params: dict, saved: bool = True):
     """Async invocation of an agent service, return the request id used to
     get result later.
 
@@ -87,6 +81,7 @@ def service_run_async(service_id: str, params: dict):
         service_id(`str`): The id of the agent service. Format like
             {appname}.service.{service_name}.
         params(`dict`): Json style params passed to service.
+        saved(`bool`): Save the request and result into database.
 
     Return:
         Returns a dict containing two keys: success and result.
@@ -102,7 +97,7 @@ def service_run_async(service_id: str, params: dict):
     """
     params = {} if params is None else params
     params['service_id'] = service_id
-    task = RequestTask(service_run_queue, **params)
+    task = RequestTask(service_run_queue, saved, **params)
     task.async_run()
     return make_standard_response(success=True,
                                   request_id=task.request_id)

@@ -16,6 +16,7 @@ from agentuniverse.base.config.application_configer.app_configer import AppConfi
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.base.component.component_configer_util import ComponentConfigerUtil
+from agentuniverse.base.config.component_configer.configers.prompt_configer import PromptConfiger
 from agentuniverse.base.config.config_type_enum import ConfigTypeEnum
 from agentuniverse.base.config.configer import Configer
 from agentuniverse.base.config.custom_configer.custom_key_configer import CustomKeyConfiger
@@ -24,11 +25,12 @@ from agentuniverse.base.util.system_util import get_project_root_path
 from agentuniverse.base.util.logging.logging_util import init_loggers
 from agentuniverse.agent_serve.web.request_task import RequestLibrary
 from agentuniverse.agent_serve.web.web_booster import GunicornApplication
+from agentuniverse.prompt.prompt_manager import PromptManager
 
 
 @singleton
 class AgentUniverse(object):
-    """agentUniverse object, responsible for the framework initialization,
+    """AgentUniverse framework object, responsible for the framework initialization,
        system variables management, etc."""
 
     def __init__(self):
@@ -38,8 +40,9 @@ class AgentUniverse(object):
 
     def start(self, config_path: str = None):
         """Start the agentUniverse framework."""
-        # step0: get default config path
+        # get default config path
         project_root_path = get_project_root_path()
+        sys.path.append(str(project_root_path.parent))
         app_path = project_root_path / 'app'
         if app_path.exists():
             sys.path.append(str(app_path))
@@ -47,33 +50,39 @@ class AgentUniverse(object):
             config_path = project_root_path / 'config' / 'config.toml'
             config_path = str(config_path)
 
-        # step1: load the configuration file
+        # load the configuration file
         configer = Configer(path=config_path).load()
         app_configer = AppConfiger().load_by_configer(configer)
         self.__config_container.app_configer = app_configer
 
-        # Load User custom key.
+        # load user custom key
         custom_key_configer_path = self.__parse_sub_config_path(
             configer.value.get('SUB_CONFIG_PATH', {}).get('custom_key_path'),
             config_path)
         CustomKeyConfiger(custom_key_configer_path)
 
-        # Init loguru loggers.
+        # init loguru loggers
         log_config_path = self.__parse_sub_config_path(
             configer.value.get('SUB_CONFIG_PATH', {}).get('log_config_path'),
             config_path)
         init_loggers(log_config_path)
 
-        # Init web request task database.
+        # init web request task database
         RequestLibrary(configer=configer)
 
-        # Init gunicorn web server.
+        # init gunicorn web server
         gunicorn_config_path = self.__parse_sub_config_path(
             configer.value.get('SUB_CONFIG_PATH', {})
             .get('gunicorn_config_path'), config_path)
         GunicornApplication(config_path=gunicorn_config_path)
 
-        # step2: scan and register the components
+        # init all extension module
+        ext_classes = configer.value.get('EXTENSION_MODULES', {}).get('class_list')
+        if isinstance(ext_classes, list):
+            for ext_class in ext_classes:
+                self.__dynamic_import_and_init(ext_class, configer)
+
+        # scan and register the components
         self.__scan_and_register(self.__config_container.app_configer)
 
     def __scan_and_register(self, app_configer: AppConfiger):
@@ -89,6 +98,7 @@ class AgentUniverse(object):
         core_tool_package_list = app_configer.core_tool_package_list or app_configer.core_default_package_list + self.__system_default_package
         core_service_package_list = app_configer.core_service_package_list or app_configer.core_default_package_list + self.__system_default_package
         core_memory_package_list = app_configer.core_memory_package_list or app_configer.core_default_package_list + self.__system_default_package
+        core_prompt_package_list = app_configer.core_prompt_package_list or app_configer.core_default_package_list + self.__system_default_package
 
         component_package_map = {
             ComponentEnum.AGENT: core_agent_package_list,
@@ -97,7 +107,8 @@ class AgentUniverse(object):
             ComponentEnum.PLANNER: core_planner_package_list,
             ComponentEnum.TOOL: core_tool_package_list,
             ComponentEnum.SERVICE: core_service_package_list,
-            ComponentEnum.MEMORY: core_memory_package_list
+            ComponentEnum.MEMORY: core_memory_package_list,
+            ComponentEnum.PROMPT: core_prompt_package_list
         }
 
         component_configer_list_map = {}
@@ -180,7 +191,7 @@ class AgentUniverse(object):
                 input_path(str): Absolute or relative path of sub config file.
                 reference_file_path(str): Main config file path.
             Returns:
-                str or None: Final
+                str or None: A file path or none when no such file.
         """
         if not input_path:
             return None
@@ -193,3 +204,16 @@ class AgentUniverse(object):
             combined_path = reference_file_path_obj.parent / input_path_obj
 
         return str(combined_path)
+
+    def __dynamic_import_and_init(self, class_path: str, configer: Configer):
+        """Resolve a sub config file path according to main config file.
+
+            Args:
+                class_path(str): Full class path like package_name.class_name.
+                Auto read from config file.
+        """
+
+        module_path, _, class_name = class_path.rpartition('.')
+        module = importlib.import_module(module_path)
+        cls = getattr(module, class_name)
+        cls(configer)

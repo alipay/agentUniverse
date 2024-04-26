@@ -1,0 +1,7 @@
+combine: |
+  写出以下由三重反引号分隔的文本的详细摘要，输出结果中需要涵盖文本的要点、数据以及任何重要的细节。
+  注意：结果输出时必须用中文。
+  ```{text}```
+metadata:
+  type: 'PROMPT'
+  version: 'prompt_processor.combine_cn'
