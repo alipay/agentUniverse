@@ -2,6 +2,7 @@ info:
   name: 'rag_agent'
   description: 'rag agent'
 profile:
+  prompt_version:
   llm_model:
     name: 'default_openai_llm'
     model_name: 'gpt-4'

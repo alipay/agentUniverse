@@ -35,6 +35,12 @@ def request_param(func):
                     if key not in kwargs:
                         kwargs[key] = req_data[key]
                 continue
+            if name == "saved":
+                if "saved" in req_data:
+                    kwargs['saved'] = req_data['saved']
+                else:
+                    kwargs['saved'] = sig.parameters['saved']
+                continue
             if name == "session_id":
                 kwargs[name] = request.headers.get("X-Session-Id")
             elif param.annotation in (str, int, dict, list):

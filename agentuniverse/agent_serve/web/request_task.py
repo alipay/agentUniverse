@@ -1,9 +1,9 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-# @Time    : 2024/04/24 16:19
-# @Author  : weizhongjie.wezj
-# @Email   : weizhongjie.wzj@antgroup.com
+# @Time    : 2024/3/25 11:18
+# @Author  : fanen.lhy
+# @Email   : fanen.lhy@antgroup.com
 # @FileName: request_task.py
 
 import enum
@@ -233,13 +233,13 @@ class RequestTask:
         """
         request_do = RequestLibrary().query_request_by_request_id(
             request_id)
-        RequestTask.is_validate(request_do)
         if request_do is None:
             return {"state": TaskStateEnum.INIT.value,
                     "result": None,
                     "steps": None}
+        RequestTask.is_validate(request_do)
         return {
             "state": request_do.state,
-            "result": request_do.result.get('result'),
+            "result": request_do.result,
             "steps": request_do.steps
         }

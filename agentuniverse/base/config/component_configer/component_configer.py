@@ -35,10 +35,18 @@ class ComponentConfiger(object):
         """Return the module of the component."""
         return self.__metadata_module
 
+    @metadata_module.setter
+    def metadata_module(self, metadata_module: str):
+        self.__metadata_module = metadata_module
+
     @property
     def metadata_class(self) -> Optional[str]:
         """Return the class of the component."""
         return self.__metadata_class
+
+    @metadata_class.setter
+    def metadata_class(self, metadata_class: str):
+        self.__metadata_class = metadata_class
 
     def load(self) -> 'ComponentConfiger':
         """Load the configuration by the Configer object.
@@ -74,6 +82,3 @@ class ComponentConfiger(object):
             Optional[str]: the type of the component
         """
         return self.__metadata_type
-
-
-

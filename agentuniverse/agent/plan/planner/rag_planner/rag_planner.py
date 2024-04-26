@@ -11,9 +11,10 @@ from langchain_core.memory import BaseMemory
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.plan.planner.planner import Planner
-from agentuniverse.agent.plan.planner.rag_planner.prompt import introduction, target, instruction
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
+from agentuniverse.prompt.prompt import Prompt
+from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
 
 
@@ -59,8 +60,14 @@ class RagPlanner(Planner):
                                                                target=profile.get('target'),
                                                                instruction=profile.get('instruction'))
 
-        system_prompt_model: AgentPromptModel = AgentPromptModel(introduction=introduction, target=target,
-                                                                 instruction=instruction)
-        self.prompt.build_prompt_template(user_prompt_model, system_prompt_model,
-                                          self.prompt_assemble_order)
+        # get the prompt by the prompt version
+        prompt_version: str = profile.get('prompt_version') or 'rag_planner.default_cn'
+        prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
+
+        system_prompt_model: AgentPromptModel = AgentPromptModel(introduction=prompt.introduction,
+                                                                 target=prompt.target,
+                                                                 instruction=prompt.instruction)
+
+        self.prompt.build_prompt(user_prompt_model, system_prompt_model,
+                                 self.prompt_assemble_order)
         process_llm_token(self.prompt.as_langchain(), profile, planner_input)

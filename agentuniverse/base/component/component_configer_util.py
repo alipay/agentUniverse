@@ -20,11 +20,13 @@ from agentuniverse.base.config.component_configer.configers.agent_configer impor
 from agentuniverse.base.config.component_configer.configers.knowledge_configer import KnowledgeConfiger
 from agentuniverse.base.config.component_configer.configers.memory_configer import MemoryConfiger
 from agentuniverse.base.config.component_configer.configers.planner_configer import PlannerConfiger
+from agentuniverse.base.config.component_configer.configers.prompt_configer import PromptConfiger
 from agentuniverse.base.config.component_configer.configers.tool_configer import ToolConfiger
 from agentuniverse.base.config.config_type_enum import ConfigTypeEnum
 from agentuniverse.base.config.component_configer.configers.llm_configer import LLMConfiger
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.llm.llm_manager import LLMManager
+from agentuniverse.prompt.prompt_manager import PromptManager
 
 
 class ComponentConfigerUtil(object):
@@ -38,6 +40,7 @@ class ComponentConfigerUtil(object):
         ComponentEnum.TOOL: ToolConfiger,
         ComponentEnum.MEMORY: MemoryConfiger,
         ComponentEnum.SERVICE: ServiceConfiger,
+        ComponentEnum.PROMPT: PromptConfiger,
         ComponentEnum.DEFAULT: ComponentConfiger
     }
 
@@ -48,7 +51,8 @@ class ComponentConfigerUtil(object):
         ComponentEnum.PLANNER: PlannerManager,
         ComponentEnum.TOOL: ToolManager,
         ComponentEnum.MEMORY: MemoryManager,
-        ComponentEnum.SERVICE: ServiceManager
+        ComponentEnum.SERVICE: ServiceManager,
+        ComponentEnum.PROMPT: PromptManager
     }
 
     @classmethod

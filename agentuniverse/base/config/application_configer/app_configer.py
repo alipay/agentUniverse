@@ -24,6 +24,7 @@ class AppConfiger(object):
         self.__core_tool_package_list: Optional[list[str]] = None
         self.__core_memory_package_list: Optional[list[str]] = None
         self.__core_service_package_list: Optional[list[str]] = None
+        self.__core_prompt_package_list: Optional[list[str]] = None
 
     @property
     def base_info_appname(self) -> Optional[str]:
@@ -70,6 +71,10 @@ class AppConfiger(object):
         """Return the service package list of the core."""
         return self.__core_service_package_list
 
+    @property
+    def core_prompt_package_list(self) -> Optional[list[str]]:
+        return self.__core_prompt_package_list
+
     def load_by_configer(self, configer: Configer) -> 'AppConfiger':
         """Load the AppConfiger by the given Configer.
 
@@ -88,4 +93,5 @@ class AppConfiger(object):
         self.__core_tool_package_list = configer.value.get('CORE_PACKAGE', {}).get('tool')
         self.__core_memory_package_list = configer.value.get('CORE_PACKAGE', {}).get('memory')
         self.__core_service_package_list = configer.value.get('CORE_PACKAGE', {}).get('service')
+        self.__core_prompt_package_list = configer.value.get('CORE_PACKAGE', {}).get('prompt')
         return self

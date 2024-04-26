@@ -2,6 +2,7 @@ info:
   name: 'ReviewingAgent'
   description: 'reviewing agent'
 profile:
+  prompt_version:
   llm_model:
     name: 'default_openai_llm'
     model_name: 'gpt-3.5-turbo'

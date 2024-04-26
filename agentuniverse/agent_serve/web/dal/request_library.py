@@ -54,16 +54,8 @@ class RequestLibrary:
             db_path.parent.mkdir(parents=True, exist_ok=True)
             db_uri = f'sqlite:////{db_path}'
 
-        # Create database engine
-        self.engine = create_engine(
-            db_uri,
-            _json_serializer=lambda x: json.dumps(x, ensure_ascii=False)
-        )
-        self.Session = sessionmaker(bind=self.engine)
-
-        with self.engine.connect() as conn:
-            if not conn.dialect.has_table(conn, REQUEST_TABLE_NAME):
-                Base.metadata.create_all(self.engine)
+        self.db_uri = db_uri
+        self.Session = None
 
     def query_request_by_request_id(self, request_id: str) -> RequestDO | None:
         """Get a RequestDO with given request_id.
@@ -74,7 +66,7 @@ class RequestLibrary:
         Return:
             The target RequestDO or none when no such data.
         """
-        session = self.Session()
+        session = self.__get_session()
         try:
             result = session.execute(
                 select(RequestORM).where(RequestORM.request_id == request_id)
@@ -94,7 +86,7 @@ class RequestLibrary:
         Return:
             A int stands unique data id in table.
         """
-        session = self.Session()
+        session = self.__get_session()
         try:
             request_orm = RequestORM(**request_do.model_dump())
             session.add(request_orm)
@@ -106,7 +98,7 @@ class RequestLibrary:
     def update_request(self, request_do: RequestDO):
         """Update the request data with same request id as the given
         RequestDO."""
-        session = self.Session()
+        session = self.__get_session()
         try:
             db_request_do = session.query(RequestORM).filter(
                 RequestORM.request_id == request_do.request_id).first()
@@ -121,7 +113,7 @@ class RequestLibrary:
 
     def update_gmt_modified(self, request_id: str):
         """Update the request task latest active time."""
-        session = self.Session()
+        session = self.__get_session()
         try:
             db_request_do = session.query(RequestORM).filter(
                 RequestORM.request_id == request_id).first()
@@ -131,6 +123,21 @@ class RequestLibrary:
                 session.refresh(db_request_do)
         finally:
             session.close()
+
+    def __get_session(self):
+        if self.Session:
+            return self.Session()
+        # Create database engine
+        self.engine = create_engine(
+            self.db_uri,
+            json_serializer=lambda x: json.dumps(x, ensure_ascii=False)
+        )
+        self.Session = sessionmaker(bind=self.engine)
+
+        with self.engine.connect() as conn:
+            if not conn.dialect.has_table(conn, REQUEST_TABLE_NAME):
+                Base.metadata.create_all(self.engine)
+        return self.Session()
 
     def __request_orm_to_do(self, request_orm: RequestORM) -> RequestDO:
         """Transfer a RequestORM to RequestDO."""
