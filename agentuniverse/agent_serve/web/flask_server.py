@@ -6,7 +6,7 @@ from werkzeug.exceptions import HTTPException
 from ..service_instance import ServiceInstance, ServiceNotFoundError
 from .request_task import RequestTask
 from .web_util import request_param, service_run_queue, make_standard_response
-from agentuniverse.base.util.logging.logging_util import LOGGER
+from ...base.util.logging.logging_util import LOGGER
 
 
 app = Flask(__name__)
@@ -15,7 +15,7 @@ app.config['JSON_AS_ASCII'] = False
 
 @app.route("/echo")
 def echo():
-    return 'Welcome to agentUniverse!!!'
+    return 'Welcome to AntFinAgentFramework!!!'
 
 
 @app.route("/liveness")

@@ -16,7 +16,6 @@ from agentuniverse.base.config.application_configer.app_configer import AppConfi
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.base.component.component_configer_util import ComponentConfigerUtil
-from agentuniverse.base.config.component_configer.configers.prompt_configer import PromptConfiger
 from agentuniverse.base.config.config_type_enum import ConfigTypeEnum
 from agentuniverse.base.config.configer import Configer
 from agentuniverse.base.config.custom_configer.custom_key_configer import CustomKeyConfiger
@@ -24,8 +23,6 @@ from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.util.system_util import get_project_root_path
 from agentuniverse.base.util.logging.logging_util import init_loggers
 from agentuniverse.agent_serve.web.request_task import RequestLibrary
-from agentuniverse.agent_serve.web.web_booster import GunicornApplication
-from agentuniverse.prompt.prompt_manager import PromptManager
 
 
 @singleton
@@ -70,11 +67,15 @@ class AgentUniverse(object):
         # init web request task database
         RequestLibrary(configer=configer)
 
-        # init gunicorn web server
-        gunicorn_config_path = self.__parse_sub_config_path(
-            configer.value.get('SUB_CONFIG_PATH', {})
-            .get('gunicorn_config_path'), config_path)
-        GunicornApplication(config_path=gunicorn_config_path)
+        # init gunicorn web server on mac or unix platform
+        if not sys.platform.lower().startswith("win"):
+            gunicorn_config_path = self.__parse_sub_config_path(
+                configer.value.get('SUB_CONFIG_PATH', {})
+                .get('gunicorn_config_path'), config_path
+            )
+            from ..agent_serve.web.gunicorn_server import \
+                GunicornApplication
+            GunicornApplication(config_path=gunicorn_config_path)
 
         # init all extension module
         ext_classes = configer.value.get('EXTENSION_MODULES', {}).get('class_list')

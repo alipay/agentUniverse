@@ -9,7 +9,8 @@
 import datetime
 import json
 
-from sqlalchemy import JSON, Integer, String, DateTime, Column, create_engine
+from sqlalchemy import JSON, Integer, String, DateTime, Text, Column
+from sqlalchemy import create_engine
 from sqlalchemy import select
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -27,10 +28,10 @@ class RequestORM(Base):
     """SQLAlchemy ORM Model for RequestDO."""
     __tablename__ = REQUEST_TABLE_NAME
     id = Column(Integer, primary_key=True, autoincrement=True)
-    request_id = Column(String, nullable=False)
-    query = Column(String)
-    session_id = Column(String)
-    state = Column(String)
+    request_id = Column(String(20), nullable=False)
+    query = Column(Text)
+    session_id = Column(String(50))
+    state = Column(String(20))
     result = Column(JSON)
     steps = Column(JSON)
     additional_args = Column(JSON)

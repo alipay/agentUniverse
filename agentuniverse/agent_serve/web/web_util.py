@@ -39,7 +39,7 @@ def request_param(func):
                 if "saved" in req_data:
                     kwargs['saved'] = req_data['saved']
                 else:
-                    kwargs['saved'] = sig.parameters['saved']
+                    kwargs['saved'] = sig.parameters['saved'].default
                 continue
             if name == "session_id":
                 kwargs[name] = request.headers.get("X-Session-Id")
