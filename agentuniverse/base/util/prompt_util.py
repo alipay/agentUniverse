@@ -62,6 +62,9 @@ def split_text_on_tokens(text: str, text_token, chunk_size=800, chunk_overlap=10
         result.append(chunk)
         current_position += chunk_char_size - chunk_char_overlap
 
+    if len(result) == 0:
+        result.append(text[current_position:])
+
     return result
 
 

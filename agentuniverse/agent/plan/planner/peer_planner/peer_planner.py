@@ -170,7 +170,7 @@ class PeerPlanner(Planner):
                     # add reviewing agent log info
                     logger_info = f"\nReviewing agent execution result is :\n"
                     reviewing_info_str = f"review suggestion: {reviewing_result.get_data('suggestion')} \n"
-                    reviewing_info_str += f"useful: {reviewing_result.get_data('is_useful')} \n"
+                    reviewing_info_str += f"review score: {reviewing_result.get_data('score')} \n"
                     LOGGER.info(logger_info + reviewing_info_str)
 
                     if reviewing_result.get_data('score') and reviewing_result.get_data('score') >= eval_threshold:
