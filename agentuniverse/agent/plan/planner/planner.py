@@ -5,12 +5,11 @@
 # @Email   : lc299034@antgroup.com
 # @FileName: planner.py
 """Base class for Planner."""
-import json
+import copy
 from abc import abstractmethod
 from typing import Optional, List
 
 from langchain_core.memory import BaseMemory
-from langchain_core.prompts import PromptTemplate
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
@@ -42,7 +41,6 @@ class Planner(ComponentBase):
     output_key: str = 'output'
     input_key: str = 'input'
     prompt_assemble_order: list = ['introduction', 'target', 'instruction']
-    prompt: Prompt = Prompt()
 
     def __init__(self):
         """Initialize the ComponentBase."""
@@ -87,8 +85,9 @@ class Planner(ComponentBase):
         memory: Memory = MemoryManager().get_instance_obj(memory_name)
         if memory is None:
             return None
-        memory.set_by_agent_model(**params)
-        langchain_memory: BaseMemory = memory.as_langchain()
+        copied_memory = copy.deepcopy(memory)
+        copied_memory.set_by_agent_model(**params)
+        langchain_memory: BaseMemory = copied_memory.as_langchain()
 
         planner_input['chat_history'] = langchain_memory.load_memory_str
         return langchain_memory
@@ -125,14 +124,14 @@ class Planner(ComponentBase):
 
         planner_input['background'] = planner_input['background'] or '' + "\n".join(action_result)
 
-    def handle_prompt(self, agent_model: AgentModel, planner_input: dict):
+    def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:
         """Prompt module processing.
 
         Args:
             agent_model (AgentModel): Agent model object.
             planner_input (dict): Planner input object.
         Returns:
-            PromptTemplate: The prompt template.
+            Prompt: The prompt instance.
         """
         pass
 
@@ -146,8 +145,9 @@ class Planner(ComponentBase):
         """
         llm_name = agent_model.profile.get('llm_model').get('name')
         llm: LLM = LLMManager().get_instance_obj(llm_name)
-        llm.set_by_agent_model(**agent_model.profile.get('llm_model'))
-        return llm
+        copied_llm = copy.deepcopy(llm)
+        copied_llm.set_by_agent_model(**agent_model.profile.get('llm_model'))
+        return copied_llm
 
     def initialize_by_component_configer(self, component_configer: PlannerConfiger) -> 'Planner':
         """Initialize the planner by the PlannerConfiger object.
