@@ -1,0 +1,6 @@
+name: 'map_planner'
+description: 'map planner'
+metadata:
+  type: 'PLANNER'
+  module: 'agentuniverse.agent.plan.planner.map_planner.map_planner'
+  class: 'MapPlanner'

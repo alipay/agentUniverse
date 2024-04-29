@@ -1,0 +1,6 @@
+name: 'map_reduce_planner'
+description: 'map_reduce planner'
+metadata:
+  type: 'PLANNER'
+  module: 'agentuniverse.agent.plan.planner.map_reduce_planner.map_reduce_planner'
+  class: 'MapReducePlanner'
