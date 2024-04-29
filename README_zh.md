@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.3-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.4-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -49,3 +49,14 @@ pip install agentUniverse
 
 ## 用户指南
 更多详细信息，请参阅[指南](docs/guidebook/zh/0_%E7%9B%AE%E5%BD%95.md) 。
+
+## 更多方式联系我们
+* github: https://github.com/alipay/agentUniverse
+* gitee: https://gitee.com/agentUniverse/agentUniverse
+* gitcode: https://gitcode.com/agentUniverse
+* Stack Overflow: https://stackoverflowteams.com/c/agentuniverse/questions
+* Discord: https://discord.gg/VfhEvJzQ
+* reddit: https://www.reddit.com/r/agentUniverse/
+* 微信公众号: agentUniverse智多星
+* 钉钉答疑群:
+![](./docs/guidebook/_picture/dingtalk_util20250429.png)
