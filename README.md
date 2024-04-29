@@ -5,7 +5,7 @@ Language version: [English](./README.md) | [中文](./README_zh.md)
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.3-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.4-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -46,3 +46,14 @@ For details, please read [Quick Start](docs/guidebook/en/1_3_Quick_Start.md).
 
 ## Guidebook
 For more detailed information, please refer to the [Guidebook](docs/guidebook/en/0_index.md).
+
+## More Ways to Contact Us
+* github: https://github.com/alipay/agentUniverse
+* gitee: https://gitee.com/agentUniverse/agentUniverse
+* gitcode: https://gitcode.com/agentUniverse
+* Stack Overflow: https://stackoverflowteams.com/c/agentuniverse/questions
+* Discord: https://discord.gg/VfhEvJzQ
+* reddit: https://www.reddit.com/r/agentUniverse/
+* WeChat Official Account: agentUniverse智多星
+* DingTalk Group:
+![](./docs/guidebook/_picture/dingtalk_util20250429.png)
