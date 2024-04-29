@@ -6,9 +6,10 @@
 # @FileName: reviewing_planner.py
 """Reviewing planner module."""
 import asyncio
+
 from langchain.chains import LLMChain
 from langchain_core.memory import BaseMemory
-from langchain_core.prompts import PromptTemplate
+
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.plan.planner.planner import Planner
@@ -36,22 +37,22 @@ class ReviewingPlanner(Planner):
 
         llm: LLM = self.handle_llm(agent_model)
 
-        self.handle_prompt(agent_model, planner_input)
+        prompt: Prompt = self.handle_prompt(agent_model, planner_input)
 
         llm_chain = LLMChain(llm=llm.as_langchain(),
-                             prompt=self.prompt.as_langchain(),
+                             prompt=prompt.as_langchain(),
                              output_key=self.output_key, memory=memory)
 
         return asyncio.run(llm_chain.acall(inputs=planner_input))
 
-    def handle_prompt(self, agent_model: AgentModel, planner_input: dict):
+    def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:
         """Generate prompt template for the planner.
 
         Args:
             agent_model (AgentModel): The agent model.
             planner_input (dict): The agent input.
         Returns:
-            PromptTemplate: The prompt template.
+            Prompt: The prompt instance.
         """
         expert_framework = planner_input.pop('expert_framework', '') or ''
 
@@ -72,6 +73,7 @@ class ReviewingPlanner(Planner):
                                                                  target=prompt.target,
                                                                  instruction=expert_framework + prompt.instruction)
 
-        self.prompt.build_prompt(user_prompt_model, system_prompt_model,
-                                 self.prompt_assemble_order)
-        process_llm_token(self.prompt.as_langchain(), profile, planner_input)
+        prompt: Prompt = Prompt().build_prompt(user_prompt_model, system_prompt_model,
+                                               self.prompt_assemble_order)
+        process_llm_token(prompt.as_langchain(), profile, planner_input)
+        return prompt

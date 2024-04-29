@@ -37,7 +37,7 @@ class Prompt(ComponentBase):
                               input_variables=self.input_variables)
 
     def build_prompt(self, user_agent_prompt_model: AgentPromptModel, system_agent_prompt_model: AgentPromptModel,
-                     prompt_assemble_order: list[str]):
+                     prompt_assemble_order: list[str]) -> 'Prompt':
         """Build the prompt class.
 
         Args:
@@ -51,6 +51,7 @@ class Prompt(ComponentBase):
         agent_prompt_model = user_agent_prompt_model + system_agent_prompt_model
         self.prompt_template = generate_template(agent_prompt_model, prompt_assemble_order)
         self.input_variables = re.findall(r'\{(.*?)}', self.prompt_template)
+        return self
 
     def get_instance_code(self) -> str:
         """Return the prompt version of the current prompt."""

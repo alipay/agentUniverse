@@ -6,6 +6,7 @@
 # @FileName: planning_planner.py
 """Planning planner module."""
 import asyncio
+
 from langchain.chains import LLMChain
 from langchain_core.memory import BaseMemory
 
@@ -37,22 +38,22 @@ class PlanningPlanner(Planner):
 
         llm: LLM = self.handle_llm(agent_model)
 
-        self.handle_prompt(agent_model, planner_input)
+        prompt: Prompt = self.handle_prompt(agent_model, planner_input)
 
         llm_chain = LLMChain(llm=llm.as_langchain(),
-                             prompt=self.prompt.as_langchain(),
+                             prompt=prompt.as_langchain(),
                              output_key=self.output_key, memory=memory)
 
         return asyncio.run(llm_chain.acall(planner_input))
 
-    def handle_prompt(self, agent_model: AgentModel, planner_input: dict):
+    def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:
         """Prompt module processing.
 
         Args:
             agent_model (AgentModel): Agent model object.
             planner_input (dict): Planner input object.
         Returns:
-            PromptTemplate: The prompt template.
+            Prompt: The prompt instance.
         """
         expert_framework = planner_input.pop('expert_framework', '') or ''
 
@@ -72,6 +73,7 @@ class PlanningPlanner(Planner):
         system_prompt_model: AgentPromptModel = AgentPromptModel(introduction=prompt.introduction,
                                                                  target=prompt.target,
                                                                  instruction=expert_framework + prompt.instruction)
-        self.prompt.build_prompt(user_prompt_model, system_prompt_model,
-                                 self.prompt_assemble_order)
-        process_llm_token(self.prompt.as_langchain(), profile, planner_input)
+        prompt = Prompt().build_prompt(user_prompt_model, system_prompt_model,
+                                       self.prompt_assemble_order)
+        process_llm_token(prompt.as_langchain(), profile, planner_input)
+        return prompt
