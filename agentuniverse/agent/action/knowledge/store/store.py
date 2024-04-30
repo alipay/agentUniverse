@@ -87,3 +87,19 @@ class Store(BaseModel):
     async def async_delete_document(self, document_id: str, **kwargs):
         """Asynchronously delete the specific document by the document id."""
         raise NotImplementedError
+
+    def upsert_document(self, documents: List[Document], **kwargs):
+        """Upsert document into the store."""
+        raise NotImplementedError
+
+    async def async_upsert_document(self, documents: List[Document], **kwargs):
+        """Asynchronously upsert documents into the store."""
+        raise NotImplementedError
+
+    def update_document(self, documents: List[Document], **kwargs):
+        """Update document into the store."""
+        raise NotImplementedError
+
+    async def async_update_document(self, documents: List[Document], **kwargs):
+        """Asynchronously update documents into the store."""
+        raise NotImplementedError

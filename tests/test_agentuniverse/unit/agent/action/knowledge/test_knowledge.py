@@ -27,6 +27,16 @@ class KnowledgeTest(unittest.TestCase):
             embedding_model_name='text-embedding-ada-002'))
         self.knowledge = Knowledge(**init_params)
 
+    def test_store_update_documents(self) -> None:
+        store = self.knowledge.store
+        store.update_document([Document(text='This is an iPhone', metadata={'type': 'Electronic products'}),
+                               Document(text='This is a Tesla.', metadata={'type': 'Industrial products'})])
+
+    def test_store_upsert_documents(self) -> None:
+        store = self.knowledge.store
+        store.upsert_document([Document(text='This is an iPhone', metadata={'type': 'Cell phone'}),
+                               Document(text='This is a Tesla.', metadata={'type': 'Car'})])
+
     def test_store_insert_documents(self) -> None:
         store = self.knowledge.store
         store.insert_documents([Document(text='This is a document about engineer'),
@@ -34,7 +44,7 @@ class KnowledgeTest(unittest.TestCase):
 
     def test_query(self) -> None:
         store = self.knowledge.store
-        query = Query(query_str='Which stock is the best?', similarity_top_k=1)
+        query = Query(query_str='Which one is a cell phone?', similarity_top_k=1)
         res = store.query(query)
         print(res)
 
