@@ -126,14 +126,14 @@ class MapPlanner(Planner):
         # 等待所有任务完成
         return await asyncio.gather(*tasks)
 
-    def handle_prompt(self, agent_model: AgentModel, planner_input: dict):
+    def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:
         """Prompt module processing.
 
         Args:
             agent_model (AgentModel): Agent model object.
             planner_input (dict): Planner input object.
         Returns:
-            PromptTemplate: The prompt template.
+            Prompt: The prompt instance.
         """
         profile: dict = agent_model.profile
 
@@ -142,12 +142,13 @@ class MapPlanner(Planner):
                                                                instruction=profile.get('instruction'))
 
         # get the prompt by the prompt version
-        prompt_version: str = profile.get('prompt_version') or 'map_planner.default_cn'
+        prompt_version: str = profile.get('prompt_version') or 'rag_planner.default_cn'
         prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
 
         system_prompt_model: AgentPromptModel = AgentPromptModel(introduction=prompt.introduction,
                                                                  target=prompt.target,
                                                                  instruction=prompt.instruction)
 
-        self.prompt.build_prompt(user_prompt_model, system_prompt_model,
-                                 self.prompt_assemble_order)
+        prompt = Prompt().build_prompt(user_prompt_model, system_prompt_model,
+                                       self.prompt_assemble_order)
+        return prompt
