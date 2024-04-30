@@ -6,8 +6,10 @@
 # @FileName: rag_planner.py
 """Rag planner module."""
 import asyncio
+
 from langchain.chains import LLMChain
 from langchain_core.memory import BaseMemory
+
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.plan.planner.planner import Planner
@@ -38,21 +40,21 @@ class RagPlanner(Planner):
 
         llm: LLM = self.handle_llm(agent_model)
 
-        self.handle_prompt(agent_model, planner_input)
+        prompt: Prompt = self.handle_prompt(agent_model, planner_input)
 
         llm_chain = LLMChain(llm=llm.as_langchain(),
-                             prompt=self.prompt.as_langchain(),
+                             prompt=prompt.as_langchain(),
                              output_key=self.output_key, memory=memory)
         return asyncio.run(llm_chain.acall(inputs=planner_input))
 
-    def handle_prompt(self, agent_model: AgentModel, planner_input: dict):
+    def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:
         """Prompt module processing.
 
         Args:
             agent_model (AgentModel): Agent model object.
             planner_input (dict): Planner input object.
         Returns:
-            PromptTemplate: The prompt template.
+            Prompt: The prompt instance.
         """
         profile: dict = agent_model.profile
 
@@ -68,6 +70,7 @@ class RagPlanner(Planner):
                                                                  target=prompt.target,
                                                                  instruction=prompt.instruction)
 
-        self.prompt.build_prompt(user_prompt_model, system_prompt_model,
-                                 self.prompt_assemble_order)
-        process_llm_token(self.prompt.as_langchain(), profile, planner_input)
+        prompt = Prompt().build_prompt(user_prompt_model, system_prompt_model,
+                                       self.prompt_assemble_order)
+        process_llm_token(prompt.as_langchain(), profile, planner_input)
+        return prompt
