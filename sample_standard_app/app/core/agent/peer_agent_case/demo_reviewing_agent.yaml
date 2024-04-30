@@ -4,7 +4,7 @@ info:
 profile:
   llm_model:
     name: 'demo_llm'
-    model_name: 'gpt-3.5-turbo'
+    model_name: 'gpt-3.5-turbo-0125'
     temperature: 0.5
 plan:
   planner:
