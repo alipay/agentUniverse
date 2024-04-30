@@ -18,9 +18,7 @@ class LLMTest(unittest.TestCase):
     """
 
     def setUp(self) -> None:
-        self.llm = OpenAILLM(model_name='gpt-4',
-                             openai_proxy="http://intlhttproxy-us.alipay.com:8080",
-                             openai_api_key="blank")
+        self.llm = OpenAILLM(model_name='gpt-4')
 
     def test_call(self) -> None:
         messages = [

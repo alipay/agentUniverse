@@ -13,7 +13,6 @@ from agentuniverse.agent_serve.service_manager import ServiceManager
 from tests.test_agentuniverse.mock.agent_serve.mock_simple_service import SimpleService
 from tests.test_agentuniverse.mock.agent_serve.mock_application_config_manager import MockApplicationConfigManager
 
-
 @patch("agentuniverse.agent_serve.service_manager.Service", new=SimpleService)
 @patch("agentuniverse.base.component.component_manager_base.ApplicationConfigManager", new=MockApplicationConfigManager)
 def test_service_manager():
