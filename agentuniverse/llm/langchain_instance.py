@@ -29,13 +29,13 @@ class LangchainOpenAI(ChatOpenAI):
             llm (LLM): the AgentUniverse(AU) LLM instance.
         """
         init_params = dict()
-        init_params['model_name'] = llm.model_name if llm.model_name is not None else 'gpt-3.5-turbo'
-        init_params['temperature'] = llm.temperature if llm.temperature is not None else 0.7
+        init_params['model_name'] = llm.model_name if llm.model_name else 'gpt-3.5-turbo'
+        init_params['temperature'] = llm.temperature if llm.temperature else 0.7
         init_params['request_timeout'] = llm.request_timeout
         init_params['max_tokens'] = llm.max_tokens
-        init_params['max_retries'] = llm.max_retries if llm.max_retries is not None else 2
-        init_params['streaming'] = llm.streaming if llm.streaming is not None else False
-        init_params['openai_api_key'] = llm.openai_api_key
+        init_params['max_retries'] = llm.max_retries if llm.max_retries else 2
+        init_params['streaming'] = llm.streaming if llm.streaming else False
+        init_params['openai_api_key'] = llm.openai_api_key if llm.openai_api_key else 'blank'
         init_params['openai_organization'] = llm.openai_organization
         init_params['openai_api_base'] = llm.openai_api_base
         init_params['openai_proxy'] = llm.openai_proxy
