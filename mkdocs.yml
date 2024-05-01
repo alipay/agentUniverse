@@ -1,0 +1,94 @@
+site_name: agentUniverse Docs
+docs_dir: 'docs/mkdocs/gen_doc'
+copyright: Copyright &copy; AntGroup agentUniverse Team
+
+theme:
+  name: "material"
+  icon:
+    logo: material/home
+  features:
+    - toc.follow
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - search.share
+    - navigation.footer
+    - content.code.copy
+
+markdown_extensions:
+    - admonition
+    - def_list
+    - footnotes
+    - abbr
+    - pymdownx.caret
+    - pymdownx.mark
+    - pymdownx.tilde
+    - md_in_html
+    - pymdownx.arithmatex:
+          generic: true
+    - toc:
+          permalink: true
+          toc_depth: 3
+    - pymdownx.highlight:
+          anchor_linenums: true
+          linenums: true
+          use_pygments: true
+          pygments_lang_class: true
+          auto_title: true
+          linenums_style: pymdownx-inline
+    - pymdownx.betterem
+    - pymdownx.caret
+    - pymdownx.mark
+    - pymdownx.tilde
+    - pymdownx.keys
+    - pymdownx.critic
+    - pymdownx.details
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.superfences
+    - pymdownx.magiclink
+    - pymdownx.smartsymbols
+    - pymdownx.snippets
+    - pymdownx.tasklist:
+          custom_checkbox: true
+    - attr_list
+    - pymdownx.emoji:
+          emoji_index: !!python/name:material.extensions.emoji.twemoji
+          emoji_generator: !!python/name:material.extensions.emoji.to_svg
+    - pymdownx.superfences:
+          custom_fences:
+              - name: mermaid
+                class: mermaid
+                format: !!python/name:pymdownx.superfences.fence_code_format
+    - pymdownx.tabbed:
+          alternate_style: true
+          combine_header_slug: true
+    - pymdownx.tasklist:
+          custom_checkbox: true
+          clickable_checkbox: true
+    - meta
+    - tables
+
+plugins:
+    - gen-files:
+        scripts:
+          - docs/mkdocs/gen_doc/gen_ref_pages.py
+    - mkdocstrings:
+          handlers:
+              python:
+                  paths: []
+                  setup_commands:
+                    - import sys
+                    - sys.path.insert(0, "..")
+    - search:
+        lang: en
+
+extra:
+    generator: false
+    social:
+        - icon: fontawesome/brands/github
+          link: https://github.com/alipay/agentUniverse
+          name: GitHub
+        - icon: material/email
+          link: agentUniverse:<jerry.zzw@antgroup.com>
+          name: Email
