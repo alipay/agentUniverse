@@ -99,6 +99,32 @@ class ChromaStore(Store):
                 ids=[document.id]
             )
 
+    def upsert_document(self, documents: List[Document], **kwargs):
+        """Upsert document into the store."""
+        for document in documents:
+            embedding = document.embedding
+            if self.embedding_model is not None and len(embedding) == 0:
+                embedding = self.embedding_model.get_embeddings([document.text])[0]
+            self.collection.upsert(
+                documents=[document.text],
+                metadatas=[document.metadata],
+                embeddings=[embedding] if embedding is not None else None,
+                ids=[document.id]
+            )
+
+    def update_document(self, documents: List[Document], **kwargs):
+        """Update document into the store."""
+        for document in documents:
+            embedding = document.embedding
+            if self.embedding_model is not None and len(embedding) == 0:
+                embedding = self.embedding_model.get_embeddings([document.text])[0]
+            self.collection.update(
+                documents=[document.text],
+                metadatas=[document.metadata],
+                embeddings=[embedding] if embedding is not None else None,
+                ids=[document.id]
+            )
+
     @staticmethod
     def to_documents(query_result: QueryResult) -> List[Document]:
         """Convert the query results of ChromaDB to the AgentUniverse(AU) document format."""

@@ -8,7 +8,7 @@ import uuid
 from typing import Dict, Any, Optional, List
 
 from langchain_core.documents.base import Document as LCDocument
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class Document(BaseModel):
@@ -21,10 +21,17 @@ class Document(BaseModel):
         embedding (List[float]): Embedding data associated with the document
     """
 
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    id: str = None
     text: Optional[str] = ""
     metadata: Optional[Dict[str, Any]] = None
     embedding: List[float] = Field(default_factory=list)
+
+    @model_validator(mode='before')
+    def create_id(cls, values):
+        text: str = values.get('text', '')
+        if not values.get('id'):
+            values['id'] = str(uuid.uuid5(uuid.NAMESPACE_URL, text))
+        return values
 
     def as_langchain(self) -> LCDocument:
         """Convert to LangChain document format."""
