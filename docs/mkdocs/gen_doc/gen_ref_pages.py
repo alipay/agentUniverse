@@ -57,8 +57,8 @@ for package_path in package_list:
 
         mkdocs_gen_files.set_edit_path(full_doc_path, Path("../../") / path)
 
-with mkdocs_gen_files.open(f"{API_REFERENCE}/API Content.md", "w") as nav_file:
-    nav_file.writelines(nav.build_literate_nav())
+# with mkdocs_gen_files.open(f"{API_REFERENCE}/API Content.md", "w") as nav_file:
+#     nav_file.writelines(nav.build_literate_nav())
 
 
 if __name__ == "__main__":
