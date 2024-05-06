@@ -24,14 +24,6 @@ class OpenAIEmbedding(Embedding):
     async_client: Any = None
     dimensions: Optional[int] = None
 
-    def __init__(self, **kwargs):
-        """Initialize the openai embedding class."""
-        super().__init__(**kwargs)
-        if self.client is None:
-            self.client = OpenAI(api_key=self.openai_api_key, **self.openai_client_args or {})
-        if self.async_client is None:
-            self.async_client = AsyncOpenAI(api_key=self.openai_api_key, **self.openai_client_args or {})
-
     def get_embeddings(self, texts: List[str]) -> List[List[float]]:
         """Get the OpenAI embeddings.
 
@@ -48,7 +40,7 @@ class OpenAIEmbedding(Embedding):
          Raises:
              ValueError: If texts exceed the embedding model token limit or missing some required parameters.
          """
-
+        self.client = OpenAI(api_key=self.openai_api_key, **self.openai_client_args or {})
         if self.embedding_model_name is None:
             raise ValueError("Must provide `embedding_model_name`")
         try:
@@ -81,7 +73,7 @@ class OpenAIEmbedding(Embedding):
          Raises:
              ValueError: If texts exceed the embedding model token limit or missing some required parameters.
          """
-
+        self.async_client = AsyncOpenAI(api_key=self.openai_api_key, **self.openai_client_args or {})
         if self.embedding_model_name is None:
             raise ValueError("Must provide `embedding_model_name`")
         try:

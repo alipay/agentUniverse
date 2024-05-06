@@ -12,5 +12,5 @@ plan:
     reviewing: 'demo_reviewing_agent'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.peer_agent_case.demo_peer_agent'
-  class: 'DemoPeerAgent'
+  module: 'agentuniverse.agent.default.peer_agent'
+  class: 'PeerAgent'
