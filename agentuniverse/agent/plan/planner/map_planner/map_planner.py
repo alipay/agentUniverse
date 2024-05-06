@@ -76,7 +76,7 @@ class MapPlanner(Planner):
         map_docs = self.split_docs(map_docs, llm, planner_input)
 
         # 5. do map summarize
-        # 获取并发度
+        # get sem
         sem = agent_model.profile.get('sem')
         map_results = asyncio.run(self.map_docs_async(llm_chain, map_docs, planner_input, sem=sem))
         result = []
@@ -105,12 +105,15 @@ class MapPlanner(Planner):
 
     @staticmethod
     async def map_docs_async(llm_chain: LLMChain, map_docs: List[Document], planner_input: dict, sem=3):
+        """Map docs async."""
+        # create a semaphore or use default value
         if sem is None or sem < 1:
             sem = 3
-        semaphore = asyncio.Semaphore(sem)  # 创建一个信号量，最大并发数设置为5
+        semaphore = asyncio.Semaphore(sem)
 
         async def process_doc(doc):
-            async with semaphore:  # 使用信号量限制并发度
+            # use the semaphore to limit the number of concurrent requests
+            async with semaphore:
                 inputs = planner_input.copy()
                 if inputs.get('background'):
                     inputs['background'] += '\n' + doc.page_content
@@ -120,10 +123,9 @@ class MapPlanner(Planner):
                 for k, v in doc.metadata.items():
                     inputs[k] = v
                 return await llm_chain.acall(inputs=inputs)
-
-        # 使用列表推导式和异步函数创建任务集
+        # create a list of tasks
         tasks = [process_doc(doc) for doc in map_docs]
-        # 等待所有任务完成
+        # wait for all tasks to complete
         return await asyncio.gather(*tasks)
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:
