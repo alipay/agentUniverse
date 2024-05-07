@@ -18,11 +18,6 @@ class ExecutingAgent(Agent):
 
     executor: Optional[Any] = ThreadPoolExecutor(max_workers=10, thread_name_prefix="executing_agent")
 
-    def __init__(self):
-        """Initialize the default executing agent class."""
-        super().__init__()
-        self.agent_model.profile['prompt_version'] = 'default_executing_agent.default_cn'
-
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
         return ['planning_result']
@@ -42,6 +37,7 @@ class ExecutingAgent(Agent):
         """
         planner_input['input'] = input_object.get_data('input')
         planner_input['framework'] = input_object.get_data('planning_result').get_data('framework')
+        self.agent_model.profile.setdefault('prompt_version', 'default_executing_agent.cn')
         return planner_input
 
     def parse_result(self, planner_result: dict) -> dict:

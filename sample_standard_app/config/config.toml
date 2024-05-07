@@ -20,7 +20,7 @@ memory = ['sample_standard_app.app.core.memory']
 # Scan and register service components for all paths under this list, with priority over the default.
 service = ['sample_standard_app.app.core.service']
 # Scan and register prompt components for all paths under this list, with priority over the default.
-prompt = ['sample_standard_app.core.prompt']
+prompt = ['sample_standard_app.app.core.prompt']
 
 [SUB_CONFIG_PATH]
 # Log config file path, an absolute path or a relative path based on the dir where the current config file is located.

@@ -14,5 +14,5 @@ memory:
   name: ''
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.expressing_agent'
+  module: 'agentuniverse.agent.default.expressing_agent.expressing_agent'
   class: 'ExpressingAgent'

@@ -13,11 +13,6 @@ from agentuniverse.agent.input_object import InputObject
 class ReviewingAgent(Agent):
     """Reviewing Agent module."""
 
-    def __init__(self):
-        """Initialize the default reviewing agent class."""
-        super().__init__()
-        self.agent_model.profile['prompt_version'] = 'default_reviewing_agent.default_cn'
-
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
         return ['input', 'expressing_result']
@@ -37,6 +32,7 @@ class ReviewingAgent(Agent):
         """
         planner_input['input'] = input_object.get_data('input')
         planner_input['expressing_result'] = input_object.get_data('expressing_result').get_data('output')
+        self.agent_model.profile.setdefault('prompt_version', 'default_reviewing_agent.cn')
         return planner_input
 
     def parse_result(self, planner_result: dict) -> dict:

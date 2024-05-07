@@ -12,11 +12,6 @@ from agentuniverse.agent.input_object import InputObject
 class RagAgent(Agent):
     """Rag Agent class."""
 
-    def __init__(self):
-        """Initialize the default rag agent class."""
-        super().__init__()
-        self.agent_model.profile['prompt_version'] = 'default_rag_agent.default_cn'
-
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
         return ['input']
@@ -36,6 +31,7 @@ class RagAgent(Agent):
         """
         input = input_object.get_data('input')
         planner_input['input'] = input
+        self.agent_model.profile.setdefault('prompt_version', 'default_rag_agent.cn')
         return planner_input
 
     def parse_result(self, planner_result: dict) -> dict:

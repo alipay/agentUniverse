@@ -14,5 +14,5 @@ memory:
   name: ''
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.planning_agent'
+  module: 'agentuniverse.agent.default.planning_agent.planning_agent'
   class: 'PlanningAgent'
