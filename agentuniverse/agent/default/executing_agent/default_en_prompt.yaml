@@ -28,4 +28,4 @@ instruction: |
   Let's take it step by step.
 metadata:
   type: 'PROMPT'
-  version: 'executing_planner.default_en'
+  version: 'default_executing_agent.default_en'

@@ -18,6 +18,11 @@ class ExecutingAgent(Agent):
 
     executor: Optional[Any] = ThreadPoolExecutor(max_workers=10, thread_name_prefix="executing_agent")
 
+    def __init__(self):
+        """Initialize the default executing agent class."""
+        super().__init__()
+        self.agent_model.profile['prompt_version'] = 'default_executing_agent.default_cn'
+
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
         return ['planning_result']

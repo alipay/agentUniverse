@@ -22,4 +22,4 @@ instruction: |
   Please provide your response according to to these rules.
 metadata:
   type: 'PROMPT'
-  version: 'expressing_planner.default_en'
+  version: 'default_expressing_agent.default_en'

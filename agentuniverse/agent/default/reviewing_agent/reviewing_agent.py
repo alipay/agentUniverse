@@ -13,6 +13,11 @@ from agentuniverse.agent.input_object import InputObject
 class ReviewingAgent(Agent):
     """Reviewing Agent module."""
 
+    def __init__(self):
+        """Initialize the default reviewing agent class."""
+        super().__init__()
+        self.agent_model.profile['prompt_version'] = 'default_reviewing_agent.default_cn'
+
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
         return ['input', 'expressing_result']

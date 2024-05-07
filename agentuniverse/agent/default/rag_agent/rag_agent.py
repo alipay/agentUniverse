@@ -12,6 +12,11 @@ from agentuniverse.agent.input_object import InputObject
 class RagAgent(Agent):
     """Rag Agent class."""
 
+    def __init__(self):
+        """Initialize the default rag agent class."""
+        super().__init__()
+        self.agent_model.profile['prompt_version'] = 'default_rag_agent.default_cn'
+
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
         return ['input']

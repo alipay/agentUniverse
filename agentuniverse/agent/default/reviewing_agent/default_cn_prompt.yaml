@@ -25,4 +25,4 @@ instruction: |
   给出的答案是: {expressing_result}
 metadata:
   type: 'PROMPT'
-  version: 'reviewing_planner.default_cn'
+  version: 'default_reviewing_agent.default_cn'
