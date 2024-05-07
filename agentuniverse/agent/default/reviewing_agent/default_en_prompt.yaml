@@ -25,4 +25,4 @@ instruction: |
   The provided answer is: {expressing_result}
 metadata:
   type: 'PROMPT'
-  version: 'reviewing_planner.default_en'
+  version: 'default_reviewing_agent.default_en'

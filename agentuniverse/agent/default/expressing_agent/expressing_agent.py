@@ -12,6 +12,11 @@ from agentuniverse.agent.input_object import InputObject
 class ExpressingAgent(Agent):
     """Expressing Agent class."""
 
+    def __init__(self):
+        """Initialize the default expressing agent class."""
+        super().__init__()
+        self.agent_model.profile['prompt_version'] = 'default_expressing_agent.default_cn'
+
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
         return ['input']

@@ -54,26 +54,30 @@ class ReviewingPlanner(Planner):
         Returns:
             Prompt: The prompt instance.
         """
-        expert_framework = planner_input.pop('expert_framework', '') or ''
+        expert_framework = planner_input.pop('expert_framework', '')
 
         profile: dict = agent_model.profile
 
         origin_instruction = profile.get('instruction')
-        user_instruction = expert_framework + origin_instruction if origin_instruction else origin_instruction
+        new_instruction = expert_framework + origin_instruction if origin_instruction else origin_instruction
 
-        user_prompt_model: AgentPromptModel = AgentPromptModel(introduction=profile.get('introduction'),
-                                                               target=profile.get('target'),
-                                                               instruction=user_instruction)
+        profile_prompt_model: AgentPromptModel = AgentPromptModel(introduction=profile.get('introduction'),
+                                                                  target=profile.get('target'),
+                                                                  instruction=new_instruction)
 
         # get the prompt by the prompt version
-        prompt_version: str = profile.get('prompt_version') or 'reviewing_planner.default_cn'
-        prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
+        prompt_version: str = profile.get('prompt_version')
+        version_prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
 
-        system_prompt_model: AgentPromptModel = AgentPromptModel(introduction=prompt.introduction,
-                                                                 target=prompt.target,
-                                                                 instruction=expert_framework + prompt.instruction)
+        if version_prompt is None and not profile_prompt_model:
+            raise Exception("Either the `prompt_version` or `introduction & target & instruction`"
+                            " in agent profile configuration should be provided.")
+        if version_prompt:
+            version_prompt_model: AgentPromptModel = AgentPromptModel(introduction=version_prompt.introduction,
+                                                                      target=version_prompt.target,
+                                                                      instruction=expert_framework + version_prompt.instruction)
+            profile_prompt_model = profile_prompt_model + version_prompt_model
 
-        prompt: Prompt = Prompt().build_prompt(user_prompt_model, system_prompt_model,
-                                               self.prompt_assemble_order)
+        prompt: Prompt = Prompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
         process_llm_token(prompt.as_langchain(), profile, planner_input)
         return prompt

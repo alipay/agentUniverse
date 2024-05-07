@@ -13,6 +13,11 @@ from agentuniverse.agent.input_object import InputObject
 class PlanningAgent(Agent):
     """Planning Agent class."""
 
+    def __init__(self):
+        """Initialize the default planning agent class."""
+        super().__init__()
+        self.agent_model.profile['prompt_version'] = 'default_planning_agent.default_cn'
+
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
         return ['input']
