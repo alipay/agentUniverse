@@ -36,7 +36,7 @@ class ExecutingPlanner(Planner):
 
         memory: BaseMemory = self.handle_memory(agent_model, planner_input)
 
-        self.handle_action(agent_model, planner_input, input_object)
+        self.handle_all_actions(agent_model, planner_input, input_object)
 
         llm: LLM = self.handle_llm(agent_model)
 
