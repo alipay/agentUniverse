@@ -27,4 +27,4 @@ instruction: |
   The question that needs to be answered is: {input}
 metadata:
   type: 'PROMPT'
-  version: 'default_planning_agent.default_en'
+  version: 'default_planning_agent.en'

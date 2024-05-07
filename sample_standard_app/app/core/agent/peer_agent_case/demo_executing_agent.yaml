@@ -19,5 +19,5 @@ action:
     - 'google_search_tool'
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.executing_agent'
+  module: 'agentuniverse.agent.default.executing_agent.executing_agent'
   class: 'ExecutingAgent'

@@ -22,4 +22,4 @@ instruction: |
   请根据规则要求做出回答。
 metadata:
   type: 'PROMPT'
-  version: 'default_expressing_agent.default_cn'
+  version: 'default_expressing_agent.cn'

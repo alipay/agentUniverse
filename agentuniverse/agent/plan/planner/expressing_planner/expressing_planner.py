@@ -54,7 +54,7 @@ class ExpressingPlanner(Planner):
         Returns:
             Prompt: The prompt instance.
         """
-        expert_framework = planner_input.pop('expert_framework', '')
+        expert_framework = planner_input.pop('expert_framework', '') or ''
 
         profile: dict = agent_model.profile
 

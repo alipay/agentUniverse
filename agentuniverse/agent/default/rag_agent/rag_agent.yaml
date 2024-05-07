@@ -11,5 +11,5 @@ plan:
     name: 'rag_planner'
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.rag_agent'
+  module: 'agentuniverse.agent.default.rag_agent.rag_agent'
   class: 'RagAgent'
