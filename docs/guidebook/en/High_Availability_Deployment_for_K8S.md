@@ -7,51 +7,53 @@ AgentUniverse offers standardized working environment images to support the cont
 First, configure the necessary resource files. Use the following YAML configuration file to define the required Namespace, Deployment, and Service resources.
 
 ```
-1apiVersion: v1
-2kind: Namespace
-3metadata:
-4  name: agent-namespace
-5---
-6apiVersion: apps/v1
-7kind: Deployment
-8metadata:
-9  name: agentuniverse-deployment
-10  namespace: agent-namespace
-11  labels:
-12    app: agentuniverse
-13spec:
-14  replicas: 3
-15  selector:
-16    matchLabels:
-17      app: agentuniverse
-18  template:
-19    metadata:
-20      labels:
-21        app: agentuniverse
-22    spec:
-23      containers:
-24      - name: agentuniverse-container
-25        image: reg.docker.alibaba-inc.com/agentframeworkbiz/agentuniverse:0.0.4_20240507154953
-26        ports:
-27        - containerPort: 8888
-28        command: ["/bin/bash", "-c"]
-29        args: ["git clone git@code.alipay.com:finresearchsys/agentUniverse-sample-app-internal.git; mv agentUniverse-sample-app-internal/sample_standard_app /usr/local/etc/workspace/project; /bin/bash --login /usr/local/etc/workspace/shell/start.sh"]
-30        env:
-31        - name: OPENAI_API_KEY
-32          value: "XXX"
-33---
-34apiVersion: v1
-35kind: Service
-36metadata:
-37  name: agentuniverse-service
-38  namespace: agent-namespace
-39spec:
-40  selector:
-41    app: agentuniverse
-42  ports:
-43  - protocol: TCP
-44    port: 9999
-45    targetPort: 8888
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: agent-namespace
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentuniverse-deployment
+  namespace: agent-namespace
+  labels:
+    app: agentuniverse
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: agentuniverse
+  template:
+    metadata:
+      labels:
+        app: agentuniverse
+    spec:
+      containers:
+      - name: agentuniverse-container
+        image: reg.docker.alibaba-inc.com/agentframeworkbiz/agentuniverse:0.0.4_20240507154953
+        ports:
+        - containerPort: 8888
+        command: ["/bin/bash", "-c"]
+        args: ["git clone git@code.alipay.com:finresearchsys/agentUniverse-sample-app-internal.git; mv agentUniverse-sample-app-internal/sample_standard_app /usr/local/etc/workspace/project; /bin/bash --login /usr/local/etc/workspace/shell/start.sh"]
+        env:
+        - name: OPENAI_API_KEY
+          value: "XXX"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentuniverse-service
+  namespace: agent-namespace
+spec:
+  selector:
+    app: agentuniverse
+  ports:
+  - protocol: TCP
+    port: 9999
+    targetPort: 8888
 ```
 
 ## 2. Build Resources
