@@ -73,9 +73,10 @@ class ExpressingPlanner(Planner):
             raise Exception("Either the `prompt_version` or `introduction & target & instruction`"
                             " in agent profile configuration should be provided.")
         if version_prompt:
-            version_prompt_model: AgentPromptModel = AgentPromptModel(introduction=version_prompt.introduction,
-                                                                      target=version_prompt.target,
-                                                                      instruction=expert_framework + version_prompt.instruction)
+            version_prompt_model: AgentPromptModel = AgentPromptModel(
+                introduction=getattr(version_prompt, 'introduction', ''),
+                target=getattr(version_prompt, 'target', ''),
+                instruction=expert_framework + getattr(version_prompt, 'instruction', ''))
             profile_prompt_model = profile_prompt_model + version_prompt_model
 
         prompt = Prompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
