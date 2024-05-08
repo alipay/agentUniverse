@@ -104,7 +104,9 @@ class OpenAILLM(LLM):
             text = chat_completion.choices[0].message.content
             return LLMOutput(text=text, raw=chat_completion.model_dump())
         for response in chat_completion:
-            yield self.generate_result(response)
+            llm_output = self.generate_result(response)
+            if llm_output:
+                yield llm_output
 
     async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the OpenAI LLM.
@@ -129,7 +131,9 @@ class OpenAILLM(LLM):
         else:
             async def generator():
                 async for response in chat_completion:
-                    yield self.generate_result(response)
+                    llm_output = self.generate_result(response)
+                    if llm_output:
+                        yield llm_output
             return generator()
 
     def as_langchain(self) -> BaseLanguageModel:
@@ -183,4 +187,6 @@ class OpenAILLM(LLM):
         choice = chunk["choices"][0]
         message = choice.get("delta")
         text = message.get("content")
+        if not text:
+            return
         return LLMOutput(text=text, raw=chat_completion.model_dump())
