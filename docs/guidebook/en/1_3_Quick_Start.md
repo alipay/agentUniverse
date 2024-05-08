@@ -192,10 +192,12 @@ metadata:
 In `xx_service.yaml`, we define a `demo_service` configuration. The `name` field defines the name of the service, the `description` field defines the description of the service, and the `agent` field defines which agent provides the service.
 
 ### Start the Service
-You can start the service by executing the `app/bootstrap/server_application.py` file in the IDE or by entering the following command in the terminal:
+Start using the `server_application.py` file found in the `bootstrap` folder within your IDE,
+or enter the following command in the terminal to start the service interface and begin listening:
 ```shell
-# under the root directory of the project
-python app/bootstrap/server_application.py
+# under the bootstrap directory of the project
+cd `your bootstrap directory path`
+python server_application.py
 ```
 
 When the command line shows that the service is listening successfully, the service is started. By default, the service listens on the address `127.0.0.1` and port `8000`, with 5 workers. You can modify the configuration in `config/gunicorn_config.toml`.
