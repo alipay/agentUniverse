@@ -1,20 +1,21 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
-# @Time    : 2024/3/19 19:37
+# @Time    : 2024/3/19 20:03
 # @Author  : heji
 # @Email   : lc299034@antgroup.com
-# @FileName: expressing_agent.py
-"""Expressing Agent module."""
+# @FileName: reviewing_agent.py
+"""Reviewing Agent class."""
+import json
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
 
 
-class ExpressingAgent(Agent):
-    """Expressing Agent class."""
+class ReviewingAgent(Agent):
+    """Reviewing Agent module."""
 
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
-        return ['input']
+        return ['input', 'expressing_result']
 
     def output_keys(self) -> list[str]:
         """Return the output keys of the Agent."""
@@ -27,10 +28,11 @@ class ExpressingAgent(Agent):
             input_object(InputObject): agent parameter object
             planner_input(dict): Planner input
         Returns:
-            dict: Planner input
+            dict: Planner parameter.
         """
         planner_input['input'] = input_object.get_data('input')
-        planner_input['background'] = self.build_background(input_object)
+        planner_input['expressing_result'] = input_object.get_data('expressing_result').get_data('output')
+        self.agent_model.profile.setdefault('prompt_version', 'default_reviewing_agent.cn')
         return planner_input
 
     def parse_result(self, planner_result: dict) -> dict:
@@ -41,20 +43,20 @@ class ExpressingAgent(Agent):
         Returns:
             dict: Agent result object.
         """
-        return planner_result
+        agent_result = dict()
 
-    def build_background(self, input_object: InputObject) -> str:
-        """Build the background knowledge.
+        output = planner_result.get('output')
+        output = json.loads(output)
+        is_useful = output.get('is_useful')
+        if is_useful is None:
+            is_useful = False
+        is_useful = bool(is_useful)
+        if is_useful:
+            score = 80
+        else:
+            score = 0
 
-        Args:
-            input_object(InputObject): agent parameter object
-        Returns:
-            str: Background knowledge.
-        """
-        executing_result = input_object.get_data('executing_result').get_data('executing_result', [])
-        knowledge_list = []
-        for execution in executing_result:
-            knowledge_list.append("question:" + execution.get('input'))
-            knowledge_list.append("answer:" + execution.get('output'))
-
-        return '\n\n'.join(knowledge_list)
+        agent_result['output'] = output
+        agent_result['score'] = score
+        agent_result['suggestion'] = output.get('suggestion')
+        return agent_result

@@ -19,10 +19,12 @@ instruction: |
   Background information:
   {background}
   
+  Today's date is: {date}
+
   Let's begin!
   You must answer user questions in English.
   The specified question is: {input}
   The provided answer is: {expressing_result}
 metadata:
   type: 'PROMPT'
-  version: 'reviewing_planner.default_en'
+  version: 'default_reviewing_agent.en'

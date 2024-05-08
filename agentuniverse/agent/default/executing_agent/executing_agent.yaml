@@ -2,7 +2,6 @@ info:
   name: 'ExecutingAgent'
   description: 'executing agent'
 profile:
-  prompt_version:
   llm_model:
     name: 'default_openai_llm'
     model_name: 'gpt-3.5-turbo'
@@ -15,5 +14,5 @@ memory:
 action:
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.executing_agent'
+  module: 'agentuniverse.agent.default.executing_agent.executing_agent'
   class: 'ExecutingAgent'

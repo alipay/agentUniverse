@@ -24,7 +24,7 @@ class PeerAgentTest(unittest.TestCase):
         """
 
         instance: Agent = AgentManager().get_instance_obj('demo_peer_agent')
-        instance.run(input='请帮我分析下2023年巴菲特减持比亚迪的原因')
+        instance.run(input='分析下巴菲特减持比亚迪的原因')
 
 
 if __name__ == '__main__':

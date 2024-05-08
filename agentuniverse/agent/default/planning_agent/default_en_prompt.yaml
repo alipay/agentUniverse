@@ -22,9 +22,11 @@ instruction: |
   Background information is.
   {background}
   
+  Today's date is: {date}
+  
   Start!
   You must answer user questions in English.
   The question that needs to be answered is: {input}
 metadata:
   type: 'PROMPT'
-  version: 'planning_planner.default_en'
+  version: 'default_planning_agent.en'
