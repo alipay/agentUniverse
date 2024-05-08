@@ -6,7 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: llm.py
 from abc import abstractmethod
-from typing import Optional, Any
+from typing import Optional, Any, AsyncIterator, Iterator, Union
 from langchain_core.language_models.base import BaseLanguageModel
 
 from agentuniverse.base.component.component_base import ComponentBase
@@ -58,11 +58,11 @@ class LLM(ComponentBase):
         pass
 
     @abstractmethod
-    def call(self, *args: Any, **kwargs: Any) -> LLMOutput:
+    def call(self, *args: Any, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the LLM."""
 
     @abstractmethod
-    async def acall(self, *args: Any, **kwargs: Any) -> LLMOutput:
+    async def acall(self, *args: Any, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the LLM."""
 
     def as_langchain(self) -> BaseLanguageModel:
@@ -136,3 +136,11 @@ class LLM(ComponentBase):
         Returns:
             The integer number of tokens in the text.
         """
+
+    @staticmethod
+    def generate_stream_result(stream_iterator: Iterator) -> Iterator[LLMOutput]:
+        """Generate the result of the stream."""
+
+    @staticmethod
+    def agenerate_stream_result(stream_iterator: AsyncIterator) -> AsyncIterator[LLMOutput]:
+        """Generate the result of the stream."""
