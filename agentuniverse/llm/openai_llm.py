@@ -5,7 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: openai_llm.py
-from typing import Any, Optional
+from typing import Any, Optional, AsyncIterator, Iterator, Union
 
 import httpx
 from langchain_core.language_models.base import BaseLanguageModel
@@ -83,45 +83,49 @@ class OpenAILLM(LLM):
             **(self.openai_client_args or {}),
         )
 
-    def call(self, messages: list, **kwargs: Any) -> LLMOutput:
+    def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the OpenAI LLM.
 
         Args:
             messages (list): The messages to send to the LLM.
             **kwargs: Arbitrary keyword arguments.
         """
+        streaming = kwargs.pop("streaming") if "streaming" in kwargs else self.streaming
         self.client = self._new_client()
-        with self.client as client:
-            chat_completion = client.chat.completions.create(
-                messages=messages,
-                model=kwargs.pop('model', self.model_name),
-                temperature=kwargs.pop('temperature', self.temperature),
-                stream=kwargs.pop('stream', self.streaming),
-                max_tokens=kwargs.pop('max_tokens', self.max_tokens),
-                **kwargs,
-            )
+        chat_completion = self.client.chat.completions.create(
+            messages=messages,
+            model=kwargs.pop('model', self.model_name),
+            temperature=kwargs.pop('temperature', self.temperature),
+            stream=kwargs.pop('stream', streaming),
+            max_tokens=kwargs.pop('max_tokens', self.max_tokens),
+            **kwargs,
+        )
+        if not streaming:
             text = chat_completion.choices[0].message.content
             return LLMOutput(text=text, raw=chat_completion.model_dump())
+        return self.generate_stream_result(chat_completion)
 
-    async def acall(self, messages: list, **kwargs: Any) -> LLMOutput:
+    async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the OpenAI LLM.
 
         Args:
             messages (list): The messages to send to the LLM.
             **kwargs: Arbitrary keyword arguments.
         """
+        streaming = kwargs.pop("streaming") if "streaming" in kwargs else self.streaming
         self.async_client = self._new_async_client()
-        async with self.async_client as async_client:
-            chat_completion = await async_client.chat.completions.create(
-                messages=messages,
-                model=kwargs.pop('model', self.model_name),
-                temperature=kwargs.pop('temperature', self.temperature),
-                stream=kwargs.pop('stream', self.streaming),
-                max_tokens=kwargs.pop('max_tokens', self.max_tokens),
-                **kwargs,
-            )
+        chat_completion = await self.async_client.chat.completions.create(
+            messages=messages,
+            model=kwargs.pop('model', self.model_name),
+            temperature=kwargs.pop('temperature', self.temperature),
+            stream=kwargs.pop('stream', streaming),
+            max_tokens=kwargs.pop('max_tokens', self.max_tokens),
+            **kwargs,
+        )
+        if not streaming:
             text = chat_completion.choices[0].message.content
             return LLMOutput(text=text, raw=chat_completion.model_dump())
+        return self.agenerate_stream_result(chat_completion)
 
     def as_langchain(self) -> BaseLanguageModel:
         """Convert the AgentUniverse(AU) openai llm class to the langchain openai llm class."""
@@ -162,3 +166,34 @@ class OpenAILLM(LLM):
         except KeyError:
             encoding = tiktoken.get_encoding("cl100k_base")
         return len(encoding.encode(text))
+
+    @staticmethod
+    def parse_result(chunk):
+        """Generate the result of the stream."""
+        chat_completion = chunk
+        if not isinstance(chunk, dict):
+            chunk = chunk.dict()
+        if len(chunk["choices"]) == 0:
+            return
+        choice = chunk["choices"][0]
+        message = choice.get("delta")
+        text = message.get("content")
+        if not text:
+            return
+        return LLMOutput(text=text, raw=chat_completion.model_dump())
+
+    @classmethod
+    def generate_stream_result(cls, stream: Iterator) -> Iterator[LLMOutput]:
+        """Generate the result of the stream."""
+        for chunk in stream:
+            llm_output = cls.parse_result(chunk)
+            if llm_output:
+                yield llm_output
+
+    @classmethod
+    async def agenerate_stream_result(cls, stream: AsyncIterator) -> AsyncIterator[LLMOutput]:
+        """Generate the result of the stream."""
+        async for chunk in stream:
+            llm_output = cls.parse_result(chunk)
+            if llm_output:
+                yield llm_output
