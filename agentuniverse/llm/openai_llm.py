@@ -103,7 +103,8 @@ class OpenAILLM(LLM):
         if not streaming:
             text = chat_completion.choices[0].message.content
             return LLMOutput(text=text, raw=chat_completion.model_dump())
-        return self.generate_stream_result(chat_completion)
+        for response in chat_completion:
+            yield self.generate_result(response)
 
     async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the OpenAI LLM.
@@ -126,7 +127,10 @@ class OpenAILLM(LLM):
             text = chat_completion.choices[0].message.content
             return LLMOutput(text=text, raw=chat_completion.model_dump())
         else:
-            return self.agenerate_stream_result(chat_completion)
+            async def generator():
+                async for response in chat_completion:
+                    yield self.generate_result(response)
+            return generator()
 
     def as_langchain(self) -> BaseLanguageModel:
         """Convert the AgentUniverse(AU) openai llm class to the langchain openai llm class."""
@@ -169,33 +173,14 @@ class OpenAILLM(LLM):
         return len(encoding.encode(text))
 
     @staticmethod
-    def generate_stream_result(stream_iterator: Iterator) -> Iterator[LLMOutput]:
-        """Generate the result of the stream iterator."""
-        for chunk in stream_iterator:
-            chat_completion = chunk
-            if not isinstance(chunk, dict):
-                chunk = chunk.dict()
-            if len(chunk["choices"]) == 0:
-                continue
-            choice = chunk["choices"][0]
-            message = choice.get("delta")
-            text = message.get("content")
-            if not text:
-                continue
-            yield LLMOutput(text=text, raw=chat_completion.model_dump())
-
-    @staticmethod
-    async def agenerate_stream_result(stream_iterator: AsyncIterator) -> AsyncIterator[LLMOutput]:
-        """Generate the result of the stream iterator."""
-        async for chunk in stream_iterator:
-            chat_completion = chunk
-            if not isinstance(chunk, dict):
-                chunk = chunk.dict()
-            if len(chunk["choices"]) == 0:
-                continue
-            choice = chunk["choices"][0]
-            message = choice.get("delta")
-            text = message.get("content")
-            if not text:
-                continue
-            yield LLMOutput(text=text, raw=chat_completion.model_dump())
+    def generate_result(chunk):
+        """Generate the result of the stream."""
+        chat_completion = chunk
+        if not isinstance(chunk, dict):
+            chunk = chunk.dict()
+        if len(chunk["choices"]) == 0:
+            return
+        choice = chunk["choices"][0]
+        message = choice.get("delta")
+        text = message.get("content")
+        return LLMOutput(text=text, raw=chat_completion.model_dump())
