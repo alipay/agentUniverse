@@ -136,11 +136,3 @@ class LLM(ComponentBase):
         Returns:
             The integer number of tokens in the text.
         """
-
-    @staticmethod
-    def generate_stream_result(stream_iterator: Iterator) -> Iterator[LLMOutput]:
-        """Generate the result of the stream."""
-
-    @staticmethod
-    def agenerate_stream_result(stream_iterator: AsyncIterator) -> AsyncIterator[LLMOutput]:
-        """Generate the result of the stream."""
