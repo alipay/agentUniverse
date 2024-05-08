@@ -1,0 +1,13 @@
+include CHANGELOG.md
+include CHANGELOG_zh.md
+include LICENSE
+include README.md
+include README_zh.md
+include requirements.txt
+include MANIFEST.in
+recursive-exclude docs *
+recursive-exclude sample_standard_app *
+recursive-exclude tests *
+global-exclude __pycache__
+global-exclude *.log
+global-exclude *.pyc
