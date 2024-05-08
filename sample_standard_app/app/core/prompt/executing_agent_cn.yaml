@@ -19,6 +19,8 @@ instruction: |
     背景信息是:
     {background}
     
+    今天的日期是: {date}
+
     开始!
     我的问题是: {input}
     
