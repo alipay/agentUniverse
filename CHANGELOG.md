@@ -19,10 +19,23 @@ Deprecated - Soon to be deprecated features.
 Removed - Features removed in this version.
 Fixed - Any bug fixes.
 Security - Patches and security improvements.
+Note - Additional remarks regarding the version.
 
 ***************************************************
 
 # Version Update History
+## [0.0.5] - 2024-05-08
+### Added
+- The LLM component supports streaming calls.
+- The Knowledge component has an added update definition.
+
+### Fixed
+- Fixed potential concurrency safety issues in the peer planner.
+- Fixed the issue in version 0.0.4 of the PyPI package where the packaging method forced users to enter an AK upon startup.
+
+### Note 
+- Some code optimizations and documentation updates.
+
 ## [0.0.4] - 2024-04-26
 ### Added
 - Add version management capability to the prompt.
@@ -31,6 +44,9 @@ Security - Patches and security improvements.
 - Fixed compatibility issues on Windows
   * Due to compatibility issues of Gunicorn with Windows systems, automatically identify the kernel version to select the web startup method.
   * Specified YAML reading as UTF-8 encoding method.
+
+### Note
+- [2024-05-08] Please be aware that the PyPI package version 0.0.4 includes the sample_standard_app example project by default. This will reference additional components from sample_standard_app at startup and require users to input an AK. If you are not using the corresponding components, you can bypass this restriction by using a mock AK. This issue has been fixed in version 0.0.5.
 
 ## [0.0.3] - 2024-04-19
 ### Init
