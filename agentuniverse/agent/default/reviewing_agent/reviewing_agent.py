@@ -52,7 +52,7 @@ class ReviewingAgent(Agent):
             is_useful = False
         is_useful = bool(is_useful)
         if is_useful:
-            score = 60
+            score = 80
         else:
             score = 0
 

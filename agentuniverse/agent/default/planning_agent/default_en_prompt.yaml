@@ -22,6 +22,8 @@ instruction: |
   Background information is.
   {background}
   
+  Today's date is: {date}
+  
   Start!
   You must answer user questions in English.
   The question that needs to be answered is: {input}

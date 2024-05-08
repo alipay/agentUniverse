@@ -25,7 +25,7 @@ def summarize_by_stuff(texts: List[str], llm: LLM, summary_prompt):
     """
     stuff_chain = load_summarize_chain(llm.as_langchain(), chain_type='stuff', verbose=True,
                                        prompt=summary_prompt.as_langchain())
-    return asyncio.run(stuff_chain.arun([Document(page_content=text) for text in texts]))
+    return stuff_chain.run([Document(page_content=text) for text in texts])
 
 
 def summarize_by_map_reduce(texts: List[str], llm: LLM, summary_prompt, combine_prompt):
@@ -35,7 +35,7 @@ def summarize_by_map_reduce(texts: List[str], llm: LLM, summary_prompt, combine_
     map_reduce_chain = load_summarize_chain(llm.as_langchain(), chain_type='map_reduce', verbose=True,
                                             map_prompt=summary_prompt.as_langchain(),
                                             combine_prompt=combine_prompt.as_langchain())
-    return asyncio.run(map_reduce_chain.arun([Document(page_content=text) for text in texts]))
+    return map_reduce_chain.run([Document(page_content=text) for text in texts])
 
 
 def split_text_on_tokens(text: str, text_token: int, chunk_size=800, chunk_overlap=100) -> List[str]:
@@ -106,21 +106,21 @@ def generate_template(agent_prompt_model: AgentPromptModel, prompt_assemble_orde
     return "\n".join(values)
 
 
-def process_llm_token(prompt_template: PromptTemplate, profile: dict, planner_input: dict):
+def process_llm_token(agent_llm: LLM, prompt_template: PromptTemplate, profile: dict, planner_input: dict):
     """Process the prompt template based on the prompt processor.
 
     Args:
+        agent_llm (LLM): The agent llm.
         prompt_template (PromptTemplate): The prompt template.
         profile (dict): The profile.
         planner_input (dict): The planner input.
     """
     llm_model: dict = profile.get('llm_model')
-    llm_name: str = llm_model.get('name')
 
     # get the prompt processor configuration
     prompt_processor: dict = llm_model.get('prompt_processor') or dict()
     prompt_processor_type: str = prompt_processor.get('type') or PromptProcessEnum.TRUNCATE.value
-    prompt_processor_llm: str = prompt_processor.get('llm') or llm_name
+    prompt_processor_llm: str = prompt_processor.get('llm')
 
     # get the summary and combine prompt versions
     summary_prompt_version: str = prompt_processor.get('summary_prompt_version') or 'prompt_processor.summary_cn'
@@ -128,9 +128,11 @@ def process_llm_token(prompt_template: PromptTemplate, profile: dict, planner_in
 
     prompt_input_dict = {key: planner_input[key] for key in prompt_template.input_variables if key in planner_input}
 
-    agent_llm: LLM = LLMManager().get_instance_obj(llm_name)
     # get the llm instance for prompt compression
     prompt_llm: LLM = LLMManager().get_instance_obj(prompt_processor_llm)
+
+    if prompt_llm is None:
+        prompt_llm = agent_llm
 
     prompt = prompt_template.format(**prompt_input_dict)
     # get the number of tokens in the prompt
