@@ -20,6 +20,8 @@ instruction: |
   Background Information:
   {background}
   
+  Today's date is: {date}
+
   Let's begin!
   My question is: {input}
   

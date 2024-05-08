@@ -108,12 +108,13 @@ class PeerPlanner(Planner):
         reviewingAgent = agents.get('reviewing')
 
         for _ in range(retry_count):
-            LOGGER.info(f"Start execution sub agents, retry_count is {_}.")
+            LOGGER.info(f"Starting peer agents, retry_count is {_}.")
             if not planning_result or jump_step == "planning":
                 if not planningAgent:
                     LOGGER.warn("no planning agent, use default.")
                     planning_result = OutputObject({"framework": [agent_input.get('input')]})
                 else:
+                    LOGGER.info(f"Starting planning agent.")
                     planning_result = planningAgent.run(**input_object.to_dict())
 
                 input_object.add_data('planning_result', planning_result)
@@ -128,6 +129,7 @@ class PeerPlanner(Planner):
                     LOGGER.warn("no executing agent, use default.")
                     executing_result = OutputObject({})
                 else:
+                    LOGGER.info(f"Starting executing agent.")
                     executing_result = executingAgent.run(**input_object.to_dict())
 
                 input_object.add_data('executing_result', executing_result)
@@ -144,6 +146,7 @@ class PeerPlanner(Planner):
                     LOGGER.warn("no expression agent, use default.")
                     expressing_result = OutputObject({})
                 else:
+                    LOGGER.info(f"Starting expressing agent.")
                     expressing_result = expressingAgent.run(**input_object.to_dict())
 
                 input_object.add_data('expressing_result', expressing_result)
@@ -164,6 +167,7 @@ class PeerPlanner(Planner):
                     result['result'] = loopResults
                     return result
                 else:
+                    LOGGER.info(f"Starting reviewing agent.")
                     reviewing_result = reviewingAgent.run(**input_object.to_dict())
                     input_object.add_data('evaluator_result', reviewing_result)
 

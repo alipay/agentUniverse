@@ -39,6 +39,7 @@ class PlanningPlanner(Planner):
         llm: LLM = self.handle_llm(agent_model)
 
         prompt: Prompt = self.handle_prompt(agent_model, planner_input)
+        process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
         llm_chain = LLMChain(llm=llm.as_langchain(),
                              prompt=prompt.as_langchain(),
@@ -80,6 +81,4 @@ class PlanningPlanner(Planner):
                 instruction=expert_framework + getattr(version_prompt, 'instruction', ''))
             profile_prompt_model = profile_prompt_model + version_prompt_model
 
-        prompt = Prompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
-        process_llm_token(prompt.as_langchain(), profile, planner_input)
-        return prompt
+        return Prompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
