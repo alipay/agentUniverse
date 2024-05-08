@@ -16,6 +16,8 @@ instruction: |
   Background information:
   {background}
   
+  Today's date is: {date}
+
   Let's get started!
   
   The question that needs to be answered is: {input}
