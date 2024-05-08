@@ -6,19 +6,21 @@ appname = 'demo_app'
 # Perform a full component scan and registration for all the paths under this list.
 default = ['sample_standard_app.app.core']
 # Scan and register agent components for all paths under this list, with priority over the default.
-agent = ['sample_standard_app.app.core.agent', 'agentuniverse.agent.default']
+agent = ['sample_standard_app.app.core.agent']
 # Scan and register agent components for all paths under this list, with priority over the default.
 knowledge = ['sample_standard_app.app.core.knowledge']
 # Scan and register knowledge components for all paths under this list, with priority over the default.
-llm = ['sample_standard_app.app.core.llm', 'agentuniverse.llm.default']
+llm = ['sample_standard_app.app.core.llm']
 # Scan and register llm components for all paths under this list, with priority over the default.
-planner = ['sample_standard_app.app.core.planner', 'agentuniverse.agent.plan.planner']
+planner = ['sample_standard_app.app.core.planner']
 # Scan and register planner components for all paths under this list, with priority over the default.
 tool = ['sample_standard_app.app.core.tool']
 # Scan and register memory components for all paths under this list, with priority over the default.
 memory = ['sample_standard_app.app.core.memory']
 # Scan and register service components for all paths under this list, with priority over the default.
 service = ['sample_standard_app.app.core.service']
+# Scan and register prompt components for all paths under this list, with priority over the default.
+prompt = []
 
 [SUB_CONFIG_PATH]
 # Log config file path, an absolute path or a relative path based on the dir where the current config file is located.

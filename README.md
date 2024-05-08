@@ -5,9 +5,9 @@ Language version: [English](./README.md) | [中文](./README_zh.md)
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.3-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.4-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
-![](https://github.com/alipay/agentUniverse/blob/master/docs/guidebook/_picture/logo_bar.png)
+![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
 
 ## Overview
@@ -24,10 +24,10 @@ This pattern consists of three agents: Data-fining agent, which is designed to s
 
 More patterns are coming soon...
 
-![](https://github.com/alipay/agentUniverse/blob/master/docs/guidebook/_picture/agent_universe_framework_resize.jpg)
+![](docs/guidebook/_picture/agent_universe_framework_resize.jpg)
 
 ## agentUniverseSample Project
-[agentUniverse Sample Project](https://github.com/alipay/agentUniverse/blob/master/sample_standard_app/README.md)
+[agentUniverse Sample Project](sample_standard_app/README.md)
 
 ## Quick Installation
 Using pip:
@@ -42,7 +42,20 @@ We will show you how to:
 * Use pattern components to complete multi-agent collaboration
 * Test and optimize the performance of the agent
 * Quickly serve the agent
-For details, please read [Quick Start](https://github.com/alipay/agentUniverse/blob/master/docs/guidebook/en/1_3_Quick_Start.md).
+For details, please read [Quick Start](docs/guidebook/en/1_3_Quick_Start.md).
 
 ## Guidebook
-For more detailed information, please refer to the [Guidebook](https://github.com/alipay/agentUniverse/blob/master/docs/guidebook/en/0_index.md).
+For more detailed information, please refer to the [Guidebook](docs/guidebook/en/0_index.md).
+
+## API Reference
+[readthedocs](https://agentuniverse.readthedocs.io/en/latest/)
+
+## More Ways to Contact Us
+* github: https://github.com/alipay/agentUniverse
+* gitee: https://gitee.com/agentUniverse/agentUniverse
+* gitcode: https://gitcode.com/agentUniverse
+* Stack Overflow: https://stackoverflowteams.com/c/agentuniverse/questions
+* Discord: https://discord.gg/VfhEvJzQ
+* WeChat Official Account: agentUniverse智多星
+* DingTalk Group:
+![](./docs/guidebook/_picture/dingtalk_util20250429.png)

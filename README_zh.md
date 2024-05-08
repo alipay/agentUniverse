@@ -5,9 +5,9 @@
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.3-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.4-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
-![](https://github.com/alipay/agentUniverse/blob/master/docs/guidebook/_picture/logo_bar.png)
+![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
 
 ## 项目介绍
@@ -25,11 +25,11 @@
 
 更多模式组件持续推出中...
 
-![](https://github.com/alipay/agentUniverse/blob/master/docs/guidebook/_picture/agent_universe_framework_resize.jpg)
+![](docs/guidebook/_picture/agent_universe_framework_resize.jpg)
 
 
 ## agentUniverse 示例项目
-[agentUniverse 示例项目](https://github.com/alipay/agentUniverse/tree/master/sample_standard_app)
+[agentUniverse 示例项目](sample_standard_app/README_zh.md)
 
 ## 快速安装
 使用pip：
@@ -45,7 +45,20 @@ pip install agentUniverse
 * 对agent执行效果进行测试调优
 * 对agent进行快速服务化
 
-详情请阅读[快速开始](https://github.com/alipay/agentUniverse/blob/master/docs/guidebook/zh/1_3_%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.md) 。
+详情请阅读[快速开始](docs/guidebook/zh/1_3_%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.md) 。
 
 ## 用户指南
-更多详细信息，请参阅[指南](https://github.com/alipay/agentUniverse/blob/master/docs/guidebook/zh/0_%E7%9B%AE%E5%BD%95.md) 。
+更多详细信息，请参阅[指南](docs/guidebook/zh/0_%E7%9B%AE%E5%BD%95.md) 。
+
+## API 参考
+[readthedocs](https://agentuniverse.readthedocs.io/en/latest/)
+
+## 更多方式联系我们
+* github: https://github.com/alipay/agentUniverse
+* gitee: https://gitee.com/agentUniverse/agentUniverse
+* gitcode: https://gitcode.com/agentUniverse
+* Stack Overflow: https://stackoverflowteams.com/c/agentuniverse/questions
+* Discord: https://discord.gg/VfhEvJzQ
+* 微信公众号: agentUniverse智多星
+* 钉钉答疑群:
+![](./docs/guidebook/_picture/dingtalk_util20250429.png)

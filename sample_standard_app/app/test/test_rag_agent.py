@@ -24,8 +24,10 @@ class RagAgentTest(unittest.TestCase):
     def test_rag_agent(self):
         """Test demo rag agent."""
         instance: Agent = AgentManager().get_instance_obj('demo_rag_agent')
-        output_object: OutputObject = instance.run(input='英伟达股票大涨原因是什么？')
-        print(output_object.get_data('output'))
+        output_object: OutputObject = instance.run(input='英伟达股票大涨原因')
+        res_info = f"\nRag agent execution result is :\n"
+        res_info += output_object.get_data('output')
+        print(res_info)
 
 
 if __name__ == '__main__':

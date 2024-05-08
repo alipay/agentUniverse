@@ -158,6 +158,6 @@ class Configer(object):
         Returns:
             dict: the value of the yaml file
         """
-        with open(path, 'r') as stream:
+        with open(path, 'r', encoding='utf-8') as stream:
             config_data = yaml.safe_load(stream)
         return config_data

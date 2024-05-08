@@ -43,7 +43,7 @@ class DemoKnowledge(Knowledge):
             embedding_model_name='text-embedding-3-small'), dimensions=1056)
         self.reader = WebPdfReader()
         # initialize the knowledge
-        self.insert_knowledge()
+        # self.insert_knowledge()
 
     def insert_knowledge(self, **kwargs) -> None:
         """Insert the knowledge into the knowledge store.

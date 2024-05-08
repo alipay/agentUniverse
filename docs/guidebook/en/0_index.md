@@ -6,12 +6,13 @@
 * 1.1 [Introduction](1_1_Introduction.md)
 * 1.2 [Installation](1_2_Installation.md)
 * 1.3 [Quick Start](1_3_Quick_Start.md)
+* 1.4 [ApplicationStructure](1_4_Application_Engineering_Structure_Explanation.md)
 
 **2. Principle Introduction**
 
 **3. Component Reference Manual**
 
-**4. API Reference Manual**
+**[4. API Reference Manual](4_1_API_Reference.md)**
 
 **5. Best Practices**
 
@@ -19,4 +20,4 @@
 
 **7. Frequently Asked Questions (FAQ)**
 
-**8. Contact Us**
+**[8. Contact Us](8_1_Contact_Us.md)**

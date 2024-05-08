@@ -23,6 +23,15 @@ Security - Patches and security improvements.
 ***************************************************
 
 # Version Update History
+## [0.0.4] - 2024-04-26
+### Added
+- Add version management capability to the prompt.
+
+### Fixed
+- Fixed compatibility issues on Windows
+  * Due to compatibility issues of Gunicorn with Windows systems, automatically identify the kernel version to select the web startup method.
+  * Specified YAML reading as UTF-8 encoding method.
+
 ## [0.0.3] - 2024-04-19
 ### Init
 - The official release version of AgentUniverse has been initialized. Enjoy using it!

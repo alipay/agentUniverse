@@ -22,7 +22,7 @@ def read_requirements():
 
 setuptools.setup(
     name="agentUniverse",
-    version="0.0.3",
+    version="0.0.4",
     author="AntGroup",
     author_email="jerry.zzw@antgroup.com",
     description="agentUniverse is a framework for developing applications powered "

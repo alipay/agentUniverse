@@ -33,7 +33,11 @@ class AgentUniverse(object):
     def __init__(self):
         self.__application_container = ApplicationComponentManager()
         self.__config_container: ApplicationConfigManager = ApplicationConfigManager()
-        self.__system_default_package = ['agentuniverse']
+        self.__system_default_agent_package = ['agentuniverse.agent.default']
+        self.__system_default_llm_package = ['agentuniverse.llm.default']
+        self.__system_default_planner_package = ['agentuniverse.agent.plan.planner']
+        self.__system_default_memory_package = ['agentuniverse.agent.memory.default']
+        self.__system_default_prompt_package = ['agentuniverse.agent', 'agentuniverse.base.prompt']
 
     def start(self, config_path: str = None):
         """Start the agentUniverse framework."""
@@ -92,14 +96,19 @@ class AgentUniverse(object):
         Args:
             app_configer(AppConfiger): the AppConfiger object
         """
-        core_agent_package_list = app_configer.core_agent_package_list or app_configer.core_default_package_list + self.__system_default_package
-        core_knowledge_package_list = app_configer.core_knowledge_package_list or app_configer.core_default_package_list + self.__system_default_package
-        core_llm_package_list = app_configer.core_llm_package_list or app_configer.core_default_package_list + self.__system_default_package
-        core_planner_package_list = app_configer.core_planner_package_list or app_configer.core_default_package_list + self.__system_default_package
-        core_tool_package_list = app_configer.core_tool_package_list or app_configer.core_default_package_list + self.__system_default_package
-        core_service_package_list = app_configer.core_service_package_list or app_configer.core_default_package_list + self.__system_default_package
-        core_memory_package_list = app_configer.core_memory_package_list or app_configer.core_default_package_list + self.__system_default_package
-        core_prompt_package_list = app_configer.core_prompt_package_list or app_configer.core_default_package_list + self.__system_default_package
+        core_agent_package_list = ((app_configer.core_agent_package_list or app_configer.core_default_package_list)
+                                   + self.__system_default_agent_package)
+        core_knowledge_package_list = app_configer.core_knowledge_package_list or app_configer.core_default_package_list
+        core_llm_package_list = ((app_configer.core_llm_package_list or app_configer.core_default_package_list)
+                                 + self.__system_default_llm_package)
+        core_planner_package_list = ((app_configer.core_planner_package_list or app_configer.core_default_package_list)
+                                     + self.__system_default_planner_package)
+        core_tool_package_list = app_configer.core_tool_package_list or app_configer.core_default_package_list
+        core_service_package_list = app_configer.core_service_package_list or app_configer.core_default_package_list
+        core_memory_package_list = ((app_configer.core_memory_package_list or app_configer.core_default_package_list)
+                                    + self.__system_default_memory_package)
+        core_prompt_package_list = ((app_configer.core_prompt_package_list or app_configer.core_default_package_list)
+                                    + self.__system_default_prompt_package)
 
         component_package_map = {
             ComponentEnum.AGENT: core_agent_package_list,

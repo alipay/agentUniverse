@@ -1,0 +1,8 @@
+name: 'google_search_tool'
+description: 'demo google search tool'
+tool_type: 'api'
+input_keys: ['input']
+metadata:
+  type: 'TOOL'
+  module: 'sample_standard_app.app.core.tool.google_search_tool'
+  class: 'GoogleSearchTool'
