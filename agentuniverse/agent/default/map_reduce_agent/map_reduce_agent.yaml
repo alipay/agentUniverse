@@ -1,11 +1,7 @@
 info:
-  name: 'map_agent'
-  description: 'map agent'
+  name: 'map_reduce_agent'
+  description: 'map reduce agent'
 profile:
-  prompt_version:
-  llm_model:
-    name: 'default_openai_llm'
-    model_name: 'gpt-4'
 
 plan:
   planner:

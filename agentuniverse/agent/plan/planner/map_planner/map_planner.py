@@ -42,18 +42,18 @@ class MapPlanner(Planner):
         # 1. load memory
         memory: BaseMemory = self.handle_memory(agent_model, planner_input)
         # 2. add tool background
-        self.handle_action(agent_model, planner_input, input_object)
+        self.handle_all_actions(agent_model, planner_input, input_object)
         # 2.1 load llm and prompt
         if input_object.get_data('agent_model'):
             llm: LLM = self.handle_llm(input_object.get_data('agent_model'))
         else:
             llm: LLM = self.handle_llm(agent_model)
         # 2.2 load prompt
-        self.handle_prompt(agent_model, planner_input)
+        prompt = self.handle_prompt(agent_model, planner_input)
 
         # 2.3 build chain
         llm_chain = LLMChain(llm=llm.as_langchain(),
-                             prompt=self.prompt.as_langchain(),
+                             prompt=prompt.as_langchain(),
                              output_key=self.output_key, memory=memory)
         map_docs = input_object.get_data('docs')
         # 3. conv to document
@@ -73,7 +73,7 @@ class MapPlanner(Planner):
             map_docs = temp
 
         # 4. calculator the chunk size
-        map_docs = self.split_docs(map_docs, llm, planner_input)
+        map_docs = self.split_docs(map_docs, llm, planner_input, prompt)
 
         # 5. do map summarize
         # get sem
@@ -88,14 +88,14 @@ class MapPlanner(Planner):
             })
         return {'output': result}
 
-    def split_docs(self, docs: List[Document], llm: LLM, planner_input: dict) -> List[Document]:
+    def split_docs(self, docs: List[Document], llm: LLM, planner_input: dict, prompt: Prompt) -> List[Document]:
         text_token = 0
         text_size = 0
         if planner_input['background']:
             text_token += llm.get_num_tokens(planner_input['background'])
             text_size += len(planner_input['background'])
-        text_token += llm.get_num_tokens(self.prompt.prompt_template)
-        text_size += len(self.prompt.prompt_template)
+        text_token += llm.get_num_tokens(prompt.prompt_template)
+        text_size += len(prompt.prompt_template)
         char_per_token = text_size / text_token
         chunk_token_size = llm.max_context_length() - text_token - llm.max_tokens
         chunk_size = char_per_token * chunk_token_size
@@ -123,6 +123,7 @@ class MapPlanner(Planner):
                 for k, v in doc.metadata.items():
                     inputs[k] = v
                 return await llm_chain.acall(inputs=inputs)
+
         # create a list of tasks
         tasks = [process_doc(doc) for doc in map_docs]
         # wait for all tasks to complete
@@ -139,18 +140,23 @@ class MapPlanner(Planner):
         """
         profile: dict = agent_model.profile
 
-        user_prompt_model: AgentPromptModel = AgentPromptModel(introduction=profile.get('introduction'),
-                                                               target=profile.get('target'),
-                                                               instruction=profile.get('instruction'))
+        profile_prompt_model: AgentPromptModel = AgentPromptModel(introduction=profile.get('introduction'),
+                                                                  target=profile.get('target'),
+                                                                  instruction=profile.get('instruction'))
 
         # get the prompt by the prompt version
-        prompt_version: str = profile.get('prompt_version') or 'rag_planner.default_cn'
-        prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
+        prompt_version: str = profile.get('prompt_version')
+        version_prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
 
-        system_prompt_model: AgentPromptModel = AgentPromptModel(introduction=prompt.introduction,
-                                                                 target=prompt.target,
-                                                                 instruction=prompt.instruction)
+        if version_prompt is None and not profile_prompt_model:
+            raise Exception("Either the `prompt_version` or `introduction & target & instruction`"
+                            " in agent profile configuration should be provided.")
+        if version_prompt:
+            version_prompt_model: AgentPromptModel = AgentPromptModel(
+                introduction=getattr(version_prompt, 'introduction', ''),
+                target=getattr(version_prompt, 'target', ''),
+                instruction=getattr(version_prompt, 'instruction', ''))
+            profile_prompt_model = profile_prompt_model + version_prompt_model
 
-        prompt = Prompt().build_prompt(user_prompt_model, system_prompt_model,
-                                       self.prompt_assemble_order)
+        prompt = Prompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
         return prompt
