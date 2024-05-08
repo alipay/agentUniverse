@@ -22,4 +22,4 @@ instruction: |
   需要回答的问题是: {input}
 metadata:
   type: 'PROMPT'
-  version: 'map_planner.default_cn'
+  version: 'default_map_planner.default_cn'

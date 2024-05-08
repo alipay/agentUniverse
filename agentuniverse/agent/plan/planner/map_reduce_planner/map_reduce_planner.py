@@ -37,9 +37,9 @@ class MapReducePlanner(Planner):
         # load docs to map
         docs = self.load_docs(agent_model, input_object)
         # load map agent
-        map_agent_name = agent_model.profile.get('map_agent')
+        map_agent_name = agent_model.plan.get('map_agent')
         # load reduce(rag) agent
-        reduce_agent_name = agent_model.profile.get('reduce_agent')
+        reduce_agent_name = agent_model.plan.get('reduce_agent')
         # load agent
         if not map_agent_name or not reduce_agent_name:
             raise Exception("MapReducePlanner need map_agent and reduce_agent")

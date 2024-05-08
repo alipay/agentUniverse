@@ -22,4 +22,4 @@ instruction: |
   The question that needs to be answered is: {input}
 metadata:
   type: 'PROMPT'
-  version: 'map_planner.default_en'
+  version: 'default_map_planner.default_en'

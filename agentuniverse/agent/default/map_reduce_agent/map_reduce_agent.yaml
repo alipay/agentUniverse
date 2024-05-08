@@ -9,8 +9,10 @@ profile:
 
 plan:
   planner:
-    name: 'map_planner'
+    name: 'map_reduce_planner'
+    map_agent: 'map_agent'
+    reduce_agent: 'rag_agent'
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.map_agent'
-  class: 'MapAgent'
+  module: 'agentuniverse.agent.default.map_reduce_agent.map_reduce_agent'
+  class: 'MapReduceAgent'

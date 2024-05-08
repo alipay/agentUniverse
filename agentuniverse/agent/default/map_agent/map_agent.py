@@ -33,6 +33,7 @@ class MapAgent(Agent):
         """
         input = input_object.get_data('input')
         planner_input['input'] = input
+        self.agent_model.profile.setdefault('prompt_version', 'default_rag_agent.cn')
         return planner_input
 
     def parse_result(self, planner_result: dict) -> dict:
