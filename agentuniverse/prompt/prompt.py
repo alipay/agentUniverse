@@ -36,19 +36,16 @@ class Prompt(ComponentBase):
         return PromptTemplate(template=self.prompt_template,
                               input_variables=self.input_variables)
 
-    def build_prompt(self, user_agent_prompt_model: AgentPromptModel, system_agent_prompt_model: AgentPromptModel,
-                     prompt_assemble_order: list[str]) -> 'Prompt':
+    def build_prompt(self, agent_prompt_model: AgentPromptModel, prompt_assemble_order: list[str]) -> 'Prompt':
         """Build the prompt class.
 
         Args:
-            user_agent_prompt_model (AgentPromptModel): The user agent prompt model.
-            system_agent_prompt_model (AgentPromptModel): The system agent prompt model.
+            agent_prompt_model (AgentPromptModel): The user agent prompt model.
             prompt_assemble_order (list[str]): The prompt assemble ordered list.
 
         Returns:
             PromptTemplate: The prompt template.
         """
-        agent_prompt_model = user_agent_prompt_model + system_agent_prompt_model
         self.prompt_template = generate_template(agent_prompt_model, prompt_assemble_order)
         self.input_variables = re.findall(r'\{(.*?)}', self.prompt_template)
         return self

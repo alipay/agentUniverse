@@ -26,3 +26,11 @@ class AgentPromptModel(BaseModel):
                 value = getattr(other, key, None)
             setattr(merged_object, key, value)
         return merged_object
+
+    def __bool__(self):
+        """ Check whether the object is empty.
+
+        Return True if one of the introduction, target and instruction attribute is not empty.
+        Return False otherwise.
+        """
+        return bool(self.introduction or self.introduction or self.introduction)

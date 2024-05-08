@@ -37,6 +37,7 @@ class ExecutingAgent(Agent):
         """
         planner_input['input'] = input_object.get_data('input')
         planner_input['framework'] = input_object.get_data('planning_result').get_data('framework')
+        self.agent_model.profile.setdefault('prompt_version', 'default_executing_agent.cn')
         return planner_input
 
     def parse_result(self, planner_result: dict) -> dict:
