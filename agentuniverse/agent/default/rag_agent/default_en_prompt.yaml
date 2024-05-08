@@ -21,4 +21,4 @@ instruction: |
   The question that needs to be answered is: {input}
 metadata:
   type: 'PROMPT'
-  version: 'rag_planner.default_en'
+  version: 'default_rag_agent.en'

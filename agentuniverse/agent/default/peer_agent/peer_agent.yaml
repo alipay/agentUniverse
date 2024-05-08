@@ -12,5 +12,5 @@ plan:
     reviewing: 'ReviewingAgent'
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.peer_agent'
+  module: 'agentuniverse.agent.default.peer_agent.peer_agent'
   class: 'PeerAgent'

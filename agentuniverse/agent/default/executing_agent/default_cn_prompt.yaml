@@ -28,4 +28,4 @@ instruction: |
   让我们一步一步来。
 metadata:
   type: 'PROMPT'
-  version: 'executing_planner.default_cn'
+  version: 'default_executing_agent.cn'
