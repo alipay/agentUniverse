@@ -27,4 +27,4 @@ instruction: |
   需要回答的问题是: {input}
 metadata:
   type: 'PROMPT'
-  version: 'planning_planner.default_cn'
+  version: 'default_planning_agent.cn'

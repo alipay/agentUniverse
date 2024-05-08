@@ -50,13 +50,15 @@ pip install agentUniverse
 ## 用户指南
 更多详细信息，请参阅[指南](docs/guidebook/zh/0_%E7%9B%AE%E5%BD%95.md) 。
 
+## API 参考
+[readthedocs](https://agentuniverse.readthedocs.io/en/latest/)
+
 ## 更多方式联系我们
 * github: https://github.com/alipay/agentUniverse
 * gitee: https://gitee.com/agentUniverse/agentUniverse
 * gitcode: https://gitcode.com/agentUniverse
 * Stack Overflow: https://stackoverflowteams.com/c/agentuniverse/questions
 * Discord: https://discord.gg/VfhEvJzQ
-* reddit: https://www.reddit.com/r/agentUniverse/
 * 微信公众号: agentUniverse智多星
 * 钉钉答疑群:
 ![](./docs/guidebook/_picture/dingtalk_util20250429.png)

@@ -1,6 +1,6 @@
 info:
-  name: 'ExecutingAgent'
-  description: 'executing agent'
+  name: 'ReviewingAgent'
+  description: 'reviewing agent'
 profile:
   prompt_version:
   llm_model:
@@ -9,11 +9,10 @@ profile:
     temperature: 0.7
 plan:
   planner:
-    name: 'executing_planner'
+    name: 'reviewing_planner'
 memory:
   name: ''
-action:
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.executing_agent'
-  class: 'ExecutingAgent'
+  module: 'agentuniverse.agent.default.reviewing_agent.reviewing_agent'
+  class: 'ReviewingAgent'
