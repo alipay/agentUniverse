@@ -5,7 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: openai_llm.py
-from typing import Any, Optional, AsyncIterator, Iterator
+from typing import Any, Optional, AsyncIterator, Iterator, Union
 
 import httpx
 from langchain_core.language_models.base import BaseLanguageModel
@@ -83,7 +83,7 @@ class OpenAILLM(LLM):
             **(self.openai_client_args or {}),
         )
 
-    def call(self, messages: list, **kwargs: Any) -> Any:
+    def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the OpenAI LLM.
 
         Args:
@@ -105,7 +105,7 @@ class OpenAILLM(LLM):
             return LLMOutput(text=text, raw=chat_completion.model_dump())
         return self.generate_stream_result(chat_completion)
 
-    async def acall(self, messages: list, **kwargs: Any) -> Any:
+    async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the OpenAI LLM.
 
         Args:
