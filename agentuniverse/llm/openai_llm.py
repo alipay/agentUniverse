@@ -103,10 +103,7 @@ class OpenAILLM(LLM):
         if not streaming:
             text = chat_completion.choices[0].message.content
             return LLMOutput(text=text, raw=chat_completion.model_dump())
-        for response in chat_completion:
-            llm_output = self.generate_result(response)
-            if llm_output:
-                yield llm_output
+        return self.generate_stream_result(chat_completion)
 
     async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the OpenAI LLM.
@@ -128,13 +125,7 @@ class OpenAILLM(LLM):
         if not streaming:
             text = chat_completion.choices[0].message.content
             return LLMOutput(text=text, raw=chat_completion.model_dump())
-        else:
-            async def generator():
-                async for response in chat_completion:
-                    llm_output = self.generate_result(response)
-                    if llm_output:
-                        yield llm_output
-            return generator()
+        return self.agenerate_stream_result(chat_completion)
 
     def as_langchain(self) -> BaseLanguageModel:
         """Convert the AgentUniverse(AU) openai llm class to the langchain openai llm class."""
@@ -177,7 +168,7 @@ class OpenAILLM(LLM):
         return len(encoding.encode(text))
 
     @staticmethod
-    def generate_result(chunk):
+    def parse_result(chunk):
         """Generate the result of the stream."""
         chat_completion = chunk
         if not isinstance(chunk, dict):
@@ -190,3 +181,19 @@ class OpenAILLM(LLM):
         if not text:
             return
         return LLMOutput(text=text, raw=chat_completion.model_dump())
+
+    @classmethod
+    def generate_stream_result(cls, stream: Iterator) -> Iterator[LLMOutput]:
+        """Generate the result of the stream."""
+        for chunk in stream:
+            llm_output = cls.parse_result(chunk)
+            if llm_output:
+                yield llm_output
+
+    @classmethod
+    async def agenerate_stream_result(cls, stream: AsyncIterator) -> AsyncIterator[LLMOutput]:
+        """Generate the result of the stream."""
+        async for chunk in stream:
+            llm_output = cls.parse_result(chunk)
+            if llm_output:
+                yield llm_output
