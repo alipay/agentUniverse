@@ -58,12 +58,12 @@ class ReviewingPlanner(Planner):
 
         profile: dict = agent_model.profile
 
-        origin_instruction = profile.get('instruction')
-        new_instruction = expert_framework + origin_instruction if origin_instruction else origin_instruction
+        profile_instruction = profile.get('instruction')
+        profile_instruction = expert_framework + profile_instruction if profile_instruction else profile_instruction
 
         profile_prompt_model: AgentPromptModel = AgentPromptModel(introduction=profile.get('introduction'),
                                                                   target=profile.get('target'),
-                                                                  instruction=new_instruction)
+                                                                  instruction=profile_instruction)
 
         # get the prompt by the prompt version
         prompt_version: str = profile.get('prompt_version')
