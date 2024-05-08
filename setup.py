@@ -30,7 +30,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://gitee.com/agentUniverse/agentUniverse",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=["*sample_standard_app*", "*docs*", "*tests*"]),
     package_data={
             '': ['*.yaml'],
         },
