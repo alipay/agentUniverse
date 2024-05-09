@@ -27,7 +27,7 @@ Note - Additional remarks regarding the version.
 ## [0.0.5] - 2024-05-08
 ### Added
 - The LLM component supports streaming calls.
-- The Knowledge component has an added update definition.
+- The Knowledge component adds an update definition.
 
 ### Fixed
 - Fixed potential concurrency safety issues in the peer planner.
