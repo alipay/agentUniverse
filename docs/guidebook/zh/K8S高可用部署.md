@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: agentuniverse-container
-        image: reg.docker.alibaba-inc.com/agentframeworkbiz/agentuniverse:0.0.4_20240507154953
+        image: registry.cn-hangzhou.aliyuncs.com/agent_universe/agent_universe:0.0.5_centos8_beta
         ports:
         - containerPort: 8888
         command: ["/bin/bash", "-c"]
