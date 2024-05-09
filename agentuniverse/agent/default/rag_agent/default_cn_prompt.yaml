@@ -16,9 +16,11 @@ instruction: |
   背景信息是:
   {background}
 
+  今天的日期是: {date}
+
   开始!
 
   需要回答的问题是: {input}
 metadata:
   type: 'PROMPT'
-  version: 'rag_planner.default_cn'
+  version: 'default_rag_agent.cn'

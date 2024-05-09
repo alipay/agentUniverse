@@ -15,6 +15,8 @@ instruction: |
   背景信息是:
   {background}
   
+  今天的日期是: {date}
+
   开始!
   必须使用中文回答用户提出的问题。
   需要回答的问题是: {input}
@@ -22,4 +24,4 @@ instruction: |
   请根据规则要求做出回答。
 metadata:
   type: 'PROMPT'
-  version: 'expressing_planner.default_cn'
+  version: 'default_expressing_agent.cn'

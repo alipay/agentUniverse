@@ -22,7 +22,7 @@ def read_requirements():
 
 setuptools.setup(
     name="agentUniverse",
-    version="0.0.4",
+    version="0.0.5",
     author="AntGroup",
     author_email="jerry.zzw@antgroup.com",
     description="agentUniverse is a framework for developing applications powered "
@@ -30,7 +30,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://gitee.com/agentUniverse/agentUniverse",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=["*sample_standard_app*", "*docs*", "*tests*"]),
     package_data={
             '': ['*.yaml'],
         },

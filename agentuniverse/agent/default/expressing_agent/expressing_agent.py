@@ -1,17 +1,16 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
-# @Time    : 2024/3/15 11:40
+# @Time    : 2024/3/19 19:37
 # @Author  : heji
 # @Email   : lc299034@antgroup.com
-# @FileName: planning_agent.py
-"""Planning agent module."""
-import json
+# @FileName: expressing_agent.py
+"""Expressing Agent module."""
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
 
 
-class PlanningAgent(Agent):
-    """Planning Agent class."""
+class ExpressingAgent(Agent):
+    """Expressing Agent class."""
 
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
@@ -31,7 +30,8 @@ class PlanningAgent(Agent):
             dict: Planner input
         """
         planner_input['input'] = input_object.get_data('input')
-        planner_input['expert_framework'] = input_object.get_data('expert_framework')
+        planner_input['background'] = self.build_background(input_object)
+        self.agent_model.profile.setdefault('prompt_version', 'default_expressing_agent.cn')
         return planner_input
 
     def parse_result(self, planner_result: dict) -> dict:
@@ -42,8 +42,20 @@ class PlanningAgent(Agent):
         Returns:
             dict: Agent result object.
         """
-        output = planner_result.get('output')
-        output = json.loads(output)
-        planner_result['framework'] = output['framework']
-        planner_result['thought'] = output['thought']
         return planner_result
+
+    def build_background(self, input_object: InputObject) -> str:
+        """Build the background knowledge.
+
+        Args:
+            input_object(InputObject): agent parameter object
+        Returns:
+            str: Background knowledge.
+        """
+        executing_result = input_object.get_data('executing_result').get_data('executing_result', [])
+        knowledge_list = []
+        for execution in executing_result:
+            knowledge_list.append("question:" + execution.get('input'))
+            knowledge_list.append("answer:" + execution.get('output'))
+
+        return '\n\n'.join(knowledge_list)

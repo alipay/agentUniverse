@@ -11,5 +11,5 @@ plan:
     name: 'reviewing_planner'
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.reviewing_agent'
+  module: 'agentuniverse.agent.default.reviewing_agent.reviewing_agent'
   class: 'ReviewingAgent'
