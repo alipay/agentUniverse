@@ -1,9 +1,23 @@
 [tool.poetry]
 name = "agentUniverse"
-version = "0.0.5"
+version = "0.0.6_beta"
 description = "agentUniverse is a framework for developing applications powered by multi-agent base on large language model."
-authors = ["AntGroup <AntGroup>"]
-readme = "README.md"
+
+authors = ["AntGroup <jerry.zzw@antgroup.com>"]
+repository = "https://gitee.com/agentUniverse/agentUniverse"
+readme = "README_PYPI.md"
+
+packages = [
+    { include = "agentuniverse" },
+    { include = "agentuniverse_connector" },
+    { include = "agentuniverse_extension" },
+]
+include = ["*.yaml"]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
