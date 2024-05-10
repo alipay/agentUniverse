@@ -92,8 +92,8 @@ class Planner(ComponentBase):
         planner_input['chat_history'] = langchain_memory.load_memory_str
         return langchain_memory
 
-    def handle_action(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
-        """Tool or knowledge processing.
+    def handle_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
+        """Tool and knowledge processing.
 
         Args:
             agent_model (AgentModel): Agent model object.

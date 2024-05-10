@@ -7,6 +7,7 @@
 # @FileName: agent.py
 """The definition of agent paradigm."""
 from abc import abstractmethod
+from datetime import datetime
 from typing import Optional
 
 from agentuniverse.agent.agent_model import AgentModel
@@ -104,6 +105,7 @@ class Agent(ComponentBase):
         planner_input = dict()
         planner_input['chat_history'] = input_object.get_data('chat_history') or ''
         planner_input['background'] = input_object.get_data('background') or ''
+        planner_input['date'] = datetime.now().strftime('%Y-%m-%d')
 
         self.parse_input(input_object, planner_input)
         return planner_input

@@ -1,0 +1,14 @@
+info:
+  name: 'rag_agent'
+  description: 'rag agent'
+profile:
+  llm_model:
+    name: 'default_openai_llm'
+    model_name: 'gpt-4'
+plan:
+  planner:
+    name: 'rag_planner'
+metadata:
+  type: 'AGENT'
+  module: 'agentuniverse.agent.default.rag_agent.rag_agent'
+  class: 'RagAgent'

@@ -1,0 +1,18 @@
+info:
+  name: 'ExecutingAgent'
+  description: 'executing agent'
+profile:
+  llm_model:
+    name: 'default_openai_llm'
+    model_name: 'gpt-3.5-turbo'
+    temperature: 0.7
+plan:
+  planner:
+    name: 'executing_planner'
+memory:
+  name: ''
+action:
+metadata:
+  type: 'AGENT'
+  module: 'agentuniverse.agent.default.executing_agent.executing_agent'
+  class: 'ExecutingAgent'
