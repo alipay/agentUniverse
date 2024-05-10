@@ -1,17 +1,15 @@
-# K8S Deployment Guide for AgentUniverse
-
-AgentUniverse offers standardized working environment images to support the containerized deployment of the AgentUniverse project on Kubernetes (K8S) clusters. This guide will instruct you on how to deploy and establish a highly available cluster in K8S using this working environment image.
+# High Availability Deployment with K8S
+AgentUniverse provides standard working environment images, designed to support containerized deployments on Kubernetes (K8S) clusters. This guide will show you how to utilize these working environment images to deploy and set up a high-availability cluster on K8S.
+Official K8S Documentation: [Kubernetes Setup Documentation](https://kubernetes.io/docs/setup/)
 
 ## 1. Resource Configuration
+First, you need to configure the necessary resource files. Below is an example used to define the required Namespace, Deployment, and Service resources using a YAML configuration file:
 
-First, configure the necessary resource files. Use the following YAML configuration file to define the required Namespace, Deployment, and Service resources.
-
-```
+```yaml
 apiVersion: v1
 kind: Namespace
 metadata:
   name: agent-namespace
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -36,11 +34,11 @@ spec:
         ports:
         - containerPort: 8888
         command: ["/bin/bash", "-c"]
-        args: ["git clone git@code.alipay.com:finresearchsys/agentUniverse-sample-app-internal.git; mv agentUniverse-sample-app-internal/sample_standard_app /usr/local/etc/workspace/project; /bin/bash --login /usr/local/etc/workspace/shell/start.sh"]
-        env:
-        - name: OPENAI_API_KEY
-          value: "XXX"
-
+        args: ["git clone git@github.com:alipay/agentUniverse.git; mv agentUniverse/sample_standard_app /usr/local/etc/workspace/project; /bin/bash --login /usr/local/etc/workspace/shell/start.sh"]
+        # Uncomment and replace "XXX" with your key to configure the agent
+        # env:
+        # - name: OPENAI_API_KEY
+        #   value: "XXX"
 ---
 apiVersion: v1
 kind: Service
@@ -56,33 +54,43 @@ spec:
     targetPort: 8888
 ```
 
-## 2. Build Resources
+### 1.1 Setting Environment Variables for AgentUniverse Project
 
-Create and apply the configuration file:
+#### Method 1 (Recommended)
+
+In the resource configuration file, uncomment the `env` section and replace `value` with your key. For additional security considerations, it's recommended to use K8S officially recommended methods, such as ConfigMap. See the [ConfigMap Configuration Documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/).
+
+#### Method 2
+
+Please refer to the description at the beginning of the configuration file: [Quick Start Guide](https://github.com/alipay/agentUniverse/blob/master/docs/guidebook/zh/1_3_快速开始.md)
+
+## 2. Building Resources
+
+Create and apply the aforementioned configuration file:
 
 ```
 kubectl apply -f agentuniverse.yaml
 ```
 
-## 3. Verify the Resources
+## 3. Verifying Resources
 
-Ensure all resources are correctly deployed:
+Verify that all resources have been correctly deployed:
 
 ```
 kubectl get all -n agent-namespace
 ```
 
-![img](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/11756835/1715074945141-c27ec861-3977-4a66-b418-be678da692fe.png)
+![Resource Deployment Status](../_picture/k8s_resource.png)
 
-## 4. Accessing AgentUniverse Service from Inside the Cluster
+## 4. Accessing AgentUniverse Services from Inside the Cluster
 
-To access the AgentUniverse service from inside the cluster, use the following command line example:
+To access AgentUniverse services from within the cluster, use the following command line example:
 
 ```
-kubectl exec -it [correct Pod name] -n agent-namespace -- curl http://agentuniverse-service:9999
+kubectl exec -it [Pod Name] -n agent-namespace -- curl http://agentuniverse-service:9999
 ```
 
-### 4.1 Example
+### 4.1 Examples
 
 #### 4.1.1 Connectivity Test
 
@@ -90,7 +98,7 @@ kubectl exec -it [correct Pod name] -n agent-namespace -- curl http://agentunive
 kubectl exec -it agentuniverse-deployment-55cfd778d-g7d9d -n agent-namespace -- curl http://agentuniverse-service:9999/echo
 ```
 
-![img](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/11756835/1715075060982-58821843-c944-48b9-bfbc-0e7548eb0fc1.png)
+![Connectivity Test](../_picture/k8s_hello.png)
 
 #### 4.1.2 Q&A Test
 
@@ -98,4 +106,4 @@ kubectl exec -it agentuniverse-deployment-55cfd778d-g7d9d -n agent-namespace -- 
 kubectl exec -it agentuniverse-deployment-55cfd778d-g7d9d -n agent-namespace -- curl -X POST -H "Content-Type: application/json" -d '{"service_id":"demo_service","params":{"input":"(18+3-5)/2*4=?"}}' http://agentuniverse-service:9999/service_run
 ```
 
-![img](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/11756835/1715075202571-b76a62fa-46cf-4212-94e1-ffb7ae7aa942.png)
+![Q&A Test](../_picture/k8s_question.png)
