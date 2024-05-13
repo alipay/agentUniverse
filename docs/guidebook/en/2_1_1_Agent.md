@@ -68,5 +68,8 @@ Tools available for Agents. agentUniverse offers numerous existing Tool componen
 ### Knowledge
 Knowledge available for Agents. agentUniverse provides a wide range of existing Knowledge components and standard methods for Knowledge customization. You can opt to use or define the Knowledge you want to use, and then load it into the Agent through configuration. In addition, agentUniverse supports the expanded integration of underlying storage technology middleware, such as SQLite, Chroma, and other storage options, meaning you can access data from any storage medium. We will explain in detail how they work in the Knowledge section.
 
-# Summary
+## Memory
+The memory available for Agents. agentUniverse provides standard optional memory types, and in most cases, users do not need to concern themselves with the specific implementation of memory. The memory component also offers the capability for users to customize it themselves. We will explain in detail how they work in the Memory section.
+
+# Conclusion
 Up to this point, you have gained a comprehensive understanding of the components and principles of an Agent. In the next section, we will specifically introduce the standard definitions of Agent components, how to customize an Agent, and how to use an Agent, among other topics.
