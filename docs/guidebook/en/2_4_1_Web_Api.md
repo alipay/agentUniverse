@@ -40,7 +40,9 @@ This POST interface is similar to `/service_run`, and its call method is consist
 curl -X POST -H "Content-Type: application/json" -d '{"service_id":"demo_service","params":{"input":"Hello!"}}' http://127.0.0.1:8888/service_run_stream
 ```
 However, the return result of the Agent will be returned in a streaming manner:
-```python
+```text
+# agentuniverse.agent_serve_web.flask_server.service_run_stream
+
 response = Response(task.stream_run(), mimetype="text/event-stream")
 response.headers['X-Request-ID'] = task.request_id
 ```
@@ -82,9 +84,10 @@ The expected return value example is as follows:
 
 ```
 The `result` contains three parts: `result` indicates the result of the Agent service execution, `state` indicates the state of the Agent service execution, and `steps` indicates the intermediate process of the Agent service execution.  
-`state` represents the task status and includes the following scenarios:：
-```python
-@enum.unique
+`state` represents the task status and includes the following scenarios:
+```text
+# agentuniverse.agent_serve.web.request_task.TaskStateEnum
+
 class TaskStateEnum(Enum):
     """All possible state of a web request task."""
     INIT = "init"

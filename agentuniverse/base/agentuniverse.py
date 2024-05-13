@@ -7,6 +7,7 @@
 # @FileName: agentuniverse.py
 import importlib
 import sys
+import threading
 from pathlib import Path
 
 from agentuniverse.base.annotation.singleton import singleton
@@ -23,6 +24,7 @@ from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.util.system_util import get_project_root_path
 from agentuniverse.base.util.logging.logging_util import init_loggers
 from agentuniverse.agent_serve.web.request_task import RequestLibrary
+from agentuniverse.agent_serve.web.rpc.grpc_server_booster import start_grpc_server
 
 
 @singleton
@@ -70,6 +72,15 @@ class AgentUniverse(object):
 
         # init web request task database
         RequestLibrary(configer=configer)
+
+        # init grpc server
+        grpc_activate = configer.value.get('GRPC', {}).get('activate')
+        if grpc_activate and grpc_activate.lower() == 'true':
+            grpc_thread = threading.Thread(
+                target=start_grpc_server,
+                kwargs={"configer": configer}
+            )
+            grpc_thread.start()
 
         # init gunicorn web server on mac or unix platform
         if not sys.platform.lower().startswith("win"):
