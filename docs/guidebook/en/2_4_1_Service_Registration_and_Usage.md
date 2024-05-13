@@ -28,4 +28,4 @@ metadata:
 - **`metadata`**: Indicates that this configuration is for a Service; no changes are needed.
 
 ## Usage
-Please refer to [Web API](2_5_Web_Api.md).
+Please refer to [Web API](2_4_1_Web_Api.md).

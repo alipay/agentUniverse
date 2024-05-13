@@ -35,7 +35,7 @@ Configuration not specified in the log configuration file will take the followin
 - **`log_rotation`**: "10MB"
 - **`log_retention`**: "3 days"
 
-Two default log files, `afaf_all.log` and `afaf_error.log`, will be located in the log storage path. 'All' records all logs above the default log level set in the log configuration, while 'error' records only logs at the ERROR level and above. The format for log component output is:
+Two default log files, `au_all.log` and `au_error.log`, will be located in the log storage path. 'All' records all logs above the default log level set in the log configuration, while 'error' records only logs at the ERROR level and above. The format for log component output is:
 ```python
 log_format: str = ("<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> "
                        "| <level>{level: <8}</level> "
@@ -68,8 +68,8 @@ If you want to output and save certain logs separately, you can create a custom 
 from agentuniverse.base.util.logging.logging_util import get_module_logger
 new_logger = get_module_logger("new_module")
 ```
-Logs recorded by this new component will be saved in the log storage path, in a log file named `afaf_{module_name}.log`,  where `{module_name}` is the module name you passed into `get_module_logger`, as in the example above, the corresponding file would be `afaf_new_module.log`.
+Logs recorded by this new component will be saved in the log storage path, in a log file named `au_{module_name}.log`,  where `{module_name}` is the module name you passed into `get_module_logger`, as in the example above, the corresponding file would be `au_new_module.log`.
 
 ## External Log Service
 
-If you want to use more log utils, please refer to [extension logging utils](3_1_Extension_Logging_Utils.md).
+If you want to use more log utils, please refer to [extension logging utils](3_2_4_Alibaba_Cloud_SLS.md).
