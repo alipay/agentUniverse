@@ -2,13 +2,12 @@
 
 [[package]]
 name = "agentuniverse"
-version = "0.0.3"
+version = "0.0.5"
 description = "agentUniverse is a framework for developing applications powered by multi-agent base on large language model."
 optional = false
 python-versions = "*"
 files = [
-    {file = "agentUniverse-0.0.3-py3-none-any.whl", hash = "sha256:c8a7e9f83ad8e5c3a774fcb5993bea88a60a1e1bfa4ee6990b55dd6869ad533f"},
-    {file = "agentUniverse-0.0.3.tar.gz", hash = "sha256:b7584e4aa1037fda6f83a03b7e3a9d971f93053a9799b6247d179baa994f3335"},
+
 ]
 
 [package.dependencies]

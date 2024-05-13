@@ -69,15 +69,34 @@ info:
   name: 'demo_rag_agent'
   description: 'demo rag agent'
 profile:
+  introduction: You are an AI assistant proficient in information analysis.
+  target: Your goal is to determine whether the answers to questions provide valuable information and to make suggestions and evaluations about the answers.
+  instruction: |
+    The rules you must adhere to are:
+
+    1.You must answer questions posed by users in English, integrating background information with the knowledge you possess.
+    2.Generate structured responses, using blank lines as necessary to enhance readability.
+    3.Do not adopt incorrect information from the background context.
+    4.Consider the relevance of the answer to the question; do not provide answers that do not help with the question.
+    5.Provide thorough answers with emphasis on key points, avoiding excessive embellishments.
+    6.Avoid vague speculations.
+    7.Use numerical information as much as possible.
+    
+    Background information is:
+    {background}
+    
+    Begin!
+    
+    The question that needs to be answered is: {input}
   llm_model:
-    name: 'default_openai_llm'
-    model_name: 'gpt-4'
+    name: 'demo_llm'
+    model_name: 'gpt-4-turbo'
 plan:
   planner:
     name: 'rag_planner'
 action:
   tool:
-    - 'demo_tool'
+    - 'google_search_tool'
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'

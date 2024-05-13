@@ -4,7 +4,7 @@ version = "0.0.6_beta"
 description = "agentUniverse is a framework for developing applications powered by multi-agent base on large language model."
 
 authors = ["AntGroup <jerry.zzw@antgroup.com>"]
-repository = "https://gitee.com/agentUniverse/agentUniverse"
+repository = "https://github.com/alipay/agentUniverse"
 readme = "README_PYPI.md"
 
 packages = [
