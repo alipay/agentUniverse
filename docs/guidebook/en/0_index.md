@@ -12,7 +12,7 @@
 
 * 2.1 Framework Principles
 * 2.2 [Domain Components](2_2_Domain_Component_Principles.md)
-  * 2.2.1 [Agent](2_1_1_Agent.md)
+  * 2.2.1 [Agent](2_2_1_Agent.md)
   * 2.2.2 LLM
   * 2.2.3 Tool
   * 2.2.4 Knowledge
