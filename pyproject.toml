@@ -1,9 +1,23 @@
 [tool.poetry]
 name = "agentUniverse"
-version = "0.0.5"
+version = "0.0.6_beta"
 description = "agentUniverse is a framework for developing applications powered by multi-agent base on large language model."
-authors = ["AntGroup <AntGroup>"]
-readme = "README.md"
+
+authors = ["AntGroup <jerry.zzw@antgroup.com>"]
+repository = "https://github.com/alipay/agentUniverse"
+readme = "README_PYPI.md"
+
+packages = [
+    { include = "agentuniverse" },
+    { include = "agentuniverse_connector" },
+    { include = "agentuniverse_extension" },
+]
+include = ["*.yaml"]
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -20,6 +34,7 @@ flask_cors = '4.0.0'
 SQLAlchemy = '2.0.25'
 pydantic = "^2.6.4"
 gunicorn = "21.2.0"
+grpcio = "1.63.0"
 chromadb = "0.4.24"
 sphinx = "^7.2.6"
 sphinx-rtd-theme = "^2.0.0"

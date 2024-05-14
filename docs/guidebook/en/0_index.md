@@ -12,7 +12,7 @@
 
 * 2.1 Framework Principles
 * 2.2 [Domain Components](2_2_Domain_Component_Principles.md)
-  * 2.2.1 Agent
+  * 2.2.1 [Agent](2_2_1_Agent.md)
   * 2.2.2 LLM
   * 2.2.3 Tool
   * 2.2.4 Knowledge
@@ -21,9 +21,13 @@
 * 2.3 Technical Components
 * 2.4 Others
   * 2.4.1 Service
+    * 2.4.1.1 [Registration and Usage](2_4_1_Service_Registration_and_Usage.md)
+    * 2.4.1.2 [Web Server](2_4_1_Web_Server.md)
+    * 2.4.1.3 [Web API](2_4_1_Web_Api.md)
   * 2.4.2 Prompt Management
   * 2.4.3 Multi-turn Dialogue
   * 2.4.4 Logging
+    * 2.4.4.1 [Logging Component](2_6_Logging_Utils.md)
   * 2.4.5 Data Collection
 
 **3. Component Reference Manual**
@@ -38,12 +42,14 @@
   * 3.2.1 RPC
   * 3.2.2 Store
   * 3.2.3 Msg
+  * 3.2.4 Logging
+    * 3.2.4.1 [Alibaba Cloud SLS](3_2_4_Alibaba_Cloud_SLS.md)
 
 **[4. API Reference Manual](4_1_API_Reference.md)**
 
 **5. Best Practices**
 * 5.1 Operations and Deployment
-  * 5.1.1 Docker Containerization Solution
+  * 5.1.1 [Docker Containerization Solution](5_1_1_Docker_Container_Deployment.md)
 
 **6. Series of Articles**
 

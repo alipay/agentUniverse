@@ -3,7 +3,7 @@ name = "sample_standard_app"
 version = "0.0.1"
 description = "This is a sample project for agentuniverse."
 authors = ["AntGroup <AntGroup>"]
-#repository = "https://github.com/alipay/agentUniverse/tree/master/sample_standard_app"
+repository = "https://github.com/alipay/agentUniverse/tree/master/sample_standard_app"
 readme = "README.md"
 packages = [
     { include = "sample_standard_app" }
@@ -11,7 +11,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-agentUniverse = "^0.0.3"
+agentUniverse = "^0.0.5"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"

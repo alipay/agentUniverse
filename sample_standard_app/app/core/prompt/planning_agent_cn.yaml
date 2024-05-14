@@ -15,7 +15,7 @@ instruction: |
   开始!
   今天的日期是: {date}
 
-  输出必须是按照以下格式化的Json代码片段，thought字段代表拆解问题的思考过程，framework字段代表拆解后的子问题列表。
+  输出必须是按照以下格式化的Json代码片段，不加额外的json标识，thought字段代表拆解问题的思考过程，framework字段代表拆解后的子问题列表。
   {{
       "thought": string,
       "framework": list
