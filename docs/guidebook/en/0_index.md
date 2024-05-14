@@ -55,4 +55,4 @@
 
 **7. Frequently Asked Questions (FAQ)**
 
-**[8. Contact Us](8_1_Contact_Us.md)**
+**[8. Contact Us](6_1_Contact_Us.md)**
