@@ -33,4 +33,4 @@ class AgentPromptModel(BaseModel):
         Return True if one of the introduction, target and instruction attribute is not empty.
         Return False otherwise.
         """
-        return bool(self.introduction or self.introduction or self.introduction)
+        return bool(self.introduction or self.target or self.instruction)
