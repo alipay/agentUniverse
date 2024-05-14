@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package agentuniverse;
+
+// RPC 服务定义
+service AgentUniverseService {
+  // 方法定义
+  rpc service_run(AgentServiceRequest) returns (AgentServiceResponse);
+  rpc service_run_async(AgentServiceRequest) returns (AgentServiceResponse);
+  rpc service_run_result(AgentResultRequest) returns (AgentServiceResponse);
+}
+
+message AgentServiceRequest {
+  string service_id = 1;
+  string params = 2;
+  bool saved = 3;
+}
+
+message AgentServiceResponse {
+  string message = 1;
+  bool success = 2;
+  string request_id = 3;
+  string result = 4;
+}
+
+message AgentResultRequest {
+    string request_id = 1;
+}
