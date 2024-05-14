@@ -2,7 +2,8 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from . import agentuniverse_service_pb2 as agentuniverse__service__pb2
+from agentuniverse.agent_serve.web.rpc.grpc import \
+    agentuniverse_service_pb2 as agentuniverse__service__pb2
 
 
 class AgentUniverseServiceStub(object):

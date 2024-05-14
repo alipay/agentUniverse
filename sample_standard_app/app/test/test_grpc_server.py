@@ -6,7 +6,8 @@
 # @Email   : fanen.lhy@antgroup.com
 # @FileName: test_grpc_server.py.py
 import grpc
-from agentuniverse.agent_serve.web.rpc import agentuniverse_service_pb2, agentuniverse_service_pb2_grpc
+from agentuniverse.agent_serve.web.rpc.grpc import agentuniverse_service_pb2, \
+    agentuniverse_service_pb2_grpc
 
 
 # Start you server_application first.

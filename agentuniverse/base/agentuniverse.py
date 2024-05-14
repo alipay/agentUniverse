@@ -24,7 +24,7 @@ from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.util.system_util import get_project_root_path
 from agentuniverse.base.util.logging.logging_util import init_loggers
 from agentuniverse.agent_serve.web.request_task import RequestLibrary
-from agentuniverse.agent_serve.web.rpc.grpc_server_booster import start_grpc_server
+from agentuniverse.agent_serve.web.rpc.grpc.grpc_server_booster import start_grpc_server
 
 
 @singleton
