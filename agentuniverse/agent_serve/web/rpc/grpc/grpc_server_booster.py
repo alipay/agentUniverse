@@ -9,9 +9,9 @@
 from concurrent import futures
 import grpc
 
-from . import agentuniverse_service_pb2
-from . import agentuniverse_service_pb2_grpc
-from .rpc_server import service_run, service_run_async, service_run_result
+from agentuniverse.agent_serve.web.rpc.grpc import agentuniverse_service_pb2, \
+    agentuniverse_service_pb2_grpc
+from agentuniverse.agent_serve.web.rpc.rpc_server import service_run, service_run_async, service_run_result
 
 
 class AgentUniverseService(agentuniverse_service_pb2_grpc.AgentUniverseService):
