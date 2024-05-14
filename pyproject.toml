@@ -34,6 +34,7 @@ flask_cors = '4.0.0'
 SQLAlchemy = '2.0.25'
 pydantic = "^2.6.4"
 gunicorn = "21.2.0"
+grpcio = "1.63.0"
 chromadb = "0.4.24"
 sphinx = "^7.2.6"
 sphinx-rtd-theme = "^2.0.0"

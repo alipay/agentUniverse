@@ -30,17 +30,16 @@ def service_run(service_id: str, params: dict, saved: bool = False):
     """Synchronous invocation of an agent service.
 
     Request Args:
-        service_id(`str`): The id of the agent service. Format like
-            {appname}.service.{service_name}.
+        service_id(`str`): The id of the agent service.
         params(`dict`): Json style params passed to service.
         saved(`bool`): Save the request and result into database.
 
     Return:
         Returns a dict containing two keys: success and result.
         success: This key holds a boolean value indicating the task was
-        successfully or not.
+            successfully or not.
         result: This key points to a nested dictionary that includes the
-        result of the task.
+            result of the task.
     """
     params = {} if params is None else params
     request_task = RequestTask(ServiceInstance(service_id).run, saved, **params)
@@ -55,8 +54,7 @@ def service_run_stream(service_id: str, params: dict, saved: bool = False):
     """Synchronous invocation of an agent service, return in stream form.
 
     Request Args:
-        service_id(`str`): The id of the agent service. Format like
-            {appname}.service.{service_name}.
+        service_id(`str`): The id of the agent service.
         params(`dict`): Json style params passed to service.
         saved(`bool`): Save the request and result into database.
 
@@ -78,22 +76,16 @@ def service_run_async(service_id: str, params: dict, saved: bool = True):
     get result later.
 
     Request Args:
-        service_id(`str`): The id of the agent service. Format like
-            {appname}.service.{service_name}.
+        service_id(`str`): The id of the agent service.
         params(`dict`): Json style params passed to service.
         saved(`bool`): Save the request and result into database.
 
     Return:
         Returns a dict containing two keys: success and result.
         success: This key holds a boolean value indicating the task was
-        successfully or not.
-        result: This key points to a dictionary contains a key: request_id,
-        its value can be used in service_run_result api to get the result
-        of async task.
-
-    Example Response:
-        {"success": True, "data": {
-        "request_id":"05d0a28785cc455894ebb88bba14a67e"}}.
+            successfully or not.
+        request_id: Stand for a single request taski, can be used in
+            service_run_result api to get the result of async task.
     """
     params = {} if params is None else params
     params['service_id'] = service_id
@@ -115,9 +107,9 @@ def service_run_result(request_id: str):
         Returns a dict containing two keys: success and result if request_id
         exists in database.
         success: This key holds a boolean value indicating the task was
-        successfully or not.
+            successfully or not.
         result: This key points to a nested dictionary that includes the
-        result of the task.
+            result of the task.
     """
     data = RequestTask.query_request_state(request_id)
     if data is None:
