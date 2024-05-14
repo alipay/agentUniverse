@@ -5,7 +5,7 @@ profile:
   prompt_version: demo_planning_agent.cn
   llm_model:
     name: 'demo_llm'
-    model_name: 'gpt-4'
+    model_name: 'gpt-4o'
     temperature: 0.5
 plan:
   planner:
