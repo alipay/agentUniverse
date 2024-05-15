@@ -124,7 +124,7 @@ class Planner(ComponentBase):
 
         planner_input['background'] = planner_input['background'] or '' + "\n".join(action_result)
 
-    def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:
+    def handle_prompt(self, agent_model: AgentModel, planner_input: dict):
         """Prompt module processing.
 
         Args:
