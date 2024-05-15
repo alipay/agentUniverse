@@ -12,6 +12,8 @@ from langchain_core.memory import BaseMemory
 
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
+from agentuniverse.agent.memory.enum import ChatMessageEnum
+from agentuniverse.agent.memory.message import Message
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
@@ -79,4 +81,9 @@ class RagPlanner(Planner):
                 instruction=getattr(version_prompt, 'instruction', ''))
             profile_prompt_model = profile_prompt_model + version_prompt_model
 
-        return ChatPrompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
+        chat_prompt = ChatPrompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
+        image_url = planner_input.pop('image_url', '') or ''
+        if image_url:
+            content = [{"type": "image_url", "image_url": {"url": image_url}}]
+            chat_prompt.messages.append(Message(type=ChatMessageEnum.HUMAN.value, content=content))
+        return chat_prompt

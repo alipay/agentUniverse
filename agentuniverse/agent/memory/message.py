@@ -7,6 +7,7 @@
 # @FileName: message.py
 from typing import Optional, List, Union, Dict
 
+from langchain_core.messages import HumanMessage
 from langchain_core.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, AIMessagePromptTemplate
 from langchain_core.prompts.chat import BaseStringMessagePromptTemplate
 from pydantic import BaseModel
@@ -30,7 +31,10 @@ class Message(BaseModel):
         if self.type == ChatMessageEnum.SYSTEM.value:
             return SystemMessagePromptTemplate.from_template(self.content)
         elif self.type == ChatMessageEnum.HUMAN.value:
-            return HumanMessagePromptTemplate.from_template(self.content)
+            if isinstance(self.content, str):
+                return HumanMessagePromptTemplate.from_template(self.content)
+            elif isinstance(self.content, list):
+                return HumanMessage(content=self.content)
         elif self.type == ChatMessageEnum.AI.value:
             return AIMessagePromptTemplate.from_template(self.content)
         else:
