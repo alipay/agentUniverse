@@ -1,5 +1,5 @@
 # High Availability Deployment with K8S
-AgentUniverse provides standard working environment images, designed to support containerized deployments on Kubernetes (K8S) clusters. This guide will show you how to utilize these working environment images to deploy and set up a high-availability cluster on K8S.
+AgentUniverse provides standard working environment images, designed to support containerized deployments on Kubernetes (K8S) clusters. This guide will show you how to utilize these working environment images to deploy and set up a cluster on K8S.
 Official K8S Documentation: [Kubernetes Setup Documentation](https://kubernetes.io/docs/setup/)
 
 ## 1. Resource Configuration
