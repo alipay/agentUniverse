@@ -10,6 +10,7 @@ import re
 
 from langchain_core.prompts import ChatPromptTemplate
 
+from agentuniverse.agent.memory.enum import ChatMessageEnum
 from agentuniverse.agent.memory.message import Message
 from agentuniverse.base.util.prompt_util import generate_chat_template
 from agentuniverse.prompt.prompt import Prompt
@@ -48,3 +49,14 @@ class ChatPrompt(Prompt):
             matches = placeholder_pattern.findall(message.content)
             result.extend(matches)
         return result
+
+    def generate_image_prompt(self, image_urls: list[str]) -> None:
+        """ Generate the prompt with image urls.
+
+        Args:
+            image_urls (list[str]): The image urls.
+        """
+        if image_urls:
+            for image_url in image_urls:
+                content = [{"type": "image_url", "image_url": {"url": image_url}}]
+                self.messages.append(Message(type=ChatMessageEnum.HUMAN.value, content=content))
