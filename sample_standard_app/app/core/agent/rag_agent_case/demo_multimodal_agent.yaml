@@ -2,12 +2,12 @@ info:
   name: 'demo_multimodal_agent'
   description: 'demo multimodal agent'
 profile:
-  introduction: 你是一位ai助手。
-  target: 你的目标是回答用户的问题。
+  introduction: You are the ai assistant.
+  target: Your target is to answer the user's questions
   instruction: |
-    开始!
+    Begin!
 
-    需要回答的问题是: {input}
+    The question that needs to be answered is: {input}
   llm_model:
     name: 'demo_llm'
     model_name: 'gpt-4o'
