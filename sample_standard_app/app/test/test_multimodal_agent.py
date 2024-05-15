@@ -24,7 +24,7 @@ class MultimodalAgentTest(unittest.TestCase):
     def test_multimodal_agent(self):
         """Test demo multimodal agent."""
         instance: Agent = AgentManager().get_instance_obj('demo_multimodal_agent')
-        output_object: OutputObject = instance.run(input='图片里有什么东西，具体是哪个城市的景色，请仔细描述下',
+        output_object: OutputObject = instance.run(input='Which city is the view in the picture?',
                                                    image_url='https://cdn.pixabay.com/photo/2016/03/27/00/01/australia-1281935_1280.jpg')
         res_info = f"\nMultimodal agent execution result is :\n"
         res_info += output_object.get_data('output')
