@@ -5,9 +5,13 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: message.py
-from typing import Optional
+from typing import Optional, List, Union, Dict
 
+from langchain_core.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate, AIMessagePromptTemplate
+from langchain_core.prompts.chat import BaseStringMessagePromptTemplate
 from pydantic import BaseModel
+
+from agentuniverse.agent.memory.enum import ChatMessageEnum
 
 
 class Message(BaseModel):
@@ -19,4 +23,25 @@ class Message(BaseModel):
     """
 
     type: Optional[str] = None
-    content: Optional[str] = None
+    content: Union[str, List[Union[str, Dict]]] = None
+
+    def as_langchain(self):
+        """Convert the AgentUniverse(AU) message class to the langchain message class."""
+        if self.type == ChatMessageEnum.SYSTEM.value:
+            return SystemMessagePromptTemplate.from_template(self.content)
+        elif self.type == ChatMessageEnum.HUMAN.value:
+            return HumanMessagePromptTemplate.from_template(self.content)
+        elif self.type == ChatMessageEnum.AI.value:
+            return AIMessagePromptTemplate.from_template(self.content)
+        else:
+            return BaseStringMessagePromptTemplate.from_template(self.content)
+
+    @staticmethod
+    def as_langchain_list(message_list: List['Message']):
+        """Convert AgentUniverse(AU) message list to langchain message list """
+        langchain_message_list = []
+        if message_list is None:
+            return langchain_message_list
+        for message in message_list:
+            langchain_message_list.append(message.as_langchain())
+        return langchain_message_list
