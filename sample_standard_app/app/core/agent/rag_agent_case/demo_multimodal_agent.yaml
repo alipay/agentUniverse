@@ -1,0 +1,22 @@
+info:
+  name: 'demo_multimodal_agent'
+  description: 'demo multimodal agent'
+profile:
+  introduction: 你是一位ai助手。
+  target: 你的目标是回答用户的问题。
+  instruction: |
+    开始!
+
+    需要回答的问题是: {input}
+  llm_model:
+    name: 'demo_llm'
+    model_name: 'gpt-4o'
+plan:
+  planner:
+    name: 'rag_planner'
+action:
+  tool:
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
+  class: 'DemoRagAgent'
