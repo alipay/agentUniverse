@@ -24,6 +24,15 @@ Note - Additional remarks regarding the version.
 ***************************************************
 
 # Version Update History
+## [0.0.6] - 2024-05-15
+### Added
+- Support for the GPT-4o model, with updates to related examples.
+- Support for the RPC component gRPC, providing a standard method for service startup.
+
+### Note 
+- Provide standard Docker images and K8S deployment solutions.
+- Some code optimizations and documentation updates.
+
 ## [0.0.5] - 2024-05-08
 ### Added
 - The LLM component supports streaming calls.
