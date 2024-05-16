@@ -18,7 +18,7 @@ class LLMTest(unittest.TestCase):
     """
 
     def setUp(self) -> None:
-        self.llm = OpenAILLM(model_name='gpt-4')
+        self.llm = OpenAILLM(model_name='gpt-4o')
 
     def test_call(self) -> None:
         messages = [
@@ -27,7 +27,7 @@ class LLMTest(unittest.TestCase):
                 "content": "hi, please introduce yourself",
             }
         ]
-        output = self.llm.call(messages=messages,streaming=False)
+        output = self.llm.call(messages=messages, streaming=False)
         print(output.__str__())
 
     def test_acall(self) -> None:
@@ -37,7 +37,7 @@ class LLMTest(unittest.TestCase):
                 "content": "hi, please introduce yourself",
             }
         ]
-        output = asyncio.run(self.llm.acall(messages=messages,streaming=False))
+        output = asyncio.run(self.llm.acall(messages=messages, streaming=False))
         print(output.__str__())
 
     def test_call_stream(self):
@@ -73,6 +73,22 @@ class LLMTest(unittest.TestCase):
         llm_chain = ConversationChain(llm=langchain_llm)
         res = llm_chain.predict(input='hello')
         print(res)
+
+    def test_gpt_4o_image(self):
+        response = self.llm.call(
+            messages=[
+                {"role": "system",
+                 "content": "You are a helpful assistant that responds in Markdown. Help me with my math homework!"},
+                {"role": "user", "content": [
+                    {"type": "text", "text": "What's the area of the triangle?"},
+                    {"type": "image_url", "image_url": {
+                        "url": "https://upload.wikimedia.org/wikipedia/commons/e/e2/The_Algebra_of_Mohammed_Ben_Musa_-_page_82b.png"}
+                     }
+                ]}
+            ],
+            temperature=0.0,
+        )
+        print(response.__str__())
 
 
 if __name__ == '__main__':

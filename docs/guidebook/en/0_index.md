@@ -40,6 +40,7 @@
   * 3.1.6 Planner
 * 3.2 Technical Components
   * 3.2.1 RPC
+    * 3.2.1.1 [gRPC](3_2_1_gRPC.md)
   * 3.2.2 Store
   * 3.2.3 Msg
   * 3.2.4 Logging
@@ -50,9 +51,10 @@
 **5. Best Practices**
 * 5.1 Operations and Deployment
   * 5.1.1 [Docker Containerization Solution](5_1_1_Docker_Container_Deployment.md)
+  * 5.1.2 [K8S Solution](5_1_2_K8S_Deployment.md)
 
 **6. Series of Articles**
 
 **7. Frequently Asked Questions (FAQ)**
 
-**[8. Contact Us](8_1_Contact_Us.md)**
+**[8. Contact Us](6_1_Contact_Us.md)**

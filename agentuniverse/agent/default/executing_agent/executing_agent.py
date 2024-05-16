@@ -26,19 +26,19 @@ class ExecutingAgent(Agent):
         """Return the output keys of the Agent."""
         return ['executing_result']
 
-    def parse_input(self, input_object: InputObject, planner_input: dict) -> dict:
-        """Planner parameter parsing.
+    def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
+        """Agent parameter parsing.
 
         Args:
-            input_object(InputObject): agent parameter object
-            planner_input(dict): Planner input
+            input_object (InputObject): input parameters passed by the user.
+            agent_input (dict): agent input preparsed by the agent.
         Returns:
-            dict: Planner input
+            dict: agent input parsed from `input_object` by the user.
         """
-        planner_input['input'] = input_object.get_data('input')
-        planner_input['framework'] = input_object.get_data('planning_result').get_data('framework')
+        agent_input['input'] = input_object.get_data('input')
+        agent_input['framework'] = input_object.get_data('planning_result').get_data('framework')
         self.agent_model.profile.setdefault('prompt_version', 'default_executing_agent.cn')
-        return planner_input
+        return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:
         """Planner result parser.
@@ -60,24 +60,24 @@ class ExecutingAgent(Agent):
 
         return {'executing_result': executing_result, 'llm_result': llm_result}
 
-    def execute(self, input_object: InputObject) -> dict:
+    def execute(self, input_object: InputObject, agent_input: dict) -> dict:
         """Execute agent instance.
 
         Args:
-            input_object(InputObject): agent parameter object
+            input_object (InputObject): input parameters passed by the user.
+            agent_input (dict): agent input parsed from `input_object` by the user.
+
         Returns:
             dict: Agent result object.
         """
-        planning_result = input_object.get_data('planning_result')
-        framework = planning_result.get_data('framework', [])
+        framework = agent_input.get('framework', [])
         futures = []
         for task in framework:
-            input_object_copy: InputObject = copy.deepcopy(input_object)
-            input_object_copy.add_data('input', task)
-            planner_input = super().pre_parse_input(input_object_copy)
+            agent_input_copy: dict = copy.deepcopy(agent_input)
+            agent_input_copy['input'] = task
             futures.append(
                 self.executor.submit(
                     PlannerManager().get_instance_obj(self.agent_model.plan.get('planner').get('name')).invoke,
-                    self.agent_model, planner_input, input_object_copy))
+                    self.agent_model, agent_input_copy, input_object))
         wait(futures, return_when=ALL_COMPLETED)
-        return self.parse_result({'futures': futures})
+        return {'futures': futures}

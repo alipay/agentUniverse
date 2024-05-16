@@ -5,13 +5,12 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: prompt_util.py
-import asyncio
 from typing import List
 
 from langchain.chains.summarize import load_summarize_chain
 from langchain_core.documents import Document
-from langchain_core.prompts import PromptTemplate
 
+from agentuniverse.agent.memory.message import Message
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt_manager import PromptManager
@@ -106,12 +105,30 @@ def generate_template(agent_prompt_model: AgentPromptModel, prompt_assemble_orde
     return "\n".join(values)
 
 
-def process_llm_token(agent_llm: LLM, prompt_template: PromptTemplate, profile: dict, planner_input: dict):
+def generate_chat_template(agent_prompt_model: AgentPromptModel, prompt_assemble_order: list[str]) -> list[Message]:
+    """Convert the agent prompt model to the agentUniverse message list.
+
+    Args:
+        agent_prompt_model (AgentPromptModel): The agent prompt model.
+        prompt_assemble_order (list[str]): The prompt assemble ordered list.
+    Returns:
+        list: The agentUniverse message list.
+    """
+    message_list = []
+    for attr in prompt_assemble_order:
+        value = getattr(agent_prompt_model, attr, None)
+        if value is not None:
+            message_list.append(
+                Message(type=agent_prompt_model.get_message_type(attr), content=value))
+    return message_list
+
+
+def process_llm_token(agent_llm: LLM, lc_prompt_template, profile: dict, planner_input: dict):
     """Process the prompt template based on the prompt processor.
 
     Args:
         agent_llm (LLM): The agent llm.
-        prompt_template (PromptTemplate): The prompt template.
+        lc_prompt_template: The langchain prompt template.
         profile (dict): The profile.
         planner_input (dict): The planner input.
     """
@@ -126,7 +143,7 @@ def process_llm_token(agent_llm: LLM, prompt_template: PromptTemplate, profile: 
     summary_prompt_version: str = prompt_processor.get('summary_prompt_version') or 'prompt_processor.summary_cn'
     combine_prompt_version: str = prompt_processor.get('combine_prompt_version') or 'prompt_processor.combine_cn'
 
-    prompt_input_dict = {key: planner_input[key] for key in prompt_template.input_variables if key in planner_input}
+    prompt_input_dict = {key: planner_input[key] for key in lc_prompt_template.input_variables if key in planner_input}
 
     # get the llm instance for prompt compression
     prompt_llm: LLM = LLMManager().get_instance_obj(prompt_processor_llm)
@@ -134,7 +151,7 @@ def process_llm_token(agent_llm: LLM, prompt_template: PromptTemplate, profile: 
     if prompt_llm is None:
         prompt_llm = agent_llm
 
-    prompt = prompt_template.format(**prompt_input_dict)
+    prompt = lc_prompt_template.format(**prompt_input_dict)
     # get the number of tokens in the prompt
     prompt_tokens: int = agent_llm.get_num_tokens(prompt)
 
