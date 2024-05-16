@@ -16,10 +16,9 @@ class DemoRagAgent(Agent):
     def output_keys(self) -> list[str]:
         return ['output']
 
-    def parse_input(self, input_object: InputObject, planner_input: dict) -> dict:
-        input = input_object.get_data('input')
-        planner_input['input'] = input
-        return planner_input
+    def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
+        agent_input['input'] = input_object.get_data('input')
+        return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:
         return planner_result

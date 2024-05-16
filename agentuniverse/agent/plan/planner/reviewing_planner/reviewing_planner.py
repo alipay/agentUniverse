@@ -29,7 +29,7 @@ class ReviewingPlanner(Planner):
         Args:
             agent_model (AgentModel): Agent model object.
             planner_input (dict): Planner input object.
-            input_object (InputObject): Agent input object.
+            input_object (InputObject): The input parameters passed by the user.
         Returns:
             dict: The planner result.
         """
@@ -51,7 +51,7 @@ class ReviewingPlanner(Planner):
 
         Args:
             agent_model (AgentModel): The agent model.
-            planner_input (dict): The agent input.
+            planner_input (dict): The planner input.
         Returns:
             Prompt: The prompt instance.
         """
