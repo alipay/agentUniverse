@@ -21,19 +21,19 @@ class PlanningAgent(Agent):
         """Return the output keys of the Agent."""
         return ['output']
 
-    def parse_input(self, input_object: InputObject, planner_input: dict) -> dict:
-        """Planner parameter parsing.
+    def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
+        """Agent parameter parsing.
 
         Args:
-            input_object(InputObject): agent parameter object
-            planner_input(dict): Planner input
+            input_object (InputObject): input parameters passed by the user.
+            agent_input (dict): agent input preparsed by the agent.
         Returns:
-            dict: Planner input
+            dict: agent input parsed from `input_object` by the user.
         """
-        planner_input['input'] = input_object.get_data('input')
-        planner_input['expert_framework'] = input_object.get_data('expert_framework')
+        agent_input['input'] = input_object.get_data('input')
+        agent_input['expert_framework'] = input_object.get_data('expert_framework')
         self.agent_model.profile.setdefault('prompt_version', 'default_planning_agent.cn')
-        return planner_input
+        return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:
         """Planner result parser.

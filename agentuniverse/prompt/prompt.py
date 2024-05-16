@@ -27,7 +27,7 @@ class Prompt(ComponentBase):
     def __init__(self, **kwargs):
         super().__init__(component_type=ComponentEnum.PROMPT, **kwargs)
 
-    def as_langchain(self) -> PromptTemplate:
+    def as_langchain(self):
         """Convert the prompt template into a LangChain prompt template.
 
         Returns:
@@ -44,7 +44,7 @@ class Prompt(ComponentBase):
             prompt_assemble_order (list[str]): The prompt assemble ordered list.
 
         Returns:
-            PromptTemplate: The prompt template.
+            Prompt: The prompt object.
         """
         self.prompt_template = generate_template(agent_prompt_model, prompt_assemble_order)
         self.input_variables = re.findall(r'\{(.*?)}', self.prompt_template)
