@@ -15,6 +15,7 @@ from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
+from agentuniverse.prompt.chat_prompt import ChatPrompt
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
@@ -40,22 +41,23 @@ class RagPlanner(Planner):
 
         llm: LLM = self.handle_llm(agent_model)
 
-        prompt: Prompt = self.handle_prompt(agent_model, planner_input)
+        prompt: ChatPrompt = self.handle_prompt(agent_model, planner_input)
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
         llm_chain = LLMChain(llm=llm.as_langchain(),
                              prompt=prompt.as_langchain(),
                              output_key=self.output_key, memory=memory)
+
         return asyncio.run(llm_chain.acall(inputs=planner_input))
 
-    def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:
+    def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> ChatPrompt:
         """Prompt module processing.
 
         Args:
             agent_model (AgentModel): Agent model object.
             planner_input (dict): Planner input object.
         Returns:
-            Prompt: The prompt instance.
+            ChatPrompt: The chat prompt instance.
         """
         profile: dict = agent_model.profile
 
@@ -77,4 +79,8 @@ class RagPlanner(Planner):
                 instruction=getattr(version_prompt, 'instruction', ''))
             profile_prompt_model = profile_prompt_model + version_prompt_model
 
-        return Prompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
+        chat_prompt = ChatPrompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
+        image_urls: list = planner_input.pop('image_urls', []) or []
+        if image_urls:
+            chat_prompt.generate_image_prompt(image_urls)
+        return chat_prompt

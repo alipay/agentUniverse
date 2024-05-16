@@ -105,6 +105,7 @@ class Agent(ComponentBase):
         planner_input = dict()
         planner_input['chat_history'] = input_object.get_data('chat_history') or ''
         planner_input['background'] = input_object.get_data('background') or ''
+        planner_input['image_urls'] = input_object.get_data('image_urls') or []
         planner_input['date'] = datetime.now().strftime('%Y-%m-%d')
 
         self.parse_input(input_object, planner_input)
