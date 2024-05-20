@@ -78,7 +78,7 @@ class Tool(ComponentBase):
         raise NotImplementedError
 
     def as_langchain(self) -> LangchainTool:
-        """Convert the AgentUniverse(AU) tool class to the langchain tool class."""
+        """Convert the agentUniverse(aU) tool class to the langchain tool class."""
         return LangchainTool(name=self.name,
                              func=self.run,
                              description=self.description)
