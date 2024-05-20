@@ -28,6 +28,7 @@
     * 2.4.1.1 [Registration and Usage](2_4_1_Service_Registration_and_Usage.md)
     * 2.4.1.2 [Web Server](2_4_1_Web_Server.md)
     * 2.4.1.3 [Web API](2_4_1_Web_Api.md)
+    * 2.4.1.4 [Service Information Storage](./2_4_1_Service_Information_Storage.md)
   * 2.4.2 Prompt Management
   * 2.4.3 Multi-turn Dialogue
   * 2.4.4 Logging

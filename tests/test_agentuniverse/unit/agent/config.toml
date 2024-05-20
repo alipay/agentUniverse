@@ -32,4 +32,4 @@ gunicorn_config_path = './gunicorn_config.toml'
 
 [DB]
 # A mysql db uri used to save web request task status. Status will be saved in sqllite if the uri is empty all not exist.
-mysql_uri = ''
+system_db_uri = ''
