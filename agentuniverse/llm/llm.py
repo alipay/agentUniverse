@@ -40,7 +40,7 @@ class LLM(ComponentBase):
     model_name: Optional[str] = None
     temperature: Optional[float] = 0.5
     request_timeout: Optional[int] = None
-    max_tokens: Optional[int] = None
+    max_tokens: Optional[int] = 1024
     max_retries: Optional[int] = 2
     streaming: Optional[bool] = False
     ext_info: Optional[dict] = None

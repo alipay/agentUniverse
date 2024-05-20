@@ -9,6 +9,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from agentuniverse.agent.memory.enum import ChatMessageEnum
+
 
 class AgentPromptModel(BaseModel):
     """Agent Prompt Model class."""
@@ -16,6 +18,9 @@ class AgentPromptModel(BaseModel):
     introduction: Optional[str] = None
     target: Optional[str] = None
     instruction: Optional[str] = None
+    _message_type_mapping: dict[str, str] = {'introduction': ChatMessageEnum.SYSTEM.value,
+                                             'target': ChatMessageEnum.SYSTEM.value,
+                                             'instruction': ChatMessageEnum.HUMAN.value}
 
     def __add__(self, other):
         """Merge two objects into one object."""
@@ -33,4 +38,15 @@ class AgentPromptModel(BaseModel):
         Return True if one of the introduction, target and instruction attribute is not empty.
         Return False otherwise.
         """
-        return bool(self.introduction or self.introduction or self.introduction)
+        return bool(self.introduction or self.target or self.instruction)
+
+    def get_message_type(self, attribute_name: str) -> str:
+        """ Get the message type of the attribute in the agent prompt model.
+
+            Args:
+                attribute_name (str): The name of the attribute.
+                
+            Returns:
+                str: The message type of the attribute(system/human/ai).
+        """
+        return self._message_type_mapping.get(attribute_name, ChatMessageEnum.HUMAN.value)

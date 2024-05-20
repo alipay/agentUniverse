@@ -29,7 +29,7 @@ class ExecutingPlanner(Planner):
         Args:
             agent_model (AgentModel): Agent model object.
             planner_input (dict): Planner input object.
-            input_object (InputObject): Agent input object.
+            input_object (InputObject): The input parameters passed by the user.
         Returns:
             dict: The planner result.
         """
