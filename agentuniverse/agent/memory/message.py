@@ -27,7 +27,7 @@ class Message(BaseModel):
     content: Union[str, List[Union[str, Dict]]] = None
 
     def as_langchain(self):
-        """Convert the AgentUniverse(AU) message class to the langchain message class."""
+        """Convert the agentUniverse(aU) message class to the langchain message class."""
         if self.type == ChatMessageEnum.SYSTEM.value:
             return SystemMessagePromptTemplate.from_template(self.content)
         elif self.type == ChatMessageEnum.HUMAN.value:
@@ -42,7 +42,7 @@ class Message(BaseModel):
 
     @staticmethod
     def as_langchain_list(message_list: List['Message']):
-        """Convert AgentUniverse(AU) message list to langchain message list """
+        """Convert agentUniverse(aU) message list to langchain message list """
         langchain_message_list = []
         if message_list is None:
             return langchain_message_list

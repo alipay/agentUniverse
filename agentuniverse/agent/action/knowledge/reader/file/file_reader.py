@@ -22,7 +22,7 @@ DEFAULT_FILE_READERS: Dict[str, Type[Reader]] = {
 
 
 class FileReader(Reader):
-    """The AgentUniverse(AU) file reader class.
+    """The agentUniverse(aU) file reader class.
 
     FileReader is used to load data from files based on the provided file paths.
 
