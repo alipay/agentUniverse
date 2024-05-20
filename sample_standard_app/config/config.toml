@@ -31,8 +31,9 @@ gunicorn_config_path = './gunicorn_config.toml'
 #custom_key_path = './custom_key.toml'
 
 [DB]
-# A mysql db uri used to save web request task status. Status will be saved in sqllite if the uri is empty all not exist.
-mysql_uri = ''
+# A sqlalchemy db uri used for storing various info, for example, service request, generated during application running.
+# If it's empty, agentUniverse will create a local sqlite db as default choice.
+system_db_uri = ''
 
 [GRPC]
 activate = 'true'
