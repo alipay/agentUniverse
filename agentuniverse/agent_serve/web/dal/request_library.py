@@ -45,13 +45,15 @@ class RequestLibrary:
     def __init__(self, configer: Configer = None):
         """Init the database connection. Use uri in config file or use sqlite
         as default database."""
-        mysql_uri = None
+        system_db_uri = None
         if Configer:
-            mysql_uri = configer.get('DB', {}).get('mysql_uri')
-        if mysql_uri and mysql_uri.strip():
-            db_uri = mysql_uri
+            system_db_uri = configer.get('DB', {}).get('system_db_uri')
+            if not system_db_uri:
+                system_db_uri = configer.get('DB', {}).get('mysql_uri')
+        if system_db_uri and system_db_uri.strip():
+            db_uri = system_db_uri
         else:
-            db_path = get_project_root_path() / 'DB' / 'agent_framework.db'
+            db_path = get_project_root_path() / 'DB' / 'agent_universe.db'
             db_path.parent.mkdir(parents=True, exist_ok=True)
             db_uri = f'sqlite:////{db_path}'
 
