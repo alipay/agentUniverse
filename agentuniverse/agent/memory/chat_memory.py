@@ -37,7 +37,7 @@ class ChatMemory(Memory):
     prompt_version: Optional[str] = None
 
     def as_langchain(self) -> BaseChatMemory:
-        """Convert the AgentUniverse(AU) chat memory class to the langchain chat memory class."""
+        """Convert the agentUniverse(aU) chat memory class to the langchain chat memory class."""
         if self.llm is None:
             raise ValueError("Must set `llm` when using langchain memory.")
         if self.type is None or self.type == MemoryTypeEnum.SHORT_TERM:

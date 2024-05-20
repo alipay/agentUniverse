@@ -14,7 +14,7 @@ from agentuniverse.agent.action.knowledge.store.document import Document
 
 
 class WebPdfReader(Reader):
-    """The AgentUniverse(AU) web pdf reader.
+    """The agentUniverse(aU) web pdf reader.
 
     The pdf file will be downloaded and then parsed by `pdfminer.six`.
     """
