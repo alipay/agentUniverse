@@ -28,10 +28,10 @@ class LangchainOpenAI(ChatOpenAI):
         """The __init__ method.
 
         The agentUniverse LLM instance is passed to this class as an argument.
-        Convert the attributes of AgentUniverse(AU) LLM instance to the LangchainOpenAI object for initialization
+        Convert the attributes of agentUniverse(aU) LLM instance to the LangchainOpenAI object for initialization
 
         Args:
-            llm (LLM): the AgentUniverse(AU) LLM instance.
+            llm (LLM): the agentUniverse(aU) LLM instance.
         """
         init_params = dict()
         init_params['model_name'] = llm.model_name if llm.model_name else 'gpt-3.5-turbo'

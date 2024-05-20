@@ -132,7 +132,7 @@ class OpenAILLM(LLM):
             return self.agenerate_stream_result(chat_completion)
 
     def as_langchain(self) -> BaseLanguageModel:
-        """Convert the AgentUniverse(AU) openai llm class to the langchain openai llm class."""
+        """Convert the agentUniverse(aU) openai llm class to the langchain openai llm class."""
         return LangchainOpenAI(self)
 
     def set_by_agent_model(self, **kwargs) -> None:

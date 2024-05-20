@@ -30,5 +30,5 @@ class Embedding(BaseModel):
         """Asynchronously get embeddings."""
 
     def as_langchain(self) -> LCEmbeddings:
-        """Convert the AgentUniverse(AU) embedding class to the langchain embedding class."""
+        """Convert the agentUniverse(aU) embedding class to the langchain embedding class."""
         pass

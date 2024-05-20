@@ -91,6 +91,6 @@ class OpenAIEmbedding(Embedding):
             raise ValueError(e.message)
 
     def as_langchain(self) -> OpenAIEmbeddings:
-        """Convert the AgentUniverse(AU) openai embedding class to the langchain openai embedding class."""
+        """Convert the agentUniverse(aU) openai embedding class to the langchain openai embedding class."""
         return OpenAIEmbeddings(openai_api_key=self.openai_api_key,
                                 client=self.client.embeddings, async_client=self.async_client.embeddings)
