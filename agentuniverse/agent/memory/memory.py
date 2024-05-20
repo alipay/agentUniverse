@@ -37,7 +37,7 @@ class Memory(ComponentBase):
         super().__init__(component_type=ComponentEnum.MEMORY, **kwargs)
 
     def as_langchain(self) -> BaseMemory:
-        """Convert the AgentUniverse(AU) memory class to the langchain memory class."""
+        """Convert the agentUniverse(aU) memory class to the langchain memory class."""
         pass
 
     def set_by_agent_model(self, **kwargs) -> None:
