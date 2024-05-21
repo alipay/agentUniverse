@@ -104,13 +104,13 @@ metadata:
   module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
   class: 'DemoRagAgent'
 ```
-The above is an actual example of an agent configuration. In addition to the standard configuration items introduced above, the observant among you may have noticed variables in the prompt like `{background}` and `{input}`. This is a very practical prompt replacement feature, which we will explain in the section on defining behaviors in the agent domain.
+The above is an actual example of an agent configuration. In addition to the standard configuration items introduced above, the observant among you may have noticed variables in the prompt like `{background}` and `{input}`. This is a very practical prompt replacement feature, which we will explain in the section [How to dynamically adjust settings based on user input](#How to dynamically adjust settings based on user input).
 
 You can find more agent configuration YAML examples in our sample project under the path `sample_standard_app.app.core.agent`.
 
 In addition to this, agentUniverse does not restrict users from extending the YAML configuration content for agents. You can create any custom configuration key according to your own requirements, but please be careful not to duplicate the default configuration keywords mentioned above.
 
-## Creating Agent Domain Behavior Definition - agent_xx.py
+## Creating Agent Domain Behavior Definition agent_xx.py
 In this section, you can orchestrate and customize the behavior of any agent. Of course, if you are completely using existing Agent capabilities, this section is not mandatory.
 
 In this section, we will focus on commonly used definitions of agent domain behavior and the common techniques you may use in the actual process of defining agent domain behaviors.
@@ -156,7 +156,7 @@ The output processing node before agent execution, where an agent's output can b
 
 This section has one input parameter, as follows:
 * `agent_result`: Agent output data, of type `dict`.  
-`parse_result`方法的输出对象一般使用`agent_result`
+* The output object for the `parse_result` method is typically used `agent_result`.
 
 #### execute method
 This method is the core entry point for the agent's execution flow. The agent's base class implements the execution method by default, and users can also override this method to customize the execution method for any agent.
@@ -213,8 +213,36 @@ In this example, the `plan` section from the agent configuration attributes is a
 
 The properties and domain behaviors of the agent are both dependent on the Agent base class in the agentUniverse framework, which is located at `agentuniverse.agent.agent.Agent`. We will also focus on the underlying objects in the sections on agents and related domain objects. If you are interested in the underlying technical implementation, you can further refer to the corresponding code and documentation.
 
+#### An actual example of an agent domain behavior definition.
+```python
+from agentuniverse.agent.agent import Agent
+from agentuniverse.agent.input_object import InputObject
+from agentuniverse.agent.plan.planner.planner import Planner
+from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
+
+class DemoRagAgent(Agent):
+    def input_keys(self) -> list[str]:
+        return ['input']
+
+    def output_keys(self) -> list[str]:
+        return ['output']
+
+    def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
+        agent_input['input'] = input_object.get_data('input')
+        return agent_input
+
+    def parse_result(self, planner_result: dict) -> dict:
+        return planner_result
+
+    # def execute(self, input_object: InputObject, agent_input: dict) -> dict:    
+    #     planner_base: Planner = PlannerManager().get_instance_obj(self.agent_model.plan.get('planner').get('name'))
+    #     planner_result = planner_base.invoke(self.agent_model, agent_input, input_object)
+    #     return planner_result
+```
+The above is an actual example of an agent domain behavior definition.
+
 ## Pay attention to the package path where your defined agent is located
-With the agent configuration and domain definition outlined above, you now have mastered all the steps to create an agent. Moving forward, we will use these agents, but before doing so, please ensure that the created agents are within the correct package scan path.
+With the above agent configuration and domain definition part, you have mastered all the steps to create an agent; next, we will use these agents. Before using, please ensure that the created agents are within the correct package scanning path.
 
 In the `config.toml` of the agentUniverse project, you need to configure the package corresponding to the agent file. Please confirm again that the package path where your created file is located is under the `CORE_PACKAGE` in the `agent` path or its subpaths.
 
@@ -226,15 +254,15 @@ Taking the configuration of the example project as a reference, it would be as f
 agent = ['sample_standard_app.app.core.agent']
 ```
 
-## Practical tips for agent development
+## Other techniques for agent development
 ### Customize and orchestrate the execution process of agents freely
-In the 'Creating Agent Domain Behavior Definitions' section of this document, we have already detailed how to customize an execute method. This method is often used in practice customizing processes and inject SOPs (Standard Operating Procedures) according to user demands.
+In the [Creating Agent Domain Behavior Definitions](#Creating Agent Domain Behavior Definition-agent_xx.py) section of this document, we have already detailed how to customize an execute method. This method is often used in practice customizing processes and inject SOPs (Standard Operating Procedures) according to user demands.
 
 ### How to dynamically adjust settings based on user input
 
 **Method 1 (Recommended): Through the standard prompt template variable replacement method.**  
 
-In the "A Practical Example of an Agent Configuration" section of this document, the prompt includes variables like `{background}`,`{input}`, etc. This feature is the prompt variable template replacement function, aimed at dynamically influencing the prompt based on the user's input. One only needs to define the text using `{variable}` format in the agent configuration settings section, and define it in the parse_input's `agent_input` to dynamically replace the corresponding prompt based on the input portion.
+In [An actual example of an agent configuration](#An actual example of an agent configuration.) section of this document, the prompt includes variables like `{background}`,`{input}`, etc. This feature is the prompt variable template replacement function, aimed at dynamically influencing the prompt based on the user's input. One only needs to define the text using `{variable}` format in the agent configuration settings section, and define it in the parse_input's `agent_input` to dynamically replace the corresponding prompt based on the input portion.
 
 For example, in the sample agent `sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent.py`, there is the following `parse_input` method.
 
@@ -335,7 +363,7 @@ metadata:
   class: 'RagAgent'
 ```
 
-You can find more information about existing agents and understand their roles in the "Learn More About Existing Agents" section of this document.
+You can find more information about existing agents and understand their roles in the [Learn more about agents](#Learn more about agents) section of this document.
 
 # How to Use an Agent
 In the agentUniverse, all agent entities are managed by a global agent manager. If you need to use an agent during any framework execution process, you can do so through the agent manager. Additionally, leveraging the framework's service capabilities, you can quickly turn an agent into a service and make network calls to it using standard HTTP or RPC protocols.

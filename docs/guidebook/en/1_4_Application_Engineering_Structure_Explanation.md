@@ -44,7 +44,7 @@ The specific meanings of each package directory level are as follows:
 ## Using Any Project Directory Structure
 You can adjust the project directory structure according to your preferences and actual circumstances, but please be sure to follow the rules below.
 
-### Bootstrap Startup Directory {#bootstrap-startup-directory}
+### Bootstrap Startup Directory
 Regardless of the location of your project's startup script, except for testing, please ensure that the application service is started with the following statement:
 
 ```python
