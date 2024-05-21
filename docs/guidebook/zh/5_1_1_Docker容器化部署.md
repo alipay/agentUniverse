@@ -22,7 +22,7 @@ docker run -d -p 8888:8888 -e OPENAI_API_KEY=XXX -v ./sample_standard_app/:/usr/
 由于多个容器在相同的挂载目录进行文件的读写，有几处设置可以优化并发读写的冲突：
 1. 当您使用本地Sqlite库时，sqlite的本地数据库文件默认保存在项目主目录下，因此所有容器会读写同一个数据库文件，可能引发并发问题。建议在config.toml中指定一个非挂载路径 `/usr/local/etc/workspace/project`下的sqlite数据库文件地址，如容器内的`/usr/local/etc`下，例如
     ```toml
-    mysql_uri = 'sqlite:////usr/local/etc/agent_universe.db'
+    system_db_uri = 'sqlite:////usr/local/etc/agent_universe.db'
     ```
     或者也可以使用mysql，避免在本地进行数据库文件的读写。
 2. 日志文件输出的默认路径是在项目工程的主目录，也就是挂载目录中，因此推荐在log_config.toml中指定一个非挂载路径下的目录，如

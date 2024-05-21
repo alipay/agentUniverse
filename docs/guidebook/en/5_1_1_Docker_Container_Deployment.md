@@ -22,7 +22,7 @@ The`-p 8888:8888`represents the port mapping for the Web Server. The first 8888 
 If you need multiple containers to mount the same directory, it's advised to pay attention to the following points when using this method:：
 1. Specify a SQLite database file address outside the mounted path `/usr/local/etc/workspace/project`in the config.toml, such as inside `/usr/local/etc` in the container, for example,
     ```toml
-    mysql_uri = 'sqlite:////usr/local/etc/agent_universe.db'
+    system_db_uri = 'sqlite:////usr/local/etc/agent_universe.db'
     ```
     This can reduce the problems with SQLite concurrency (as SQLite does not handle concurrency very well). Alternatively, you can directly use MySQL, which will offer better concurrency performance.
 2. Specify a directory outside the mounted path in the log_config.toml, like
