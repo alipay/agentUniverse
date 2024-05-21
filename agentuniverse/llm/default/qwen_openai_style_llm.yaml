@@ -1,0 +1,8 @@
+name: 'default_qwen_llm'
+description: 'default openai llm with spi'
+model_name: 'qwen-turbo'
+max_tokens: 1000
+metadata:
+  type: 'LLM'
+  module: 'agentuniverse.llm.default.qwen_openai_style_llm'
+  class: 'QWenOpenAIStyleLLM'
