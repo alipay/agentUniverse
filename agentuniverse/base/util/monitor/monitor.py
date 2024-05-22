@@ -24,7 +24,7 @@ class Monitor(BaseModel):
 
     def trace_llm_invocation(self, source: str, llm_input: Union[str, dict], llm_output: Union[str, dict]) -> None:
         """Trace the llm invocation and save it to the monitor jsonl file."""
-        # get current time
+        # get the current time
         date = datetime.datetime.now()
         llm_invocation = {
             "source": source,
@@ -32,6 +32,7 @@ class Monitor(BaseModel):
             "llm_input": llm_input,
             "llm_output": llm_output,
         }
+        # files are stored in hours
         filename = f"llm_{date.strftime('%Y%m%d-%H')}.jsonl"
         # file path to save
         path_save = os.path.join(str(self._get_or_create_subdir(LLM_INVOCATION_SUBDIR)), filename)
