@@ -79,7 +79,8 @@ def trace_llm(func):
         return wrapper_sync
 
 
-def _get_llm_input(func, *args, **kwargs):
+def _get_llm_input(func, *args, **kwargs) -> dict:
+    """Get the llm input from arguments."""
     sig = inspect.signature(func)
     bound_args = sig.bind(*args, **kwargs)
     bound_args.apply_defaults()
