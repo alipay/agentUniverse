@@ -45,6 +45,7 @@ class LLM(ComponentBase):
     streaming: Optional[bool] = False
     tracing: Optional[bool] = False
     ext_info: Optional[dict] = None
+    __max_context_length: Optional[int] = None
 
     def __init__(self, **kwargs):
         """Initialize the llm."""
@@ -103,6 +104,7 @@ class LLM(ComponentBase):
             self.tracing = component_configer.tracing
         if component_configer.ext_info:
             self.ext_info = component_configer.ext_info
+
         return self
 
     def set_by_agent_model(self, **kwargs) -> None:
@@ -121,13 +123,15 @@ class LLM(ComponentBase):
             self.streaming = kwargs['streaming']
         if 'tracing' in kwargs and kwargs['tracing']:
             self.tracing = kwargs['tracing']
+        if 'max_context_length' in kwargs and kwargs['max_context_length']:
+            self.__max_context_length = kwargs['max_context_length']
 
-    @abstractmethod
     def max_context_length(self) -> int:
         """Max context length.
 
         The total length of input tokens and generated tokens is limited by the model's context length.
         """
+        return self.__max_context_length
 
     @abstractmethod
     def get_num_tokens(self, text: str) -> int:
@@ -141,3 +145,6 @@ class LLM(ComponentBase):
         Returns:
             The integer number of tokens in the text.
         """
+
+    class Config:
+        protected_namespaces = ()

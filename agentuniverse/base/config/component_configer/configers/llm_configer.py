@@ -26,6 +26,7 @@ class LLMConfiger(ComponentConfiger):
         self.__streaming: Optional[bool] = None
         self.__tracing: Optional[bool] = None
         self.__ext_info: Optional[dict] = None
+        self.__max_context_length: Optional[int] = None
 
     @property
     def name(self) -> Optional[str]:
@@ -70,6 +71,10 @@ class LLMConfiger(ComponentConfiger):
     def ext_info(self) -> Optional[dict]:
         return self.__ext_info
 
+    @property
+    def max_content_length(self) -> Optional[int]:
+        return self.__max_context_length
+
     def load(self) -> 'LLMConfiger':
         """Load the configuration by the Configer object.
         Returns:
@@ -97,6 +102,7 @@ class LLMConfiger(ComponentConfiger):
             self.__streaming = configer.value.get('streaming')
             self.__tracing = configer.value.get('tracing')
             self.__ext_info = configer.value.get('ext_info')
+            self.__max_context_length = configer.value.get('max_context_length')
         except Exception as e:
             raise Exception(f"Failed to parse the LLM configuration: {e}")
         return self
