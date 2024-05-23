@@ -14,8 +14,8 @@ import tiktoken
 from langchain_core.language_models.base import BaseLanguageModel
 from openai import OpenAI, AsyncOpenAI
 
-from agentuniverse.llm.langchain_openai_style_instance import LangchainOpenAIStyleInstance
 from agentuniverse.llm.llm import LLM, LLMOutput
+from agentuniverse.llm.openai_style_langchain_instance import LangchainOpenAIStyleInstance
 
 
 class OpenAIStyleLLM(LLM):
@@ -37,7 +37,6 @@ class OpenAIStyleLLM(LLM):
     api_base: Optional[str] = None
     proxy: Optional[str] = None
     client_args: Optional[dict] = None
-    model_max_context_length: int = None
 
     def _new_client(self):
         """Initialize the openai client."""
@@ -83,6 +82,7 @@ class OpenAIStyleLLM(LLM):
         )
         if not streaming:
             text = chat_completion.choices[0].message.content
+            self.close()
             return LLMOutput(text=text, raw=chat_completion.model_dump())
         return self.generate_stream_result(chat_completion)
 
@@ -106,6 +106,7 @@ class OpenAIStyleLLM(LLM):
         )
         if not streaming:
             text = chat_completion.choices[0].message.content
+            await self.aclose()
             return LLMOutput(text=text, raw=chat_completion.model_dump())
         return self.agenerate_stream_result(chat_completion)
 
@@ -124,8 +125,6 @@ class OpenAIStyleLLM(LLM):
             self.proxy = kwargs['proxy']
         if 'client_args' in kwargs and kwargs['client_args']:
             self.client_args = kwargs['client_args']
-        if 'model_max_context_length' in kwargs and kwargs['model_max_context_length']:
-            self.model_max_context_length = kwargs['model_max_context_length']
 
     @staticmethod
     def parse_result(chunk):
@@ -142,21 +141,22 @@ class OpenAIStyleLLM(LLM):
             return
         return LLMOutput(text=text, raw=chat_completion.model_dump())
 
-    @classmethod
-    def generate_stream_result(cls, stream: openai.Stream):
+    def generate_stream_result(self, stream: openai.Stream):
         """Generate the result of the stream."""
         for chunk in stream:
-            llm_output = cls.parse_result(chunk)
+            llm_output = self.parse_result(chunk)
+            if llm_output:
+                yield llm_output
+        self.close()
+
+    async def agenerate_stream_result(self, stream: AsyncIterator) -> AsyncIterator[LLMOutput]:
+        """Generate the result of the stream."""
+        async for chunk in stream:
+            llm_output = self.parse_result(chunk)
             if llm_output:
                 yield llm_output
 
-    @classmethod
-    async def agenerate_stream_result(cls, stream: AsyncIterator) -> AsyncIterator[LLMOutput]:
-        """Generate the result of the stream."""
-        async for chunk in stream:
-            llm_output = cls.parse_result(chunk)
-            if llm_output:
-                yield llm_output
+        await self.aclose()
 
     def get_num_tokens(self, text: str) -> int:
         """Get the number of tokens present in the text.
@@ -174,3 +174,13 @@ class OpenAIStyleLLM(LLM):
         except KeyError:
             encoding = tiktoken.get_encoding("cl100k_base")
         return len(encoding.encode(text))
+
+    def close(self):
+        """Close the client."""
+        if hasattr(self, 'client') and self.client:
+            self.client.close()
+
+    async def aclose(self):
+        """Async close the client."""
+        if hasattr(self, 'async_client') and self.async_client:
+            await self.async_client.close()

@@ -1,5 +1,5 @@
-name: 'default_wenxin_llm'
-description: 'default openai llm with spi'
+name: 'wenxin_llm'
+description: 'demo wenxin llm with spi'
 model_name: 'ERNIE-3.5-8K'
 max_tokens: 1000
 streaming: true

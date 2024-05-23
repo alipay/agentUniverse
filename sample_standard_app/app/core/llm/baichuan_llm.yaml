@@ -1,5 +1,5 @@
-name: 'default_baichuan_llm'
-description: 'default baichuan llm with spi'
+name: 'baichuan_llm'
+description: 'demo baichuan llm with spi'
 model_name: 'Baichuan2-Turbo'
 max_tokens: 1000
 api_key_name: 'BAICHUAN_API_KEY'

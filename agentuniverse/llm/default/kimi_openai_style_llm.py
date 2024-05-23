@@ -22,7 +22,6 @@ KIMI_Max_CONTEXT_LENGTH = {
 
 
 class KIMIOpenAIStyleLLM(OpenAIStyleLLM):
-
     """
         KIMI's OpenAI Style LLM
         Attributes:
@@ -31,10 +30,12 @@ class KIMIOpenAIStyleLLM(OpenAIStyleLLM):
     """
     api_key: Optional[str] = Field(default_factory=lambda: get_from_env("KIMI_API_KEY"))
     api_base: Optional[str] = "https://api.moonshot.cn/v1"
+    proxy: Optional[str] = Field(default_factory=lambda: get_from_env("KIMI_PROXY"))
+    organization: Optional[str] = Field(default_factory=lambda: get_from_env("KIMI_ORGANIZATION"))
 
     def max_context_length(self) -> int:
-        if self.model_max_context_length:
-            return self.model_max_context_length
+        if super().max_context_length():
+            return super().max_context_length()
         return KIMI_Max_CONTEXT_LENGTH.get(self.model_name, 8000)
 
     def get_num_tokens(self, text: str) -> int:

@@ -36,10 +36,12 @@ class QWenOpenAIStyleLLM(OpenAIStyleLLM):
 
     api_key: Optional[str] = Field(default_factory=lambda: get_from_env("DASHSCOPE_API_KEY"))
     api_base: Optional[str] = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    proxy: Optional[str] = Field(default_factory=lambda: get_from_env("DASHSCOPE_PROXY"))
+    organization: Optional[str] = Field(default_factory=lambda: get_from_env("DASHSCOPE_ORGANIZATION"))
 
     def max_context_length(self) -> int:
-        if self.model_max_context_length:
-            return self.model_max_context_length
+        if super().max_context_length():
+            return super().max_context_length()
         return QWen_Max_CONTEXT_LENGTH.get(self.model_name, 8000)
 
     def get_num_tokens(self, text: str) -> int:

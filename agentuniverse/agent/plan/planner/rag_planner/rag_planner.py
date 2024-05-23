@@ -43,7 +43,6 @@ class RagPlanner(Planner):
 
         prompt: ChatPrompt = self.handle_prompt(agent_model, planner_input)
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
-
         llm_chain = LLMChain(llm=llm.as_langchain(),
                              prompt=prompt.as_langchain(),
                              output_key=self.output_key, memory=memory)

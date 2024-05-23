@@ -18,6 +18,7 @@ from qianfan.resources.tools import tokenizer
 from agentuniverse.base.util.env_util import get_from_env
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_output import LLMOutput
+from agentuniverse.llm.wenxin_langchain_instance import WenXinLangChainInstance
 
 TokenModelList = [
     'Ernie-4.0-8k',
@@ -95,6 +96,8 @@ class WenXinLLM(LLM):
         return self.agenerate_stream_result(chat_completion)
 
     def max_context_length(self) -> int:
+        if super().max_context_length():
+            return super().max_context_length()
         res = self._new_client().get_model_info(self.model_name)
         if res.max_input_tokens:
             return res.max_input_tokens
@@ -116,7 +119,7 @@ class WenXinLLM(LLM):
         text = chunk.body.get('result')
         if not text:
             return None
-        return LLMOutput(text=text, raw=chunk.body)
+        return LLMOutput(text=text, raw=chunk)
 
     def generate_stream_result(self, chat_completion) -> Iterator[LLMOutput]:
         for chunk in chat_completion:
@@ -132,10 +135,4 @@ class WenXinLLM(LLM):
 
     def as_langchain(self) -> BaseLanguageModel:
         """Return an instance of the LangChain `BaseLanguageModel` class."""
-        llm = self
-        init_params = {"qianfan_ak": self.qianfan_ak, "qianfan_sk": self.qianfan_sk, "model": self.model_name,
-                       "max_tokens": self.max_tokens, "timeout": self.request_timeout,
-                       'max_retries': llm.max_retries if llm.max_retries else 2,
-                       'streaming': llm.streaming if llm.streaming else False,
-                       'temperature': llm.temperature if llm.temperature else 0.7}
-        return QianfanChatEndpoint(**init_params)
+        return WenXinLangChainInstance(llm=self)
