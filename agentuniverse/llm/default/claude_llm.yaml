@@ -1,0 +1,8 @@
+name: 'default_claude_llm'
+description: 'default kimi llm with spi'
+model_name: 'claude-3-opus-20240229'
+max_tokens: 4096
+metadata:
+  type: 'LLM'
+  module: 'agentuniverse.llm.default.claude_llm'
+  class: 'ClaudeLLM'

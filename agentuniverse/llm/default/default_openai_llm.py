@@ -5,18 +5,25 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: default_openai_llm.py
-from typing import Any
+from typing import Any, Optional
 
+from pydantic import Field
+
+from agentuniverse.base.util.env_util import get_from_env
 from agentuniverse.llm.llm_output import LLMOutput
-from agentuniverse.llm.openai_llm import OpenAILLM
+from agentuniverse.llm.openai_style_llm import OpenAIStyleLLM
 
 
-class DefaultOpenAILLM(OpenAILLM):
+class DefaultOpenAILLM(OpenAIStyleLLM):
     """The agentUniverse default openai llm module.
 
     LLM parameters, such as name/description/model_name/max_tokens,
     are injected into this class by the default_openai_llm.yaml configuration.
     """
+    api_key: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_API_KEY"))
+    organization: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_ORGANIZATION"))
+    api_base: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_API_BASE"))
+    proxy: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_PROXY"))
 
     def call(self, messages: list, **kwargs: Any) -> LLMOutput:
         """ The call method of the LLM.
