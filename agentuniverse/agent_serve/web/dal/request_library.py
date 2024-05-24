@@ -7,18 +7,18 @@
 # @FileName: request_library.py
 
 import datetime
-import json
 
 from sqlalchemy import JSON, Integer, String, DateTime, Text, Column
-from sqlalchemy import create_engine
 from sqlalchemy import select
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base
 
 from .entity.request_do import RequestDO
 from agentuniverse.base.util.system_util import get_project_root_path
 from agentuniverse.base.config.configer import Configer
+from agentuniverse.base.config.component_configer.configers.sqldb_wrapper_config import SQLDBWrapperConfiger
 from agentuniverse.base.annotation.singleton import singleton
+from agentuniverse.database.sqldb_wrapper import SQLDBWrapper
+from agentuniverse.database.sqldb_wrapper_manager import SQLDBWrapperManager
 
 REQUEST_TABLE_NAME = 'request_task'
 Base = declarative_base()
@@ -51,14 +51,33 @@ class RequestLibrary:
             if not system_db_uri:
                 system_db_uri = configer.get('DB', {}).get('mysql_uri')
         if system_db_uri and system_db_uri.strip():
-            db_uri = system_db_uri
+            pass
         else:
             db_path = get_project_root_path() / 'DB' / 'agent_universe.db'
             db_path.parent.mkdir(parents=True, exist_ok=True)
-            db_uri = f'sqlite:////{db_path}'
+            system_db_uri = f'sqlite:////{db_path}'
 
-        self.db_uri = db_uri
-        self.Session = None
+        self.session = None
+        # create a sqldb_wrapper_instance
+        _configer = SQLDBWrapperConfiger()
+        _configer.db_uri = system_db_uri
+        self.sqldb_wrapper = SQLDBWrapper(
+            name="__system_db__",
+            db_wrapper_configer=_configer
+        )
+        SQLDBWrapperManager().register("__system_db__", self.sqldb_wrapper)
+
+    def __init_request_table(self):
+        with self.sqldb_wrapper.sql_database._engine.connect() as conn:
+            if not conn.dialect.has_table(conn, REQUEST_TABLE_NAME):
+                Base.metadata.create_all(self.sqldb_wrapper.sql_database._engine)
+
+    def get_session(self):
+        if not self.session:
+            self.__init_request_table()
+            self.session = self.sqldb_wrapper.get_session()
+        return self.session
+
 
     def query_request_by_request_id(self, request_id: str) -> RequestDO | None:
         """Get a RequestDO with given request_id.
@@ -69,7 +88,7 @@ class RequestLibrary:
         Return:
             The target RequestDO or none when no such data.
         """
-        session = self.__get_session()
+        session = self.get_session()
         try:
             result = session.execute(
                 select(RequestORM).where(RequestORM.request_id == request_id)
@@ -89,7 +108,7 @@ class RequestLibrary:
         Return:
             A int stands unique data id in table.
         """
-        session = self.__get_session()
+        session = self.get_session()
         try:
             request_orm = RequestORM(**request_do.model_dump())
             session.add(request_orm)
@@ -101,7 +120,7 @@ class RequestLibrary:
     def update_request(self, request_do: RequestDO):
         """Update the request data with same request id as the given
         RequestDO."""
-        session = self.__get_session()
+        session = self.get_session()
         try:
             db_request_do = session.query(RequestORM).filter(
                 RequestORM.request_id == request_do.request_id).first()
@@ -116,7 +135,7 @@ class RequestLibrary:
 
     def update_gmt_modified(self, request_id: str):
         """Update the request task latest active time."""
-        session = self.__get_session()
+        session = self.get_session()
         try:
             db_request_do = session.query(RequestORM).filter(
                 RequestORM.request_id == request_id).first()
@@ -126,21 +145,6 @@ class RequestLibrary:
                 session.refresh(db_request_do)
         finally:
             session.close()
-
-    def __get_session(self):
-        if self.Session:
-            return self.Session()
-        # Create database engine
-        self.engine = create_engine(
-            self.db_uri,
-            json_serializer=lambda x: json.dumps(x, ensure_ascii=False)
-        )
-        self.Session = sessionmaker(bind=self.engine)
-
-        with self.engine.connect() as conn:
-            if not conn.dialect.has_table(conn, REQUEST_TABLE_NAME):
-                Base.metadata.create_all(self.engine)
-        return self.Session()
 
     def __request_orm_to_do(self, request_orm: RequestORM) -> RequestDO:
         """Transfer a RequestORM to RequestDO."""

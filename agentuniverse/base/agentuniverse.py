@@ -116,6 +116,7 @@ class AgentUniverse(object):
                                      + self.__system_default_planner_package)
         core_tool_package_list = app_configer.core_tool_package_list or app_configer.core_default_package_list
         core_service_package_list = app_configer.core_service_package_list or app_configer.core_default_package_list
+        core_sqldb_wrapper_package_list = app_configer.core_sqldb_wrapper_package_list or app_configer.core_default_package_list
         core_memory_package_list = ((app_configer.core_memory_package_list or app_configer.core_default_package_list)
                                     + self.__system_default_memory_package)
         core_prompt_package_list = ((app_configer.core_prompt_package_list or app_configer.core_default_package_list)
@@ -128,6 +129,7 @@ class AgentUniverse(object):
             ComponentEnum.PLANNER: core_planner_package_list,
             ComponentEnum.TOOL: core_tool_package_list,
             ComponentEnum.SERVICE: core_service_package_list,
+            ComponentEnum.SQLDB_WRAPPER: core_sqldb_wrapper_package_list,
             ComponentEnum.MEMORY: core_memory_package_list,
             ComponentEnum.PROMPT: core_prompt_package_list
         }
