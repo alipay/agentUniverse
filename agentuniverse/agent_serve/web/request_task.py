@@ -225,7 +225,7 @@ class RequestTask:
         self.__request_do__.state = TaskStateEnum.FINISHED.value
 
     @staticmethod
-    def query_request_state(request_id: str) -> dict:
+    def query_request_state(request_id: str) -> dict|None:
         """Query the request data in database by given request_id.
 
         Args:
@@ -234,9 +234,7 @@ class RequestTask:
         request_do = RequestLibrary().query_request_by_request_id(
             request_id)
         if request_do is None:
-            return {"state": TaskStateEnum.INIT.value,
-                    "result": None,
-                    "steps": None}
+            return None
         RequestTask.is_validate(request_do)
         return {
             "state": request_do.state,

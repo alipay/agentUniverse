@@ -24,6 +24,7 @@ class AppConfiger(object):
         self.__core_tool_package_list: Optional[list[str]] = None
         self.__core_memory_package_list: Optional[list[str]] = None
         self.__core_service_package_list: Optional[list[str]] = None
+        self.__core_sqldb_wrapper_package_list: Optional[list[str]] = None
         self.__core_prompt_package_list: Optional[list[str]] = None
 
     @property
@@ -72,6 +73,11 @@ class AppConfiger(object):
         return self.__core_service_package_list
 
     @property
+    def core_sqldb_wrapper_package_list(self) -> Optional[list[str]]:
+        """Return the sql db wrapper package list of the core."""
+        return self.__core_sqldb_wrapper_package_list
+
+    @property
     def core_prompt_package_list(self) -> Optional[list[str]]:
         return self.__core_prompt_package_list
 
@@ -93,5 +99,6 @@ class AppConfiger(object):
         self.__core_tool_package_list = configer.value.get('CORE_PACKAGE', {}).get('tool')
         self.__core_memory_package_list = configer.value.get('CORE_PACKAGE', {}).get('memory')
         self.__core_service_package_list = configer.value.get('CORE_PACKAGE', {}).get('service')
+        self.__core_sqldb_wrapper_package_list = configer.value.get('CORE_PACKAGE', {}).get('sqldb_wrapper')
         self.__core_prompt_package_list = configer.value.get('CORE_PACKAGE', {}).get('prompt')
         return self

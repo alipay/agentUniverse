@@ -15,6 +15,7 @@ from agentuniverse.agent.memory.memory_manager import MemoryManager
 from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
 from agentuniverse.agent_serve.service_manager import ServiceManager
 from agentuniverse.agent_serve.service_configer import ServiceConfiger
+from agentuniverse.database.sqldb_wrapper_manager import SQLDBWrapperManager
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
 from agentuniverse.base.config.component_configer.configers.knowledge_configer import KnowledgeConfiger
@@ -22,6 +23,7 @@ from agentuniverse.base.config.component_configer.configers.memory_configer impo
 from agentuniverse.base.config.component_configer.configers.planner_configer import PlannerConfiger
 from agentuniverse.base.config.component_configer.configers.prompt_configer import PromptConfiger
 from agentuniverse.base.config.component_configer.configers.tool_configer import ToolConfiger
+from agentuniverse.base.config.component_configer.configers.sqldb_wrapper_config import SQLDBWrapperConfiger
 from agentuniverse.base.config.config_type_enum import ConfigTypeEnum
 from agentuniverse.base.config.component_configer.configers.llm_configer import LLMConfiger
 from agentuniverse.base.component.component_enum import ComponentEnum
@@ -41,6 +43,7 @@ class ComponentConfigerUtil(object):
         ComponentEnum.MEMORY: MemoryConfiger,
         ComponentEnum.SERVICE: ServiceConfiger,
         ComponentEnum.PROMPT: PromptConfiger,
+        ComponentEnum.SQLDB_WRAPPER: SQLDBWrapperConfiger,
         ComponentEnum.DEFAULT: ComponentConfiger
     }
 
@@ -52,6 +55,7 @@ class ComponentConfigerUtil(object):
         ComponentEnum.TOOL: ToolManager,
         ComponentEnum.MEMORY: MemoryManager,
         ComponentEnum.SERVICE: ServiceManager,
+        ComponentEnum.SQLDB_WRAPPER: SQLDBWrapperManager,
         ComponentEnum.PROMPT: PromptManager
     }
 
