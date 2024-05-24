@@ -24,6 +24,7 @@ class LLMConfiger(ComponentConfiger):
         self.__max_tokens: Optional[int] = None
         self.__max_retries: Optional[int] = None
         self.__streaming: Optional[bool] = None
+        self.__tracing: Optional[bool] = None
         self.__ext_info: Optional[dict] = None
 
     @property
@@ -62,6 +63,10 @@ class LLMConfiger(ComponentConfiger):
         return self.__streaming
 
     @property
+    def tracing(self) -> Optional[bool]:
+        return self.__tracing
+
+    @property
     def ext_info(self) -> Optional[dict]:
         return self.__ext_info
 
@@ -90,6 +95,7 @@ class LLMConfiger(ComponentConfiger):
             self.__max_tokens = configer.value.get('max_tokens')
             self.__max_retries = configer.value.get('max_retries')
             self.__streaming = configer.value.get('streaming')
+            self.__tracing = configer.value.get('tracing')
             self.__ext_info = configer.value.get('ext_info')
         except Exception as e:
             raise Exception(f"Failed to parse the LLM configuration: {e}")

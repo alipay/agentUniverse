@@ -27,6 +27,11 @@ def trace_llm(func):
     async def wrapper_async(*args, **kwargs):
         # get llm input from arguments
         llm_input = _get_llm_input(func, *args, **kwargs)
+        # check whether the tracing switch is enabled
+        self = llm_input.pop('self', None)
+        if self and hasattr(self, 'tracing'):
+            if not self.tracing:
+                return await func(*args, **kwargs)
         # invoke function
         result = await func(*args, **kwargs)
         # not streaming
@@ -51,6 +56,11 @@ def trace_llm(func):
     def wrapper_sync(*args, **kwargs):
         # get llm input from arguments
         llm_input = _get_llm_input(func, *args, **kwargs)
+        # check whether the tracing switch is enabled
+        self = llm_input.pop('self', None)
+        if self and hasattr(self, 'tracing'):
+            if not self.tracing:
+                return func(*args, **kwargs)
         # invoke function
         result = func(*args, **kwargs)
         # not streaming
@@ -84,4 +94,4 @@ def _get_llm_input(func, *args, **kwargs) -> dict:
     sig = inspect.signature(func)
     bound_args = sig.bind(*args, **kwargs)
     bound_args.apply_defaults()
-    return {k: v for k, v in bound_args.arguments.items() if k != 'self'}
+    return {k: v for k, v in bound_args.arguments.items()}

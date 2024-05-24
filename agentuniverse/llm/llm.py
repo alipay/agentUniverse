@@ -43,6 +43,7 @@ class LLM(ComponentBase):
     max_tokens: Optional[int] = 1024
     max_retries: Optional[int] = 2
     streaming: Optional[bool] = False
+    tracing: Optional[bool] = False
     ext_info: Optional[dict] = None
 
     def __init__(self, **kwargs):
@@ -98,6 +99,8 @@ class LLM(ComponentBase):
             self.max_retries = component_configer.max_retries
         if component_configer.streaming:
             self.streaming = component_configer.streaming
+        if component_configer.tracing:
+            self.tracing = component_configer.tracing
         if component_configer.ext_info:
             self.ext_info = component_configer.ext_info
         return self
@@ -116,6 +119,8 @@ class LLM(ComponentBase):
             self.max_retries = kwargs['max_retries']
         if 'streaming' in kwargs and kwargs['streaming']:
             self.streaming = kwargs['streaming']
+        if 'tracing' in kwargs and kwargs['tracing']:
+            self.tracing = kwargs['tracing']
 
     @abstractmethod
     def max_context_length(self) -> int:
