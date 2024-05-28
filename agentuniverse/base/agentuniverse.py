@@ -39,7 +39,7 @@ class AgentUniverse(object):
         self.__system_default_llm_package = ['agentuniverse.llm.default']
         self.__system_default_planner_package = ['agentuniverse.agent.plan.planner']
         self.__system_default_memory_package = ['agentuniverse.agent.memory.default']
-        self.__system_default_prompt_package = ['agentuniverse.agent', 'agentuniverse.base.prompt']
+        self.__system_default_prompt_package = ['agentuniverse.agent', 'agentuniverse.base.util']
 
     def start(self, config_path: str = None):
         """Start the agentUniverse framework."""
