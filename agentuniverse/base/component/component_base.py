@@ -18,6 +18,8 @@ class ComponentBase(BaseModel):
     """The ComponentBase class, which is used to define the base class of the component."""
 
     component_type: ComponentEnum
+    # pydantic protected_namespaces config
+    model_config = ConfigDict(protected_namespaces=())
 
     # pydantic protected_namespaces config
     model_config = ConfigDict(protected_namespaces=())
