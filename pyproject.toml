@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "agentUniverse"
-version = "0.0.6"
+version = "0.0.7"
 description = "agentUniverse is a framework for developing applications powered by multi-agent base on large language model."
 
 authors = ["AntGroup <jerry.zzw@antgroup.com>"]
@@ -41,6 +41,9 @@ sphinx-rtd-theme = "^2.0.0"
 aliyun-log-python-sdk = { version = "0.8.8", optional = true}
 googleapis-common-protos = "^1.63.0"
 myst-parser = "^2.0.0"
+qianfan = "^0.3.12"
+dashscope = "^1.19.1"
+anthropic = "^0.26.0"
 
 [tool.poetry.extras]
 log_ext = ["aliyun-log-python-sdk"]

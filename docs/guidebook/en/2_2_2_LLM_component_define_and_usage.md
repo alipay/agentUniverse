@@ -483,6 +483,11 @@ metadata:
 You can find more LLM metadata in the [Understanding More Existing LLM Components](#Understanding More Existing LLM Components) section of this document.
 
 # How to Use Model LLM Components
+## Configure for use in an Agent
+You can set up any LLM you have created in the llm_model of your agent according to the contents of [Agent Creation and Usage section](2_2_1_Agent_Create_And_Use.md).
+
+Refer to the example: `demo_multillm_agent`, with the specific file path being `sample_standard_app/app/core/agent/rag_agent_case/demo_multillm_agent.yaml`.
+
 ## Using the LLM Manager
 You can obtain an LLM instance with the specified name through the `.get_instance_obj(xx_llm_name)` method in the LLM Manager.
 

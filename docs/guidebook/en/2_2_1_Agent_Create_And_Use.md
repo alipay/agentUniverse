@@ -24,7 +24,7 @@ We will provide detailed descriptions of each component in the configuration.
   * `name`: name of LLM
   * `model_name`: model_name of LLM
 
-  You can choose any existing LLM or connect to any LLM of your choice. We will not elaborate on this part here; you can refer to the LLM section for more details.
+  You can choose any existing LLM or connect to any LLM of your choice. We will not elaborate on this part here; you can refer to the [LLM section](2_2_2_LLM.md) for more details.
 
 ### Setting the agent's plan
 **`plan` - plan of agent**
@@ -41,7 +41,7 @@ We will provide detailed descriptions of each component in the configuration.
     \- tool_name_b  
     \- tool_name_c  
 
-  You can choose any existing Tool or connect to any Tool of your choice. We will not elaborate on this part here; you can refer to the Tool section for more details.
+  You can choose any existing Tool or connect to any Tool of your choice. We will not elaborate on this part here; you can refer to the [Tool section](2_2_3_Tool.md) for more details.
 
 * `Knowledge` : Knowledge available for the agent's use.
   * knowledge_name_list，list of knowledge names, for example:   

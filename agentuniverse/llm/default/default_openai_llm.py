@@ -5,18 +5,47 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: default_openai_llm.py
-from typing import Any
+from typing import Any, Optional
 
+from pydantic import Field
+
+from agentuniverse.base.util.env_util import get_from_env
 from agentuniverse.llm.llm_output import LLMOutput
-from agentuniverse.llm.openai_llm import OpenAILLM
+from agentuniverse.llm.openai_style_llm import OpenAIStyleLLM
 
 
-class DefaultOpenAILLM(OpenAILLM):
+OPENAI_MAX_CONTEXT_LENGTH = {
+    "gpt-3.5-turbo": 4096,
+    "gpt-3.5-turbo-0301": 4096,
+    "gpt-3.5-turbo-0613": 4096,
+    "gpt-3.5-turbo-16k": 16384,
+    "gpt-3.5-turbo-16k-0613": 16384,
+    "gpt-35-turbo": 4096,
+    "gpt-35-turbo-16k": 16384,
+    "gpt-3.5-turbo-1106": 16384,
+    "gpt-3.5-turbo-0125": 16384,
+    "gpt-4-0314": 8192,
+    "gpt-4": 8192,
+    "gpt-4-32k": 32768,
+    "gpt-4-32k-0613": 32768,
+    "gpt-4-0613": 8192,
+    "gpt-4-1106-preview": 128000,
+    "gpt-4-turbo": 128000,
+    "gpt-4o": 128000,
+    "gpt-4o-2024-05-13": 128000,
+}
+
+
+class DefaultOpenAILLM(OpenAIStyleLLM):
     """The agentUniverse default openai llm module.
 
     LLM parameters, such as name/description/model_name/max_tokens,
     are injected into this class by the default_openai_llm.yaml configuration.
     """
+    api_key: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_API_KEY"))
+    organization: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_ORGANIZATION"))
+    api_base: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_API_BASE"))
+    proxy: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_PROXY"))
 
     def call(self, messages: list, **kwargs: Any) -> LLMOutput:
         """ The call method of the LLM.
@@ -39,3 +68,10 @@ class DefaultOpenAILLM(OpenAILLM):
             **kwargs: Arbitrary keyword arguments.
         """
         return await super().acall(messages, **kwargs)
+
+    def max_context_length(self) -> int:
+        """Max context length.
+
+          The total length of input tokens and generated tokens is limited by the openai model's context length.
+          """
+        return OPENAI_MAX_CONTEXT_LENGTH.get(self.model_name, 4096)
