@@ -1,4 +1,4 @@
-# Qwen 使用
+# KIMI 使用
 ## 1. 创建相关文件
 创建一个yaml文件，例如 user_kimi.yaml
 将以下内容粘贴到您的user_kimi.yaml文件当中
