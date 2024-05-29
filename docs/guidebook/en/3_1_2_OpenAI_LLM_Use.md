@@ -32,7 +32,7 @@ OPENAI_API_BASE="http://xxxx/v1"
 ## 3. Obtaining the OpenAI API KEY 
 [参考文档](https://platform.openai.com/account/api-keys)
 
-## 6. Note
+## 4. Note
 In agentuniverse, we have already created an llm with the name default_openai_llm. After configuring the OPENAI_API_KEY, users can directly use it.
 
 
