@@ -14,11 +14,13 @@
 * 2.2 [Domain Components](2_2_Domain_Component_Principles.md)
   * 2.2.1 [Agent](2_2_1_Agent.md)
     * 2.2.1.1 [Create And Use](2_2_1_Agent_Create_And_Use.md)
-    * 2.2.1.2 [Related Domain Objects](2_2_1_Agents_Related_Domain_Objects.md)
+    * 2.2.1.2 [Related Domain Objects](2_2_1_Agent_Related_Domain_Objects.md)
   * 2.2.2 [LLM](2_2_2_LLM.md)
     * 2.2.2.1 [Define And Use](2_2_2_LLM_component_define_and_usage.md)
-    * 2.2.2.2 [Related Domain Objects](2_2_2_LLMs_Related_Domain_Objects.md)
-  * 2.2.3 Tool
+    * 2.2.2.2 [Related Domain Objects](2_2_2_LLM_Related_Domain_Objects.md)
+  * 2.2.3 [Tool](2_2_3_Tool.md)
+    * 2.2.3.1 [Create And Use](2_2_3_Tool_Create_And_Use.md)
+    * 2.2.3.2 [Related Domain Objects](2_2_3_Tool_Related_Domain_Objects.md)
   * 2.2.4 Knowledge
   * 2.2.5 Memory
   * 2.2.6 Planner
