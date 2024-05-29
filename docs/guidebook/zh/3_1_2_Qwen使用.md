@@ -28,7 +28,7 @@ os.environ['DASHSCOPE_PROXY'] = 'https://xxxxxx'
 DASHSCOPE_API_KEY="sk-******"
 DASHSCOPE_PROXY="https://xxxxxx"
 ```
-## 3. DASHSCOP API KEY 获取
+## 3. DASHSCOPE API KEY 获取
 参考 Dashscope 官方文档：https://dashscope.console.aliyun.com/apiKey
 
 ## 4. 注意

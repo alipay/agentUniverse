@@ -1,4 +1,4 @@
-# Qwen 使用
+# Claude 使用
 ## 1. 创建相关文件
 创建一个yaml文件，例如 user_claude.yaml
 将以下内容粘贴到您的user_claude.yaml文件当中
@@ -27,7 +27,7 @@ os.environ['ANTHROPIC_API_URL'] = 'https://xxxxxx'
 ANTHROPIC_API_KEY="sk-******"
 ANTHROPIC_API_URL="https://xxxxxx"
 ```
-## 3. KIMI API KEY 获取
+## 3. Claude API KEY 获取
 参考 Claude 官方文档：https://docs.anthropic.com/zh-CN/docs/getting-access-to-claude
 
 ## 4. 注意
