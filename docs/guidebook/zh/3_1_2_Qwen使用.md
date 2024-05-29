@@ -13,16 +13,6 @@ metadata:
   module: 'agentuniverse.llm.default.qwen_openai_style_llm'
   class: 'QWenOpenAIStyleLLM'
 ```
-### 配置字段说明
-*    name 该全局唯一的名称
-*    description 描述信息
-*    model_name 模型名称
-*    max_tokens 模型输出的最大token数
-*    max_context_length: 所配置模型的最大上下文
-*    metadata 元数据
-*    type 类型，必须为'LLM'
-*    module 模块
-*    class 类名
 ## 2. 环境设置
 必须配置：DASHSCOPE_API_KEY  
 可选配置：ASHSCOPE_PROXY

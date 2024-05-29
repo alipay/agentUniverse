@@ -12,16 +12,6 @@ metadata:
   module: 'agentuniverse.llm.default.kimi_openai_style_llm'
   class: 'KIMIOpenAIStyleLLM'
 ```
-### Configuration Field Descriptions
-*  name: The globally unique name
-* description: Description information
-* model_name: Model name
-* max_tokens: The maximum number of tokens the model can output
-* max_context_length: The maximum length of context
-* metadata: Metadata
-* type: The type, must be 'LLM'
-* module: Module
-* class: Class name
 ## 2. Environment Setup
 Must be configured: KIMI_API_KEY
 Optional: KIMI_PROXY
