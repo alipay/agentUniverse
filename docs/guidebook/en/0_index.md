@@ -18,12 +18,6 @@
   * 2.2.2 [LLM](2_2_2_LLM.md)
     * 2.2.2.1 [Define And Use](2_2_2_LLM_component_define_and_usage.md)
     * 2.2.2.2 [Related Domain Objects](2_2_2_LLMs_Related_Domain_Objects.md)
-    * 2.2.2.3 [OpenAI Usage Instructions](2_2_2_OpenAI_LLM_Use.md)
-    * 2.2.2.4 [Qwen Usage Instructions](2_2_2_Qwen_LLM_Use.md)
-    * 2.2.2.5 [KIMI Usage Instructions](2_2_2_Kimi_LLM_Use.md)
-    * 2.2.2.6 [BAICHUAN Usage Instructions](2_2_2_BaiChuan_LLM_Use.md)
-    * 2.2.2.7 [Claude Usage Instructions](2_2_2_Claude_LLM_Use.md)
-    * 2.2.2.8 [WenXin Usage Instructions](2_2_2_WenXin_LLM_Use.md)
   * 2.2.3 Tool
   * 2.2.4 Knowledge
   * 2.2.5 Memory
