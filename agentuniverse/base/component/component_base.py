@@ -7,7 +7,7 @@
 # @FileName: component_base.py
 from abc import ABC
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
@@ -18,6 +18,8 @@ class ComponentBase(BaseModel):
     """The ComponentBase class, which is used to define the base class of the component."""
 
     component_type: ComponentEnum
+    # pydantic protected_namespaces config
+    model_config = ConfigDict(protected_namespaces=())
 
     def get_instance_code(self) -> str:
         """Return the full name of the component."""
