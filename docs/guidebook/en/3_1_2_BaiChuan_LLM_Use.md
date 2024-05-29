@@ -31,6 +31,6 @@ BAICHUAN_PROXY="https://xxxxxx"
 ## 3. Obtaining the BAICHUAN API KEY
 Reference BaiChuan Official Documentation: https://platform.baichuan-ai.com/console/apikey
 
-## 4. Note
+## 4. Tips
 In agentuniverse, we have already created an llm with the name default_baichuan_llm. After configuring the BAICHUAN_API_KEY, users can directly use it.
 
