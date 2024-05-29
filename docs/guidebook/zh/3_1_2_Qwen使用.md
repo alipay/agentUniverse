@@ -31,7 +31,7 @@ DASHSCOPE_PROXY="https://xxxxxx"
 ## 3. DASHSCOPE API KEY 获取
 参考 Dashscope 官方文档：https://dashscope.console.aliyun.com/apiKey
 
-## 4. 注意
-在agentuniverse中，我们已经创建了一个name为default_qwen_llm的llm,用户在配置DASHSCOPE_API_KEY之后可以直接使用
+## 4. Tips
+在agentuniverse中，我们已经创建了一个name为default_qwen_llm的llm,用户在配置DASHSCOPE_API_KEY之后可以直接使用。
 
 

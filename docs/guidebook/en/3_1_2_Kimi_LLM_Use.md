@@ -30,5 +30,5 @@ KIMI_PROXY="https://xxxxxx"
 ## 3. Obtaining the KIMI API KEY 
 Reference KIMI Official Documentation:https://platform.moonshot.cn/console/api-keys
 
-## 4. Note
+## 4. Tips
 In agentuniverse, we have already created an llm with the name default_kimi_llm. After configuring the KIMI_API_KEY, users can directly use it.

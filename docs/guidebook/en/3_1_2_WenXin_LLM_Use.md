@@ -30,7 +30,7 @@ QIANFAN_SK="https://xxxxxx"
 ## 3. Obtaining the WenXin API KEY 
 Reference QianFan Official Documentation: https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Dlkm79mnx
 
-## 4. Note
+## 4. Tips
 In agentuniverse, we have already created an llm with the name default_wenxin_llm. After configuring the QIANFAN_AK、QIANFAN_SK, users can directly use it.
 
 
