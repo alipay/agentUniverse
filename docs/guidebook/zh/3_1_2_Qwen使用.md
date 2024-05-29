@@ -15,7 +15,7 @@ metadata:
 ```
 ## 2. 环境设置
 必须配置：DASHSCOPE_API_KEY  
-可选配置：ASHSCOPE_PROXY
+可选配置：DASHSCOPE_PROXY
 ### 2.1 通过python代码配置
 ```python
 import os
