@@ -44,7 +44,6 @@ myst-parser = "^2.0.0"
 qianfan = "^0.3.12"
 dashscope = "^1.19.1"
 anthropic = "^0.26.0"
-langchain-anthropic = "^0.1.13"
 
 [tool.poetry.extras]
 log_ext = ["aliyun-log-python-sdk"]
