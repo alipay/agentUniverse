@@ -13,16 +13,6 @@ metadata:
   module: 'agentuniverse.llm.default.baichuan_openai_style_llm'
   class: 'BAICHUANOpenAIStyleLLM'
 ```
-### Configuration Field Descriptions
-*  name: The globally unique name
-* description: Description information
-* model_name: Model name
-* max_tokens: The maximum number of tokens the model can output
-* max_context_length: The maximum length of context
-* metadata: Metadata
-* type: The type, must be 'LLM'
-* module: Module
-* class: Class name
 ## 2. Environment Setup
 ### 2.1 Configure through Python code
 Must be configured: BAICHUAN_API_KEY  
