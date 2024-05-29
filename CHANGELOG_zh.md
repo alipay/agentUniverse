@@ -24,6 +24,14 @@ Note - 对于版本的额外说明。
 ***************************************************
 
 # 版本更新记录
+## [0.0.7] - 2024-05-29
+### Added
+- LLM组件支持多模态参数调用
+- 新增通义千问、文心一言、Kimi、百川等常用LLM接入方式
+
+### Note 
+- 添加多模态样例agent调用详情见`sample_standard_app.app.test.test_multimodal_agent.MultimodalAgentTest`
+- 部分代码优化与文档更新
 
 ## [0.0.6] - 2024-05-15
 ### Added
