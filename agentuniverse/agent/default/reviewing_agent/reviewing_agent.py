@@ -5,7 +5,8 @@
 # @Email   : lc299034@antgroup.com
 # @FileName: reviewing_agent.py
 """Reviewing Agent class."""
-import json
+from langchain.output_parsers.json import parse_json_markdown
+
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
 
@@ -46,7 +47,7 @@ class ReviewingAgent(Agent):
         agent_result = dict()
 
         output = planner_result.get('output')
-        output = json.loads(output)
+        output = parse_json_markdown(output)
         is_useful = output.get('is_useful')
         if is_useful is None:
             is_useful = False
