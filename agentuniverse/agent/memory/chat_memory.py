@@ -37,7 +37,7 @@ class ChatMemory(Memory):
     prompt_version: Optional[str] = None
 
     def as_langchain(self) -> BaseChatMemory:
-        """Convert the AgentUniverse(AU) chat memory class to the langchain chat memory class."""
+        """Convert the agentUniverse(aU) chat memory class to the langchain chat memory class."""
         if self.llm is None:
             raise ValueError("Must set `llm` when using langchain memory.")
         if self.type is None or self.type == MemoryTypeEnum.SHORT_TERM:
@@ -70,10 +70,10 @@ class ChatMemory(Memory):
             ChatMemory: the ChatMemory object
         """
         super().initialize_by_component_configer(component_configer)
-        if component_configer.input_key:
+        if hasattr(component_configer, 'input_key') and component_configer.input_key:
             self.input_key = component_configer.input_key
-        if component_configer.output_key:
+        if hasattr(component_configer, 'output_key') and component_configer.output_key:
             self.output_key = component_configer.output_key
-        if component_configer.prompt_version:
+        if hasattr(component_configer, 'prompt_version') and component_configer.prompt_version:
             self.prompt_version = component_configer.prompt_version
         return self

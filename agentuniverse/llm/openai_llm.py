@@ -93,20 +93,20 @@ class OpenAILLM(LLM):
             **kwargs: Arbitrary keyword arguments.
         """
         streaming = kwargs.pop("streaming") if "streaming" in kwargs else self.streaming
-        self.client = self._new_client()
-        with self.client as client:
-            chat_completion = client.chat.completions.create(
-                messages=messages,
-                model=kwargs.pop('model', self.model_name),
-                temperature=kwargs.pop('temperature', self.temperature),
-                stream=kwargs.pop('stream', streaming),
-                max_tokens=kwargs.pop('max_tokens', self.max_tokens),
-                **kwargs,
-            )
-            if not streaming:
-                text = chat_completion.choices[0].message.content
-                return LLMOutput(text=text, raw=chat_completion.model_dump())
-            return self.generate_stream_result(chat_completion)
+        if self.client is None:
+            self.client = self._new_client()
+        chat_completion = self.client.chat.completions.create(
+            messages=messages,
+            model=kwargs.pop('model', self.model_name),
+            temperature=kwargs.pop('temperature', self.temperature),
+            stream=kwargs.pop('stream', streaming),
+            max_tokens=kwargs.pop('max_tokens', self.max_tokens),
+            **kwargs,
+        )
+        if not streaming:
+            text = chat_completion.choices[0].message.content
+            return LLMOutput(text=text, raw=chat_completion.model_dump())
+        return self.generate_stream_result(chat_completion)
 
     async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the OpenAI LLM.
@@ -116,23 +116,23 @@ class OpenAILLM(LLM):
             **kwargs: Arbitrary keyword arguments.
         """
         streaming = kwargs.pop("streaming") if "streaming" in kwargs else self.streaming
-        self.async_client = self._new_async_client()
-        async with self.async_client as async_client:
-            chat_completion = await async_client.chat.completions.create(
-                messages=messages,
-                model=kwargs.pop('model', self.model_name),
-                temperature=kwargs.pop('temperature', self.temperature),
-                stream=kwargs.pop('stream', streaming),
-                max_tokens=kwargs.pop('max_tokens', self.max_tokens),
-                **kwargs,
-            )
-            if not streaming:
-                text = chat_completion.choices[0].message.content
-                return LLMOutput(text=text, raw=chat_completion.model_dump())
-            return self.agenerate_stream_result(chat_completion)
+        if self.async_client is None:
+            self.async_client = self._new_async_client()
+        chat_completion = await self.async_client.chat.completions.create(
+            messages=messages,
+            model=kwargs.pop('model', self.model_name),
+            temperature=kwargs.pop('temperature', self.temperature),
+            stream=kwargs.pop('stream', streaming),
+            max_tokens=kwargs.pop('max_tokens', self.max_tokens),
+            **kwargs,
+        )
+        if not streaming:
+            text = chat_completion.choices[0].message.content
+            return LLMOutput(text=text, raw=chat_completion.model_dump())
+        return self.agenerate_stream_result(chat_completion)
 
     def as_langchain(self) -> BaseLanguageModel:
-        """Convert the AgentUniverse(AU) openai llm class to the langchain openai llm class."""
+        """Convert the agentUniverse(aU) openai llm class to the langchain openai llm class."""
         return LangchainOpenAI(self)
 
     def set_by_agent_model(self, **kwargs) -> None:

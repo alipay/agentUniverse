@@ -40,7 +40,7 @@ class Document(BaseModel):
 
     @staticmethod
     def as_langchain_list(document_list) -> List[LCDocument]:
-        """Convert AgentUniverse(AU) document list to langchain document list """
+        """Convert agentUniverse(aU) document list to langchain document list """
         langchain_document_list = []
         if document_list is None:
             return langchain_document_list
@@ -50,7 +50,7 @@ class Document(BaseModel):
 
     @staticmethod
     def from_langchain_list(lc_document_list: List[LCDocument]):
-        """Convert langchain document list to AgentUniverse(AU) document list """
+        """Convert langchain document list to agentUniverse(aU) document list """
         document_list = []
         if lc_document_list is None:
             return document_list

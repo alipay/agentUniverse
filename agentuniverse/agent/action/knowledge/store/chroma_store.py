@@ -73,7 +73,7 @@ class ChromaStore(Store):
                 n_results=query.similarity_top_k,
                 query_texts=[query.query_str]
             )
-        # convert to the AgentUniverse(AU) document format
+        # convert to the agentUniverse(aU) document format
         return self.to_documents(query_result)
 
     def insert_documents(self, documents: List[Document], **kwargs: Any):
@@ -127,7 +127,7 @@ class ChromaStore(Store):
 
     @staticmethod
     def to_documents(query_result: QueryResult) -> List[Document]:
-        """Convert the query results of ChromaDB to the AgentUniverse(AU) document format."""
+        """Convert the query results of ChromaDB to the agentUniverse(aU) document format."""
 
         if query_result is None:
             return []

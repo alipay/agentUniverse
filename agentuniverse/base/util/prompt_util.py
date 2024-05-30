@@ -10,6 +10,7 @@ from typing import List
 from langchain.chains.summarize import load_summarize_chain
 from langchain_core.documents import Document
 
+from agentuniverse.agent.memory.enum import ChatMessageEnum
 from agentuniverse.agent.memory.message import Message
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
@@ -120,6 +121,12 @@ def generate_chat_template(agent_prompt_model: AgentPromptModel, prompt_assemble
         if value is not None:
             message_list.append(
                 Message(type=agent_prompt_model.get_message_type(attr), content=value))
+    if message_list:
+        # Integrate the system messages and put them in the first of the message list.
+        system_messages = '\n'.join(msg.content for msg in message_list if msg.type == ChatMessageEnum.SYSTEM.value)
+        if system_messages:
+            message_list = list(filter(lambda msg: msg.type != ChatMessageEnum.SYSTEM.value, message_list))
+            message_list.insert(0, Message(type=ChatMessageEnum.SYSTEM.value, content=system_messages))
     return message_list
 
 

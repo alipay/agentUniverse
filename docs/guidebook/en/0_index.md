@@ -14,9 +14,13 @@
 * 2.2 [Domain Components](2_2_Domain_Component_Principles.md)
   * 2.2.1 [Agent](2_2_1_Agent.md)
     * 2.2.1.1 [Create And Use](2_2_1_Agent_Create_And_Use.md)
-    * 2.2.1.2 [Related Domain Objects](2_2_1_Agents_Related_Domain_Objects.md)
-  * 2.2.2 LLM
-  * 2.2.3 Tool
+    * 2.2.1.2 [Related Domain Objects](2_2_1_Agent_Related_Domain_Objects.md)
+  * 2.2.2 [LLM](2_2_2_LLM.md)
+    * 2.2.2.1 [Define And Use](2_2_2_LLM_component_define_and_usage.md)
+    * 2.2.2.2 [Related Domain Objects](2_2_2_LLM_Related_Domain_Objects.md)
+  * 2.2.3 [Tool](2_2_3_Tool.md)
+    * 2.2.3.1 [Create And Use](2_2_3_Tool_Create_And_Use.md)
+    * 2.2.3.2 [Related Domain Objects](2_2_3_Tool_Related_Domain_Objects.md)
   * 2.2.4 Knowledge
   * 2.2.5 Memory
   * 2.2.6 Planner
@@ -35,12 +39,17 @@
 
 **3. Component Reference Manual**
 * 3.1 Domain Components
-  * 3.1.1 Agent
-  * 3.1.2 LLM
-  * 3.1.3 Tool
-  * 3.1.4 Knowledge
-  * 3.1.5 Memory
-  * 3.1.6 Planner
+  * 3.1.1 List of Agents
+  * 3.1.2 List of LLMs
+    * 3.1.2.1 [OpenAI Usage Instructions](3_1_2_OpenAI_LLM_Use.md)
+    * 3.1.2.2 [Qwen Usage Instructions](3_1_2_Qwen_LLM_Use.md)
+    * 3.1.2.3 [WenXin Usage Instructions](3_1_2_WenXin_LLM_Use.md)
+    * 3.1.2.4 [Kimi Usage Instructions](3_1_2_Kimi_LLM_Use.md)
+    * 3.1.2.5 [BaiChuan Usage Instructions](3_1_2_BaiChuan_LLM_Use.md)
+  * 3.1.3 List of Tools
+  * 3.1.4 List of Knowledge
+  * 3.1.5 List of Memories
+  * 3.1.6 List of Planners
 * 3.2 Technical Components
   * 3.2.1 RPC
     * 3.2.1.1 [gRPC](3_2_1_gRPC.md)
