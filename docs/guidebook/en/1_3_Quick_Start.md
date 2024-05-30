@@ -17,7 +17,14 @@ We provide a standard project template which you can access [here](../../../samp
 The "sample_standard_app" folder contains a standard project template that you can modify according to your own needs. You can also copy the "sample_standard_app" folder to use as the root directory of your application project.
 
 ### Installation
-Use package management tools like `poetry` for installation and management.
+**Install via pip**
+```shell
+pip install agentUniverse
+```
+More version information can be found on the
+[PyPi agentUniverse](https://pypi.org/project/agentUniverse/)
+
+or use package management tools like `poetry` for installation and management.
 
 **Install via poetry**
 ```shell
@@ -218,7 +225,7 @@ cd `your bootstrap directory path`
 python server_application.py
 ```
 
-When the command line shows that the service is listening successfully, the service is started. By default, the service listens on the address `127.0.0.1` and port `8000`, with 5 workers. You can modify the configuration in `config/gunicorn_config.toml`.
+When the command line shows that the service is listening successfully, the service is started. By default, the service listens on the address `127.0.0.1` and port `8000`, with 5 workers. You can modify the configuration in `config/gunicorn_config.toml`.(Note that on Windows systems and when directly using Flask to start, the default listening port is currently 8888.)
 ![image](../_picture/1_3_Quick%20Start_0.png)
 
 ### Access the Service
