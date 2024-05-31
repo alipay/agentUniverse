@@ -40,6 +40,7 @@ chromadb = "0.4.24"
 sphinx = "^7.2.6"
 sphinx-rtd-theme = "^2.0.0"
 aliyun-log-python-sdk = { version = "0.8.8", optional = true}
+pymilvus = { version = "^2.4.3", optional = true}
 googleapis-common-protos = "^1.63.0"
 myst-parser = "^2.0.0"
 qianfan = "^0.3.12"
@@ -48,6 +49,7 @@ anthropic = "^0.26.0"
 
 [tool.poetry.extras]
 log_ext = ["aliyun-log-python-sdk"]
+store_ext = ["pymilvus"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
