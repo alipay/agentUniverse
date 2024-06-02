@@ -9,8 +9,6 @@ import copy
 from abc import abstractmethod
 from typing import Optional, List
 
-from langchain_core.memory import BaseMemory
-
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
 from agentuniverse.agent.action.knowledge.store.document import Document
@@ -18,6 +16,7 @@ from agentuniverse.agent.action.knowledge.store.query import Query
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
+from agentuniverse.agent.memory.chat_memory import ChatMemory
 from agentuniverse.agent.memory.memory import Memory
 from agentuniverse.agent.memory.message import Message
 from agentuniverse.agent.memory.memory_manager import MemoryManager
@@ -60,7 +59,7 @@ class Planner(ComponentBase):
         """
         pass
 
-    def handle_memory(self, agent_model: AgentModel, planner_input: dict) -> BaseMemory | None:
+    def handle_memory(self, agent_model: AgentModel, planner_input: dict) -> ChatMemory | None:
         """Memory module processing.
 
         Args:
@@ -82,15 +81,12 @@ class Planner(ComponentBase):
         params['input_key'] = self.input_key
         params['output_key'] = self.output_key
 
-        memory: Memory = MemoryManager().get_instance_obj(memory_name)
+        memory: ChatMemory = MemoryManager().get_instance_obj(memory_name)
         if memory is None:
             return None
         copied_memory = copy.deepcopy(memory)
         copied_memory.set_by_agent_model(**params)
-        langchain_memory: BaseMemory = copied_memory.as_langchain()
-
-        planner_input['chat_history'] = langchain_memory.load_memory_str
-        return langchain_memory
+        return copied_memory
 
     def handle_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
         """Tool and knowledge processing.
