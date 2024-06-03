@@ -13,6 +13,16 @@ server_port = 50051
 - **max_workers**: The maximum number of threads in the gRPC server thread pool, with a default of 10.
 - **server_port**: The service port of the gRPC server, with a default of 50051.
 
+And then start the gRPC server:
+```python
+from agentuniverse.agent_serve.web.web_booster import start_web_server
+from agentuniverse.base.agentuniverse import AgentUniverse
+
+AgentUniverse().start()
+start_web_server()
+```
+
+
 ### Calling the gRPC Service
 
 ### Interface Definition

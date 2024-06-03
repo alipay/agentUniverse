@@ -13,6 +13,16 @@ server_port = 50051
 - **max_workers**: gRPC服务器线程池的最大线程数量，默认为10
 - **server_port**: gRPC服务器的服务端口，默认为50051
 
+然后启动grpc服务器：
+```python
+from agentuniverse.agent_serve.web.web_booster import start_web_server
+from agentuniverse.base.agentuniverse import AgentUniverse
+
+AgentUniverse().start()
+start_web_server()
+```
+
+
 ### 调用gRPC服务
 
 ### 接口定义
