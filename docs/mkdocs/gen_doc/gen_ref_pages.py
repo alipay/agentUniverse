@@ -23,6 +23,11 @@ package_list = [
 TUTORIAL = "[1] Tutorial"
 API_REFERENCE = "[2] API Reference"
 
+with mkdocs_gen_files.open(f"{TUTORIAL}/index.md", "w") as nav_file:
+    with open('docs/guidebook/en/0_index.md', 'r', encoding='utf-8') as file:
+        markdown_text = file.read()
+        nav_file.writelines(markdown_text)
+
 with mkdocs_gen_files.open(f"{TUTORIAL}/QuickStart.md", "w") as nav_file:
     with open('docs/guidebook/en/1_3_Quick_Start.md', 'r', encoding='utf-8') as file:
         markdown_text = file.read()
