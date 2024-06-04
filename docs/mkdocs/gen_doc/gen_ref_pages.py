@@ -58,44 +58,46 @@ doc_list_map = {
 }
 
 doc_number_map = {
-    '1_1_Introduction.md': '1.1',
-    '1_2_Installation.md': '1.2',
-    '1_3_Quick_Start.md': '1.3',
-    '1_4_Application_Engineering_Structure_Explanation.md': '1.4',
-    '2_2_Domain_Component_Principles.md': '2.2',
-    '2_2_1_Agent.md': '2.2.1',
-    '2_2_1_Agent_Create_And_Use.md': '2.2.1.1',
-    '2_2_1_Agent_Related_Domain_Objects.md': '2.2.1.2',
-    '2_2_2_LLM.md': '2.2.2',
-    '2_2_2_LLM_component_define_and_usage.md': '2.2.2.1',
-    '2_2_2_LLM_Related_Domain_Objects.md': '2.2.2.2',
-    '2_2_3_Tool.md': '2.2.3',
-    '2_2_3_Tool_Create_And_Use.md': '2.2.3.1',
-    '2_2_3_Tool_Related_Domain_Objects.md': '2.2.3.2',
-    '2_4_1_Service_Registration_and_Usage.md': '2.4.1',
-    '2_4_1_Service_Information_Storage.md': '2.4.2',
-    '2_4_1_Web_Server.md': '2.4.3',
-    '2_4_1_Web_Api.md': '2.4.4',
-    '2_6_Logging_Utils.md': '2.6',
-    '2_7_Framework_Context.md': '2.7',
-    '3_1_2_0_List_Of_LLMs.md': '3.1.2',
-    '3_1_2_BaiChuan_LLM_Use.md': '3.1.2.1',
-    '3_1_2_Kimi_LLM_Use.md': '3.1.2.2',
-    '3_1_2_OpenAI_LLM_Use.md': '3.1.2.3',
-    '3_1_2_Qwen_LLM_Use.md': '3.1.2.4',
-    '3_1_2_WenXin_LLM_Use.md': '3.1.2.5',
-    '3_2_1_gRPC.md': '3.2.1',
-    '3_2_4_Alibaba_Cloud_SLS.md': '3.2.4',
-    '5_1_1_Docker_Container_Deployment.md': '5.1.1',
-    '5_1_2_K8S_Deployment.md': '5.1.2',
-    '6_1_Contact_Us.md': '6.1',
+    '1.1': '1_1_Introduction.md',
+    '1.2': '1_2_Installation.md',
+    '1.3': '1_3_Quick_Start.md',
+    '1.4': '1_4_Application_Engineering_Structure_Explanation.md',
+    '2.2': '2_2_Domain_Component_Principles.md',
+    '2.2.1': '2_2_1_Agent.md',
+    '2.2.1.1': '2_2_1_Agent_Create_And_Use.md',
+    '2.2.1.2': '2_2_1_Agent_Related_Domain_Objects.md',
+    '2.2.2': '2_2_2_LLM.md',
+    '2.2.2.1': '2_2_2_LLM_component_define_and_usage.md',
+    '2.2.2.2': '2_2_2_LLM_Related_Domain_Objects.md',
+    '2.2.3': '2_2_3_Tool.md',
+    '2.2.3.1': '2_2_3_Tool_Create_And_Use.md',
+    '2.2.3.2': '2_2_3_Tool_Related_Domain_Objects.md',
+    '2.4.1': '2_4_1_Service_Registration_and_Usage.md',
+    '2.4.2': '2_4_1_Service_Information_Storage.md',
+    '2.4.3': '2_4_1_Web_Server.md',
+    '2.4.4': '2_4_1_Web_Api.md',
+    '2.6': '2_6_Logging_Utils.md',
+    '2.7': '2_7_Framework_Context.md',
+    '3.1.2': '3_1_2_0_List_Of_LLMs.md',
+    '3.1.2.1': '3_1_2_BaiChuan_LLM_Use.md',
+    '3.1.2.2': '3_1_2_Kimi_LLM_Use.md',
+    '3.1.2.3': '3_1_2_OpenAI_LLM_Use.md',
+    '3.1.2.4': '3_1_2_Qwen_LLM_Use.md',
+    '3.1.2.5': '3_1_2_WenXin_LLM_Use.md',
+    '3.2.1': '3_2_1_gRPC.md',
+    '3.2.4': '3_2_4_Alibaba_Cloud_SLS.md',
+    '5.1.1': '5_1_1_Docker_Container_Deployment.md',
+    '5.1.2': '5_1_2_K8S_Deployment.md',
+    '6.1': '6_1_Contact_Us.md',
 }
 
-for key, value in doc_list_map.items():
-    with mkdocs_gen_files.open(f"{TUTORIAL}/{value}.md", "w") as nav_file:
-        with open(f'docs/guidebook/en/{key}', 'r', encoding='utf-8') as file:
+for number in sorted(doc_number_map.keys()):
+    file_name = doc_number_map.get(number)
+    content_value = doc_list_map.get(file_name)
+    with mkdocs_gen_files.open(f"{TUTORIAL}/{content_value}.md", "w") as nav_file:
+        with open(f'docs/guidebook/en/{file_name}', 'r', encoding='utf-8') as file:
+            nav_file.writelines(f'# {number} {content_value} \n')
             markdown_text = file.read()
-            nav_file.writelines(f'# {doc_number_map.get(key)} {value}')
             nav_file.writelines(markdown_text)
 
 for package_path in package_list:
