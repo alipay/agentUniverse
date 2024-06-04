@@ -12,12 +12,19 @@ we will show you how to:
 - python 3.10+
 
 ### Application Preparation
-We provide a standard project template which you can access here (https://github.com/alipay/agentUniverse/tree/master/sample_standard_app) . 
+We provide a standard project template which you can access [here](../../../sample_standard_app) . 
 
 The "sample_standard_app" folder contains a standard project template that you can modify according to your own needs. You can also copy the "sample_standard_app" folder to use as the root directory of your application project.
 
 ### Installation
-Use package management tools like `poetry` for installation and management.
+**Install via pip**
+```shell
+pip install agentUniverse
+```
+More version information can be found on the
+[PyPi agentUniverse](https://pypi.org/project/agentUniverse/)
+
+or use package management tools like `poetry` for installation and management.
 
 **Install via poetry**
 ```shell
@@ -69,15 +76,34 @@ info:
   name: 'demo_rag_agent'
   description: 'demo rag agent'
 profile:
+  introduction: You are an AI assistant proficient in information analysis.
+  target: Your goal is to determine whether the answers to questions provide valuable information and to make suggestions and evaluations about the answers.
+  instruction: |
+    The rules you must adhere to are:
+
+    1.You must answer questions posed by users in English, integrating background information with the knowledge you possess.
+    2.Generate structured responses, using blank lines as necessary to enhance readability.
+    3.Do not adopt incorrect information from the background context.
+    4.Consider the relevance of the answer to the question; do not provide answers that do not help with the question.
+    5.Provide thorough answers with emphasis on key points, avoiding excessive embellishments.
+    6.Avoid vague speculations.
+    7.Use numerical information as much as possible.
+    
+    Background information is:
+    {background}
+    
+    Begin!
+    
+    The question that needs to be answered is: {input}
   llm_model:
-    name: 'default_openai_llm'
-    model_name: 'gpt-4'
+    name: 'demo_llm'
+    model_name: 'gpt-4-turbo'
 plan:
   planner:
     name: 'rag_planner'
 action:
   tool:
-    - 'demo_tool'
+    - 'google_search_tool'
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
@@ -98,10 +124,9 @@ class DemoRagAgent(Agent):
     def output_keys(self) -> list[str]:
         return ['output']
 
-    def parse_input(self, input_object: InputObject, planner_input: dict) -> dict:
-        input = input_object.get_data('input')
-        planner_input['input'] = input
-        return planner_input
+    def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
+        agent_input['input'] = input_object.get_data('input')
+        return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:
         return planner_result
@@ -192,13 +217,15 @@ metadata:
 In `xx_service.yaml`, we define a `demo_service` configuration. The `name` field defines the name of the service, the `description` field defines the description of the service, and the `agent` field defines which agent provides the service.
 
 ### Start the Service
-You can start the service by executing the `app/bootstrap/server_application.py` file in the IDE or by entering the following command in the terminal:
+Start using the `server_application.py` file found in the `bootstrap` folder within your IDE,
+or enter the following command in the terminal to start the service interface and begin listening:
 ```shell
-# under the root directory of the project
-python app/bootstrap/server_application.py
+# under the bootstrap directory of the project
+cd `your bootstrap directory path`
+python server_application.py
 ```
 
-When the command line shows that the service is listening successfully, the service is started. By default, the service listens on the address `127.0.0.1` and port `8000`, with 5 workers. You can modify the configuration in `config/gunicorn_config.toml`.
+When the command line shows that the service is listening successfully, the service is started. By default, the service listens on the address `127.0.0.1` and port `8000`, with 5 workers. You can modify the configuration in `config/gunicorn_config.toml`.(Note that on Windows systems and when directly using Flask to start, the default listening port is currently 8888.)
 ![image](../_picture/1_3_Quick%20Start_0.png)
 
 ### Access the Service
@@ -218,13 +245,9 @@ For more details on service development, please refer to the subsequent service 
 Through this chapter, you have learned how to use this framework to prepare the environment and application engineering, how to build a simple agent, how to use pattern components to achieve multi-agent collaboration, how to test and tune the performance of agents, and how to quickly serve agents. 
 
 The actual capabilities of this framework are far more extensive than this. You can continue to read the following sections:
-
 * Further study the principles and core components of the framework;
-
 * Further enhance the capabilities of your agents by combining the framework with professional tools, knowledge, and evaluation methods;
-
 * Further apply the framework to provide end-to-end solutions and products;
-
 * Further read the best practices of the framework in various industry scenarios.
 
 Let's explore and progress together!

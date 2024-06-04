@@ -25,7 +25,7 @@ Or add the following content to your `pyproject.toml` file:
 [tool.poetry.dependencies]
 agentUniverse = "^0.0.3"
 ```
-A standard project's `pyproject.toml` can be found [here](https://github.com/alipay/agentUniverse/tree/master/sample_standard_app).
+A standard project's `pyproject.toml` can be found [here](../../../sample_standard_app/pyproject.toml).
 
 Use the `poetry update` command to update dependencies:
 ```shell
@@ -38,4 +38,4 @@ pip list | grep agentUniverse
 ```
 If you see `agentUniverse` and its version number, the installation was successful.
 
-![image](../../gen_doc/_picture/1_2_Installation_0.png)
+![image](../_picture/1_2_Installation_0.png)
