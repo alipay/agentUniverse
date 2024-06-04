@@ -56,6 +56,8 @@ class PeerPlanner(Planner):
         agents = dict()
         for config_key, default_agent in default_sub_agents.items():
             config_data = planner_config.get(config_key, None)
+            if config_data == '':
+                continue
             agents[config_key] = AgentManager().get_instance_obj(config_data if config_data else default_agent)
         return agents
 
@@ -111,7 +113,7 @@ class PeerPlanner(Planner):
             LOGGER.info(f"Starting peer agents, retry_count is {_}.")
             if not planning_result or jump_step == "planning":
                 if not planningAgent:
-                    LOGGER.warn("no planning agent, use default.")
+                    LOGGER.warn("no planning agent.")
                     planning_result = OutputObject({"framework": [agent_input.get('input')]})
                 else:
                     LOGGER.info(f"Starting planning agent.")
@@ -126,7 +128,7 @@ class PeerPlanner(Planner):
 
             if not executing_result or jump_step in ["planning", "executing"]:
                 if not executingAgent:
-                    LOGGER.warn("no executing agent, use default.")
+                    LOGGER.warn("no executing agent.")
                     executing_result = OutputObject({})
                 else:
                     LOGGER.info(f"Starting executing agent.")
@@ -135,15 +137,16 @@ class PeerPlanner(Planner):
                 input_object.add_data('executing_result', executing_result)
                 # add executing agent log info
                 logger_info = f"\nExecuting agent execution result is :\n"
-                for index, one_exec_res in enumerate(executing_result.get_data('executing_result')):
-                    one_exec_log_info = f"[{index + 1}] input: {one_exec_res['input']}\n"
-                    one_exec_log_info += f"[{index + 1}] output: {one_exec_res['output']}\n"
-                    logger_info += one_exec_log_info
+                if executing_result.get_data('executing_result'):
+                    for index, one_exec_res in enumerate(executing_result.get_data('executing_result')):
+                        one_exec_log_info = f"[{index + 1}] input: {one_exec_res['input']}\n"
+                        one_exec_log_info += f"[{index + 1}] output: {one_exec_res['output']}\n"
+                        logger_info += one_exec_log_info
                 LOGGER.info(logger_info)
 
             if not expressing_result or jump_step in ["planning", "executing", "expressing"]:
                 if not expressingAgent:
-                    LOGGER.warn("no expression agent, use default.")
+                    LOGGER.warn("no expression agent.")
                     expressing_result = OutputObject({})
                 else:
                     LOGGER.info(f"Starting expressing agent.")
@@ -157,7 +160,7 @@ class PeerPlanner(Planner):
 
             if not reviewing_result or jump_step in ["planning", "executing", "expressing", "reviewing"]:
                 if not reviewingAgent:
-                    LOGGER.warn("no expression agent, use default.")
+                    LOGGER.warn("no expression agent.")
                     loopResults.append({
                         "planning_result": planning_result,
                         "executing_result": executing_result,
@@ -169,7 +172,7 @@ class PeerPlanner(Planner):
                 else:
                     LOGGER.info(f"Starting reviewing agent.")
                     reviewing_result = reviewingAgent.run(**input_object.to_dict())
-                    input_object.add_data('evaluator_result', reviewing_result)
+                    input_object.add_data('reviewing_result', reviewing_result)
 
                     # add reviewing agent log info
                     logger_info = f"\nReviewing agent execution result is :\n"
