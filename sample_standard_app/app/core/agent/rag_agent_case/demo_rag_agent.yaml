@@ -16,7 +16,10 @@ profile:
 
     背景信息是:
     {background}
-
+  
+    之前的对话:
+    {chat_history}
+    
     开始!
 
     需要回答的问题是: {input}
@@ -29,6 +32,8 @@ plan:
 action:
   tool:
     - 'google_search_tool'
+memory:
+  name: ''
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
