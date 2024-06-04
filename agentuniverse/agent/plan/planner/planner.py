@@ -5,8 +5,9 @@
 # @Email   : lc299034@antgroup.com
 # @FileName: planner.py
 """Base class for Planner."""
-import copy
 from abc import abstractmethod
+import copy
+import logging
 from typing import Optional, List
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
@@ -27,6 +28,8 @@ from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.base.util.memory_util import generate_messages
+
+logging.getLogger().setLevel(logging.ERROR)
 
 
 class Planner(ComponentBase):
