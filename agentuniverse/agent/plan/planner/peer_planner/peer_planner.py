@@ -110,7 +110,7 @@ class PeerPlanner(Planner):
         reviewingAgent = agents.get('reviewing')
 
         for _ in range(retry_count):
-            LOGGER.info(f"Starting peer agents, retry_count is {_}.")
+            LOGGER.info(f"Starting peer agents, retry_count is {_ + 1}.")
             if not planning_result or jump_step == "planning":
                 if not planningAgent:
                     LOGGER.warn("no planning agent.")

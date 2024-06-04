@@ -7,7 +7,6 @@
 # @FileName: langchain_instance.py
 from typing import List, Optional, Dict, Any
 
-from langchain import LLMChain
 from langchain_core.messages import BaseMessage, get_buffer_string
 from langchain.memory import ConversationSummaryBufferMemory, ConversationTokenBufferMemory
 
@@ -116,8 +115,9 @@ class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory):
         )
         prompt_version = self.prompt_version if self.prompt_version else 'chat_memory.summarizer_cn'
         prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
-        chain = LLMChain(llm=self.llm, prompt=prompt.as_langchain())
-        return chain.predict(summary=existing_summary, new_lines=new_lines)
+        chain = prompt.as_langchain() | self.llm
+        res = chain.invoke(input={'summary': existing_summary, 'new_lines': new_lines})
+        return res.content
 
 
 class AuConversationTokenBufferMemory(ConversationTokenBufferMemory):
