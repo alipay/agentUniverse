@@ -96,7 +96,7 @@ for number in sorted(doc_number_map.keys()):
     content_value = doc_list_map.get(file_name)
     with mkdocs_gen_files.open(f"{TUTORIAL}/{content_value}.md", "w") as nav_file:
         with open(f'docs/guidebook/en/{file_name}', 'r', encoding='utf-8') as file:
-            nav_file.writelines(f'# {number} {content_value} \n')
+            nav_file.writelines(f'{number} {content_value} \n\n')
             markdown_text = file.read()
             nav_file.writelines(markdown_text)
 
