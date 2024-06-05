@@ -9,7 +9,7 @@
 from typing import Any, List, Optional, AsyncIterator
 
 from langchain.callbacks.manager import AsyncCallbackManagerForLLMRun, CallbackManagerForLLMRun
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models.openai import ChatOpenAI
 from langchain.schema import BaseMessage, ChatResult
 from langchain_community.chat_models.openai import _convert_delta_to_message_chunk
 from langchain_core.language_models.chat_models import generate_from_stream, agenerate_from_stream

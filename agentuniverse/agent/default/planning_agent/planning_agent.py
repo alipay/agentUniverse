@@ -5,7 +5,8 @@
 # @Email   : lc299034@antgroup.com
 # @FileName: planning_agent.py
 """Planning agent module."""
-import json
+from langchain.output_parsers.json import parse_json_markdown
+
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
 
@@ -44,7 +45,7 @@ class PlanningAgent(Agent):
             dict: Agent result object.
         """
         output = planner_result.get('output')
-        output = json.loads(output)
+        output = parse_json_markdown(output)
         planner_result['framework'] = output['framework']
         planner_result['thought'] = output['thought']
         return planner_result

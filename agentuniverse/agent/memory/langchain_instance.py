@@ -7,10 +7,8 @@
 # @FileName: langchain_instance.py
 from typing import List, Optional, Dict, Any
 
-from langchain.chains import LLMChain
 from langchain_core.messages import BaseMessage, get_buffer_string
 from langchain.memory import ConversationSummaryBufferMemory, ConversationTokenBufferMemory
-from langchain.memory.summary import SummarizerMixin
 
 from agentuniverse.agent.memory.enum import ChatMessageEnum
 from agentuniverse.agent.memory.message import Message
@@ -18,7 +16,7 @@ from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 
 
-class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory, SummarizerMixin):
+class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory):
     """Long term memory to store conversation memory.
 
     If memories exceeds the max tokens limit,
@@ -46,18 +44,18 @@ class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory, Summari
     @property
     def load_memory(self) -> List[BaseMessage]:
         """ General method: load the memory context from the memory buffer."""
-        buffer = self.buffer
+        messages = self.chat_memory.messages
         if self.moving_summary_buffer != "":
             moving_messages: List[BaseMessage] = [
                 self.summary_message_cls(content=self.moving_summary_buffer)
             ]
-            buffer = moving_messages + buffer
-        return buffer
+            messages = moving_messages + messages
+        return messages
 
     @property
     def load_memory_str(self) -> str:
         """ General method: load the memory context from the memory buffer as string format."""
-        buffer = get_buffer_string(self.buffer)
+        buffer = get_buffer_string(self.chat_memory.messages)
         if self.moving_summary_buffer is not None:
             buffer = self.moving_summary_buffer + buffer
         return buffer
@@ -117,8 +115,9 @@ class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory, Summari
         )
         prompt_version = self.prompt_version if self.prompt_version else 'chat_memory.summarizer_cn'
         prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
-        chain = LLMChain(llm=self.llm, prompt=prompt.as_langchain())
-        return chain.predict(summary=existing_summary, new_lines=new_lines)
+        chain = prompt.as_langchain() | self.llm
+        res = chain.invoke(input={'summary': existing_summary, 'new_lines': new_lines})
+        return res.content
 
 
 class AuConversationTokenBufferMemory(ConversationTokenBufferMemory):
