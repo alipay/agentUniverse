@@ -72,6 +72,22 @@ keepalive = 10
 您也可以通过以下方式在启动Web Server时进行配置：
 ```python
 from agentuniverse.agent_serve.web.web_booster import start_web_server
+from agentuniverse.base.agentuniverse import AgentUniverse
 
+AgentUniverse().start()
 start_web_server(bind="127.0.0.1:8002", threads=4)
 ```
+如果您有某些函数想在启动后执行，可以用类似以下方式添加:
+```python
+from agentuniverse.agent_serve.web.post_fork_queue import add_post_fork
+from agentuniverse.agent_serve.web.web_booster import start_web_server
+from agentuniverse.base.agentuniverse import AgentUniverse
+
+def print_hello(name: str):
+    print(f"hello {name}")
+
+add_post_fork(print_hello, "name")
+AgentUniverse().start()
+start_web_server(bind="127.0.0.1:8002")
+```
+您可以在启动后看到和worker数相等的"hello name"。

@@ -72,6 +72,22 @@ The configuration file is written in TOML format, and the specific configuration
 You can also configure the web server at startup as follows:
 ```python
 from agentuniverse.agent_serve.web.web_booster import start_web_server
+from agentuniverse.base.agentuniverse import AgentUniverse
 
+AgentUniverse().start()
 start_web_server(bind="127.0.0.1:8002", threads=4)
 ```
+If you have certain functions you want to execute after gunicorn fork child processes, you can add them in a way similar to the following:
+```python
+from agentuniverse.agent_serve.web.post_fork_queue import add_post_fork
+from agentuniverse.agent_serve.web.web_booster import start_web_server
+from agentuniverse.base.agentuniverse import AgentUniverse
+
+def print_hello(name: str):
+    print(f"hello {name}")
+
+add_post_fork(print_hello, "name")
+AgentUniverse().start()
+start_web_server(bind="127.0.0.1:8002")
+```
+You should observe the same amount output "hello name" as gunicorn workers。

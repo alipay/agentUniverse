@@ -10,6 +10,7 @@ import tomli
 from gunicorn.app.base import BaseApplication
 
 from .flask_server import app
+from .post_fork_queue import POST_FORK_QUEUE
 from ...base.annotation.singleton import singleton
 
 
@@ -22,6 +23,12 @@ DEFAULT_GUNICORN_CONFIG = {
     'timeout': 60,
     'keepalive': 10
 }
+
+
+# Execute all func in the queue after fork chile process.
+def post_fork(server, worker):
+    for _func, args, kwargs in POST_FORK_QUEUE:
+        _func(*args, **kwargs)
 
 
 @singleton
@@ -51,6 +58,9 @@ class GunicornApplication(BaseApplication):
         for key, value in self.options.items():
             if key in self.cfg.settings and value is not None:
                 self.cfg.set(key.lower(), value)
+
+        # Set post fork.
+        self.cfg.set('post_fork', post_fork)
 
     def update_config(self, options: dict):
         self.options = options
