@@ -5,16 +5,15 @@
 # @Author  : weizjajj 
 # @Email   : weizhongjie.wzj@antgroup.com
 # @FileName: wenxin_llm.py
-
 from typing import Any, Union, AsyncIterator, Iterator
 
 import qianfan
-from langchain_community.chat_models import QianfanChatEndpoint
 from langchain_core.language_models import BaseLanguageModel
 from pydantic import Field
 from qianfan import QfResponse
 from qianfan.resources.tools import tokenizer
 
+from agentuniverse.base.annotation.trace import trace_llm
 from agentuniverse.base.util.env_util import get_from_env
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_output import LLMOutput
@@ -51,6 +50,7 @@ class WenXinLLM(LLM):
         """Create a new Qianfan client."""
         return qianfan.ChatCompletion(ak=self.qianfan_ak, sk=self.qianfan_sk)
 
+    @trace_llm
     def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the OpenAI LLM.
 
@@ -73,6 +73,7 @@ class WenXinLLM(LLM):
             return self.parse_result(chat_completion)
         return self.generate_stream_result(chat_completion)
 
+    @trace_llm
     async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the OpenAI LLM.
 

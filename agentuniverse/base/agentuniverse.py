@@ -21,6 +21,7 @@ from agentuniverse.base.config.config_type_enum import ConfigTypeEnum
 from agentuniverse.base.config.configer import Configer
 from agentuniverse.base.config.custom_configer.custom_key_configer import CustomKeyConfiger
 from agentuniverse.base.component.component_enum import ComponentEnum
+from agentuniverse.base.util.monitor.monitor import Monitor
 from agentuniverse.base.util.system_util import get_project_root_path
 from agentuniverse.base.util.logging.logging_util import init_loggers
 from agentuniverse.agent_serve.web.request_task import RequestLibrary
@@ -97,6 +98,9 @@ class AgentUniverse(object):
         if isinstance(ext_classes, list):
             for ext_class in ext_classes:
                 self.__dynamic_import_and_init(ext_class, configer)
+
+        # init monitor module
+        Monitor(configer=configer)
 
         # scan and register the components
         self.__scan_and_register(self.__config_container.app_configer)

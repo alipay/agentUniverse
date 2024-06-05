@@ -5,13 +5,14 @@
 # @Author  : weizjajj
 # @Email   : weizhongjie.wzj@antgroup.com
 # @FileName: qwen_openai_style_llm.py
-
-from typing import Optional
+from typing import Optional, Any, Union, Iterator, AsyncIterator
 
 from dashscope import get_tokenizer
 from pydantic import Field
 
+from agentuniverse.base.annotation.trace import trace_llm
 from agentuniverse.base.util.env_util import get_from_env
+from agentuniverse.llm.llm_output import LLMOutput
 from agentuniverse.llm.openai_style_llm import OpenAIStyleLLM
 
 QWen_Max_CONTEXT_LENGTH = {
@@ -26,7 +27,6 @@ QWen_Max_CONTEXT_LENGTH = {
 
 
 class QWenOpenAIStyleLLM(OpenAIStyleLLM):
-
     """
         QWen OpenAI style LLM
         Args:
@@ -38,6 +38,30 @@ class QWenOpenAIStyleLLM(OpenAIStyleLLM):
     api_base: Optional[str] = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     proxy: Optional[str] = Field(default_factory=lambda: get_from_env("DASHSCOPE_PROXY"))
     organization: Optional[str] = Field(default_factory=lambda: get_from_env("DASHSCOPE_ORGANIZATION"))
+
+    @trace_llm
+    def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
+        """ The call method of the LLM.
+
+        Users can customize how the model interacts by overriding call method of the LLM class.
+
+        Args:
+            messages (list): The messages to send to the LLM.
+            **kwargs: Arbitrary keyword arguments.
+        """
+        return super().call(messages, **kwargs)
+
+    @trace_llm
+    async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
+        """ The async call method of the LLM.
+
+        Users can customize how the model interacts by overriding acall method of the LLM class.
+
+        Args:
+            messages (list): The messages to send to the LLM.
+            **kwargs: Arbitrary keyword arguments.
+        """
+        return await super().acall(messages, **kwargs)
 
     def max_context_length(self) -> int:
         if super().max_context_length():
