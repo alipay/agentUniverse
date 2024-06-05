@@ -47,5 +47,5 @@ max_workers = 10
 server_port = 50051
 
 [MONITOR]
-activate = true
+activate = false
 dir = './monitor'
