@@ -9,6 +9,8 @@
 import sys
 import threading
 
+from .post_fork_queue import POST_FORK_QUEUE
+
 ACTIVATE_OPTIONS = {
     "gunicorn": False,
     "grpc": False
@@ -44,4 +46,6 @@ def start_web_server(**kwargs):
         else:
             port = 8888
             host = '0.0.0.0'
+        for _func, args, kwargs in POST_FORK_QUEUE:
+            _func(*args, **kwargs)
         app.run(port=port, host=host, debug=False)
