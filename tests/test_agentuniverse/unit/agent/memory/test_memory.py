@@ -13,7 +13,7 @@ from langchain_core.prompts import PromptTemplate
 from agentuniverse.agent.memory.chat_memory import ChatMemory
 from agentuniverse.agent.memory.enum import MemoryTypeEnum
 from agentuniverse.agent.memory.message import Message
-from agentuniverse.llm.openai_llm import OpenAILLM
+from agentuniverse.llm.default.default_openai_llm import DefaultOpenAILLM
 
 template = """
 You are a chatbot having a conversation with a human.
@@ -33,12 +33,12 @@ class MemoryTest(unittest.TestCase):
 
     def setUp(self) -> None:
         init_params = dict()
-        init_params['model_name'] = 'gpt-3.5-turbo'
+        init_params['model_name'] = 'gpt-4o'
         init_params['temperature'] = 0.7
         init_params['max_retries'] = 2
         init_params['streaming'] = False
 
-        init_params['llm'] = OpenAILLM(**init_params)
+        init_params['llm'] = DefaultOpenAILLM(**init_params)
         init_params['memory_key'] = 'chat_history'
         init_params['max_tokens'] = '1024'
         init_params['type'] = MemoryTypeEnum.LONG_TERM
