@@ -1,5 +1,5 @@
 [GUNICORN_CONFIG]
-bind = '127.0.0.1:8000'
+bind = '127.0.0.1:8888'
 backlog = 2048
 worker_class = 'gthread'
 threads = 4
