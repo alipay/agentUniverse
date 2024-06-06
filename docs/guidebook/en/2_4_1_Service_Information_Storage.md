@@ -12,6 +12,9 @@ system_db_uri = ''
 ```
 Please note that this URI should comply with the URI format specification in SQLAlchemy.
 When this value is empty, a `DB` folder will be created in the project root directory, and a SQLite DB file named `agent_universe.db` will be created in the folder as the default system database.
+If you wish to obtain more information on how to use the system database, you can refer to the section [SQLDB_WRAPPER](2_3_1_SQLDB_WRAPPER.md), where the name of the system database is registered as `__system_db__`.
+
+
 
 ## Service Information Table Format
 agentUniverse uses the following ORM to store request information:

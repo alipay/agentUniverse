@@ -21,10 +21,12 @@ from agentuniverse.base.config.config_type_enum import ConfigTypeEnum
 from agentuniverse.base.config.configer import Configer
 from agentuniverse.base.config.custom_configer.custom_key_configer import CustomKeyConfiger
 from agentuniverse.base.component.component_enum import ComponentEnum
+from agentuniverse.base.util.monitor.monitor import Monitor
 from agentuniverse.base.util.system_util import get_project_root_path
 from agentuniverse.base.util.logging.logging_util import init_loggers
 from agentuniverse.agent_serve.web.request_task import RequestLibrary
-from agentuniverse.agent_serve.web.rpc.grpc.grpc_server_booster import start_grpc_server
+from agentuniverse.agent_serve.web.rpc.grpc.grpc_server_booster import set_grpc_config
+from agentuniverse.agent_serve.web.web_booster import ACTIVATE_OPTIONS
 
 
 @singleton
@@ -73,19 +75,18 @@ class AgentUniverse(object):
         # init web request task database
         RequestLibrary(configer=configer)
 
-        # init grpc server
+        # Edit grpc config.
         grpc_activate = configer.value.get('GRPC', {}).get('activate')
         if grpc_activate and grpc_activate.lower() == 'true':
-            grpc_thread = threading.Thread(
-                target=start_grpc_server,
-                kwargs={"configer": configer}
-            )
-            grpc_thread.start()
+            ACTIVATE_OPTIONS["grpc"] = True
+            set_grpc_config(configer)
 
-        # init gunicorn web server on mac or unix platform
-        if not sys.platform.lower().startswith("win"):
+        # Init gunicorn web server with config file.
+        gunicorn_activate = configer.value.get('GUNICORN', {}).get('activate')
+        if gunicorn_activate and gunicorn_activate.lower() == 'true':
+            ACTIVATE_OPTIONS["gunicorn"] = True
             gunicorn_config_path = self.__parse_sub_config_path(
-                configer.value.get('SUB_CONFIG_PATH', {})
+                configer.value.get('GUNICORN', {})
                 .get('gunicorn_config_path'), config_path
             )
             from ..agent_serve.web.gunicorn_server import \
@@ -97,6 +98,9 @@ class AgentUniverse(object):
         if isinstance(ext_classes, list):
             for ext_class in ext_classes:
                 self.__dynamic_import_and_init(ext_class, configer)
+
+        # init monitor module
+        Monitor(configer=configer)
 
         # scan and register the components
         self.__scan_and_register(self.__config_container.app_configer)
@@ -116,6 +120,7 @@ class AgentUniverse(object):
                                      + self.__system_default_planner_package)
         core_tool_package_list = app_configer.core_tool_package_list or app_configer.core_default_package_list
         core_service_package_list = app_configer.core_service_package_list or app_configer.core_default_package_list
+        core_sqldb_wrapper_package_list = app_configer.core_sqldb_wrapper_package_list or app_configer.core_default_package_list
         core_memory_package_list = ((app_configer.core_memory_package_list or app_configer.core_default_package_list)
                                     + self.__system_default_memory_package)
         core_prompt_package_list = ((app_configer.core_prompt_package_list or app_configer.core_default_package_list)
@@ -128,6 +133,7 @@ class AgentUniverse(object):
             ComponentEnum.PLANNER: core_planner_package_list,
             ComponentEnum.TOOL: core_tool_package_list,
             ComponentEnum.SERVICE: core_service_package_list,
+            ComponentEnum.SQLDB_WRAPPER: core_sqldb_wrapper_package_list,
             ComponentEnum.MEMORY: core_memory_package_list,
             ComponentEnum.PROMPT: core_prompt_package_list
         }

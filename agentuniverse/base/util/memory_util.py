@@ -7,6 +7,8 @@
 # @FileName: memory_util.py
 from typing import List
 
+from langchain_core.chat_history import BaseChatMessageHistory
+
 from agentuniverse.agent.memory.message import Message
 
 
@@ -16,3 +18,8 @@ def generate_messages(memories: list) -> List[Message]:
         message: Message = Message(type=memory.get('type'), content=memory.get('content'))
         messages.append(message)
     return messages
+
+
+def generate_memories(chat_messages: BaseChatMessageHistory) -> list:
+    return [{"content": message.content, "type": message.type}
+            for message in chat_messages.messages] if chat_messages.messages else []

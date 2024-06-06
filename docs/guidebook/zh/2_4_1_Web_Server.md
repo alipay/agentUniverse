@@ -1,6 +1,6 @@
 # Web Server
 
-AgentUniverse提供了一个基于Gunicorn+Flask的Web Server，您可以通过Web Server中预置的API调用开发完成的Agent服务。
+AgentUniverse提供了一个基于Flask的Web Server，您可以通过Web Server中预置的API调用开发完成的Agent服务。
 
 ## Web Server启动
 您需要在AgentUniverse应用启动后，启动Web Server。  
@@ -12,22 +12,30 @@ from agentuniverse.base.agentuniverse import AgentUniverse
 AgentUniverse().start()
 start_web_server()
 ```
-
-## Windows用户
-如果您正在windows上使用AgentUniverse，由于Gunicorn兼容性问题，AgentUniverse会直接运行Flask程序。您可以在`start_web_server`中修改启动端口，如：
+Flask服务的默认启动端口为8888，您可以通过bind参数修改启动端口:
 ```python
 from agentuniverse.agent_serve.web.web_booster import start_web_server
+from agentuniverse.base.agentuniverse import AgentUniverse
 
-start_web_server(bind='127.0.0.1:8888')
+AgentUniverse().start()
+start_web_server(bind="127.0.0.1:8002")
 ```
 
-## Web Server配置
-Web Server的配置按照优先度从低到高包含四个层次:`gunicorn`原生默认配置，AgentUniverse默认配置，配置文件配置和启动时配置。其中`gunicorn`的原生默认配置请参考对应版本的`gunicorn`官方文档。
+如果您需要配置更多细节或是追求生产的稳定性，您可以使用Gunicorn作为HTTP Server。
+
+## Gunicorn配置
+您可以通过在配置文件中进行如下配置将Gunicorn设置为您的HTTP Server:
+```toml
+[GUNICORN]
+activate = 'true'
+```
+
+Gunicorn的配置按照优先度从低到高包含四个层次:`gunicorn`原生默认配置，AgentUniverse默认配置，配置文件配置和启动时配置。其中`gunicorn`的原生默认配置请参考对应版本的`gunicorn`官方文档。
 
 ### AgentUniverse默认配置
 ```python
 DEFAULT_GUNICORN_CONFIG = {
-    'bind': '127.0.0.1:8000',
+    'bind': '127.0.0.1:8888',
     'workers': 5,
     'backlog': 2048,
     'worker_class': 'gthread',
@@ -41,7 +49,7 @@ AgentUniverse根据框架的工作特性预先进行了部分参数的配置，�
 ### 配置文件路径
 Web Server的配置路径会在AgentUniverse的主配置config.toml中指定。
 ```toml
-[SUB_CONFIG_PATH]
+[GUNICORN]
 # Gunicorn config file path, an absolute path or a relative path based on the dir where the current config file is located.
 gunicorn_config_path = './gunicorn_config.toml'
 ```
@@ -50,7 +58,7 @@ gunicorn_config_path = './gunicorn_config.toml'
 ### 配置文件
 ```toml
 [GUNICORN_CONFIG]
-bind = '127.0.0.1:8000'
+bind = '127.0.0.1:8888'
 backlog = 2048
 worker_class = 'gthread'
 threads = 4
@@ -64,6 +72,22 @@ keepalive = 10
 您也可以通过以下方式在启动Web Server时进行配置：
 ```python
 from agentuniverse.agent_serve.web.web_booster import start_web_server
+from agentuniverse.base.agentuniverse import AgentUniverse
 
+AgentUniverse().start()
 start_web_server(bind="127.0.0.1:8002", threads=4)
 ```
+如果您有某些函数想在启动后执行，可以用类似以下方式添加:
+```python
+from agentuniverse.agent_serve.web.post_fork_queue import add_post_fork
+from agentuniverse.agent_serve.web.web_booster import start_web_server
+from agentuniverse.base.agentuniverse import AgentUniverse
+
+def print_hello(name: str):
+    print(f"hello {name}")
+
+add_post_fork(print_hello, "name")
+AgentUniverse().start()
+start_web_server(bind="127.0.0.1:8002")
+```
+您可以在启动后看到和worker数相等的"hello name"。

@@ -24,6 +24,38 @@ Note - 对于版本的额外说明。
 ***************************************************
 
 # 版本更新记录
+## [0.0.8] - 2024-06-06
+### Added
+- 新增monitor模块
+  - 任何agentUniverse运行时的数据可以被采集与观测
+- 新增webserver post_fork功能
+  - 开放agentUniverse中webserver启动后的多节点流程干预功能
+- 新增SQLDB_WRAPPER包装类，提供典型数据库连接方式
+  - 通过SQLDB_WRAPPER包装类您可以非常方便的连接如SQLite、MySQL、Oracle、PostgreSQL、SQLite等几十种数据库与存储技术组件。
+- 新增milvus向量数据库组件连接
+
+上述功能更多用法请关注agentUniverse指导手册部分。
+
+### Changed
+- 全平台以flask作为默认webserver启动方式，gunicorn与GRPC能力置为默认关闭
+  - 我们在上个版本中发现不同的操作系统对于gunicorn与GRPC的兼容性会有略微差异，我们将flask作为全平台的第一启动方式，您可以按需在配置中开启gunicorn与GRPC。
+
+### Security
+- 部分aU依赖第三方包识别到安全漏洞，出于安全考虑我们对其进行版本升级，主要包含如下变动：
+  - requests (^2.31.0 -> ^2.32.0)
+  - flask (^2.2 -> ^2.3.2)
+  - werkzeug (^2.2.2 -> ^3.0.3)
+  - langchain (0.0.352 -> 0.1.20)
+  - langchain-core (0.1.3 -> 0.1.52)
+  - langchain-community (no version lock -> 0.0.38)
+  - gunicorn (21.2.0 -> ^22.0.0)
+  - Jinja2 (no version lock -> ^3.1.4)
+  - tqdm (no version lock -> ^4.66.3)
+若您的系统存在外部访问，强烈建议您安装v0.0.8版本的aU以规避这些三方包的安全风险，更详细的说明您可以关注https://security.snyk.io。
+
+### Note
+- 部分代码优化与文档更新
+
 ## [0.0.7] - 2024-05-29
 ### Added
 - LLM组件支持多模态参数调用

@@ -5,14 +5,12 @@
 # @Author  : jerry.zzw 
 # @Email   : jerry.zzw@antgroup.com
 # @FileName: component_manager_base.py
-from agentuniverse.base.component.component_base import ComponentBase
-from agentuniverse.base.component.component_enum import ComponentEnum
-import importlib
-import inspect
-import pkgutil
+import copy
 from typing import TypeVar, Generic
 
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
+from agentuniverse.base.component.component_base import ComponentBase
+from agentuniverse.base.component.component_enum import ComponentEnum
 
 # 添加类型范型限定
 ComponentTypeVar = TypeVar("ComponentTypeVar", bound=ComponentBase)
@@ -40,10 +38,12 @@ class ComponentManagerBase(Generic[ComponentTypeVar]):
         self._instance_obj_map.pop(component_instance_name)
 
     def get_instance_obj(self, component_instance_name: str,
-                         appname: str = None) -> ComponentTypeVar:
+                         appname: str = None, new_instance: bool = None) -> ComponentTypeVar:
         """Return the component instance object."""
         appname = appname or ApplicationConfigManager().app_configer.base_info_appname
         instance_code = f'{appname}.{self._component_type.value.lower()}.{component_instance_name}'
+        if new_instance:
+            return copy.deepcopy(self._instance_obj_map.get(instance_code))
         return self._instance_obj_map.get(instance_code)
 
     def get_instance_name_list(self) -> list[str]:

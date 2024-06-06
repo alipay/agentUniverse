@@ -11,6 +11,7 @@ from ...base.util.logging.logging_util import LOGGER
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
+app.json.ensure_ascii = False
 
 
 @app.route("/echo")

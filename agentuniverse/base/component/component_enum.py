@@ -19,6 +19,7 @@ class ComponentEnum(Enum):
     SERVICE = "SERVICE"
     MEMORY = "MEMORY"
     PROMPT = "PROMPT"
+    SQLDB_WRAPPER = "SQLDB_WRAPPER"
 
     @staticmethod
     def to_value_list():
