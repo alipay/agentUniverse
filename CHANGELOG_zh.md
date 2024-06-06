@@ -31,7 +31,7 @@ Note - 对于版本的额外说明。
 - 新增webserver post_fork功能
   - 开放agentUniverse中webserver启动后的多节点流程干预功能
 - 新增SQLDB_WRAPPER包装类，提供典型数据库连接方式
-  - 通过SQLDB_WRAPPER包装类您可以非常方便的连接如SQLite、MySQL、Oracle、PostgreSQL、SQLite等几十种数据库与存储技术组件。
+  - 通过SQLDB_WRAPPER包装类您可以非常方便的连接如SQLServer、MySQL、Oracle、PostgreSQL、SQLite等几十种数据库与存储技术组件。
 - 新增milvus向量数据库组件连接
 
 上述功能更多用法请关注agentUniverse指导手册部分。

@@ -31,7 +31,7 @@ Note - Additional remarks regarding the version.
 - Added webserver post_fork functionality
   - Provides multi-node process intervention capabilities after starting the webserver in agentUniverse
 - Introduced SQLDB_WRAPPER wrapper class, offering typical database connection methods
-  - Through the SQLDB_WRAPPER wrapper class, you can conveniently connect to various databases and storage technologies including SQLite, MySQL, Oracle, PostgreSQL, and others
+  - Through the SQLDB_WRAPPER wrapper class, you can conveniently connect to various databases and storage technologies including SQLServer, MySQL, Oracle, PostgreSQL, SQLite and others
 - Added connection support for Milvus vector database component
 
 For more usage of the above features, please pay attention to the agentUniverse guidebook.
