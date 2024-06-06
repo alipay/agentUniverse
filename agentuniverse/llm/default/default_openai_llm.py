@@ -5,14 +5,14 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: default_openai_llm.py
-from typing import Any, Optional
+from typing import Any, Optional, Iterator, Union, AsyncIterator
 
 from pydantic import Field
 
+from agentuniverse.base.annotation.trace import trace_llm
 from agentuniverse.base.util.env_util import get_from_env
 from agentuniverse.llm.llm_output import LLMOutput
 from agentuniverse.llm.openai_style_llm import OpenAIStyleLLM
-
 
 OPENAI_MAX_CONTEXT_LENGTH = {
     "gpt-3.5-turbo": 4096,
@@ -47,7 +47,8 @@ class DefaultOpenAILLM(OpenAIStyleLLM):
     api_base: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_API_BASE"))
     proxy: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_PROXY"))
 
-    def call(self, messages: list, **kwargs: Any) -> LLMOutput:
+    @trace_llm
+    def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """ The call method of the LLM.
 
         Users can customize how the model interacts by overriding call method of the LLM class.
@@ -58,7 +59,8 @@ class DefaultOpenAILLM(OpenAIStyleLLM):
         """
         return super().call(messages, **kwargs)
 
-    async def acall(self, messages: list, **kwargs: Any) -> LLMOutput:
+    @trace_llm
+    async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """ The async call method of the LLM.
 
         Users can customize how the model interacts by overriding acall method of the LLM class.

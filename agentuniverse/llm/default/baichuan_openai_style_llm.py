@@ -5,14 +5,13 @@
 # @Author  : weizjajj
 # @Email   : weizhongjie.wzj@antgroup.com
 # @FileName: baichuan_openai_style_llm.py
+from typing import Optional, Any, Union, Iterator, AsyncIterator
 
-from typing import Optional
-
-from langchain_community.chat_models import ChatBaichuan
-from langchain_core.language_models import BaseLanguageModel
 from pydantic import Field
 
+from agentuniverse.base.annotation.trace import trace_llm
 from agentuniverse.base.util.env_util import get_from_env
+from agentuniverse.llm.llm_output import LLMOutput
 from agentuniverse.llm.openai_style_llm import OpenAIStyleLLM
 
 BAICHUAN_Max_CONTEXT_LENGTH = {
@@ -41,3 +40,27 @@ class BAICHUANOpenAIStyleLLM(OpenAIStyleLLM):
         if super().max_context_length():
             return super().max_context_length()
         return BAICHUAN_Max_CONTEXT_LENGTH.get(self.model_name, 8000)
+
+    @trace_llm
+    def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
+        """ The call method of the LLM.
+
+        Users can customize how the model interacts by overriding call method of the LLM class.
+
+        Args:
+            messages (list): The messages to send to the LLM.
+            **kwargs: Arbitrary keyword arguments.
+        """
+        return super().call(messages, **kwargs)
+
+    @trace_llm
+    async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
+        """ The async call method of the LLM.
+
+        Users can customize how the model interacts by overriding acall method of the LLM class.
+
+        Args:
+            messages (list): The messages to send to the LLM.
+            **kwargs: Arbitrary keyword arguments.
+        """
+        return await super().acall(messages, **kwargs)

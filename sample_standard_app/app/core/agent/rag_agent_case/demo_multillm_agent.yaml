@@ -9,14 +9,14 @@ profile:
 
     The question that needs to be answered is: {input}
   llm_model:
-    name: 'kimi_llm'
-    model_name: 'moonshot-v1-8k'
+#    name: 'kimi_llm'
+#    model_name: 'moonshot-v1-8k'
 #    name: 'baichuan_llm'
 #    model_name: 'Baichuan2-Turbo'
 #    name: 'qwen_llm'
 #    model_name: 'qwen-turbo'
-#    name: 'wenxin_llm'
-#    model_name: 'ERNIE-3.5-8K'
+    name: 'wenxin_llm'
+    model_name: 'ERNIE-3.5-8K'
 plan:
   planner:
     name: 'rag_planner'

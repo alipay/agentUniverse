@@ -10,6 +10,8 @@ profile:
 plan:
   planner:
     name: 'planning_planner'
+memory:
+  name: ''
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.default.planning_agent.planning_agent'

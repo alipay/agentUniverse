@@ -171,15 +171,18 @@ def process_llm_token(agent_llm: LLM, lc_prompt_template, profile: dict, planner
 
     # compress the background in the prompt
     content = planner_input.get('background')
-    if process_prompt_type_enum == PromptProcessEnum.TRUNCATE:
-        planner_input['background'] = truncate_content(content, input_tokens, agent_llm)
-    elif process_prompt_type_enum == PromptProcessEnum.STUFF:
-        planner_input['background'] = summarize_by_stuff(texts=[content], llm=prompt_llm,
-                                                         summary_prompt=PromptManager().get_instance_obj(
-                                                             summary_prompt_version))
-    elif process_prompt_type_enum == PromptProcessEnum.MAP_REDUCE:
-        planner_input['background'] = summarize_by_map_reduce(texts=split_texts([content], agent_llm), llm=prompt_llm,
-                                                              summary_prompt=PromptManager().get_instance_obj(
-                                                                  summary_prompt_version),
-                                                              combine_prompt=PromptManager().get_instance_obj(
-                                                                  combine_prompt_version))
+
+    if content:
+        if process_prompt_type_enum == PromptProcessEnum.TRUNCATE:
+            planner_input['background'] = truncate_content(content, input_tokens, agent_llm)
+        elif process_prompt_type_enum == PromptProcessEnum.STUFF:
+            planner_input['background'] = summarize_by_stuff(texts=[content], llm=prompt_llm,
+                                                             summary_prompt=PromptManager().get_instance_obj(
+                                                                 summary_prompt_version))
+        elif process_prompt_type_enum == PromptProcessEnum.MAP_REDUCE:
+            planner_input['background'] = summarize_by_map_reduce(texts=split_texts([content], agent_llm),
+                                                                  llm=prompt_llm,
+                                                                  summary_prompt=PromptManager().get_instance_obj(
+                                                                      summary_prompt_version),
+                                                                  combine_prompt=PromptManager().get_instance_obj(
+                                                                      combine_prompt_version))

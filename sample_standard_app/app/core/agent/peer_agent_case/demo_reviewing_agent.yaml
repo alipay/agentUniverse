@@ -9,6 +9,8 @@ profile:
 plan:
   planner:
     name: 'reviewing_planner'
+memory:
+  name: ''
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.default.reviewing_agent.reviewing_agent'
