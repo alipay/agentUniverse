@@ -44,6 +44,7 @@ class LLM(ComponentBase):
     max_retries: Optional[int] = 2
     streaming: Optional[bool] = False
     ext_info: Optional[dict] = None
+    tracing: Optional[bool] = None
     __max_context_length: Optional[int] = None
 
     def __init__(self, **kwargs):
@@ -101,7 +102,7 @@ class LLM(ComponentBase):
             self.streaming = component_configer.streaming
         if component_configer.ext_info:
             self.ext_info = component_configer.ext_info
-
+        self.tracing = component_configer.tracing
         return self
 
     def set_by_agent_model(self, **kwargs) -> None:
@@ -140,6 +141,3 @@ class LLM(ComponentBase):
         Returns:
             The integer number of tokens in the text.
         """
-
-    class Config:
-        protected_namespaces = ()

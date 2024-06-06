@@ -45,3 +45,7 @@ gunicorn_config_path = './gunicorn_config.toml'
 activate = 'false'
 max_workers = 10
 server_port = 50051
+
+[MONITOR]
+activate = false
+dir = './monitor'

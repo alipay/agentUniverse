@@ -6,7 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: default_memory.py
 from agentuniverse.agent.memory.chat_memory import ChatMemory
-from agentuniverse.llm.openai_llm import OpenAILLM
+from agentuniverse.llm.default.default_openai_llm import DefaultOpenAILLM
 
 
 class DefaultMemory(ChatMemory):
@@ -24,4 +24,4 @@ class DefaultMemory(ChatMemory):
             default memory uses OpenAILLM(gpt-3.5-turbo) object as the memory llm.
         """
         super().__init__(**kwargs)
-        self.llm = OpenAILLM(model_name="gpt-3.5-turbo")
+        self.llm = DefaultOpenAILLM(model_name="gpt-4o")

@@ -19,11 +19,12 @@ from agentuniverse.llm.openai_style_langchain_instance import LangchainOpenAISty
 
 
 class OpenAIStyleLLM(LLM):
-    """
-    This is a wrapper around the OpenAI API that implements a chat interface for the LLM.
+    """This is a wrapper around the OpenAI API that implements a chat interface for the LLM.
+
     It uses the `chat` endpoint of the OpenAI API.
     It also supports using the `completion` endpoint instead of the `chat` endpoint.
     It supports both sync and async modes.
+
     Attributes:
         api_key (Optional[str]): The API key to use for authentication.
         organization (Optional[str]): The organization ID to use for authentication.

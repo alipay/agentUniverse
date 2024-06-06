@@ -9,7 +9,7 @@ import unittest
 
 from langchain.chains import ConversationChain
 
-from agentuniverse.llm.openai_llm import OpenAILLM
+from agentuniverse.llm.default.default_openai_llm import DefaultOpenAILLM
 
 
 class LLMTest(unittest.TestCase):
@@ -18,7 +18,7 @@ class LLMTest(unittest.TestCase):
     """
 
     def setUp(self) -> None:
-        self.llm = OpenAILLM(model_name='gpt-4o')
+        self.llm = DefaultOpenAILLM(model_name='gpt-4o')
 
     def test_call(self) -> None:
         messages = [
