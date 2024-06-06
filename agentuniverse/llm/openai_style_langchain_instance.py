@@ -12,7 +12,7 @@ from langchain.callbacks.manager import AsyncCallbackManagerForLLMRun, CallbackM
 from langchain.schema import BaseMessage, ChatResult
 from langchain_community.chat_models.openai import _convert_delta_to_message_chunk
 from langchain_core.language_models.chat_models import generate_from_stream, agenerate_from_stream
-from langchain_core.messages import AIMessageChunk
+from langchain_core.messages import AIMessageChunk, get_buffer_string
 from langchain_core.outputs import ChatGenerationChunk
 from langchain_community.chat_models import ChatOpenAI
 
@@ -130,3 +130,7 @@ class LangchainOpenAIStyleInstance(ChatOpenAI):
             yield chunk
             if run_manager:
                 await run_manager.on_llm_new_token(token=chunk.text, chunk=chunk)
+
+    def get_num_tokens_from_messages(self, messages: List[BaseMessage]) -> int:
+        messages_str = get_buffer_string(messages)
+        return self.llm.get_num_tokens(messages_str)
