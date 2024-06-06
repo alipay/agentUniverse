@@ -1,6 +1,6 @@
 # agentUniverse
 ****************************************
-语言版本: [English](./README.md) | [中文](./README_zh.md)
+语言版本: [English](./README.md) | [中文](./README_zh.md) | [日本語](./README_jp.md)
 
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
