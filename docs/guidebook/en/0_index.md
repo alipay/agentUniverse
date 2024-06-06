@@ -54,6 +54,8 @@
   * 3.2.1 RPC
     * 3.2.1.1 [gRPC](3_2_1_gRPC.md)
   * 3.2.2 Store
+    * 3.2.2.1 [SQLDBWrapper](2_3_1_SQLDB_WRAPPER.md)
+    * 3.2.2.2 [Milvus](3_3_1_Milvus.md)
   * 3.2.3 Msg
   * 3.2.4 Logging
     * 3.2.4.1 [Alibaba Cloud SLS](3_2_4_Alibaba_Cloud_SLS.md)
