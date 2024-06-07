@@ -18,4 +18,4 @@ def chat(question: str):
 
 
 if __name__ == '__main__':
-    chat("预测下2024年NBA总冠军是谁？")
+    chat("预测2024年NBA总冠军")

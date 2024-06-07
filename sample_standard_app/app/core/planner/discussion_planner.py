@@ -67,5 +67,5 @@ class DiscussionPlanner(Planner):
 
                 # get the result
                 result = output_object.to_dict()
-                LOGGER.info(f"agent {agent_name} thought: {output_object.get_data('output', '')}.")
+                LOGGER.info(f"the {i + 1} round agent {agent_name} thought: {output_object.get_data('output', '')}.")
         return result
