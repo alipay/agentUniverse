@@ -1,6 +1,12 @@
 info:
   name: 'host_agent'
   description: 'host agent'
+profile:
+  prompt_version: host_agent.cn
+  llm_model:
+    name: 'demo_llm'
+    model_name: 'gpt-4o'
+    temperature: 0.6
 plan:
   planner:
     name: 'discussion_planner'
@@ -9,6 +15,8 @@ plan:
       name:
         - 'participant_agent_one'
         - 'participant_agent_two'
+memory:
+  name: 'default_memory'
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.host_agent'
