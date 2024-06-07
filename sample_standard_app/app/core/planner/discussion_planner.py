@@ -61,7 +61,8 @@ class DiscussionPlanner(Planner):
                 current_output = output_object.get_data('output', '')
 
                 chat_history.append({'content': agent_input.get('input'), 'type': 'human'})
-                chat_history.append({'content': f'agent {agent_name} thought: {current_output}.', 'type': 'ai'})
+                chat_history.append(
+                    {'content': f'the {i + 1} round agent {agent_name} thought: {current_output}.', 'type': 'ai'})
                 agent_input['chat_history'] = chat_history
 
                 # get the result
