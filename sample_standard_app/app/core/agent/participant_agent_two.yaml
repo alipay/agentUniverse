@@ -1,0 +1,21 @@
+info:
+  name: 'participant_agent_two'
+  description: 'demo participant agent'
+profile:
+  prompt_version: participant_agent.cn
+
+  llm_model:
+    name: 'demo_llm'
+    model_name: 'gpt-4o'
+plan:
+  planner:
+    name: 'rag_planner'
+action:
+  tool:
+    - 'google_search_tool'
+memory:
+  name: 'default_memory'
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.app.core.agent.participant_agent'
+  class: 'ParticipantAgent'
