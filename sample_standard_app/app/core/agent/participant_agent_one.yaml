@@ -6,6 +6,7 @@ profile:
   llm_model:
     name: 'demo_llm'
     model_name: 'gpt-4o'
+    temperature: 0.6
 plan:
   planner:
     name: 'rag_planner'
