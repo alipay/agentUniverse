@@ -1,5 +1,7 @@
 name: 'google_search_tool'
-description: 'demo google search tool'
+description: |
+  tool used for google search, the tool is passed in the following way:
+  input='xxxx'
 tool_type: 'api'
 input_keys: ['input']
 metadata:
