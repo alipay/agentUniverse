@@ -57,7 +57,7 @@ chat_history=[{"content": "Hello", "type": "human"}, {"content": "Hello", "type"
 The default_memory instance will retrieve this parameter during agent execution and process the memory accordingly throughout the agent's execution process.
 
 ## Using the Memory Manager
-You can get the Memory instance corresponding to its name using the ..get_instance_obj(xx_memory_name) method in the Memory Manager.
+You can get the Memory instance corresponding to its name using the `.get_instance_obj(xx_memory_name)` method in the Memory Manager.
 
 ```python
 from agentuniverse.agent.memory.memory_manager import MemoryManager

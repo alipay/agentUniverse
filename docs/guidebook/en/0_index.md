@@ -27,7 +27,9 @@
   * 2.2.5 [Memory](2_2_5_Memory.md)
     * 2.2.5.1 [Define And Use](2_2_5_Memory_Define_And_Use.md)
     * 2.2.5.2 [Related Domain Objects](2_2_5_Memory_Related_Domain_Objects.md)
-  * 2.2.6 Planner
+  * 2.2.6 [Planner](2_2_6_Planner.md)
+    * 2.2.5.1 [Define And Use](2_2_6_Planner_Define_And_Use.md)
+    * 2.2.5.2 [Related Domain Objects](2_2_6_Planner_Related_Domain_Objects.md)
 * 2.3 Technical Components
 * 2.4 Others
   * 2.4.1 Service
