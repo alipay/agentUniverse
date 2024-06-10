@@ -21,7 +21,9 @@
   * 2.2.3 [Tool](2_2_3_Tool.md)
     * 2.2.3.1 [Create And Use](2_2_3_Tool_Create_And_Use.md)
     * 2.2.3.2 [Related Domain Objects](2_2_3_Tool_Related_Domain_Objects.md)
-  * 2.2.4 Knowledge
+  * 2.2.4 [Knowledge](2_2_4_Knowledge.md)
+    * 2.2.4.1 [Define And Use](2_2_4_Knowledge_Define_And_Use.md)
+    * 2.2.4.2 [Related Domain Objects](2_2_4_Knowledge_Related_Domain_Objects.md)
   * 2.2.5 Memory
   * 2.2.6 Planner
 * 2.3 Technical Components
