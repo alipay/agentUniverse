@@ -8,6 +8,7 @@
 import asyncio
 
 from langchain_core.chat_history import InMemoryChatMessageHistory
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables.history import RunnableWithMessageHistory
 
 from agentuniverse.agent.agent_manager import AgentManager
@@ -128,11 +129,11 @@ class DiscussionPlanner(Planner):
             lambda session_id: chat_history,
             history_messages_key="chat_history",
             input_messages_key=self.input_key,
-        )
+        ) | StrOutputParser()
         res = asyncio.run(
             chain_with_history.ainvoke(input=planner_input, config={"configurable": {"session_id": "unused"}}))
-        LOGGER.info(f"Discussion summary is: {res.content}.")
-        return {**planner_input, self.output_key: res.content, 'chat_history': generate_memories(chat_history)}
+        LOGGER.info(f"Discussion summary is: {res}.")
+        return {**planner_input, self.output_key: res, 'chat_history': generate_memories(chat_history)}
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> ChatPrompt:
         """Prompt module processing.
