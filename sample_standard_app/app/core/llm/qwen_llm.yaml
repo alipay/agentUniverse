@@ -1,6 +1,6 @@
 name: 'qwen_llm'
 description: 'demo qwen llm with spi'
-model_name: 'qwen-turbo'
+model_name: 'qwen-max'
 max_tokens: 1000
 metadata:
   type: 'LLM'

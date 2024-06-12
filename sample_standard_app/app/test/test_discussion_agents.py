@@ -20,7 +20,7 @@ class DiscussionAgentsTest(unittest.TestCase):
 
     def test_discussion_agents(self):
         instance: Agent = AgentManager().get_instance_obj('host_agent')
-        output_object: OutputObject = instance.run(input='预测2024年NBA总冠军？')
+        output_object: OutputObject = instance.run(input='甜粽子好吃还是咸粽子好吃')
 
 
 if __name__ == '__main__':

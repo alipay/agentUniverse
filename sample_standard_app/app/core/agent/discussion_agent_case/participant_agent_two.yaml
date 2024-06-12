@@ -1,12 +1,11 @@
 info:
-  name: 'participant_agent_one'
+  name: 'participant_agent_two'
   description: 'demo participant agent'
 profile:
   prompt_version: participant_agent.cn
   llm_model:
-    name: 'demo_llm'
-    model_name: 'gpt-4o'
-    temperature: 0.4
+    name: 'qwen_llm'
+    temperature: 0.3
 plan:
   planner:
     name: 'rag_planner'
@@ -14,8 +13,8 @@ action:
   tool:
     - 'google_search_tool'
 memory:
-  name: 'default_memory'
+  name: 'demo_memory'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.participant_agent'
+  module: 'sample_standard_app.app.core.agent.discussion_agent_case.participant_agent'
   class: 'ParticipantAgent'

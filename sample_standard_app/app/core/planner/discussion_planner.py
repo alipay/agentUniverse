@@ -42,11 +42,14 @@ class DiscussionPlanner(Planner):
             dict: The planner result.
         """
         planner_config = agent_model.plan.get('planner')
+        # generate participant agents
         participant_agents = self.generate_participant_agents(planner_config)
-        return self.agents_run(participant_agents, planner_config, agent_model, planner_input, input_object)
+        # invoke agents
+        return self.agents_run(participant_agents, planner_config, agent_model, planner_input)
 
     @staticmethod
     def generate_participant_agents(planner_config: dict) -> dict:
+        """Generate participant agents."""
         participant = planner_config.get('participant', {})
         participant_names = participant.get('name', [])
         if len(participant_names) == 0:
@@ -56,38 +59,61 @@ class DiscussionPlanner(Planner):
             agents[participant_name] = AgentManager().get_instance_obj(participant_name)
         return agents
 
-    def agents_run(self, agents: dict, planner_config: dict, agent_model: AgentModel, agent_input: dict,
-                   input_object: InputObject) -> dict:
-        result: dict = dict()
+    def agents_run(self, participant_agents: dict, planner_config: dict, agent_model: AgentModel,
+                   agent_input: dict) -> dict:
+        """ Invoke the participant agents and host agent.
+
+        Args:
+            participant_agents (dict): Participant agents.
+            planner_config (dict): Planner config.
+            agent_model (AgentModel): Agent model object.
+            agent_input (dict): Agent input object.
+        Returns:
+            dict: The planner result.
+        """
         total_round: int = planner_config.get('round', default_round)
         chat_history = []
+        LOGGER.info(f"The topic of discussion is {agent_input.get(self.input_key)}")
         for i in range(total_round):
+            LOGGER.info("------------------------------------------------------------------")
             LOGGER.info(f"Start a discussion, round is {i + 1}.")
-            for agent_name, agent in agents.items():
+            for agent_name, agent in participant_agents.items():
+                LOGGER.info("------------------------------------------------------------------")
                 LOGGER.info(f"Start speaking: agent is {agent_name}.")
-
-                # invoke agent
+                LOGGER.info("------------------------------------------------------------------")
+                # invoke participant agent
                 agent_input['agent_name'] = agent_name
                 agent_input['total_round'] = total_round
                 agent_input['cur_round'] = i + 1
                 output_object: OutputObject = agent.run(**agent_input)
                 current_output = output_object.get_data('output', '')
 
+                # process chat history
                 chat_history.append({'content': agent_input.get('input'), 'type': 'human'})
                 chat_history.append(
-                    {'content': f'the {i + 1} round agent {agent_name} thought: {current_output}.', 'type': 'ai'})
+                    {'content': f'the round {i + 1} agent {agent_name} thought: {current_output}.', 'type': 'ai'})
                 agent_input['chat_history'] = chat_history
 
-                # get the result
-                result = output_object.to_dict()
-                LOGGER.info(f"the {i + 1} round agent {agent_name} thought: {output_object.get_data('output', '')}.")
+                LOGGER.info(f"the round {i + 1} agent {agent_name} thought: {output_object.get_data('output', '')}.")
 
         agent_input['chat_history'] = chat_history
-        return self.invoke_host_agent(agent_model, agent_input, input_object)
 
-    def invoke_host_agent(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject) -> dict:
+        # finally invoke host agent
+        return self.invoke_host_agent(agent_model, agent_input)
+
+    def invoke_host_agent(self, agent_model: AgentModel, planner_input: dict) -> dict:
+        """ Invoke the host agent.
+
+        Args:
+            agent_model (AgentModel): Agent model object.
+            planner_input (dict): Planner input object.
+        Returns:
+            dict: The planner result.
+        """
+        LOGGER.info("------------------------------------------------------------------")
         LOGGER.info(f"Discussion end.")
         LOGGER.info(f"Host agent starts summarize the discussion.")
+        LOGGER.info("------------------------------------------------------------------")
         memory: ChatMemory = self.handle_memory(agent_model, planner_input)
 
         llm: LLM = self.handle_llm(agent_model)
