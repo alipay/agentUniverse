@@ -75,6 +75,7 @@ class DiscussionPlanner(Planner):
         total_round: int = planner_config.get('round', default_round)
         chat_history = []
         LOGGER.info(f"The topic of discussion is {agent_input.get(self.input_key)}")
+        LOGGER.info(f"The participant agents are {'|'.join(participant_agents.keys())}")
         for i in range(total_round):
             LOGGER.info("------------------------------------------------------------------")
             LOGGER.info(f"Start a discussion, round is {i + 1}.")
