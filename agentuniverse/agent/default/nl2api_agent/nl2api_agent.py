@@ -1,16 +1,16 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
-from langchain.agents import create_openai_tools_agent
 
-# @Time    : 2024/5/31 21:22
-# @Author  : wangchongshi
-# @Email   : wangchongshi.wcs@antgroup.com
-# @FileName: react_agent.py
+# @Time    : 2024/6/11 17:14
+# @Author  : weizjajj 
+# @Email   : weizhongjie.wzj@antgroup.com
+# @FileName: nl2api_agent.py
+
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
 
 
-class ReActAgent(Agent):
+class Nl2ApiAgent(Agent):
     """ReAct Agent class."""
 
     def input_keys(self) -> list[str]:
@@ -31,7 +31,7 @@ class ReActAgent(Agent):
             dict: agent input parsed from `input_object` by the user.
         """
         agent_input['input'] = input_object.get_data('input')
-        self.agent_model.profile.setdefault('prompt_version', 'default_react_agent.cn')
+        self.agent_model.profile.setdefault('prompt_version', 'default_nl2api_agent.cn')
         return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:

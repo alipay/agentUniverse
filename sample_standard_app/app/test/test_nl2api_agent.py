@@ -20,8 +20,9 @@ class ReActAgentTest(unittest.TestCase):
 
     def test_react_agent(self):
         """Test demo reAct agent."""
-        instance: Agent = AgentManager().get_instance_obj('demo_react_agent')
-        output_object: OutputObject = instance.run(input='黄金和沪深300的价格分别是多少')
+        instance: Agent = AgentManager().get_instance_obj('demo_nl2api_agent')
+        output_object: OutputObject = instance.run(input='1+3/2+10-4*3等于多少')
+        print(output_object.to_dict())
 
 
 if __name__ == '__main__':

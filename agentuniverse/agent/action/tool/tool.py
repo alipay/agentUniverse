@@ -64,8 +64,7 @@ class Tool(ComponentBase):
     def run(self, **kwargs):
         """The callable method that runs the tool."""
         self.input_check(kwargs)
-        tool_input = ToolInput(kwargs)
-        return self.execute(tool_input)
+        return self.execute(**kwargs)
 
     def input_check(self, kwargs: dict) -> None:
         """Check whether the input parameters of the tool contain input keys of the tool"""
@@ -73,14 +72,19 @@ class Tool(ComponentBase):
             if key not in kwargs.keys():
                 raise Exception(f'{self.get_instance_code()} - The input must include key: {key}.')
 
+    def langchain_run(self, *args, callbacks=None, **kwargs):
+        """The callable method that runs the tool."""
+        kwargs["callbacks"] = callbacks
+        return self.execute(*args, **kwargs)
+
     @abstractmethod
-    def execute(self, tool_input: ToolInput):
+    def execute(self, *args, **kwargs):
         raise NotImplementedError
 
     def as_langchain(self) -> LangchainTool:
         """Convert the agentUniverse(aU) tool class to the langchain tool class."""
         return LangchainTool(name=self.name,
-                             func=self.run,
+                             func=self.langchain_run,
                              description=self.description)
 
     def get_instance_code(self) -> str:

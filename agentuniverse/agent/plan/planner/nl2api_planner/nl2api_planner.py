@@ -1,12 +1,15 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
+# @Time    : 2024/3/18 10:50
+# @Author  : heji
+# @Email   : lc299034@antgroup.com
+# @FileName: expressing_planner.py
+"""Expressing planner module."""
+import asyncio
 
-# @Time    : 2024/5/31 21:22
-# @Author  : wangchongshi
-# @Email   : wangchongshi.wcs@antgroup.com
-# @FileName: react_planner.py
 from langchain_core.chat_history import InMemoryChatMessageHistory
-from langchain.agents import AgentExecutor, create_react_agent, create_structured_chat_agent
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain.tools import Tool as LangchainTool
 
 from agentuniverse.agent.action.tool.tool import Tool
@@ -15,21 +18,18 @@ from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.chat_memory import ChatMemory
 from agentuniverse.agent.plan.planner.planner import Planner
+from agentuniverse.base.util.memory_util import generate_memories
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
-from agentuniverse.prompt.chat_prompt import ChatPrompt
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
 
 
-class ReActPlanner(Planner):
-    """ReAct planner class."""
+class Nl2ApiPlanner(Planner):
+    """Expressing planner class."""
 
-    tools: list[LangchainTool] = None
-
-    def invoke(self, agent_model: AgentModel, planner_input: dict,
-               input_object: InputObject) -> dict:
+    def invoke(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject) -> dict:
         """Invoke the planner.
 
         Args:
@@ -39,23 +39,25 @@ class ReActPlanner(Planner):
         Returns:
             dict: The planner result.
         """
-
         memory: ChatMemory = self.handle_memory(agent_model, planner_input)
 
         llm: LLM = self.handle_llm(agent_model)
 
-        tools = self.acquire_tools(agent_model.action)
-
         prompt: Prompt = self.handle_prompt(agent_model, planner_input)
+
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
         chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
 
-        agent = create_react_agent(llm.as_langchain(), tools, prompt.as_langchain())
-        agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-
-        return agent_executor.invoke(input=planner_input, memory=memory.as_langchain() if memory else None,
-                                     chat_history=chat_history)
+        chain_with_history = RunnableWithMessageHistory(
+            prompt.as_langchain() | llm.as_langchain(),
+            lambda session_id: chat_history,
+            history_messages_key="chat_history",
+            input_messages_key=self.input_key,
+        ) | JsonOutputParser()
+        res = asyncio.run(
+            chain_with_history.ainvoke(input=planner_input, config={"configurable": {"session_id": "unused"}}))
+        return {**planner_input, self.output_key: res, 'chat_history': generate_memories(chat_history)}
 
     @staticmethod
     def acquire_tools(action) -> list[LangchainTool]:
@@ -67,7 +69,8 @@ class ReActPlanner(Planner):
         return lc_tools
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:
-        """Prompt module processing.
+        """
+        Prompt module processing.
 
         Args:
             agent_model (AgentModel): Agent model object.
@@ -75,17 +78,17 @@ class ReActPlanner(Planner):
         Returns:
             ChatPrompt: The chat prompt instance.
         """
+        tools = self.acquire_tools(action=agent_model.action)
         lc_tools_str: str = ''
-        tools = self.acquire_tools(agent_model.action)
-        for lc_tool in self.acquire_tools(agent_model.action):
+        for lc_tool in tools:
             lc_tools_str += "tool name:" + lc_tool.name + " " + "tool description:" + lc_tool.description + '\n'
         lc_tool_names = "|".join([lc_tool.name for lc_tool in tools])
         planner_input['tool_names'] = lc_tool_names
         planner_input['tools'] = lc_tools_str
         planner_input['agent_scratchpad'] = ''
-
+        #
         profile: dict = agent_model.profile
-
+        #
         profile_prompt_model: AgentPromptModel = AgentPromptModel(introduction=profile.get('introduction'),
                                                                   target=profile.get('target'),
                                                                   instruction=profile.get('instruction'))
