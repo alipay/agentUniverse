@@ -10,6 +10,8 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import Optional
 
+from langchain_community.llms.ollama import Ollama
+
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.output_object import OutputObject
@@ -156,3 +158,8 @@ class Agent(ComponentBase):
                                                        plan=plan, memory=memory, action=action)
         self.agent_model = agent_model
         return self
+
+if __name__ == '__main__':
+    llm = Ollama(model='qwen2:7b',base_url='http://127.0.0.1:11434')
+    res = llm.invoke(input="你猜我的梦想是什么")
+    print(res)
