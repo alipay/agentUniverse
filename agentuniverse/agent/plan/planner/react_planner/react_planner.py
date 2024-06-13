@@ -5,9 +5,11 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: react_planner.py
+
 from langchain_core.chat_history import InMemoryChatMessageHistory
-from langchain.agents import AgentExecutor, create_react_agent, create_structured_chat_agent
+from langchain.agents import AgentExecutor, create_react_agent
 from langchain.tools import Tool as LangchainTool
+from langchain_core.runnables import RunnableConfig
 
 from agentuniverse.agent.action.tool.tool import Tool
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
@@ -15,6 +17,7 @@ from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.chat_memory import ChatMemory
 from agentuniverse.agent.plan.planner.planner import Planner
+from agentuniverse.agent.plan.planner.react_planner.stream_callback import StreamOutPutCallbackHandler
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
 from agentuniverse.prompt.chat_prompt import ChatPrompt
@@ -52,10 +55,19 @@ class ReActPlanner(Planner):
         chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
 
         agent = create_react_agent(llm.as_langchain(), tools, prompt.as_langchain())
-        agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+        agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
 
         return agent_executor.invoke(input=planner_input, memory=memory.as_langchain() if memory else None,
-                                     chat_history=chat_history)
+                                     chat_history=chat_history, config=self.get_run_config(input_object))
+
+    @staticmethod
+    def get_run_config(input_object: InputObject) -> RunnableConfig:
+        config = RunnableConfig()
+        callbacks = []
+        output_stream = input_object.get_data('output_stream')
+        callbacks.append(StreamOutPutCallbackHandler(output_stream))
+        config.setdefault("callbacks", callbacks)
+        return config
 
     @staticmethod
     def acquire_tools(action) -> list[LangchainTool]:

@@ -9,16 +9,16 @@ instruction: |
   您可以使用以下工具:
   {tools}
   
-  使用以下格式:
+  你的回答必须严格使用以下格式:
   
-  Question: 您必须回答的问题
-  Thought: 你应该经常想想该怎么做
-  Action: 要采取的行动应该是 one of [{tool_names}]
-  Action Input: 行动的输入
-  Observation: 行动的结果
-  ... (Thought/Action/Action Input/Observation 的过程可以重复 N 次)
-  Thought: 我现在知道最终答案了
-  Final Answer: 原输入问题的最终答案
+    Question: 您必须回答的问题
+    Thought: 你应该经常想想该怎么做
+    Action: 要采取的行动应该是 one of [{tool_names}]
+    Action Input: 行动的输入
+    Observation: 行动的结果
+    ... (Thought/Action/Action Input/Observation 的过程可以重复 N 次)
+    Thought: 我现在知道最终答案了
+    Final Answer: 原输入问题的最终答案
   
   之前的对话:
   {chat_history}

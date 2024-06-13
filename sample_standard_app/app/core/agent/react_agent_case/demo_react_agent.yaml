@@ -2,18 +2,14 @@ info:
   name: 'demo_react_agent'
   description: 'react agent'
 profile:
+  prompt_version: qwen_react_agent.cn
   llm_model:
-    name: 'default_qwen_llm'
-#    model_name: 'qwen1.5-72b-chat'
+    name: 'default_ollama_llm'
+    temperature: 0
 action:
   tool:
-#    - 'add'
-#    - 'sub'
-#    - 'mul'
-#    - 'div'
     - 'google_search_tool'
-    - 'gold_search_tool'
-    - 'stock_search_tool'
+    - 'python_repl'
 plan:
   planner:
     name: 'react_planner'
