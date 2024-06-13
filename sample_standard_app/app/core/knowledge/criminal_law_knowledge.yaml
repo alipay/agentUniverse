@@ -1,0 +1,6 @@
+name: 'criminal_law_knowledge'
+description: 'criminal law knowledge'
+metadata:
+  type: 'KNOWLEDGE'
+  module: 'sample_standard_app.app.core.knowledge.criminal_law_knowledge'
+  class: 'CriminalLawKnowledge'

@@ -1,0 +1,6 @@
+name: 'civil_law_knowledge'
+description: 'civil law knowledge'
+metadata:
+  type: 'KNOWLEDGE'
+  module: 'sample_standard_app.app.core.knowledge.civil_law_knowledge'
+  class: 'CivilLawKnowledge'
