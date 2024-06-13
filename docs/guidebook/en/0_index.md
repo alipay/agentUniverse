@@ -21,9 +21,15 @@
   * 2.2.3 [Tool](2_2_3_Tool.md)
     * 2.2.3.1 [Create And Use](2_2_3_Tool_Create_And_Use.md)
     * 2.2.3.2 [Related Domain Objects](2_2_3_Tool_Related_Domain_Objects.md)
-  * 2.2.4 Knowledge
-  * 2.2.5 Memory
-  * 2.2.6 Planner
+  * 2.2.4 [Knowledge](2_2_4_Knowledge.md)
+    * 2.2.4.1 [Define And Use](2_2_4_Knowledge_Define_And_Use.md)
+    * 2.2.4.2 [Related Domain Objects](2_2_4_Knowledge_Related_Domain_Objects.md)
+  * 2.2.5 [Memory](2_2_5_Memory.md)
+    * 2.2.5.1 [Define And Use](2_2_5_Memory_Define_And_Use.md)
+    * 2.2.5.2 [Related Domain Objects](2_2_5_Memory_Related_Domain_Objects.md)
+  * 2.2.6 [Planner](2_2_6_Planner.md)
+    * 2.2.5.1 [Define And Use](2_2_6_Planner_Define_And_Use.md)
+    * 2.2.5.2 [Related Domain Objects](2_2_6_Planner_Related_Domain_Objects.md)
 * 2.3 Technical Components
 * 2.4 Others
   * 2.4.1 Service
@@ -40,7 +46,7 @@
 **3. Component Reference Manual**
 * 3.1 Domain Components
   * 3.1.1 List of Agents
-  * 3.1.2 List of LLMs
+  * 3.1.2 [List of LLMs](3_1_2_0_List_Of_LLMs.md)
     * 3.1.2.1 [OpenAI Usage Instructions](3_1_2_OpenAI_LLM_Use.md)
     * 3.1.2.2 [Qwen Usage Instructions](3_1_2_Qwen_LLM_Use.md)
     * 3.1.2.3 [WenXin Usage Instructions](3_1_2_WenXin_LLM_Use.md)
@@ -54,6 +60,8 @@
   * 3.2.1 RPC
     * 3.2.1.1 [gRPC](3_2_1_gRPC.md)
   * 3.2.2 Store
+    * 3.2.2.1 [SQLDBWrapper](2_3_1_SQLDB_WRAPPER.md)
+    * 3.2.2.2 [Milvus](3_3_1_Milvus.md)
   * 3.2.3 Msg
   * 3.2.4 Logging
     * 3.2.4.1 [Alibaba Cloud SLS](3_2_4_Alibaba_Cloud_SLS.md)

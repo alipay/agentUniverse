@@ -24,6 +24,38 @@ Note - Additional remarks regarding the version.
 ***************************************************
 
 # Version Update History
+## [0.0.8] - 2024-06-06
+### Added
+- Introduced a new monitor module
+  - Data running in any agentUniverse can be collected and observed
+- Added webserver post_fork functionality
+  - Provides multi-node process intervention capabilities after starting the webserver in agentUniverse
+- Introduced SQLDB_WRAPPER wrapper class, offering typical database connection methods
+  - Through the SQLDB_WRAPPER wrapper class, you can conveniently connect to various databases and storage technologies including SQLServer, MySQL, Oracle, PostgreSQL, SQLite and others
+- Added connection support for Milvus vector database component
+
+For more usage of the above features, please pay attention to the agentUniverse guidebook.
+
+### Changed
+- Flask is set as the default webserver startup method across all platforms, with gunicorn and gRPC capabilities disabled by default
+  - In the previous version, we found slight compatibility differences with gunicorn and gRPC across different operating systems. Thus, we have made Flask the primary startup method for all platforms. You can enable gunicorn and gRPC in the configuration as needed.
+
+### Security
+- Some aU dependencies were identified to have security vulnerabilities in third-party packages. For security reasons, we have upgraded their versions, with the main changes including:
+  - requests (^2.31.0 -> ^2.32.0)
+  - flask (^2.2 -> ^2.3.2)
+  - werkzeug (^2.2.2 -> ^3.0.3)
+  - langchain (0.0.352 -> 0.1.20)
+  - langchain-core (0.1.3 -> 0.1.52)
+  - langchain-community (no version lock -> 0.0.38)
+  - gunicorn (21.2.0 -> ^22.0.0)
+  - Jinja2 (no version lock -> ^3.1.4)
+  - tqdm (no version lock -> ^4.66.3)
+If your system has external access, we strongly recommend installing version v0.0.8 of agentUniverse to mitigate the security risks posed by these third-party packages. For more detailed information, you can visit https://security.snyk.io.
+
+### Note
+- Some code optimizations and documentation updates.
+
 ## [0.0.7] - 2024-05-29
 ### Added
 - LLM component supports multimodal parameter invocation.
