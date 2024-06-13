@@ -40,6 +40,7 @@ class MockSearchTool(Tool):
         We recommend that you configure your `SERPER_API_KEY` and use google_search_tool to get information.
     """
 
-    def execute(self, input:str):
+    def execute(self, tool_input: ToolInput):
+        input = tool_input.get_data("input")
         """Demonstrates the execute method of the Tool class."""
         return MOCK_SEARCH_RESULT

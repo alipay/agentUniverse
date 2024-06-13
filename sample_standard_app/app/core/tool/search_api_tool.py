@@ -12,7 +12,7 @@ from typing import Optional
 from langchain_community.utilities import SearchApiAPIWrapper
 from pydantic import Field
 
-from agentuniverse.agent.action.tool.tool import Tool
+from agentuniverse.agent.action.tool.tool import Tool, ToolInput
 from agentuniverse.base.config.component_configer.configers.tool_configer import ToolConfiger
 from agentuniverse.base.util.env_util import get_from_env
 
@@ -46,14 +46,15 @@ class SearchAPITool(Tool):
             self.search_api_wrapper = SearchApiAPIWrapper(searchapi_api_key=self.search_api_key, engine=self.engine)
         return self.search_api_wrapper
 
-    def execute(self, input: str, **kwargs):
+    def execute(self, tool_input: ToolInput):
         self._load_api_wapper()
         search_params = {}
         for k, v in self.search_params.items():
-            if k in kwargs:
-                search_params[k] = kwargs[k]
+            if k in tool_input.to_dict():
+                search_params[k] = tool_input.get_data(k)
                 continue
             search_params[k] = v
+        input = tool_input.get_data("input")
         if self.search_type == "json":
             return self.search_api_wrapper.results(query=input, **search_params)
         return self.search_api_wrapper.run(query=input, **search_params)

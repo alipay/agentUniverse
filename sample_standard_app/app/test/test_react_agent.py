@@ -21,7 +21,7 @@ class ReActAgentTest(unittest.TestCase):
     def test_react_agent(self):
         """Test demo reAct agent."""
         instance: Agent = AgentManager().get_instance_obj('demo_react_agent')
-        output_object: OutputObject = instance.run(input='黄金和沪深300的价格分别是多少')
+        output_object: OutputObject = instance.run(input='请给出一段python代码，可以计算三数之和，给出之前必须验证代码是否可以运行，最少验证三次')
 
 
 if __name__ == '__main__':

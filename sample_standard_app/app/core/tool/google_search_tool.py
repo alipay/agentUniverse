@@ -26,7 +26,8 @@ class GoogleSearchTool(Tool):
 
     serper_api_key: Optional[str] = Field(default_factory=lambda: get_from_env("SERPER_API_KEY"))
 
-    def execute(self, input: str, **kwargs):
+    def execute(self, tool_input: ToolInput):
+        input = tool_input.get_data("input")
         if self.serper_api_key is None:
             return MockSearchTool().execute(input=input)
         # get top10 results from Google search.

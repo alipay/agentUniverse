@@ -64,7 +64,8 @@ class Tool(ComponentBase):
     def run(self, **kwargs):
         """The callable method that runs the tool."""
         self.input_check(kwargs)
-        return self.execute(**kwargs)
+        tool_input = ToolInput(kwargs)
+        return self.execute(tool_input)
 
     def input_check(self, kwargs: dict) -> None:
         """Check whether the input parameters of the tool contain input keys of the tool"""
@@ -75,10 +76,12 @@ class Tool(ComponentBase):
     def langchain_run(self, *args, callbacks=None, **kwargs):
         """The callable method that runs the tool."""
         kwargs["callbacks"] = callbacks
-        return self.execute(*args, **kwargs)
+        tool_input = ToolInput(kwargs)
+        tool_input.add_data(self.input_keys[0], args[0])
+        return self.execute(tool_input)
 
     @abstractmethod
-    def execute(self, *args, **kwargs):
+    def execute(self, tool_input: ToolInput):
         raise NotImplementedError
 
     def as_langchain(self) -> LangchainTool:

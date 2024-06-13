@@ -12,7 +12,7 @@ description: '使用该工具可以执行python代码.工具的输入必须时�
         print(resp.content)
         ```'
 tool_type: 'api'
-input_keys:
+input_keys: ['input']
 metadata:
   type: 'TOOL'
   module: 'sample_standard_app.app.core.tool.python_repl'

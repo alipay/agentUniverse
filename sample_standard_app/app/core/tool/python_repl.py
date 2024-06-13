@@ -10,7 +10,7 @@ import re
 
 from langchain_community.utilities import PythonREPL
 from pydantic import Field
-from agentuniverse.agent.action.tool.tool import Tool
+from agentuniverse.agent.action.tool.tool import Tool, ToolInput
 
 
 class PythonREPLTool(Tool):
@@ -24,7 +24,8 @@ class PythonREPLTool(Tool):
     """
     client: PythonREPL = Field(default_factory=lambda: PythonREPL())
 
-    def execute(self, input: str,**kwargs):
+    def execute(self, tool_input: ToolInput):
+        input = tool_input.get_data("input")
         """Demonstrates the execute method of the Tool class."""
         pattern = re.compile(r"```python(.*?)``", re.DOTALL)
         matches = pattern.findall(input)
