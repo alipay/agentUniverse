@@ -23,4 +23,3 @@ class DemoMemory(ChatMemory):
             llm (LLM): the LLM instance used by this memory.
         """
         super().__init__(**kwargs)
-        self.llm = QWenOpenAIStyleLLM(model_name="qwen-max")
