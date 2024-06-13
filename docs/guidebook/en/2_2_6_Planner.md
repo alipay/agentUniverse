@@ -1,0 +1,5 @@
+# Planner
+Planners influence the collaboration and execution strategies of actual agents. As we mentioned earlier, agentUniverse can be viewed as a Pattern Factory, and Planners are the practical carriers of the collaboration and execution philosophies of these patterns. Planners can encompass various types, such as making the agent adhere to a fully human-orchestrated workflow, follow a specific Standard Operating Procedure (SOP), or use certain specific models of operation like PEER/Retrieval-Augmented Generation (RAG), or even allow the agent to work completely autonomously (Auto).
+
+# Conclusion
+At this point, you have a preliminary understanding of the role of planning. In the next section, we will specifically introduce the standard definitions of planning components, how to create custom plans, and how to use plans.
