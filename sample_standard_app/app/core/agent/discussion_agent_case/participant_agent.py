@@ -21,6 +21,7 @@ class ParticipantAgent(Agent):
         agent_input['agent_name'] = input_object.get_data('agent_name')
         agent_input['total_round'] = input_object.get_data('total_round')
         agent_input['cur_round'] = input_object.get_data('cur_round')
+        agent_input['participants'] = input_object.get_data('participants')
         return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:

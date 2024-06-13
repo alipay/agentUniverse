@@ -10,10 +10,6 @@ instruction: |
   4. You need to speak once in each round, try to stick to the views you have held for many rounds, and if you find that what other discussion participants have said is more reasonable, you can also change your original point of view.
   5. In the last round, according to the dialogue results of many rounds of discussion among the participants in the discussion group, as well as your own views expressed in many rounds, answer the questions raised by the users and ask them to be as detailed and justified as possible.。
 
-  your are the agent: {agent_name}
-  
-  There are altogether {total_round} rounds of discussion, and this is currently the {cur_round} round of discussions.
-  
   Background is:
   {background}
   
@@ -24,7 +20,11 @@ instruction: |
 
   Begin!
 
-  The question to be answered is: {input}
+  your are the participant of this discussion group, your name is : {agent_name}, participants in the discussion group include: {participants}.
+  
+  There are totally {total_round} rounds of discussion, and this is currently the {cur_round} round of discussions.
+  
+  Please answer in English, the question to be answered is: {input}
 metadata:
   type: 'PROMPT'
   version: participant_agent.en

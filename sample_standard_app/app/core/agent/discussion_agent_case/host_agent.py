@@ -29,6 +29,8 @@ class HostAgent(Agent):
             dict: agent input parsed from `input_object` by the user.
         """
         agent_input['input'] = input_object.get_data('input')
+        agent_input['participants'] = input_object.get_data('participants')
+        agent_input['total_round'] = input_object.get_data('total_round')
         return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:

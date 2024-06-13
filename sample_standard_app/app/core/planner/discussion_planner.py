@@ -76,6 +76,8 @@ class DiscussionPlanner(Planner):
         chat_history = []
         LOGGER.info(f"The topic of discussion is {agent_input.get(self.input_key)}")
         LOGGER.info(f"The participant agents are {'|'.join(participant_agents.keys())}")
+        agent_input['total_round'] = total_round
+        agent_input['participants'] = ' and '.join(participant_agents.keys())
         for i in range(total_round):
             LOGGER.info("------------------------------------------------------------------")
             LOGGER.info(f"Start a discussion, round is {i + 1}.")
@@ -85,7 +87,6 @@ class DiscussionPlanner(Planner):
                 LOGGER.info("------------------------------------------------------------------")
                 # invoke participant agent
                 agent_input['agent_name'] = agent_name
-                agent_input['total_round'] = total_round
                 agent_input['cur_round'] = i + 1
                 output_object: OutputObject = agent.run(**agent_input)
                 current_output = output_object.get_data('output', '')
@@ -93,13 +94,12 @@ class DiscussionPlanner(Planner):
                 # process chat history
                 chat_history.append({'content': agent_input.get('input'), 'type': 'human'})
                 chat_history.append(
-                    {'content': f'the round {i + 1} agent {agent_name} thought: {current_output}.', 'type': 'ai'})
+                    {'content': f'the round {i + 1} agent {agent_name} thought: {current_output}', 'type': 'ai'})
                 agent_input['chat_history'] = chat_history
 
-                LOGGER.info(f"the round {i + 1} agent {agent_name} thought: {output_object.get_data('output', '')}.")
+                LOGGER.info(f"the round {i + 1} agent {agent_name} thought: {output_object.get_data('output', '')}")
 
         agent_input['chat_history'] = chat_history
-
         # finally invoke host agent
         return self.invoke_host_agent(agent_model, agent_input)
 
@@ -133,7 +133,7 @@ class DiscussionPlanner(Planner):
         ) | StrOutputParser()
         res = asyncio.run(
             chain_with_history.ainvoke(input=planner_input, config={"configurable": {"session_id": "unused"}}))
-        LOGGER.info(f"Discussion summary is: {res}.")
+        LOGGER.info(f"Discussion summary is: {res}")
         return {**planner_input, self.output_key: res, 'chat_history': generate_memories(chat_history)}
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> ChatPrompt:
