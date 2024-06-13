@@ -4,12 +4,12 @@ info:
 profile:
   prompt_version: qwen_react_agent.cn
   llm_model:
-    name: 'default_ollama_llm'
+    name: 'default_qwen_llm'
     temperature: 0
 action:
   tool:
     - 'google_search_tool'
-    - 'python_repl'
+    - 'python_runner'
 plan:
   planner:
     name: 'react_planner'

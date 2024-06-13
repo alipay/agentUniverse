@@ -3,8 +3,7 @@ info:
   description: 'demo nl2api agent'
 profile:
   llm_model:
-    name: 'default_openai_llm'
-    model_name: 'gpt-4o'
+    name: 'default_qwen_llm'
 action:
   tool:
     - 'add'

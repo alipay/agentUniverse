@@ -24,7 +24,7 @@ profile:
 
     需要回答的问题是: {input}
   llm_model:
-    name: 'default_ollama_llm'
+    name: 'default_qwen_llm'
 #    model_name: 'gpt-4o'
 plan:
   planner:
