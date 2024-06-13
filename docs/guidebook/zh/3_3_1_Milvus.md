@@ -38,4 +38,5 @@ init_params['store'] = MilvusStore(
 )
 knowledge = Knowledge(**init_params)
 ```
+
 上面的代码会创建一个基于Milvus的Knowledge，关于Knowledge的具体用法您可以参考[知识组件](2_2_4_知识.md)，或是参考代码`tests/test_agentuniverse/unit/agent/action/knowledge/test_knowledge_with_milvus.py`。
