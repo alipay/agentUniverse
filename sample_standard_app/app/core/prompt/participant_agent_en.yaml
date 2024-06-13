@@ -20,7 +20,7 @@ instruction: |
 
   Begin!
 
-  your are the participant of this discussion group, your name is : {agent_name}, participants in the discussion group include: {participants}.
+  You are the participant of this discussion group, your name is : {agent_name}, participants in the discussion group include: {participants}.
   
   There are totally {total_round} rounds of discussion, and this is currently the {cur_round} round of discussions.
   
