@@ -77,8 +77,19 @@ class Tool(ComponentBase):
         """The callable method that runs the tool."""
         kwargs["callbacks"] = callbacks
         tool_input = ToolInput(kwargs)
-        tool_input.add_data(self.input_keys[0], args[0])
+        parse_result = self.parse_react_input(args[0])
+        for key in self.input_keys:
+            tool_input.add_data(key, parse_result[key])
         return self.execute(tool_input)
+
+    def parse_react_input(self, input_str: str):
+        """
+            parse react string to you input
+            you can define your own logic here by override this function
+        """
+        return {
+            self.input_keys[0]: input_str
+        }
 
     @abstractmethod
     def execute(self, tool_input: ToolInput):
