@@ -51,11 +51,13 @@ class ReActPlanner(Planner):
 
         prompt: Prompt = self.handle_prompt(agent_model, planner_input)
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
-
         chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
 
         agent = create_react_agent(llm.as_langchain(), tools, prompt.as_langchain())
-        agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, handle_parsing_errors=True)
+        agent_executor = AgentExecutor(agent=agent, tools=tools,
+                                       verbose=True,
+                                       handle_parsing_errors=True,
+                                       max_iterations=agent_model.plan.get('planner').get("max_iterations", 15))
 
         return agent_executor.invoke(input=planner_input, memory=memory.as_langchain() if memory else None,
                                      chat_history=chat_history, config=self.get_run_config(input_object))
