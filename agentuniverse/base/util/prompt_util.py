@@ -163,6 +163,9 @@ def process_llm_token(agent_llm: LLM, lc_prompt_template, profile: dict, planner
     prompt_tokens: int = agent_llm.get_num_tokens(prompt)
 
     input_tokens = agent_llm.max_context_length() - agent_llm.max_tokens
+    if input_tokens <= 0:
+        raise Exception("The current output max tokens limit is greater than the context length of the LLM model, "
+                        "please adjust it by editing the `max_tokens` parameter in the llm yaml.")
 
     if prompt_tokens <= input_tokens:
         return

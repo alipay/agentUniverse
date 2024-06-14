@@ -5,6 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: openai_embedding.py
+
 from typing import List, Optional, Any
 
 from langchain_community.embeddings.openai import OpenAIEmbeddings

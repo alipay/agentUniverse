@@ -10,7 +10,7 @@ from agentuniverse.llm.default.default_openai_llm import DefaultOpenAILLM
 
 
 class DefaultMemory(ChatMemory):
-    """The AFAF default memory module."""
+    """The aU default memory module."""
 
     def __init__(self, **kwargs):
         """The __init__ method.

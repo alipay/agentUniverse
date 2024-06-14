@@ -5,7 +5,7 @@ Language version: [English](./README.md) | [中文](./README_zh.md) | [日本語
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.8-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.9-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -43,6 +43,11 @@ We will show you how to:
 * Test and optimize the performance of the agent
 * Quickly serve the agent
 For details, please read [Quick Start](docs/guidebook/en/1_3_Quick_Start.md).
+
+## Use Cases
+[Legal Consultation Agent](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
+[Python Code Generation and Execution Agent](./docs/guidebook/en/7_1_1_Python_Auto_Runner.md)
+[Discussion Group Based on Multi-Turn Multi-Agent Mode](./docs/guidebook/en/6_2_1_Discussion_Group.md)
 
 ## Guidebook
 For more detailed information, please refer to the [Guidebook](docs/guidebook/en/0_index.md).

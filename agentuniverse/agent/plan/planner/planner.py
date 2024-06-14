@@ -74,10 +74,10 @@ class Planner(ComponentBase):
         chat_history: list = planner_input.get('chat_history')
         memory_name = agent_model.memory.get('name')
         llm_model = agent_model.memory.get('llm_model') or dict()
-        llm_name = llm_model.get('name')
+        llm_name = llm_model.get('name') or agent_model.profile.get('llm_model').get('name')
 
         messages: list[Message] = generate_messages(chat_history)
-        llm: LLM = LLMManager().get_instance_obj(llm_name) if llm_name else None
+        llm: LLM = LLMManager().get_instance_obj(llm_name)
         params: dict = dict()
         params['messages'] = messages
         params['llm'] = llm
@@ -90,7 +90,7 @@ class Planner(ComponentBase):
         memory.set_by_agent_model(**params)
         return memory
 
-    def handle_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
+    def run_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
         """Tool and knowledge processing.
 
         Args:

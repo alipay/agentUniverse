@@ -18,7 +18,8 @@ pip install pymilvus
 ```
 
 ### What can I do with Milvus
-You can use Milvus in the Knowledge component to store and query knowledge. You can create a storage component using Milvus as follows:
+
+You can use Milvus in the [Knowledge component](2_2_4_Knowledge.md) to store and query knowledge. You can create a storage component using Milvus as follows:
 
 ```python
 from agentuniverse.agent.action.knowledge.store.milvus_store import MilvusStore
@@ -37,4 +38,5 @@ init_params['store'] = MilvusStore(
 )
 knowledge = Knowledge(**init_params)
 ```
-The above code will create a Milvus-based Knowledge instance. For detailed usage of Knowledge, you can refer to the [Knowledge documentation]() or the code `tests/test_agentuniverse/unit/agent/action/knowledge/test_knowledge_with_milvus.py`.
+
+The above code will create a Milvus-based Knowledge instance. For detailed usage of Knowledge, you can refer to the [Knowledge component](2_2_4_Knowledge.md) or the code `tests/test_agentuniverse/unit/agent/action/knowledge/test_knowledge_with_milvus.py`.

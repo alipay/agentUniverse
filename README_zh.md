@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.8-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.9-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -46,6 +46,11 @@ pip install agentUniverse
 * 对agent进行快速服务化
 
 详情请阅读[快速开始](docs/guidebook/zh/1_3_%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.md) 。
+
+## 使用案例
+[法律咨询Agent](./docs/guidebook/zh/7_1_1_法律咨询案例.md)
+[Python代码生成与执行Agent](./docs/guidebook/zh/7_1_1_Python自动执行案例.md)
+[基于多轮多Agent的讨论小组](./docs/guidebook/zh/6_2_1_讨论组.md)
 
 ## 用户指南
 更多详细信息，请参阅[指南](docs/guidebook/zh/0_%E7%9B%AE%E5%BD%95.md) 。

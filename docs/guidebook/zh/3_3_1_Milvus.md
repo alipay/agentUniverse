@@ -20,7 +20,7 @@ pip install pymilvus
 
 ### 我可以用Milvus做些什么
 
-您可以在[Knowledge组件]()中使用Milvus来存储和查询知识，你可以使用以下方式来创建一个使用Milvus的存储组件:
+您可以在[知识组件](2_2_4_知识.md)中使用Milvus来存储和查询知识，你可以使用以下方式来创建一个使用Milvus的存储组件:
 ```python
 from agentuniverse.agent.action.knowledge.store.milvus_store import MilvusStore
 from agentuniverse.agent.action.knowledge.embedding.openai_embedding import OpenAIEmbedding
@@ -38,4 +38,5 @@ init_params['store'] = MilvusStore(
 )
 knowledge = Knowledge(**init_params)
 ```
-上面的代码会创建一个基于Milvus的Knowledge，关于Knowledge的具体用法您可以参考[Knowledge文档]()，或是参考代码`tests/test_agentuniverse/unit/agent/action/knowledge/test_knowledge_with_milvus.py`。
+
+上面的代码会创建一个基于Milvus的Knowledge，关于Knowledge的具体用法您可以参考[知识组件](2_2_4_知识.md)，或是参考代码`tests/test_agentuniverse/unit/agent/action/knowledge/test_knowledge_with_milvus.py`。

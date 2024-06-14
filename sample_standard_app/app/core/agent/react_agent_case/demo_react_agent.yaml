@@ -1,0 +1,19 @@
+info:
+  name: 'demo_react_agent'
+  description: 'react agent'
+profile:
+  prompt_version: qwen_react_agent.cn
+  llm_model:
+    name: 'default_qwen_llm'
+    temperature: 0
+action:
+  tool:
+    - 'google_search_tool'
+    - 'python_runner'
+plan:
+  planner:
+    name: 'react_planner'
+metadata:
+  type: 'AGENT'
+  module: 'agentuniverse.agent.default.react_agent.react_agent'
+  class: 'ReActAgent'

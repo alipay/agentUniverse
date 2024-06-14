@@ -1,0 +1,17 @@
+info:
+  name: 'react_agent'
+  description: 'react agent'
+profile:
+  llm_model:
+    name: 'default_openai_llm'
+    model_name: 'gpt-4o'
+action:
+  tool:
+    - ''
+plan:
+  planner:
+    name: 'react_planner'
+metadata:
+  type: 'AGENT'
+  module: 'agentuniverse.agent.default.react_agent.react_agent'
+  class: 'ReActAgent'
