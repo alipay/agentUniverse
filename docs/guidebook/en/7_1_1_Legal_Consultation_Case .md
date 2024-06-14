@@ -25,7 +25,7 @@ Remove the comment from self.insert_knowledge() to rebuild the database.
 ### Law Agent
 This agent involves the following two files:
 - [law_rag_agent.py](../../../sample_standard_app/app/core/agent/rag_agent_case/law_rag_agent.py): Defines the agent's input and output
-- [law_rag_agent.py](../../../sample_standard_app/app/core/agent/rag_agent_case/law_rag_agent.yaml): Defines the agent's related prompts
+- [law_rag_agent.yaml](../../../sample_standard_app/app/core/agent/rag_agent_case/law_rag_agent.yaml): Defines the agent's related prompts
 
 
 ### Demonstration Code
