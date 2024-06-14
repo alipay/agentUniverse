@@ -24,6 +24,21 @@ Note - 对于版本的额外说明。
 ***************************************************
 
 # 版本更新记录
+## [0.0.9] - 2024-06-14
+### Added
+- LLM组件新增claude、ollama标准接入
+- 新增qwen embedding模块
+- 新增ReAct、nl2api默认agent
+
+### Note
+- 新增使用案例
+  - RAG类Agent案例-法律咨询Agent
+  - ReAct类Agent案例-Python代码生成与执行Agent
+  - 多智能体案例-基于多轮多Agent的讨论小组
+
+  详情请看用户文档案例部分。
+- 部分代码优化与文档更新
+
 ## [0.0.8] - 2024-06-06
 ### Added
 - 新增monitor模块
