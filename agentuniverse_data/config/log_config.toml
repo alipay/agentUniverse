@@ -1,0 +1,16 @@
+[LOG_CONFIG]
+[LOG_CONFIG.BASIC_CONFIG]
+# Loguru log level.
+log_level = "INFO"
+# Output path of the log file. If value is empty, agentuniverse will create a subdir under your workdir to save logs.
+log_path = "./dispatch"
+# Specifies the log rotation policy, controlling when a new log file is created. It can be a time period
+# (e.g., "1 week"), a file size (e.g., "100 MB"), or a function returning True when rotation should occur.
+log_rotation = "10MB"
+# Specifies the duration to keep old log files. It can be a time span (e.g., "30 days") or a function to filter the
+# files to be retained. Files outside this policy are purged.
+log_retention = "3 days"
+
+[LOG_CONFIG.EXTEND_MODULE]
+# Whether use aliyun simple log server. If value is True, you should fill the ALIYUN_SLS_CONFIG below.
+sls_log = "False"

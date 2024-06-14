@@ -1,0 +1,30 @@
+[BASE_INFO]
+# The app name will be applied to all processes including agent service integration.
+appname = 'agentuniverse_data'
+
+[CORE_PACKAGE]
+# Perform a full component scan and registration for all the paths under this list.
+default = ['agentuniverse_data']
+# Scan and register agent components for all paths under this list, with priority over the default.
+agent = ['']
+# Scan and register knowledge components for all paths under this list, with priority over the default.
+knowledge = ['']
+# Scan and register llm components for all paths under this list, with priority over the default.
+llm = ['agentuniverse_data.dispatch.llm']
+# Scan and register planner components for all paths under this list, with priority over the default.
+planner = ['']
+# Scan and register tool components for all paths under this list, with priority over the default.
+tool = ['']
+# Scan and register memory components for all paths under this list, with priority over the default.
+memory = ['']
+# Scan and register service components for all paths under this list, with priority over the default.
+service = ['']
+# Scan and register prompt components for all paths under this list, with priority over the default.
+prompt = ['']
+
+
+[SUB_CONFIG_PATH]
+# Log config file path, an absolute path or a relative path based on the dir where the current config file is located.
+log_config_path = './log_config.toml'
+# Custom key file path, use to save your own secret key like open ai or sth else. REMEMBER TO ADD IT TO .gitignore.
+#custom_key_path = './custom_key.toml'

@@ -1,0 +1,9 @@
+name: 'openai_llm'
+description: 'demo openai'
+model_name: 'gpt-4o'
+max_tokens: 1000
+max_retries: 2
+metadata:
+  type: 'LLM'
+  module: 'agentuniverse_data.dispatch.llm.openai_llm'
+  class: 'DemoOpenAILLM'
