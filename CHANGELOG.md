@@ -24,6 +24,21 @@ Note - Additional remarks regarding the version.
 ***************************************************
 
 # Version Update History
+## [0.0.9] - 2024-06-14
+### Added
+- Added standard integration for Claude and Ollama LLM components
+- Added new Qwen embedding module
+- Added default agents for ReAct-Type and NL2API-Type
+
+### Note
+- Added new use cases
+  - RAG-Type Agent Examples: Legal Consultation Agent
+  - ReAct-Type Agent Examples: Python Code Generation and Execution Agent
+  - Multi-Agent: Discussion Group Based on Multi-Turn Multi-Agent Mode
+
+  For more details, please refer to the use case section in the user documentation.
+- Some code optimizations and documentation updates.
+
 ## [0.0.8] - 2024-06-06
 ### Added
 - Introduced a new monitor module
