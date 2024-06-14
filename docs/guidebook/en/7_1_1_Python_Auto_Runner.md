@@ -61,5 +61,8 @@ curl --location --request POST 'http://localhost:8888/service_run' \
 }'
 ```
 
+### Result
+![test_case](../_picture/react_demo.png)
+
 ### Please note
 Due to limitations of the model's capabilities, it is recommended to use the qwen-max model for testing.

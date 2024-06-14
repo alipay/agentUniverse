@@ -62,5 +62,8 @@ curl --location --request POST 'http://localhost:8888/service_run' \
 }'
 ```
 
+### 执行结果
+![test_case](../_picture/react_demo.png)
+
 ### 注意
 受限于模型能力问题，建议使用qwen-max模型进行测试
