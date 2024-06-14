@@ -44,6 +44,11 @@ We will show you how to:
 * Quickly serve the agent
 For details, please read [Quick Start](docs/guidebook/en/1_3_Quick_Start.md).
 
+## Use Cases
+[Legal Consultation Agent](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
+[Python Code Generation and Execution Agent](./docs/guidebook/en/7_1_1_Python_Auto_Runner.md)
+[Discussion Group Based on Multi-Turn Multi-Agent Mode](./docs/guidebook/en/6_2_1_Discussion_Group.md)
+
 ## Guidebook
 For more detailed information, please refer to the [Guidebook](docs/guidebook/en/0_index.md).
 
