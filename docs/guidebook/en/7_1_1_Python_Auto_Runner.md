@@ -62,7 +62,12 @@ curl --location --request POST 'http://localhost:8888/service_run' \
 ```
 
 ### Result
-![test_case](../_picture/react_demo.png)
+![test_case](../_picture/react_demo_step.png)
+
+In the image, React went through three steps in total:  
+Step 1: The model provided a piece of Python code and handed it over to the Python Runner tool for execution, but the execution failed due to the failure to use print to output the execution result.  
+Step 2: The model realized the mistake and proactively modified the code. It then used the Python Runner tool again for execution, which was successful.  
+Step 3: The model conveyed the successfully executed code to the user.  
 
 ### Please note
 Due to limitations of the model's capabilities, it is recommended to use the qwen-max model for testing.
