@@ -90,7 +90,7 @@ class Planner(ComponentBase):
         memory.set_by_agent_model(**params)
         return memory
 
-    def handle_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
+    def run_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
         """Tool and knowledge processing.
 
         Args:
