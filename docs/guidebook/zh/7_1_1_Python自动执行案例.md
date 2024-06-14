@@ -63,7 +63,12 @@ curl --location --request POST 'http://localhost:8888/service_run' \
 ```
 
 ### 执行结果
-![test_case](../_picture/react_demo.png)
+![test_case](../_picture/react_demo_step.png)
+
+图片中，react一共执行了三步：
+    第一步，模型根据问题给出了一段python代码，并交给python_runner工具执行，但是执行失败了，失败原因是没有使用print打印执行结果。
+    第二步，模型意识到错误，主动修改了代码，再次使用python_runner工具执行，执行成功。
+    第三步，模型将执行成功的代码告诉给用户
 
 ### 注意
 受限于模型能力问题，建议使用qwen-max模型进行测试
