@@ -49,7 +49,9 @@ pip install agentUniverse
 
 ## 使用案例
 [法律咨询Agent](./docs/guidebook/zh/7_1_1_法律咨询案例.md)
+
 [Python代码生成与执行Agent](./docs/guidebook/zh/7_1_1_Python自动执行案例.md)
+
 [基于多轮多Agent的讨论小组](./docs/guidebook/zh/6_2_1_讨论组.md)
 [基于PEER协同模式的金融事件分析](./docs/guidebook/zh/6_4_1_金融事件分析案例.md)]
 
