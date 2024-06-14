@@ -46,7 +46,9 @@ For details, please read [Quick Start](docs/guidebook/en/1_3_Quick_Start.md).
 
 ## Use Cases
 [Legal Consultation Agent](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
+
 [Python Code Generation and Execution Agent](./docs/guidebook/en/7_1_1_Python_Auto_Runner.md)
+
 [Discussion Group Based on Multi-Turn Multi-Agent Mode](./docs/guidebook/en/6_2_1_Discussion_Group.md)
 
 ## Guidebook
