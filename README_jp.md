@@ -43,6 +43,11 @@ pip install agentUniverse
 * エージェントを迅速に提供する
 詳細は、[クイックスタート](docs/guidebook/en/1_3_Quick_Start.md)をご覧ください。
 
+## 使用ケース
+[法律相談Agent](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
+[Pythonコード生成と実行Agent](./docs/guidebook/en/7_1_1_Python_Auto_Runner.md)
+[多回多Agentによるディスカッショングループ](./docs/guidebook/en/6_2_1_Discussion_Group.md)
+
 ## ガイドブック
 詳細情報については、[ガイドブック](docs/guidebook/en/0_index.md)を参照してください。
 
