@@ -23,16 +23,13 @@ class RagAgentTest(unittest.TestCase):
     def setUp(self) -> None:
         AgentUniverse().start(config_path='../../config/config.toml')
 
-    def test_rag_agent(self):
+    def test_rag_fgent(self):
         """Test demo rag agent."""
-        # instance: Agent = AgentManager().get_instance_obj('demo_rag_agent')
-        # # output_object: OutputObject = instance.run(input='分析下巴菲特减持比亚迪的原因')
-        # # res_info = f"\nRag agent execution result is :\n"
-        # # res_info += output_object.get_data('output')
-        # # print(res_info)
-        # tool = instance.as_langchain_tool()
-        knowledge: Knowledge = KnowledgeManager().get_instance_obj('demo_knowledge')
-        print(knowledge.as_langchain_tool().description)
+        instance: Agent = AgentManager().get_instance_obj('demo_rag_agent')
+        output_object: OutputObject = instance.run(input='分析下巴菲特减持比亚迪的原因')
+        res_info = f"\nRag agent execution result is :\n"
+        res_info += output_object.get_data('output')
+        print(res_info)
 
 
 if __name__ == '__main__':
