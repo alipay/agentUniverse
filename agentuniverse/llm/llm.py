@@ -45,7 +45,7 @@ class LLM(ComponentBase):
     streaming: Optional[bool] = False
     ext_info: Optional[dict] = None
     tracing: Optional[bool] = None
-    __max_context_length: Optional[int] = None
+    _max_context_length: Optional[int] = None
 
     def __init__(self, **kwargs):
         """Initialize the llm."""
@@ -120,14 +120,14 @@ class LLM(ComponentBase):
         if 'streaming' in kwargs and kwargs['streaming']:
             self.streaming = kwargs['streaming']
         if 'max_context_length' in kwargs and kwargs['max_context_length']:
-            self.__max_context_length = kwargs['max_context_length']
+            self._max_context_length = kwargs['max_context_length']
 
     def max_context_length(self) -> int:
         """Max context length.
 
         The total length of input tokens and generated tokens is limited by the model's context length.
         """
-        return self.__max_context_length
+        return self._max_context_length
 
     @abstractmethod
     def get_num_tokens(self, text: str) -> int:

@@ -73,6 +73,24 @@ class Tool(ComponentBase):
             if key not in kwargs.keys():
                 raise Exception(f'{self.get_instance_code()} - The input must include key: {key}.')
 
+    def langchain_run(self, *args, callbacks=None, **kwargs):
+        """The callable method that runs the tool."""
+        kwargs["callbacks"] = callbacks
+        tool_input = ToolInput(kwargs)
+        parse_result = self.parse_react_input(args[0])
+        for key in self.input_keys:
+            tool_input.add_data(key, parse_result[key])
+        return self.execute(tool_input)
+
+    def parse_react_input(self, input_str: str):
+        """
+            parse react string to you input
+            you can define your own logic here by override this function
+        """
+        return {
+            self.input_keys[0]: input_str
+        }
+
     @abstractmethod
     def execute(self, tool_input: ToolInput):
         raise NotImplementedError
@@ -80,7 +98,7 @@ class Tool(ComponentBase):
     def as_langchain(self) -> LangchainTool:
         """Convert the agentUniverse(aU) tool class to the langchain tool class."""
         return LangchainTool(name=self.name,
-                             func=self.run,
+                             func=self.langchain_run,
                              description=self.description)
 
     def get_instance_code(self) -> str:

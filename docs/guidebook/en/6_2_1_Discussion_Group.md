@@ -66,6 +66,10 @@ def chat(question: str):
 if __name__ == '__main__':
     chat("Which tastes better, Coca-Cola or Pepsi")
 ```
+### Result Demonstration
+Which tastes better, Coca-Cola or Pepsi：
+
+![Picture](../_picture/coca-cola_or_pepsi.png)
 
 ## More Details
 ### Agent Configuration

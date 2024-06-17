@@ -1,0 +1,20 @@
+info:
+  name: 'demo_nl2api_agent'
+  description: 'demo nl2api agent'
+profile:
+  llm_model:
+    name: 'default_qwen_llm'
+action:
+  tool:
+    - 'add'
+    - 'sub'
+    - 'mul'
+    - 'div'
+    - 'google_search_tool'
+plan:
+  planner:
+    name: 'nl2api_planner'
+metadata:
+  type: 'AGENT'
+  module: 'agentuniverse.agent.default.nl2api_agent.nl2api_agent'
+  class: 'Nl2ApiAgent'

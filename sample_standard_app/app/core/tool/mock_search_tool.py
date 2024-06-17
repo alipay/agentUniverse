@@ -41,5 +41,6 @@ class MockSearchTool(Tool):
     """
 
     def execute(self, tool_input: ToolInput):
+        input = tool_input.get_data("input")
         """Demonstrates the execute method of the Tool class."""
         return MOCK_SEARCH_RESULT

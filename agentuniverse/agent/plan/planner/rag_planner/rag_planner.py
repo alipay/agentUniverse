@@ -40,7 +40,7 @@ class RagPlanner(Planner):
         """
         memory: ChatMemory = self.handle_memory(agent_model, planner_input)
 
-        self.handle_all_actions(agent_model, planner_input, input_object)
+        self.run_all_actions(agent_model, planner_input, input_object)
 
         llm: LLM = self.handle_llm(agent_model)
 

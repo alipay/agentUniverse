@@ -52,6 +52,8 @@
     * 3.1.2.3 [WenXin Usage Instructions](3_1_2_WenXin_LLM_Use.md)
     * 3.1.2.4 [Kimi Usage Instructions](3_1_2_Kimi_LLM_Use.md)
     * 3.1.2.5 [BaiChuan Usage Instructions](3_1_2_BaiChuan_LLM_Use.md)
+    * 3.1.2.6 [Claude Usage Instructions](3_1_2_Claude_LLM_Use.md)
+    * 3.1.2.7 [Ollama Usage Instructions](3_1_2_Ollama_LLM_Use.md)
   * 3.1.3 List of Tools
   * 3.1.4 List of Knowledge
   * 3.1.5 List of Memories
@@ -62,6 +64,7 @@
   * 3.2.2 Store
     * 3.2.2.1 [SQLDBWrapper](2_3_1_SQLDB_WRAPPER.md)
     * 3.2.2.2 [Milvus](3_3_1_Milvus.md)
+    * 3.2.2.3 [ChromaDB](3_3_2_ChromaDB.md)
   * 3.2.3 Msg
   * 3.2.4 Logging
     * 3.2.4.1 [Alibaba Cloud SLS](3_2_4_Alibaba_Cloud_SLS.md)
@@ -73,8 +76,15 @@
   * 5.1.1 [Docker Containerization Solution](5_1_1_Docker_Container_Deployment.md)
   * 5.1.2 [K8S Solution](5_1_2_K8S_Deployment.md)
 
-**6. Series of Articles**
+**6. Use Cases**
+* 6.1 RAG-Type Agent Examples
+  * 6.1.1 [Legal Consultation Agent](7_1_1_Legal_Consultation_Case.md)
+* 6.2 ReAct-Type Agent Examples
+  * 6.2.1 [Python Code Generation and Execution Agent](7_1_1_Python_Auto_Runner.md)
+* 6.3 [Discussion Group Based on Multi-Turn Multi-Agent Mode](6_2_1_Discussion_Group.md)
 
-**7. Frequently Asked Questions (FAQ)**
+**7. Series of Articles**
 
-**[8. Contact Us](6_1_Contact_Us.md)**
+**8. Frequently Asked Questions (FAQ)**
+
+**[9. Contact Us](6_1_Contact_Us.md)**
