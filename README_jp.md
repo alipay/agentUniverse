@@ -61,7 +61,5 @@ pip install agentUniverse
 * gitee: https://gitee.com/agentUniverse/agentUniverse
 * gitcode: https://gitcode.com/agentUniverse
 * Stack Overflow: https://stackoverflowteams.com/c/agentuniverse/questions
-* Discord: https://discord.gg/VfhEvJzQ
+* Discord: https://discord.gg/DHFcdkWAhn
 * WeChat公式アカウント: agentUniverse智多星
-* DingTalkグループ:
-![](./docs/guidebook/_picture/dingtalk_util20250429.png)

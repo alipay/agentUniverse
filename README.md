@@ -91,11 +91,7 @@ For more details, please read the [Quick Start](./docs/guidebook/en/1_3_Quick_St
 😊 We recommend submitting your queries using [GitHub Issues](https://github.com/alipay/agentUniverse/issues), we typically respond within 2 days.
 
 #### Contact Us via Discord
-😊 Join our [Discord Channel](https://discord.gg/VfhEvJzQ) to interact with us.
-
-#### Contact Us via DingTalk
-😊 Join our DingTalk support group to get in touch with us.
-![](./docs/guidebook/_picture/dingtalk_util20250429.png)
+😊 Join our [Discord Channel](https://discord.gg/DHFcdkWAhn) to interact with us.
 
 #### Contact Us via Administrator Email
 😊 Email: [jerry.zzw@antgroup.com](mailto:jerry.zzw@antgroup.com)
