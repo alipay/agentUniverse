@@ -5,7 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: knowledge.py
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, List
 
 from langchain_core.utils.json import parse_json_markdown
 from langchain.tools import Tool as LangchainTool
@@ -94,7 +94,7 @@ class Knowledge(ComponentBase):
             res.append(doc.text)
         return "\n=========================================\n".join(res)
 
-    def as_langchain_tool(self) -> Any:
+    def as_langchain_tool(self) -> LangchainTool:
         """Convert the Knowledge object to a LangChain tool.
 
         Returns:

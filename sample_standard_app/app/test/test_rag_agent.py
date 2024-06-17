@@ -7,6 +7,8 @@
 # @FileName: test_rag_agent.py
 import unittest
 
+from agentuniverse.agent.action.knowledge.knowledge import Knowledge
+from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.output_object import OutputObject
@@ -23,13 +25,14 @@ class RagAgentTest(unittest.TestCase):
 
     def test_rag_agent(self):
         """Test demo rag agent."""
-        instance: Agent = AgentManager().get_instance_obj('demo_rag_agent')
-        # output_object: OutputObject = instance.run(input='分析下巴菲特减持比亚迪的原因')
-        # res_info = f"\nRag agent execution result is :\n"
-        # res_info += output_object.get_data('output')
-        # print(res_info)
-        tool = instance.as_langchain_tool()
-        print(tool.description)
+        # instance: Agent = AgentManager().get_instance_obj('demo_rag_agent')
+        # # output_object: OutputObject = instance.run(input='分析下巴菲特减持比亚迪的原因')
+        # # res_info = f"\nRag agent execution result is :\n"
+        # # res_info += output_object.get_data('output')
+        # # print(res_info)
+        # tool = instance.as_langchain_tool()
+        knowledge: Knowledge = KnowledgeManager().get_instance_obj('demo_knowledge')
+        print(knowledge.as_langchain_tool().description)
 
 
 if __name__ == '__main__':
