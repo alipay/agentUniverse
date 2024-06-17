@@ -21,6 +21,8 @@ nodes:
   - module: 'agentuniverse_data.node.data.event.planner'
     # data planner in event agent which could plan python code to extract with reflections
     class: 'PlannerNode'
+    llm: 'openai_llm'
+    prompt_version: 'event_planner_node.cn'
     param_in_jsonl: 'auto_event_flow.perceiver.param.out'
     param_out_jsonl: 'auto_event_flow.planner.plan.out'
     datasets_in_jsonl:

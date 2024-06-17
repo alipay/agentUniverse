@@ -4,6 +4,8 @@ nodes:
   - module: 'agentuniverse_data.node.data.prompt.input.seed'
     # query seed from LLM
     class: 'SeedNode'
+    llm: 'openai_llm'
+    prompt_version: 'dataset_input_seed_node.cn'
     param_in_jsonl:
     param_out_jsonl:
     datasets_in_jsonl:
@@ -15,6 +17,8 @@ nodes:
   - module: 'agentuniverse_data.node.data.prompt.input.rewrite'
     # rewrite query from LLM
     class: 'RewriteNode'
+    llm: 'openai_llm'
+    prompt_version: 'dataset_rewrite_node.cn'
     param_in_jsonl:
     param_out_jsonl:
     datasets_in_jsonl:
@@ -24,6 +28,8 @@ nodes:
   - module: 'agentuniverse_data.node.data.prompt.input.extend'
     # extend query from LLM
     class: 'ExtendNode'
+    llm: 'openai_llm'
+    prompt_version: 'dataset_extend_node.cn'
     param_in_jsonl:
     param_out_jsonl:
     datasets_in_jsonl:
@@ -48,6 +54,7 @@ nodes:
   - module: 'agentuniverse_data.node.data.answer.answer'
     # build answers from the prompt via LLM as training data
     class: 'AnswerNode'
+    llm: 'openai_llm'
     param_in_jsonl:
     param_out_jsonl:
     datasets_in_jsonl:
@@ -57,6 +64,8 @@ nodes:
   - module: 'agentuniverse_data.node.data.answer.filter'
     # filter training data to improve data quality
     class: 'FilterNode'
+    llm: 'openai_llm'
+    prompt_version: 'dataset_filter_node.cn'
     param_in_jsonl:
     param_out_jsonl:
     datasets_in_jsonl:

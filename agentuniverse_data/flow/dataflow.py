@@ -23,7 +23,7 @@ class Dataflow(BaseModel):
     _flow_name: str = None
     _flow_desc: str = None
     _node_sequence_list: List[NodeBase] = None
-
+    _llm_name: str = None
     _configer: Optional[Configer] = None
 
     def __init__(self, conf_path: str = None):
@@ -52,6 +52,9 @@ class Dataflow(BaseModel):
             dataset_out_jsonl_str = node_obj.get('dataset_out_jsonl')
             node_param_json = node_obj.get('node_param')
 
+            node_llm = node_obj.get('llm')
+            node_prompt_version = node_obj.get('prompt_version')
+
             module = importlib.import_module(module_str)
             clz = getattr(module, class_str)
             node: NodeBase = clz()
@@ -60,6 +63,8 @@ class Dataflow(BaseModel):
             node.set_datasets_in_jsonl(datasets_in_jsonl_list)
             node.set_dataset_out_jsonl(dataset_out_jsonl_str)
             node.set_node_param_json(node_param_json)
+            node.set_llm(node_llm)
+            node.set_prompt_version(node_prompt_version)
 
             self._node_sequence_list.append(node)
 

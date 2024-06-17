@@ -27,6 +27,9 @@ class NodeBase(BaseModel):
     param_out_jsonl: str = None
     dataset_out_jsonl: str = None
 
+    llm: str = None
+    prompt_version: str = None
+
     node_param_json: Dict[str, Any] = None
 
     _param_in_handler: Any = None
@@ -52,6 +55,14 @@ class NodeBase(BaseModel):
     def set_node_param_json(self, node_param_json: json) -> None:
         if node_param_json:
             self.node_param_json = node_param_json
+
+    def set_llm(self, llm: str) -> None:
+        if llm:
+            self.llm = llm
+
+    def set_prompt_version(self, prompt_version: str) -> None:
+        if prompt_version:
+            self.prompt_version = prompt_version
 
     def _node_preprocess(self) -> None:
         if self.param_in_jsonl:

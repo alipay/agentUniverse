@@ -4,6 +4,8 @@ nodes:
   - module: 'agentuniverse_data.node.eval.eval'
     # eval dump result from LLM infer
     class: 'EvalNode'
+    llm: 'openai_llm'
+    prompt_version: 'eval_node.cn'
     param_in_jsonl:
     param_out_jsonl:
     datasets_in_jsonl:

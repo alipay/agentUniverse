@@ -10,7 +10,7 @@ agent = ['']
 # Scan and register knowledge components for all paths under this list, with priority over the default.
 knowledge = ['']
 # Scan and register llm components for all paths under this list, with priority over the default.
-llm = ['agentuniverse_data.dispatch.llm']
+llm = ['agentuniverse_data.llm']
 # Scan and register planner components for all paths under this list, with priority over the default.
 planner = ['']
 # Scan and register tool components for all paths under this list, with priority over the default.
@@ -20,7 +20,7 @@ memory = ['']
 # Scan and register service components for all paths under this list, with priority over the default.
 service = ['']
 # Scan and register prompt components for all paths under this list, with priority over the default.
-prompt = ['']
+prompt = ['agentuniverse_data.prompt']
 
 
 [SUB_CONFIG_PATH]
