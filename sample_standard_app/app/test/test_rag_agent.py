@@ -7,8 +7,6 @@
 # @FileName: test_rag_agent.py
 import unittest
 
-from agentuniverse.agent.action.knowledge.knowledge import Knowledge
-from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.output_object import OutputObject
