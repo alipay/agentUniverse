@@ -91,7 +91,7 @@ pip install agentUniverse
 😊 我们建议您使用[github issue](https://github.com/alipay/agentUniverse/issues) 提交您的疑问, 我们通常会在2日内回复。
 
 #### 通过Discord联系我们
-😊 加入我们的 [Discord频道](https://discord.gg/VfhEvJzQ) 与我们进行交流。
+😊 加入我们的 [Discord频道](https://discord.gg/DHFcdkWAhn) 与我们进行交流。
 
 #### 通过钉钉群联系我们
 😊 加入我们的钉钉答疑群与我们联系。
