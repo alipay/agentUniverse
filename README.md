@@ -27,13 +27,13 @@ More patterns are coming soon...
 
 ****************************************
 ## Table of Contents
-* [Quick Start](#Quick Start)
-* [Cases and Example Projects](#Cases and Example Projects)
+* [Quick Start](#Quick-Start)
+* [Cases and Example Projects](#Cases-and-Example-Projects)
 * [More](#More)
-  * [Why Use agentUniverse](#Why Use agentUniverse)
-  * [Core Features](#Core Features)
-  * [User Guide](#User Guide)
-  * [API Reference](#API Reference)
+  * [Why Use agentUniverse](#Why-Use-agentUniverse)
+  * [Core Features](#Core-Features)
+  * [User Guide](#User-Guide)
+  * [API Reference](#API-Reference)
   * [Support](#Support)
   * [Acknowledgements](#Acknowledgements)
 ****************************************
