@@ -82,6 +82,8 @@
 * 6.2 ReAct-Type Agent Examples
   * 6.2.1 [Python Code Generation and Execution Agent](7_1_1_Python_Auto_Runner.md)
 * 6.3 [Discussion Group Based on Multi-Turn Multi-Agent Mode](6_2_1_Discussion_Group.md)
+* 6.4 PEER Multi-Agent Cooperation Examples
+  * 6.4.1 [Financial Event Analysis Case](./6_4_1_Financial_Event_Analysis_Case.md)
 
 **7. Series of Articles**
 
