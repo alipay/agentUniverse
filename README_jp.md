@@ -45,7 +45,9 @@ pip install agentUniverse
 
 ## 使用ケース
 [法律相談Agent](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
+
 [Pythonコード生成と実行Agent](./docs/guidebook/en/7_1_1_Python_Auto_Runner.md)
+
 [多回多Agentによるディスカッショングループ](./docs/guidebook/en/6_2_1_Discussion_Group.md)
 [PEERマルチAgentモードに基づいた金融イベント分析](./docs/guidebook/en/6_4_1_Financial_Event_Analysis_Case.md)
 
@@ -60,7 +62,5 @@ pip install agentUniverse
 * gitee: https://gitee.com/agentUniverse/agentUniverse
 * gitcode: https://gitcode.com/agentUniverse
 * Stack Overflow: https://stackoverflowteams.com/c/agentuniverse/questions
-* Discord: https://discord.gg/VfhEvJzQ
+* Discord: https://discord.gg/DHFcdkWAhn
 * WeChat公式アカウント: agentUniverse智多星
-* DingTalkグループ:
-![](./docs/guidebook/_picture/dingtalk_util20250429.png)
