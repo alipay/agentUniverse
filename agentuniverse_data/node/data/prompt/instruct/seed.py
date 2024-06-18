@@ -30,8 +30,8 @@ class SeedNode(PromptBase):
 
     def _node_process(self) -> None:
         version_prompt: Prompt = PromptManager().get_instance_obj(self.prompt_version)
-        prompt_with_extend_times = version_prompt.replace('<extend_times>',
-                                                          str(self.extend_times))
+        prompt_with_extend_times = version_prompt.prompt_template.replace('<extend_times>',
+                                                                          str(self.extend_times))
 
         prompts = [prompt_with_extend_times.replace('<instruct_seed>', _DEFAULT_INSTRUCT_FOR_PROMPT)]
         responses = batch_call(prompts, self.llm)

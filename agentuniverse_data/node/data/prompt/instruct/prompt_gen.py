@@ -22,6 +22,9 @@ class PromptGenNode(PromptBase):
     _instruct_num: int = None
 
     def _node_preprocess(self) -> None:
+
+        super()._node_preprocess()
+
         if not self.datasets_in_jsonl or len(self.datasets_in_jsonl) != 2:
             raise Exception(f"Node param {self.datasets_in_jsonl} should contain 2 elements:1.instruct 2.input")
 

@@ -17,6 +17,7 @@ class ReportNode(EvalNodeBase):
     _eval_report_json_list: List[str] = None
 
     def _node_preprocess(self) -> None:
+        super()._node_preprocess()
         if not self.datasets_in_jsonl or len(self.datasets_in_jsonl) == 0:
             raise Exception(f"No input datasets: {self.datasets_in_jsonl}")
 

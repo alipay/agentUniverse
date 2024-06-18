@@ -29,25 +29,25 @@ nodes:
     node_param:
       instruct_num: 10
 
-  - module: ''
-    # dump answer from pre deployed LLM infer via prompt as input
-    class: 'DumpNode'
-    param_in_jsonl: 'train_dump_flow.pre_deploy.out'
-    param_out_jsonl:
-    datasets_in_jsonl:
-      - 'instruct_select_flow.prompt_gen.out'
-    dataset_out_jsonl: 'instruct_select_flow.dump.out'
+#  - module: ''
+#    # dump answer from pre deployed LLM infer via prompt as input
+#    class: 'DumpNode'
+#    param_in_jsonl: 'train_dump_flow.pre_deploy.out'
+#    param_out_jsonl:
+#    datasets_in_jsonl:
+#      - 'instruct_select_flow.prompt_gen.out'
+#    dataset_out_jsonl: 'instruct_select_flow.dump.out'
 
-  - module: 'agentuniverse_data.node.eval.eval'
-    # eval dump result through 7 dimensions
-    class: 'EvalNode'
-    llm: 'openai_llm'
-    prompt_version: 'eval_node.cn'
-    param_in_jsonl:
-    param_out_jsonl:
-    datasets_in_jsonl:
-      - 'instruct_select_flow.dump.out'
-    dataset_out_jsonl: 'instruct_select_flow.eval.out'
-    node_param:
-      eval_lines: 100
+#  - module: 'agentuniverse_data.node.eval.eval'
+#    # eval dump result through 7 dimensions
+#    class: 'EvalNode'
+#    llm: 'openai_llm'
+#    prompt_version: 'eval_node.cn'
+#    param_in_jsonl:
+#    param_out_jsonl:
+#    datasets_in_jsonl:
+#      - 'instruct_select_flow.dump.out'
+#    dataset_out_jsonl: 'instruct_select_flow.eval.out'
+#    node_param:
+#      eval_lines: 100
 

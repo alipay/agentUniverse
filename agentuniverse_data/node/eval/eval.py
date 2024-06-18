@@ -13,24 +13,8 @@ from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse_data.node.base.eval_node_base import EvalNodeBase
 from agentuniverse.base.util.logging.logging_util import LOGGER
+from agentuniverse_data.util.constant.eval_node_dimensions import get_eval_dims
 from agentuniverse_data.util.llm.llm_call import batch_call
-
-_EVAL_DIM_FACTUALITY_NAME = "事实性"
-_EVAL_DIM_FACTUALITY_REQUIREMENT = """
-1.不符合准入条件
-数据错误，不符合事实
-
-2.门槛值
-个别数据不准确，但不影响整体事实性
-
-3.加分项
-解读内容中所有引用数据真实可信，数据来源官方可信
-"""
-
-
-def get_eval_dims():
-    eval_dims = [(_EVAL_DIM_FACTUALITY_NAME, _EVAL_DIM_FACTUALITY_REQUIREMENT)]
-    return eval_dims
 
 
 class EvalNode(EvalNodeBase):
