@@ -11,12 +11,12 @@ from typing import List, Dict
 from langchain.output_parsers.json import parse_json_markdown
 
 from agentuniverse.base.util.logging.logging_util import LOGGER
-from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse_data.util.fileio.node_msg_jsonl import JsonFileReader
 from agentuniverse_data.node.enum.enum import NodeEnum
 from agentuniverse_data.node.base.data_node_base import DataNodeBase
+from agentuniverse_data.util.llm.llm_call import batch_call
 
 
 class PlannerNode(DataNodeBase):
@@ -116,8 +116,7 @@ class PlannerNode(DataNodeBase):
                 return None
 
             LOGGER.debug(prompt)
-            llm = LLMManager().get_instance_obj(self.llm)
-            res = llm.batch_call([prompt])
+            res = batch_call([prompt], self.llm)
             LOGGER.debug(res)
 
             try:
@@ -169,8 +168,7 @@ class PlannerNode(DataNodeBase):
 
         prompt = getattr(version_prompt, 'exec_result_verification', '').replace('<input_lines>', data_str)
         LOGGER.debug(prompt)
-        llm = LLMManager().get_instance_obj(self.llm)
-        res = llm.batch_call([prompt])
+        res = batch_call([prompt], self.llm)
         LOGGER.debug(res[0])
         json_obj = parse_json_markdown(res[0])
         if json_obj.get('success'):

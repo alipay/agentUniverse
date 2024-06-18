@@ -11,7 +11,7 @@ from agentuniverse_data.node.base.node_base import NodeBase
 class DataNodeBase(NodeBase):
     """The DataBase class, which is used to define the base class of data node."""
     _batch_line_size: int = 10
-    _batch_prompt_size: int = 40
+    _batch_prompt_size: int = 10
 
     def _node_process(self) -> None:
         pass

@@ -12,8 +12,8 @@ from langchain.output_parsers.json import parse_json_markdown
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse_data.node.base.eval_node_base import EvalNodeBase
-from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.base.util.logging.logging_util import LOGGER
+from agentuniverse_data.util.llm.llm_call import batch_call
 
 _EVAL_DIM_FACTUALITY_NAME = "事实性"
 _EVAL_DIM_FACTUALITY_REQUIREMENT = """
@@ -94,8 +94,7 @@ class EvalNode(EvalNodeBase):
                 eval_prompt = eval_prompt.replace('<dim_requirement>', eval_dim_requirement)
                 eval_prompts.append(eval_prompt)
 
-            llm = LLMManager().get_instance_obj(self.llm)
-            res = llm.batch_call(eval_prompts)
+            res = batch_call(eval_prompts, self.llm)
 
             dim_score_json = {'line': line_num}
             dimensions = []

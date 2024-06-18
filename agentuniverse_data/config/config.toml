@@ -4,21 +4,21 @@ appname = 'agentuniverse_data'
 
 [CORE_PACKAGE]
 # Perform a full component scan and registration for all the paths under this list.
-default = ['agentuniverse_data']
+default = []
 # Scan and register agent components for all paths under this list, with priority over the default.
-agent = ['']
+agent = []
 # Scan and register knowledge components for all paths under this list, with priority over the default.
-knowledge = ['']
+knowledge = []
 # Scan and register llm components for all paths under this list, with priority over the default.
 llm = ['agentuniverse_data.llm']
 # Scan and register planner components for all paths under this list, with priority over the default.
-planner = ['']
+planner = []
 # Scan and register tool components for all paths under this list, with priority over the default.
-tool = ['']
+tool = []
 # Scan and register memory components for all paths under this list, with priority over the default.
-memory = ['']
+memory = []
 # Scan and register service components for all paths under this list, with priority over the default.
-service = ['']
+service = []
 # Scan and register prompt components for all paths under this list, with priority over the default.
 prompt = ['agentuniverse_data.prompt']
 

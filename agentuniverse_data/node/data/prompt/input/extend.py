@@ -8,11 +8,11 @@
 import json
 import math
 
-from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse_data.node.data.base.prompt_base import PromptBase
 from agentuniverse.base.util.logging.logging_util import LOGGER
+from agentuniverse_data.util.llm.llm_call import batch_call
 
 
 class ExtendNode(PromptBase):
@@ -42,8 +42,7 @@ class ExtendNode(PromptBase):
                 prompts.append(prompt_with_extend_times.replace('<input_list>', input_list))
                 input_list = ''
 
-        llm = LLMManager().get_instance_obj(self.llm)
-        responses = llm.batch_call(prompts)
+        responses = batch_call(prompts, self.llm)
 
         for i in range(0, len(responses)):
             try:

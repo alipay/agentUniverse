@@ -3,7 +3,7 @@
 # Loguru log level.
 log_level = "INFO"
 # Output path of the log file. If value is empty, agentuniverse will create a subdir under your workdir to save logs.
-log_path = "./dispatch"
+log_path = "./log"
 # Specifies the log rotation policy, controlling when a new log file is created. It can be a time period
 # (e.g., "1 week"), a file size (e.g., "100 MB"), or a function returning True when rotation should occur.
 log_rotation = "10MB"

@@ -5,5 +5,5 @@ max_tokens: 1000
 max_retries: 2
 metadata:
   type: 'LLM'
-  module: 'agentuniverse_data.dispatch.llm.openai_llm'
-  class: 'DemoOpenAILLM'
+  module: 'agentuniverse.llm.default.default_openai_llm'
+  class: 'DefaultOpenAILLM'

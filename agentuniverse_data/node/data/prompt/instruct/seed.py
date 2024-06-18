@@ -7,11 +7,11 @@
 # @FileName: seed.py
 from langchain.output_parsers.json import parse_json_markdown
 
-from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse_data.node.data.base.prompt_base import PromptBase
 from agentuniverse.base.util.logging.logging_util import LOGGER
+from agentuniverse_data.util.llm.llm_call import batch_call
 
 _DEFAULT_INSTRUCT_FOR_PROMPT = """
 你是一个极致严谨的金融专家，请尽量找出问题对应的金融解读框架，并基于解读框架一步一步结构化详细回答如下问题:
@@ -34,8 +34,7 @@ class SeedNode(PromptBase):
                                                           str(self.extend_times))
 
         prompts = [prompt_with_extend_times.replace('<instruct_seed>', _DEFAULT_INSTRUCT_FOR_PROMPT)]
-        llm = LLMManager().get_instance_obj(self.llm)
-        responses = llm.batch_call(prompts)
+        responses = batch_call(prompts, self.llm)
         self._prompt_list = []
         if len(responses) == 1:
             try:

@@ -5,7 +5,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: answer.py
 from agentuniverse_data.node.data.base.prompt_answer_base import PromptAnswerBase
-from agentuniverse.llm.llm_manager import LLMManager
+from agentuniverse_data.util.llm.llm_call import batch_call
 
 
 class AnswerNode(PromptAnswerBase):
@@ -24,16 +24,15 @@ class AnswerNode(PromptAnswerBase):
             prompt = prompt_answer_list[i][0]
             prompts.append(prompt)
             total_prompt_num = total_prompt_num + 1
-            llm = LLMManager().get_instance_obj(self.llm)
             if total_prompt_num % self._batch_prompt_size == 0:
-                res = llm.batch_call(prompts)
+                res = batch_call(prompts, self.llm)
                 for prompt, answer in zip(prompts, res):
                     if res is not None:
                         self._prompt_answer_list.append((prompt, answer))
                     prompts = []
             else:
                 if total_prompt_num == prompt_list_num and len(prompts) > 0:
-                    res = llm.batch_call(prompts)
+                    res = batch_call(prompts, self.llm)
                     for prompt, answer in zip(prompts, res):
                         if res is not None:
                             self._prompt_answer_list.append((prompt, answer))

@@ -10,11 +10,11 @@ import json
 from langchain.output_parsers.json import parse_json_markdown
 
 from agentuniverse.base.util.logging.logging_util import LOGGER
-from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse_data.node.data.base.prompt_answer_base import PromptAnswerBase
 from agentuniverse_data.util.fileio.node_msg_jsonl import JsonFileReader, JsonFileWriter
+from agentuniverse_data.util.llm.llm_call import batch_call
 
 
 class FilterNode(PromptAnswerBase):
@@ -59,8 +59,7 @@ class FilterNode(PromptAnswerBase):
                 do_req = True
 
             if do_req:
-                llm = LLMManager().get_instance_obj(self.llm)
-                res = llm.batch_call(prompts)
+                res = batch_call(prompts, self.llm)
 
                 start_line_num = total_lines - len(prompts)
                 for res_idx in range(0, len(res)):

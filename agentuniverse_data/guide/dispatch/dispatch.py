@@ -32,3 +32,7 @@ def dispatch(conf_file='dispatch.yaml'):
             dataflow.execute()
     except Exception as e:
         LOGGER.error(f"An error occurred: {e}")
+
+
+if __name__ == '__main__':
+    dispatch('dispatch.yaml')

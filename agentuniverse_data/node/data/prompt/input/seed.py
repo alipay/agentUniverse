@@ -7,11 +7,11 @@
 # @FileName: seed.py
 import json
 
-from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse_data.node.data.base.prompt_base import PromptBase
 from agentuniverse.base.util.logging.logging_util import LOGGER
+from agentuniverse_data.util.llm.llm_call import batch_call
 
 
 class SeedNode(PromptBase):
@@ -50,8 +50,7 @@ class SeedNode(PromptBase):
                 prompt = prompt_with_seed_requirement.replace('<seeds_num>', str(left_num))
                 prompts.append(prompt)
 
-        llm = LLMManager().get_instance_obj(self.llm)
-        responses = llm.batch_call(prompts)
+        responses = batch_call(prompts, self.llm)
 
         self._prompt_list = []
         for i in range(0, len(responses)):

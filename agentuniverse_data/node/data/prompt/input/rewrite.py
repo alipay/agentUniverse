@@ -9,10 +9,10 @@ import json
 
 from langchain.output_parsers.json import parse_json_markdown
 
-from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse_data.node.data.base.prompt_base import PromptBase
+from agentuniverse_data.util.llm.llm_call import batch_call
 
 
 class RewriteNode(PromptBase):
@@ -32,8 +32,7 @@ class RewriteNode(PromptBase):
                 prompts.append(version_prompt.prompt_template.replace('<inputs>', inputs_all))
                 inputs_all = ''
 
-        llm = LLMManager().get_instance_obj(self.llm)
-        responses = llm.batch_call(prompts)
+        responses = batch_call(prompts, self.llm)
 
         self._prompt_list = []
         for i in range(0, len(responses)):
