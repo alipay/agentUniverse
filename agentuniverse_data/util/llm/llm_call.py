@@ -18,11 +18,12 @@ def batch_call(prompts: list[str], llm_name: str):
 
 async def async_batch_call(prompts: list[str], llm_name: str):
     tasks = []
-    llm: LLM = LLMManager().get_instance_obj(llm_name)
-    if llm is None:
-        raise Exception('LLM not found for agentuniverse data.')
+
     prompt_len = len(prompts)
     for i in range(0, prompt_len):
+        llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name, new_instance=True)
+        if llm is None:
+            raise Exception('LLM not found for agentuniverse data.')
         messages = [{"role": "user", "content": prompts[i]}]
         tasks.append(llm.acall(messages=messages, timeout=200))
 

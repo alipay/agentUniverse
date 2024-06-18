@@ -7,6 +7,8 @@
 # @FileName: seed.py
 import json
 
+from langchain.output_parsers.json import parse_json_markdown
+
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse_data.node.data.base.prompt_base import PromptBase
@@ -55,7 +57,7 @@ class SeedNode(PromptBase):
         self._prompt_list = []
         for i in range(0, len(responses)):
             try:
-                seeds = json.loads(responses[i])['seeds']
+                seeds = parse_json_markdown(responses[i])['seeds']
                 self._prompt_list.extend(seeds)
             except TypeError as e:
                 continue

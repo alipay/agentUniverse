@@ -18,7 +18,9 @@ instruction: |
   指令输入参考：
   <instruct_seed>
   
-  请确保输出包含且只包含如下的json格式:
+  指令输出格式要求：
+  
+  请确保输出只包含如下的json格式，不包含其他内容:
   {
       "instructs":
       [

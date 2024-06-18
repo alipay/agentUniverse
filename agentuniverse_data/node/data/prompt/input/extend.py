@@ -8,6 +8,8 @@
 import json
 import math
 
+from langchain.output_parsers.json import parse_json_markdown
+
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse_data.node.data.base.prompt_base import PromptBase
@@ -47,7 +49,7 @@ class ExtendNode(PromptBase):
         for i in range(0, len(responses)):
             try:
                 if responses[i] != '' and responses[i] is not None:
-                    data = json.loads(responses[i])
+                    data = parse_json_markdown(responses[i])
                     if 'extend_inputs' in data:
                         extend_inputs = data['extend_inputs']
                         self._prompt_list.extend(extend_inputs)

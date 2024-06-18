@@ -1,4 +1,4 @@
 name: 'main_dispatch'
 description: 'dispatch with multi-dataflows which will execute one after another'
 dataflows:
-  - ../../flow/instruct_select.yaml
+  - ../flow/dataset_build.yaml

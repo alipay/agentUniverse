@@ -11,21 +11,27 @@ instruction: |
   answer:
   <answer_str>
   
-  质量打分维度包括:
-  <dim>
+  质量打分维度描述:
+  
+  <dims>
   
   
-  质量打分维度名称:
-  <dim_name>
+  输出格式要求：
   
-  质量打分维度要求:
-  <dim_requirement>
-  
-  请确保输出包含且只包含如下字段且每个字段不能为空长度也不超过200的json格式:
+  请确保输出只包含如下的json格式字段，且每个字段不能为空长度也不超过200，不包含其他内容:
   {
-      "name":质量打分维度名称,
-      "score":分数,
-      "negative substr":扣分最多的子串
+    "dimensions": [
+        {
+            "name":质量打分维度名称,
+            "score":分数,
+            "negative substr":扣分最多的子串
+        },
+        {
+            "name":质量打分维度,
+            "score":分数,
+            "negative substr":扣分最多的子串
+        }
+    ]
   }
 metadata:
   type: 'PROMPT'

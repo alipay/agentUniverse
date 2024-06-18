@@ -4,7 +4,7 @@ nodes:
   - module: 'agentuniverse_data.node.data.prompt.instruct.seed'
     # produce multiple instruct seed candidates
     class: 'SeedNode'
-    llm: 'openai_llm'
+    llm: 'qwen_llm'
     prompt_version: 'instruct_seed_node.cn'
     param_in_jsonl:
     param_out_jsonl:
@@ -16,7 +16,7 @@ nodes:
   - module: 'agentuniverse_data.node.data.prompt.instruct.prompt_gen'
     # produce prompt from instruct and query
     class: 'PromptGenNode'
-    llm: 'openai_llm'
+    llm: 'qwen_llm'
     prompt_version: 'instruct_prompt_gen_node.cn'
     param_in_jsonl:
     param_out_jsonl:
@@ -41,7 +41,7 @@ nodes:
 #  - module: 'agentuniverse_data.node.eval.eval'
 #    # eval dump result through 7 dimensions
 #    class: 'EvalNode'
-#    llm: 'openai_llm'
+#    llm: 'qwen_llm'
 #    prompt_version: 'eval_node.cn'
 #    param_in_jsonl:
 #    param_out_jsonl:

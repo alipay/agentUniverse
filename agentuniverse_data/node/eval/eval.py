@@ -69,31 +69,31 @@ class EvalNode(EvalNodeBase):
 
             eval_prompt_temp = version_prompt.prompt_template.replace('<prompt_str>', prompt)
             eval_prompt_temp = eval_prompt_temp.replace('<answer_str>', answer)
-            eval_prompts = []
+            dim_prompts = []
 
             for i in range(0, len(eval_dims)):
                 eval_dim_name = eval_dims[i][0]
                 eval_dim_requirement = eval_dims[i][1]
-                eval_prompt = eval_prompt_temp.replace('<dim_name>', eval_dim_name)
-                eval_prompt = eval_prompt.replace('<dim_requirement>', eval_dim_requirement)
-                eval_prompts.append(eval_prompt)
+                dim_prompt = f'dimension name: {eval_dim_name} \n dimension requirement: {eval_dim_requirement}'
+                dim_prompts.append(dim_prompt)
 
-            res = batch_call(eval_prompts, self.llm)
+            eval_prompt_temp = eval_prompt_temp.replace('<dims>', '\n'.join(dim_prompts))
+            res = batch_call([eval_prompt_temp], self.llm)
 
             dim_score_json = {'line': line_num}
             dimensions = []
             avg_score = 0.0
-            for j in range(0, len(res)):
-                try:
-                    if res[j] != '' and res[j] is not None:
-                        data = parse_json_markdown(res[j])
-                        avg_score += data['score']
-                        dimensions.append(data)
-                except Exception as e:
-                    LOGGER.warn(f'except[eval_prompt_answer_from_jsonl]>>>{e}:{res[j]}')
-                    continue
-            if len(res) > 0:
-                avg_score = avg_score / len(res)
+
+            try:
+                if res[0] != '' and res[0] is not None:
+                    data = parse_json_markdown(res[0])
+                    dimensions = data['dimensions']
+                    avg_score = sum(data['score'] for data in dimensions)
+            except Exception as e:
+                LOGGER.warn(f'except[eval_prompt_answer_from_jsonl]>>>{e}:{res[0]}')
+                continue
+            if len(dimensions) > 0:
+                avg_score = avg_score / len(dimensions)
             dim_score_json['avg_score'] = avg_score
             dim_score_json['dimensions'] = dimensions
 
