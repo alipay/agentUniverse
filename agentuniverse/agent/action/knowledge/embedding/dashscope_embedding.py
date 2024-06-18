@@ -8,6 +8,7 @@
 import aiohttp
 import requests
 from typing import List, Generator, Optional
+from pydantic import Field
 import json
 
 from agentuniverse.base.util.env_util import get_from_env
@@ -27,14 +28,9 @@ def batched(inputs: List,
 
 class DashscopeEmbedding(Embedding):
     """The Dashscope embedding class."""
-    dashscope_api_key: Optional[str] = None
-
-    def __init__(self, **kwargs):
-        """Initialize the dashscope embedding class, need dashscope api key."""
-        super().__init__(**kwargs)
-        self.dashscope_api_key = get_from_env("DASHSCOPE_API_KEY")
-        if not self.dashscope_api_key:
-            raise Exception("No DASHSCOPE_API_KEY in your environment.")
+    dashscope_api_key: Optional[str] = Field(
+        default_factory=lambda: get_from_env("DASHSCOPE_API_KEY")
+    )
 
 
     def get_embeddings(self, texts: List[str]) -> List[List[float]]:
@@ -69,7 +65,8 @@ class DashscopeEmbedding(Embedding):
             )
             resp_json = response.json()
             return resp_json
-
+        if not self.dashscope_api_key:
+            raise Exception("No DASHSCOPE_API_KEY in your environment.")
         result = []
         post_params = {
             "model": self.embedding_model_name,
@@ -128,7 +125,8 @@ class DashscopeEmbedding(Embedding):
                 ) as resp:
                     resp_json = await resp.json()
             return resp_json
-
+        if not self.dashscope_api_key:
+            raise Exception("No DASHSCOPE_API_KEY in your environment.")
         result = []
         post_params = {
             "model": self.embedding_model_name,

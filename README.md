@@ -62,6 +62,8 @@ For more details, please read the [Quick Start](./docs/guidebook/en/1_3_Quick_St
 
 [Discussion Group Based on Multi-Turn Multi-Agent Mode](./docs/guidebook/en/6_2_1_Discussion_Group.md)
 
+[Financial Event Analysis Based on PEER Multi-Agent Mode](./docs/guidebook/en/6_4_1_Financial_Event_Analysis_Case.md)
+
 ### 🌟 Example Projects
 [agentUniverse Example Projects](sample_standard_app)
 
