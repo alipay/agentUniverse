@@ -1,0 +1,42 @@
+name: 'auto_event_flow'
+description: "event collect agent via perceiver planner executor"
+nodes:
+  - module: 'agentuniverse_dataflow.node.data.event.perceiver'
+    # data perceiver in event agent which could perceive tables in jsonl .etc
+    class: 'PerceiverNode'
+    param_in_jsonl:
+    param_out_jsonl: 'auto_event_flow.perceiver.param.out'
+    datasets_in_jsonl:
+    dataset_out_jsonl: 'auto_event_flow.perceiver.dataset.out'
+    node_param:
+      # supported event_db: jsonl
+      event_db: jsonl
+      # if jsonl, please input jsonl file prefix as event_uri and make sure jsonl file in path data/; then event_sql is useless
+      event_uri: demo_jsonl
+      # perceive limited lines
+      event_sql:
+      prompt_col: prompt
+      answer_col: answer
+
+  - module: 'agentuniverse_dataflow.node.data.event.planner'
+    # data planner in event agent which could plan python code to extract with reflections
+    class: 'PlannerNode'
+    llm: 'qwen_llm'
+    prompt_version: 'event_planner_node.cn'
+    param_in_jsonl: 'auto_event_flow.perceiver.param.out'
+    param_out_jsonl: 'auto_event_flow.planner.plan.out'
+    datasets_in_jsonl:
+      - 'auto_event_flow.perceiver.dataset.out'
+    dataset_out_jsonl:
+    node_param:
+      verify_lines: 1
+
+  - module: 'agentuniverse_dataflow.node.data.event.executor'
+    # data executor in event agent which execute python code from planner
+    class: 'ExecutorNode'
+    param_in_jsonl: 'auto_event_flow.planner.plan.out'
+    param_out_jsonl:
+    datasets_in_jsonl:
+    dataset_out_jsonl: 'auto_event_flow.executor.out'
+
+

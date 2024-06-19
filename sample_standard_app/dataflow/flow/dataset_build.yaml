@@ -1,0 +1,77 @@
+name: 'dataset_build_flow'
+description: "train dataset build agent flow"
+nodes:
+  - module: 'agentuniverse_dataflow.node.data.prompt.input.seed'
+    # query seed from LLM
+    class: 'SeedNode'
+    llm: 'qwen_llm'
+    prompt_version: 'dataset_input_seed_node.cn'
+    param_in_jsonl:
+    param_out_jsonl:
+    datasets_in_jsonl:
+    dataset_out_jsonl: 'dataset_build_flow.seed.out'
+    node_param:
+      seeds_num: 5
+      seed_gen_requirement: '金融领域'
+
+  - module: 'agentuniverse_dataflow.node.data.prompt.input.rewrite'
+    # rewrite query from LLM
+    class: 'RewriteNode'
+    llm: 'qwen_llm'
+    prompt_version: 'dataset_rewrite_node.cn'
+    param_in_jsonl:
+    param_out_jsonl:
+    datasets_in_jsonl:
+      - 'dataset_build_flow.seed.out'
+    dataset_out_jsonl: 'dataset_build_flow.rewrite.out'
+
+  - module: 'agentuniverse_dataflow.node.data.prompt.input.extend'
+    # extend query from LLM
+    class: 'ExtendNode'
+    llm: 'qwen_llm'
+    prompt_version: 'dataset_extend_node.cn'
+    param_in_jsonl:
+    param_out_jsonl:
+    datasets_in_jsonl:
+      - 'dataset_build_flow.rewrite.out'
+    dataset_out_jsonl: 'dataset_build_flow.extend.out'
+    node_param:
+      extend_times: 2
+
+  - module: 'agentuniverse_dataflow.node.data.prompt.input.dedupe'
+    # dedupe queries which improve sft result
+    class: 'DedupeNode'
+    param_in_jsonl:
+    param_out_jsonl:
+    datasets_in_jsonl:
+      - 'dataset_build_flow.extend.out'
+    dataset_out_jsonl: 'dataset_build_flow.dedupe.out'
+    node_param:
+      diversify_hamming_threshold: 18
+      freq_top_percent: 1.0
+      freq_least_count: 100
+
+  - module: 'agentuniverse_dataflow.node.data.answer.answer'
+    # build answers from the prompt via LLM as training data
+    class: 'AnswerNode'
+    llm: 'qwen_llm'
+    param_in_jsonl:
+    param_out_jsonl:
+    datasets_in_jsonl:
+      - 'dataset_build_flow.dedupe.out'
+    dataset_out_jsonl: 'dataset_build_flow.answer.out'
+
+  - module: 'agentuniverse_dataflow.node.data.answer.filter'
+    # filter training data to improve data quality
+    class: 'FilterNode'
+    llm: 'qwen_llm'
+    prompt_version: 'dataset_filter_node.cn'
+    param_in_jsonl:
+    param_out_jsonl:
+    datasets_in_jsonl:
+      - 'dataset_build_flow.answer.out'
+    dataset_out_jsonl: 'dataset_build_flow.filter.out'
+    node_param:
+      dimscore_threshold: 60
+      avgscore_threshold: 75
+
