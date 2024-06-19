@@ -14,6 +14,8 @@ import tiktoken
 from langchain_core.language_models.base import BaseLanguageModel
 from openai import OpenAI, AsyncOpenAI
 
+from agentuniverse.base.config.component_configer.configers.llm_configer import LLMConfiger
+from agentuniverse.base.util.env_util import get_from_env
 from agentuniverse.llm.llm import LLM, LLMOutput
 from agentuniverse.llm.openai_style_langchain_instance import LangchainOpenAIStyleInstance
 
@@ -161,6 +163,17 @@ class OpenAIStyleLLM(LLM):
 
         await self.aclose()
 
+    def initialize_by_component_configer(self, component_configer: LLMConfiger) -> 'LLM':
+        if 'api_base' in component_configer.configer.value:
+            self.api_base = component_configer.configer.value.get('api_base')
+        elif 'api_base_env' in component_configer.configer.value:
+            self.api_base = get_from_env(component_configer.configer.value.get('api_base_env'))
+        if 'api_key' in component_configer .configer.value:
+            self.api_key = component_configer.configer.value.get('api_key')
+        elif 'api_key_env' in component_configer.configer.value:
+            self.api_key = get_from_env(component_configer.configer.value.get('api_key_env'))
+        return super().initialize_by_component_configer(component_configer)
+
     def get_num_tokens(self, text: str) -> int:
         """Get the number of tokens present in the text.
 
@@ -187,3 +200,9 @@ class OpenAIStyleLLM(LLM):
         """Async close the client."""
         if hasattr(self, 'async_client') and self.async_client:
             await self.async_client.close()
+
+    def max_context_length(self) -> int:
+        """Return the maximum length of the context."""
+        if super().max_context_length():
+            return super().max_context_length()
+        return 4000

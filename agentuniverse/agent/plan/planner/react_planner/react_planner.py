@@ -16,6 +16,7 @@ from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeMana
 from agentuniverse.agent.action.tool.tool import Tool
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent import Agent
+from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.chat_memory import ChatMemory
@@ -88,7 +89,7 @@ class ReActPlanner(Planner):
 
         agents: list = action.get('agent') or list()
         for agent_name in agents:
-            agent_tool: Agent = AgentModel.load_by_name(agent_name)
+            agent_tool: Agent = AgentManager().get_instance_obj(agent_name)
             lc_tools.append(agent_tool.as_langchain_tool())
         return lc_tools
 

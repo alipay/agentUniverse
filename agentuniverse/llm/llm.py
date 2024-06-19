@@ -103,6 +103,8 @@ class LLM(ComponentBase):
         if component_configer.ext_info:
             self.ext_info = component_configer.ext_info
         self.tracing = component_configer.tracing
+        if 'max_context_length' in component_configer.configer.value:
+            self._max_context_length = component_configer.configer.value['max_context_length']
         return self
 
     def set_by_agent_model(self, **kwargs) -> None:
