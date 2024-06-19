@@ -13,10 +13,6 @@ from agentuniverse_data.node.data.base.prompt_base import PromptBase
 from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse_data.util.llm.llm_call import batch_call
 
-_DEFAULT_INSTRUCT_FOR_PROMPT = """
-你是一个极致严谨的金融专家，请尽量找出问题对应的金融解读框架，并基于解读框架一步一步结构化详细回答如下问题:
-"""
-
 
 class SeedNode(PromptBase):
     """The SeedNode class, which is used to define the class of extend node."""
@@ -33,7 +29,7 @@ class SeedNode(PromptBase):
         prompt_with_extend_times = version_prompt.prompt_template.replace('<extend_times>',
                                                                           str(self.extend_times))
 
-        prompts = [prompt_with_extend_times.replace('<instruct_seed>', _DEFAULT_INSTRUCT_FOR_PROMPT)]
+        prompts = [prompt_with_extend_times]
         responses = batch_call(prompts, self.llm)
         self._prompt_list = []
         if len(responses) == 1:

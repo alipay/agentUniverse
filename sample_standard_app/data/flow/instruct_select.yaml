@@ -32,7 +32,7 @@ nodes:
 #  - module: ''
 #    # dump answer from pre deployed LLM infer via prompt as input
 #    class: 'DumpNode'
-#    param_in_jsonl: 'train_dump_flow.pre_deploy.out'
+#    param_in_jsonl: 'train_dump_flow.aci_pre_deploy.out'
 #    param_out_jsonl:
 #    datasets_in_jsonl:
 #      - 'instruct_select_flow.prompt_gen.out'
