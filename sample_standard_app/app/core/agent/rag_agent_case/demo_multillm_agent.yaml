@@ -15,8 +15,10 @@ profile:
 #    model_name: 'Baichuan2-Turbo'
 #    name: 'qwen_llm'
 #    model_name: 'qwen-turbo'
-    name: 'wenxin_llm'
-    model_name: 'ERNIE-3.5-8K'
+#    name: 'wenxin_llm'
+#    model_name: 'ERNIE-3.5-8K'
+#    name: 'deep_seek_llm'
+    name: 'default_deepseek_llm'
 plan:
   planner:
     name: 'rag_planner'
