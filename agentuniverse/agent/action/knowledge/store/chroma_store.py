@@ -6,10 +6,11 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: chroma_store.py
 from typing import List, Any, Optional
+from pydantic import SkipValidation
 
 import chromadb
 from chromadb import QueryResult
-from chromadb.api.models import Collection
+from chromadb.api.models.Collection import Collection
 
 from agentuniverse.agent.action.knowledge.store.document import Document
 from agentuniverse.agent.action.knowledge.store.query import Query
@@ -28,7 +29,7 @@ class ChromaStore(Store):
     """
 
     collection_name: Optional[str] = 'chroma_db'
-    collection: Collection = None
+    collection: SkipValidation[Collection] = None
     persist_path: Optional[str] = None
 
     def __init__(self, **kwargs):
