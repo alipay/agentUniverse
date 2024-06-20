@@ -21,7 +21,7 @@ class RagAgentTest(unittest.TestCase):
     def setUp(self) -> None:
         AgentUniverse().start(config_path='../../config/config.toml')
 
-    def test_rag_agent(self):
+    def test_rag_fgent(self):
         """Test demo rag agent."""
         instance: Agent = AgentManager().get_instance_obj('demo_rag_agent')
         output_object: OutputObject = instance.run(input='分析下巴菲特减持比亚迪的原因')

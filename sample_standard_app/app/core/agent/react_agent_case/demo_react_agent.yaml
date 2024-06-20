@@ -5,11 +5,17 @@ profile:
   prompt_version: qwen_react_agent.cn
   llm_model:
     name: 'default_qwen_llm'
+    model_name: 'qwen-max'
     temperature: 0
 action:
   tool:
     - 'google_search_tool'
     - 'python_runner'
+  knowledge:
+    - 'civil_law_knowledge'
+    - 'criminal_law_knowledge'
+  agent:
+    - 'law_rag_agent'
 plan:
   planner:
     name: 'react_planner'
