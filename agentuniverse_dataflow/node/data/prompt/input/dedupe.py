@@ -7,7 +7,6 @@
 # @FileName: dedupe.py
 from collections import Counter
 
-from simhash import Simhash
 from agentuniverse_dataflow.node.data.base.prompt_base import PromptBase
 
 
@@ -28,6 +27,13 @@ class DedupeNode(PromptBase):
     def _node_process(self) -> None:
         if not self._prompt_list or len(self._prompt_list) == 0:
             return
+
+        try:
+            from simhash import Simhash
+        except ImportError:
+            raise ImportError(
+                "simhash is required at the DedupeNode. Please: `pip install simhash`"
+            )
 
         # calculate the simhash value for each document.
         simhashes = [(doc, Simhash(doc)) for doc in self._prompt_list]
