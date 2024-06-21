@@ -1,0 +1,4 @@
+name: 'main_dispatch'
+description: 'dispatch with multi-dataflows which will execute one after another'
+dataflows:
+  - ../flow/auto_event.yaml
