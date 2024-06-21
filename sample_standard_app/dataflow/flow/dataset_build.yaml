@@ -36,7 +36,7 @@ nodes:
       - 'dataset_build_flow.rewrite.out'
     dataset_out_jsonl: 'dataset_build_flow.extend.out'
     node_param:
-      extend_times: 2
+      extend_times: 1
 
   - module: 'agentuniverse_dataflow.node.data.prompt.input.dedupe'
     # dedupe queries which improve sft result
