@@ -57,8 +57,11 @@ For more details, please read the [Quick Start](./docs/guidebook/en/1_3_Quick_St
 ## Cases and Example Projects
 ### 🌟 Use Cases
 [Legal Consultation Agent](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
+
 [Python Code Generation and Execution Agent](./docs/guidebook/en/7_1_1_Python_Auto_Runner.md)
-[Discussion Group Based on Multi-Turn Multi-Agent Mode](./docs/guidebook/en/6_2_1_Discussion_Group.md)  
+
+[Discussion Group Based on Multi-Turn Multi-Agent Mode](./docs/guidebook/en/6_2_1_Discussion_Group.md)
+
 [Financial Event Analysis Based on PEER Multi-Agent Mode](./docs/guidebook/en/6_4_1_Financial_Event_Analysis_Case.md)
 
 ### 🌟 Example Projects
