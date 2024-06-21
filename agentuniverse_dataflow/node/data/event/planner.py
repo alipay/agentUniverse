@@ -39,8 +39,8 @@ class PlannerNode(DataNodeBase):
         if self._dataset_in_handler:
             perceived_list = self._dataset_in_handler.read_json_obj_list()
             # one for plan , at least one for verification
-            if not perceived_list or len(perceived_list) <= 1:
-                raise Exception('perceived json list does not provide at least 2 samples!')
+            if not perceived_list or len(perceived_list) < 1:
+                raise Exception('perceived json list does not provide at least 1 samples!')
 
             for i in range(0, len(perceived_list)):
                 json_obj = perceived_list[i]
