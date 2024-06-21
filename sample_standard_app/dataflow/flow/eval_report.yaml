@@ -10,7 +10,8 @@ nodes:
     param_out_jsonl:
     datasets_in_jsonl:
 #      - 'train_dump_flow.aci_dump.out'
-      - 'dataset_build_flow.filter.out'
+#      - 'dataset_build_flow.filter.out'
+      - 'demo_jsonl'
     dataset_out_jsonl: 'eval_report_flow.eval.out'
     node_param:
       eval_lines: 100

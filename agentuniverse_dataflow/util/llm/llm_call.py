@@ -25,7 +25,7 @@ async def async_batch_call(prompts: list[str], llm_name: str):
         if llm is None:
             raise Exception('LLM not found for agentuniverse data.')
         messages = [{"role": "user", "content": prompts[i]}]
-        tasks.append(llm.acall(messages=messages, timeout=200))
+        tasks.append(llm.acall(messages=messages, timeout=700))
 
     task = asyncio.create_task(show_progress(len(prompts), asyncio.get_running_loop()))
     outputs = await asyncio.gather(*tasks, return_exceptions=True)

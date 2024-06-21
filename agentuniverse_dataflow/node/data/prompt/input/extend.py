@@ -20,7 +20,7 @@ from agentuniverse_dataflow.util.llm.llm_call import batch_call
 class ExtendNode(PromptBase):
     """The ExtendNode class, which is used to define the class of extend node."""
 
-    extend_times: int = 4
+    extend_times: int = 1
 
     def _node_preprocess(self) -> None:
         super()._node_preprocess()
