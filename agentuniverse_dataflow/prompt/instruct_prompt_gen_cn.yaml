@@ -1,7 +1,0 @@
-instruction: |
-  <instruct> 
-  
-  <input>
-metadata:
-  type: 'PROMPT'
-  version: 'instruct_prompt_gen_node.cn'
