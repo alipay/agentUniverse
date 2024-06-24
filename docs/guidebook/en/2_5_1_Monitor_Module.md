@@ -19,7 +19,7 @@ dir = './monitor'
 - **`dir`**: The local storage directory corresponding to the monitor module is, by default, the 'monitor' directory one
   level above the runtime directory. Users can customize the configuration of the directory path.
 
-### LLM tracing configuration
+### LLM Tracing Configuration
 
 For the LLM invocation tracking capability, agentUniverse also supports model granularity configuration. Once the main
 switch of the monitor module is turned on, the invocation tracking function for specific models can be selectively
