@@ -146,7 +146,7 @@ class PeerPlanner(Planner):
 
             if not expressing_result or jump_step in ["planning", "executing", "expressing"]:
                 if not expressingAgent:
-                    LOGGER.warn("no expression agent.")
+                    LOGGER.warn("no expressing agent.")
                     expressing_result = OutputObject({})
                 else:
                     LOGGER.info(f"Starting expressing agent.")
@@ -160,7 +160,7 @@ class PeerPlanner(Planner):
 
             if not reviewing_result or jump_step in ["planning", "executing", "expressing", "reviewing"]:
                 if not reviewingAgent:
-                    LOGGER.warn("no expression agent.")
+                    LOGGER.warn("no reviewing agent.")
                     loopResults.append({
                         "planning_result": planning_result,
                         "executing_result": executing_result,

@@ -8,6 +8,8 @@
 import copy
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 from typing import Optional, Any
+
+from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
@@ -78,6 +80,30 @@ class ExecutingAgent(Agent):
             futures.append(
                 self.executor.submit(
                     PlannerManager().get_instance_obj(self.agent_model.plan.get('planner').get('name')).invoke,
-                    self.agent_model, agent_input_copy, input_object))
+                    self.agent_model, agent_input_copy, self.process_intput_object(input_object, task)))
         wait(futures, return_when=ALL_COMPLETED)
         return {'futures': futures}
+
+    def process_intput_object(self, input_object: InputObject, planning_task: str) -> InputObject:
+        """Process input object for the executing agent.
+
+        Args:
+            input_object (InputObject): input parameters passed by the user.
+            planning_task (str): planning task to be executed.
+        Returns:
+            InputObject: Processed input object
+        """
+        # get agent toolsets
+        action: dict = self.agent_model.action or dict()
+        tools: list = action.get('tool') or list()
+        if len(tools) < 1:
+            return input_object
+        input_object_copy: InputObject = copy.deepcopy(input_object)
+        # wrap input_object for agent toolsets
+        for tool_name in tools:
+            tool = ToolManager().get_instance_obj(tool_name)
+            if tool is None:
+                continue
+            # note: only insert the first key of tool input
+            input_object_copy.add_data(tool.input_keys[0], planning_task)
+        return input_object_copy
