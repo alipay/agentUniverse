@@ -8,8 +8,8 @@ description: 'Use this when you want to POST to a website.
         ```'
 headers:
   content-type: 'application/json'
-method: 'GET'
-json_parser: false
+method: 'POST'
+json_parser: true
 response_content_type: json
 tool_type: 'api'
 input_keys: ['input']

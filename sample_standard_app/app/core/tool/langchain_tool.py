@@ -9,7 +9,7 @@ import json
 
 from typing import Optional, Type
 
-from langchain_core.tools import BaseTool, Tool as LangchainTool
+from langchain_core.tools import BaseTool
 
 from agentuniverse.agent.action.tool.tool import Tool, ToolInput
 from agentuniverse.base.config.component_configer.configers.tool_configer import ToolConfiger
@@ -23,7 +23,7 @@ class LangChainTool(Tool):
     def execute(self, tool_input: ToolInput):
         input = tool_input.get_data("input")
         callbacks = tool_input.get_data("callbacks", None)
-        return self.tool.run(json.loads(input), callbacks=callbacks)
+        return self.tool.run(input, callbacks=callbacks)
 
     def initialize_by_component_configer(self, component_configer: ToolConfiger) -> 'Tool':
         super().initialize_by_component_configer(component_configer)
