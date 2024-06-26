@@ -1,0 +1,6 @@
+name: 'reflection_planner'
+description: '反思规划'
+metadata:
+  type: 'PLANNER'
+  module: 'sample_standard_app.app.core.planner.translation_planner.reflection_planner'
+  class: 'ReflectionPlanner'
