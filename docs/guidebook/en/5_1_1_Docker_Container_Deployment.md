@@ -1,22 +1,22 @@
 # Docker container deployment
 
-AgentUniverse provides standard work environment images for containerized deployment of AgentUniverse projects. This document will explain how to deploy your own project based on the such images.
+AgentUniverse provides standard work environment images for containerized deployment of AgentUniverse projects. This document will explain how to deploy your own project based on the such images. You can get full tag list in [this site](https://cr.console.aliyun.com/repository/cn-hangzhou/agent_universe/agent_universe/images).
 
 ## Preparations
 1.  Build your own project according to the standard directory structure of AgentUniverse, referring to [Application_Engineering_Structure_Explanation](1_4_Application_Engineering_Structure_Explanation.md)。For ease of explanation, this document assumes the project name and project directory are `sample_standard_app`.
 2.   Get the required version of the AgentUniverse image.
 ```shell
-docker pull registry.cn-hangzhou.aliyuncs.com/agent_universe/agent_universe:0.0.5_centos8_beta
+docker pull registry.cn-hangzhou.aliyuncs.com/agent_universe/agent_universe:0.0.9_centos8
 ```
 
 
 ## Method 1: Mount the host path
 You can mount your project to a path inside the container by mounting the host directory, with the reference command as follows:
 ```shell
-docker run -d -p 8888:8888 -v ./sample_standard_app/:/usr/local/etc/workspace/project registry.cn-hangzhou.aliyuncs.com/agent_universe/agent_universe:0.0.5_centos8_beta
+docker run -d -p 8888:8888 -v ./sample_standard_app/:/usr/local/etc/workspace/project/sample_standard_app registry.cn-hangzhou.aliyuncs.com/agent_universe/agent_universe:0.0.9_centos8
 ```
 The`-p 8888:8888`represents the port mapping for the Web Server. The first 8888 indicates that the web server inside the container is started on port 8888, and the latter indicates that it is mapped to port 8888 on the host machine. Adjust it according to the actual startup conditions of the application as needed.  
-`-v {local_dir}:/usr/local/etc/workspace/project`indicates that the `local_dir` directory on the host is mounted to the `/usr/local/etc/workspace/project`within the container. The directory path inside the container is a fixed value and cannot be modified.
+`-v {local_dir}:/usr/local/etc/workspace/project/{local_dir_name}`indicates that the `local_dir` directory on the host is mounted to the `/usr/local/etc/workspace/project`within the container. The directory path inside the container is a fixed value and cannot be modified. `local_dir_name` stands for the last pattern of the `local_dir`.
 
 ### Precautions:：
 If you need multiple containers to mount the same directory, it's advised to pay attention to the following points when using this method:：
