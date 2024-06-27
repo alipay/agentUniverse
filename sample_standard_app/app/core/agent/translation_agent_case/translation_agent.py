@@ -22,7 +22,7 @@ class TranslationAgent(Agent):
         return self.agent_model.profile.get('output_keys')
 
     def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
-        for key in self.input_keys():
+        for key in input_object.to_dict():
             agent_input[key] = input_object.get_data(key)
         return agent_input
 
@@ -32,7 +32,7 @@ class TranslationAgent(Agent):
     def execute(self, input_object: InputObject, agent_input: dict) -> dict:
         planner_base: Planner = PlannerManager().get_instance_obj(self.agent_model.plan.get('planner').get('name'))
         agent_model = copy.deepcopy(self.agent_model)
-        translation_type = input_object.get_data('type')
+        translation_type = input_object.get_data('execute_type')
         if translation_type == "multi":
             agent_model.profile['prompt_version'] = translation_type + "_" + agent_model.profile['prompt_version']
         planner_result = planner_base.invoke(agent_model, agent_input, input_object)
