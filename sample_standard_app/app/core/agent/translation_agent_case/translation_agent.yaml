@@ -7,12 +7,8 @@ profile:
   output_keys: ['output']
   llm_model:
     name: 'default_deepseek_llm'
+    max_tokens: 4000
 plan:
-  work_agent: 'translation_work_agent'
-  reflection_agent: 'translation_reflection_agent'
-  improve_agent: 'translation_improve_agent'
-  planner:
-    name: 'reflection_planner'
 action:
   tool:
 #    - 'google_search_tool'

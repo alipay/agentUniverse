@@ -41,9 +41,6 @@ I came away from Washington optimistic about the progress we’ve made. A  year 
 Looking beyond the U.S. federal government, there are many jurisdictions globally. Unfortunately, arguments in favor of  regulations that would stifle AI development continue to proliferate. But I’ve learned from my trips to Washington and other nations’ capitals that talking to regulators does have an impact. If you get a chance to talk to a regulator at any level, I hope you’ll do what you can to help governments better understand AI.
         """
         """Test demo rag agent."""
-        with open('/Users/weizj/jobspace/agentUniverse/sample_standard_app/app/test/test_file.txt') as f:
-            data = f.read()
-            print(len(data))
 
         instance: Agent = AgentManager().get_instance_obj('translation_by_token_agent')
         output_object: OutputObject = instance.run(source_lang="英文", target_lang="中文",
