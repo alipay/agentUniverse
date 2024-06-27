@@ -54,8 +54,7 @@ class Monitor(BaseModel):
 
             # write to jsonl
             with jsonlines.open(path_save, 'a') as writer:
-                json_record = json.dumps(llm_invocation, ensure_ascii=False)
-                writer.write(json_record)
+                writer.write(llm_invocation)
 
     def _get_or_create_subdir(self, subdir: str) -> str:
         """Get or create a subdirectory if it doesn't exist in the monitor directory."""

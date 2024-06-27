@@ -10,6 +10,7 @@ from typing import List, Dict
 from agentuniverse_dataflow.node.enum.enum import NodeEnum
 from agentuniverse_dataflow.node.base.data_node_base import DataNodeBase
 from agentuniverse_dataflow.util.fileio.node_msg_jsonl import JsonFileReader
+from agentuniverse.base.util.logging.logging_util import LOGGER
 
 
 class PerceiverNode(DataNodeBase):
@@ -27,6 +28,8 @@ class PerceiverNode(DataNodeBase):
         super().__init__(node_type=NodeEnum.PROMPT_ANSWER)
 
     def _node_preprocess(self) -> None:
+        LOGGER.info("------------------------------------------------------------------------------------")
+        LOGGER.info("PerceiverNode preprocess start: read PerceiverNode configuration from auto_event.yaml")
         super()._node_preprocess()
 
         self.event_db = self._get_node_param('event_db')
@@ -36,11 +39,14 @@ class PerceiverNode(DataNodeBase):
         self.answer_col = self._get_node_param('answer_col')
 
     def _node_process(self) -> None:
+        LOGGER.info("PerceiverNode process start: read the dataset from the user-configured jsonl file.")
         if self.event_db:
             if self.event_db == 'jsonl':
                 self._input_data_jsonlist = JsonFileReader(self.event_uri).read_json_obj_list()
 
     def _node_postprocess(self) -> None:
+        LOGGER.info("PerceiverNode postprocess start: assemble the raw input and output from the dataset into "
+                     "the dictionary dataset with 'prompt' and 'answer' keys.")
         super()._node_postprocess()
         if self._input_data_jsonlist is not None and self._dataset_out_handler:
             for i in range(0, len(self._input_data_jsonlist)):

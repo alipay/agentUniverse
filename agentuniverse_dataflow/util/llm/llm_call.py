@@ -6,6 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: llm_call.py
 import asyncio
+import time
 
 from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.llm.llm import LLM
@@ -13,6 +14,7 @@ from agentuniverse.llm.llm_manager import LLMManager
 
 
 def batch_call(prompts: list[str], llm_name: str):
+    time.sleep(3)
     return asyncio.run(async_batch_call(prompts, llm_name))
 
 

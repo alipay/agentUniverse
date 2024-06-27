@@ -29,6 +29,9 @@ class EvalNode(EvalNodeBase):
             self._eval_lines = eval_lines
 
     def _node_preprocess(self) -> None:
+        LOGGER.info("------------------------------------------------------------------------------------")
+        LOGGER.info("EvalNode preprocess start: read EvalNode configuration and prompt & answer datasets from "
+                    "auto_event.yaml")
         super()._node_preprocess()
 
         self._eval_lines = self._get_node_param('eval_lines')
@@ -36,16 +39,16 @@ class EvalNode(EvalNodeBase):
             self._prompt_answer_list = self._dataset_in_handler.read_json_prompt_answer_list()
 
     def _node_postprocess(self) -> None:
+        LOGGER.info("EvalNode postprocess start: write the evaluation result of each data in the jsonl file.")
         super()._node_postprocess()
 
         if self._dataset_out_handler and self._eval_dims_json_list:
             self._dataset_out_handler.write_json_obj_list(self._eval_dims_json_list)
 
     def _node_process(self) -> None:
+        LOGGER.info("EvalNode process start: start the evaluation process.")
         if not self._prompt_answer_list or len(self._prompt_answer_list) == 0:
             return
-
-        eval_dims = get_eval_dims()
 
         line_num = 0
         self._eval_dims_json_list = []
@@ -67,17 +70,9 @@ class EvalNode(EvalNodeBase):
 
             version_prompt: Prompt = PromptManager().get_instance_obj(self.prompt_version)
 
-            eval_prompt_temp = version_prompt.prompt_template.replace('<prompt_str>', prompt)
-            eval_prompt_temp = eval_prompt_temp.replace('<answer_str>', answer)
-            dim_prompts = []
+            eval_prompt_temp = version_prompt.prompt_template.replace('{prompt_str}', prompt)
+            eval_prompt_temp = eval_prompt_temp.replace('{answer_str}', answer)
 
-            for i in range(0, len(eval_dims)):
-                eval_dim_name = eval_dims[i][0]
-                eval_dim_requirement = eval_dims[i][1]
-                dim_prompt = f'dimension name: {eval_dim_name} \n dimension requirement: {eval_dim_requirement}'
-                dim_prompts.append(dim_prompt)
-
-            eval_prompt_temp = eval_prompt_temp.replace('<dims>', '\n'.join(dim_prompts))
             res = batch_call([eval_prompt_temp], self.llm)
 
             dim_score_json = {'line': line_num}
@@ -96,5 +91,6 @@ class EvalNode(EvalNodeBase):
                 avg_score = avg_score / len(dimensions)
             dim_score_json['avg_score'] = avg_score
             dim_score_json['dimensions'] = dimensions
+            LOGGER.info(f"EvalNode process: the line number {line_num} evaluation done.")
 
             self._eval_dims_json_list.append(dim_score_json)

@@ -15,8 +15,8 @@ nodes:
       event_uri: demo_jsonl
       # perceive limited lines
       event_sql:
-      prompt_col: prompt
-      answer_col: answer
+      prompt_col: agent_input
+      answer_col: agent_output
 
   - module: 'agentuniverse_dataflow.node.data.event.planner'
     # data planner in event agent which could plan python code to extract with reflections
