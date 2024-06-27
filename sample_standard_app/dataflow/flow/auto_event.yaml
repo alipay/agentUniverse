@@ -12,7 +12,7 @@ nodes:
       # supported event_db: jsonl
       event_db: jsonl
       # if jsonl, please input jsonl file prefix as event_uri and make sure jsonl file in path data/; then event_sql is useless
-      event_uri: demo_jsonl
+      event_uri: demo_agent
       # perceive limited lines
       event_sql:
       prompt_col: agent_input
