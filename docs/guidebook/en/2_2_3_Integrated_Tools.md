@@ -157,42 +157,33 @@ metadata:
   module: 'sample_standard_app.app.core.tool.request_tool'
   class: 'RequestTool'
 ```
+Configuration to Refer to When Sending a POST Request：
+```yaml
+name: 'requests_post'
+# description copy from langchain RequestPOSTTool
+description: 'Use this when you want to POST to a website.
+    Input should be a json string with two keys: "url" and "data".
+    The value of "url" should be a string, and the value of "data" should be a dictionary of 
+    key-value pairs you want to POST to the url.
+    Be careful to always use double quotes for strings in the json string
+    The output will be the text response of the POST request.
+        ```'
+headers:
+  content-type: 'application/json'
+method: 'POST'
+json_parser: true
+response_content_type: json
+tool_type: 'api'
+input_keys: ['input']
+metadata:
+  type: 'TOOL'
+  module: 'sample_standard_app.app.core.tool.request_tool'
+  class: 'RequestTool'
+```
 Parameter Description:
     method: The method of the request, such as GET, POST, PUT, etc.
     headers: The HTTP headers required for sending the request.
     json_parse: Specifies whether the input parameters need to be parsed by HTTP. It should be set to True for POST requests and False for GET requests.
     response_content_type: The parsing method for the HTTP request result. If set to 'json', the result will be returned in JSON format; if set to 'text', the result will be returned as text.
 This tool can be used directly without any keys required.
-
-## 4. Langchain Tool
-Langchain incorporates numerous tools, but different tools may have distinct initialization methods. To address this, we have implemented a base class called LangChainTool. You merely need to implement the init_langchain_tool method of this class to initialize the corresponding Langchain tool object.
-Here's an example of a tool implementation:
-[Tool address](../../../sample_standard_app/app/core/tool/human_input_run.yaml)
-```yaml
-name: 'human_input_run'
-description: 'human input tool'
-tool_type: 'api'
-input_keys: ['input']
-langchain:
-  module: langchain_community.tools
-  class_name: HumanInputRun
-metadata:
-  type: 'TOOL'
-  module: 'sample_standard_app.app.core.tool.langchain_tool'
-  class: 'LangChainTool'
-```
-Parameter Explanation:
-    langchain: The Langchain tool you intend to use, requiring configuration of module and class_name.
-    langchain.module: The name of the Langchain module, for instance, langchain_community.tools.
-    langchain.class_name: The class name within Langchain, such as HumanInputRun.
-    langchain.init_params: Initialization parameters for Langchain, for example:
-        ```yaml
-        langchain:
-          module: langchain_community.tools
-          class_name: HumanInputRun
-          init_params:
-            prompt: '请输入你的问题'
-        ```
-    If you opt to fully override the init_langchain_tool method, then you do not need to configure this part.
-This tool can be utilized directly without requiring any keys.
 

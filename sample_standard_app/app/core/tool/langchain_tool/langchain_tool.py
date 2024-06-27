@@ -9,6 +9,7 @@ import json
 
 from typing import Optional, Type
 
+from langchain_community.tools import DuckDuckGoSearchResults
 from langchain_core.tools import BaseTool
 
 from agentuniverse.agent.action.tool.tool import Tool, ToolInput
@@ -27,8 +28,9 @@ class LangChainTool(Tool):
 
     def initialize_by_component_configer(self, component_configer: ToolConfiger) -> 'Tool':
         super().initialize_by_component_configer(component_configer)
-        self.init_langchain_tool(component_configer)
-        self.description = self.tool.description
+        self.tool = self.init_langchain_tool(component_configer)
+        if not component_configer.description:
+            self.description = self.tool.description
         return self
 
     def init_langchain_tool(self, component_configer):
@@ -46,6 +48,3 @@ class LangChainTool(Tool):
             self.tool = clz(**init_params)
         else:
             self.tool = clz()
-
-    def as_langchain(self):
-        return self.tool

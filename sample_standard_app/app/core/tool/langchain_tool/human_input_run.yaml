@@ -1,5 +1,5 @@
 name: 'human_input_run'
-description: 'human input tool'
+description: ''
 tool_type: 'api'
 input_keys: ['input']
 langchain:
@@ -7,5 +7,5 @@ langchain:
   class_name: HumanInputRun
 metadata:
   type: 'TOOL'
-  module: 'sample_standard_app.app.core.tool.langchain_tool'
+  module: 'sample_standard_app.app.core.tool.langchain_tool.langchain_tool'
   class: 'LangChainTool'
