@@ -104,7 +104,7 @@ SEARCHAPI_API_KEY="xxxxxx"
 ```
 
 
-## 2. 代码工具
+## 2. Code Tool
 
 ### 2.1 PythonRepl
 [Tool address](../../../sample_standard_app/app/core/tool/python_repl_tool.yaml)  
@@ -134,5 +134,56 @@ metadata:
 This tool can be used directly without any key, but for system security, please do not use this tool in production environments.
 
 
+## 3.HTTP Tool
 
+### 3.1 HTTP GET
+[Tool address](../../../sample_standard_app/app/core/tool/request_get_tool.yaml)
+The tool can send a GET request, with its configuration information being:
+```yaml
+name: 'requests_get'
+description: 'A portal to the internet. Use this when you need to get specific
+    content from a website. Input should be a  url (i.e. https://www.google.com).
+    The output will be the text response of the GET request.
+        ```'
+headers:
+  content-type: 'application/json'
+method: 'POST'
+json_parser: true
+response_content_type: json
+tool_type: 'api'
+input_keys: ['input']
+metadata:
+  type: 'TOOL'
+  module: 'sample_standard_app.app.core.tool.request_tool'
+  class: 'RequestTool'
+```
+Configuration to Refer to When Sending a POST Request：
+```yaml
+name: 'requests_post'
+# description copy from langchain RequestPOSTTool
+description: 'Use this when you want to POST to a website.
+    Input should be a json string with two keys: "url" and "data".
+    The value of "url" should be a string, and the value of "data" should be a dictionary of 
+    key-value pairs you want to POST to the url.
+    Be careful to always use double quotes for strings in the json string
+    The output will be the text response of the POST request.
+        ```'
+headers:
+  content-type: 'application/json'
+method: 'POST'
+json_parser: true
+response_content_type: json
+tool_type: 'api'
+input_keys: ['input']
+metadata:
+  type: 'TOOL'
+  module: 'sample_standard_app.app.core.tool.request_tool'
+  class: 'RequestTool'
+```
+Parameter Description:
+    method: The method of the request, such as GET, POST, PUT, etc.
+    headers: The HTTP headers required for sending the request.
+    json_parse: Specifies whether the input parameters need to be parsed by HTTP. It should be set to True for POST requests and False for GET requests.
+    response_content_type: The parsing method for the HTTP request result. If set to 'json', the result will be returned in JSON format; if set to 'text', the result will be returned as text.
+This tool can be used directly without any keys required.
 
