@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "agentUniverse"
-version = "0.0.9"
+version = "0.0.10"
 description = "agentUniverse is a framework for developing applications powered by multi-agent base on large language model."
 
 authors = ["AntGroup <jerry.zzw@antgroup.com>"]
@@ -51,6 +51,11 @@ dashscope = "^1.19.1"
 anthropic = "^0.26.0"
 ollama = '^0.2.1'
 langchain-anthropic = '^0.1.13'
+numpy = '^1.26.0'
+pandas = "^2.2.2"
+pyarrow = "^16.1.0"
+duckduckgo-search = "^6.1.7"
+wikipedia= "^1.4.0"
 
 [tool.poetry.extras]
 log_ext = ["aliyun-log-python-sdk"]

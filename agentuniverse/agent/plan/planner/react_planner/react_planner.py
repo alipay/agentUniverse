@@ -11,8 +11,12 @@ from langchain.agents import AgentExecutor, create_react_agent
 from langchain.tools import Tool as LangchainTool
 from langchain_core.runnables import RunnableConfig
 
+from agentuniverse.agent.action.knowledge.knowledge import Knowledge
+from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
 from agentuniverse.agent.action.tool.tool import Tool
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
+from agentuniverse.agent.agent import Agent
+from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.chat_memory import ChatMemory
@@ -78,6 +82,15 @@ class ReActPlanner(Planner):
         for tool_name in tool_names:
             tool: Tool = ToolManager().get_instance_obj(tool_name)
             lc_tools.append(tool.as_langchain())
+        knowledge: list = action.get('knowledge') or list()
+        for knowledge_name in knowledge:
+            knowledge_tool: Knowledge = KnowledgeManager().get_instance_obj(knowledge_name)
+            lc_tools.append(knowledge_tool.as_langchain_tool())
+
+        agents: list = action.get('agent') or list()
+        for agent_name in agents:
+            agent_tool: Agent = AgentManager().get_instance_obj(agent_name)
+            lc_tools.append(agent_tool.as_langchain_tool())
         return lc_tools
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:

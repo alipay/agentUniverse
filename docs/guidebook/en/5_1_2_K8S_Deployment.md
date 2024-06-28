@@ -1,5 +1,5 @@
 # High Availability Deployment with K8S
-AgentUniverse provides standard working environment images, designed to support containerized deployments on Kubernetes (K8S) clusters. This guide will show you how to utilize these working environment images to deploy and set up a cluster on K8S.
+AgentUniverse provides standard working environment images, designed to support containerized deployments on Kubernetes (K8S) clusters. This guide will show you how to utilize these working environment images to deploy and set up a cluster on K8S. You can get full tag list in [this site](https://cr.console.aliyun.com/repository/cn-hangzhou/agent_universe/agent_universe/images).
 Official K8S Documentation: [Kubernetes Setup Documentation](https://kubernetes.io/docs/setup/)
 
 ## 1. Resource Configuration
@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: agentuniverse-container
-        image: registry.cn-hangzhou.aliyuncs.com/agent_universe/agent_universe:0.0.5_centos8_beta
+        image: registry.cn-hangzhou.aliyuncs.com/agent_universe/agent_universe:0.0.9_centos8
         ports:
         - containerPort: 8888
         command: ["/bin/bash", "-c"]
