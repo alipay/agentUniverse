@@ -24,6 +24,21 @@ Note - Additional remarks regarding the version.
 ***************************************************
 
 # Version Update History
+## [0.0.10] - 2024-06-28
+### Added
+- Added standard integration for the DeepSeek model in the LLM module.
+- Added a new OpenAI general protocol wrapper class, OpenAIStyleLLM.
+  - Models using the OpenAI protocol can be configured directly.
+- Added a new LangChain tool wrapper class, LangChainTool, with several example tools for search and execution.
+  - LangChain tools can be configured directly.
+- Added Agent information collection capability in the monitor module.
+
+### Note
+- Added use cases.
+  - Supplemented documentation with a financial event analysis case study using PEER collaborative mode.
+- Updated the new README.
+- Some code optimizations and documentation updates.
+
 ## [0.0.9] - 2024-06-14
 ### Added
 - Added standard integration for Claude and Ollama LLM components
