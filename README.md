@@ -80,7 +80,7 @@ For more details, please read the [Quick Start](./docs/guidebook/en/1_3_Quick_St
 * **Customizable Components:** All framework components, including LLM, knowledge, tools, and memory, are customizable, allowing users to enhance their dedicated agents.
 * **Seamless Integration of Domain Expertise:** Offers capabilities for domain-specific prompts, knowledge construction, and management, and supports domain-level SOP orchestration and embedding, aligning agents to the expert level in their fields.
 
-💡 For more specific details, see the [Core Features of agentUniverse](./docs/guidebook/en/1_Core_Features.md).
+💡 For more features details, see the [Core Features of agentUniverse](./docs/guidebook/en/1_Core_Features.md).
 
 ### User Guide
 💡 For more detailed information, please read the [User Guide](./docs/guidebook/en/0_index.md).
