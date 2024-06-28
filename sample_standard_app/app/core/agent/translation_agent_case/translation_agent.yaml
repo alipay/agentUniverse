@@ -6,8 +6,8 @@ profile:
   input_keys: ['source_lang','target_lang','source_text']
   output_keys: ['output']
   llm_model:
-    name: 'default_deepseek_llm'
-    max_tokens: 4000
+    name: 'default_qwen_llm'
+    max_tokens: 1000
 plan:
 action:
   tool:
