@@ -6,7 +6,7 @@ profile:
   input_keys: ['source_lang','target_lang','source_text','init_agent_result','reflection_agent_result']
   output_keys: ['output']
   llm_model:
-    name: 'default_qwen_llm'
+    name: 'default_deepseek_llm'
     max_tokens: 4000
 plan:
   planner:

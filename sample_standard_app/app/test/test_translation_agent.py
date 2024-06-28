@@ -23,16 +23,16 @@ class TranslationAgentTest(unittest.TestCase):
 
     def test_translation_agent_long(self):
         instance: Agent = AgentManager().get_instance_obj('translation_by_token_agent')
-        with open('./translation_data/long_text.txt', 'r') as f:
+        with open('/Users/weizj/Documents/GitHub/agentUniverse/docs/guidebook/zh/7_1_1_翻译案例.md', 'r') as f:
             data = f.read()
 
-        output_object: OutputObject = instance.run(source_lang="英文", target_lang="中文",
+        output_object: OutputObject = instance.run(source_lang="中文", target_lang="英文",
                                                    source_text=data
                                                    )
         res_info = f"\nRag agent execution result is :\n"
         res_info += output_object.get_data('output')
         # 创建文件，并写入文件
-        with open('./translation_data/long_text_result.txt', 'w') as f:
+        with open('./translation_data/long_text_result111.txt', 'w') as f:
             f.write(res_info)
         print(res_info)
 
