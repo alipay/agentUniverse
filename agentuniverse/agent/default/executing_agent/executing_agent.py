@@ -92,8 +92,9 @@ class ExecutingAgent(Agent):
             input_object (InputObject): input parameters passed by the user.
             subtask (str): subtask to be executed.
             planner_input_key (str): planner input key.
+
         Returns:
-            InputObject: Processed input object
+            input_object (InputObject): processed input object.
         """
         # get agent toolsets.
         action: dict = self.agent_model.action or dict()
