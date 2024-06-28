@@ -76,7 +76,7 @@ class TranslationAgent(Agent):
         llm_name = self.agent_model.profile.get('llm_model').get('name')
         llm: LLM = LLMManager().get_instance_obj(llm_name)
         source_text = agent_input.get('source_text')
-        text_tokens = len(source_text)
+        text_tokens = llm.get_num_tokens(source_text)
         # 这里使用最大输入token，因为必须要保证有足够的token输出翻译结果
         max_context_length = llm.max_tokens
         if text_tokens < max_context_length:
