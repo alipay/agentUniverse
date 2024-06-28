@@ -42,6 +42,7 @@
   * 2.4.4 Logging
     * 2.4.4.1 [Logging Component](2_6_Logging_Utils.md)
   * 2.4.5 Data Collection
+    * 2.4.5.1 [Monitor Module](2_5_1_Monitor_Module.md)
 
 **3. Component Reference Manual**
 * 3.1 Domain Components
@@ -54,7 +55,11 @@
     * 3.1.2.5 [BaiChuan Usage Instructions](3_1_2_BaiChuan_LLM_Use.md)
     * 3.1.2.6 [Claude Usage Instructions](3_1_2_Claude_LLM_Use.md)
     * 3.1.2.7 [Ollama Usage Instructions](3_1_2_Ollama_LLM_Use.md)
+    * 3.1.2.8 [DeepSeek Usage Instructions](3_1_2_DeepSeek_LLM_Use.md)
+    * 3.1.2.9 [General OpenAI Protocol Style Wrapper](3_1_2_OpenAIStyleLLM_Use.md)
   * 3.1.3 List of Tools
+    * 3.1.3.1 [Integration Tool Details](2_2_3_Integrated_Tools.md)
+    * 3.1.3.2 [LangChain Tool Wrapper](2_2_3_Integrated_LangChain_Tools.md)
   * 3.1.4 List of Knowledge
   * 3.1.5 List of Memories
   * 3.1.6 List of Planners

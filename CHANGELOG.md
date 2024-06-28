@@ -36,6 +36,7 @@ Note - Additional remarks regarding the version.
 ### Note
 - Added use cases.
   - Supplemented documentation with a financial event analysis case study using PEER collaborative mode.
+- Added several new documents for LLM components, tool components, and the Monitor module.
 - Updated the new README.
 - Some code optimizations and documentation updates.
 
