@@ -16,6 +16,7 @@ from agentuniverse.base.annotation.singleton import singleton
 from agentuniverse.base.config.configer import Configer
 
 LLM_INVOCATION_SUBDIR = "llm_invocation"
+AGENT_INVOCATION_SUBDIR = "agent_invocation"
 
 
 @singleton
@@ -54,11 +55,38 @@ class Monitor(BaseModel):
 
             # write to jsonl
             with jsonlines.open(path_save, 'a') as writer:
-                json_record = json.dumps(llm_invocation, ensure_ascii=False)
-                writer.write(json_record)
+                writer.write(llm_invocation)
 
     def _get_or_create_subdir(self, subdir: str) -> str:
         """Get or create a subdirectory if it doesn't exist in the monitor directory."""
         path = os.path.join(self.dir, subdir)
         os.makedirs(path, exist_ok=True)
         return path
+
+    def trace_agent_invocation(self, source: str, agent_input: Union[str, dict],
+                               agent_output: Union[str, dict]) -> None:
+        """Trace the agent invocation and save it to the monitor jsonl file."""
+        if self.activate:
+            try:
+                import jsonlines
+            except ImportError:
+                raise ImportError(
+                    "jsonlines is required to trace llm invocation: `pip install jsonlines`"
+                )
+            # get the current time
+            date = datetime.datetime.now()
+            agent_invocation = {
+                "source": source,
+                "date": date.strftime("%Y-%m-%d %H:%M:%S"),
+                "agent_input": agent_input,
+                "agent_output": agent_output,
+            }
+            # files are stored in hours
+            filename = f"agent_{source}_{date.strftime('%Y-%m-%d-%H')}.jsonl"
+            # file path to save
+            path_save = os.path.join(str(self._get_or_create_subdir(AGENT_INVOCATION_SUBDIR)), filename)
+
+            # write to jsonl
+            with jsonlines.open(path_save, 'a') as writer:
+                writer.write(agent_invocation)
+

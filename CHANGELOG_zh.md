@@ -24,6 +24,22 @@ Note - 对于版本的额外说明。
 ***************************************************
 
 # 版本更新记录
+## [0.0.10] - 2024-06-28
+### Added
+- LLM组件新增DeepSeek模型标准接入
+- 新增OpenAI通用协议包装类OpenAIStyleLLM
+  - openai协议类模型接入可直接配置
+- 新增LangChain工具包装类LangChainTool，新增搜索类、执行类示例工具若干
+  - LangChain工具接入可直接配置
+- monitor模块新增Agent纬度信息采集能力
+
+### Note
+- 新增使用案例
+  - PEER协同模式的金融事件分析案例文档补充
+- 新增若干LLM组件、工具组件、Monitor模块文档
+- 新版README更新
+- 部分代码优化与文档更新
+
 ## [0.0.9] - 2024-06-14
 ### Added
 - LLM组件新增claude、ollama标准接入
