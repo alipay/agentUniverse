@@ -5,7 +5,7 @@ Language version: [English](./README.md) | [中文](./README_zh.md) | [日本語
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.9-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.10-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -80,7 +80,7 @@ For more details, please read the [Quick Start](./docs/guidebook/en/1_3_Quick_St
 * **Customizable Components:** All framework components, including LLM, knowledge, tools, and memory, are customizable, allowing users to enhance their dedicated agents.
 * **Seamless Integration of Domain Expertise:** Offers capabilities for domain-specific prompts, knowledge construction, and management, and supports domain-level SOP orchestration and embedding, aligning agents to the expert level in their fields.
 
-💡 For more specific details, see the [Core Features of agentUniverse](./docs/guidebook/en/1_Core_Features.md).
+💡 For more features details, see the [Core Features of agentUniverse](./docs/guidebook/en/1_Core_Features.md).
 
 ### User Guide
 💡 For more detailed information, please read the [User Guide](./docs/guidebook/en/0_index.md).

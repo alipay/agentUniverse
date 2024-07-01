@@ -18,6 +18,7 @@ from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.output_object import OutputObject
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
+from agentuniverse.base.annotation.trace import trace_agent
 from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.application_configer.application_config_manager \
@@ -70,6 +71,7 @@ class Agent(ComponentBase):
         """
         pass
 
+    @trace_agent
     def run(self, **kwargs) -> OutputObject:
         """Agent instance running entry.
 

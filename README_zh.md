@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.9-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.10-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -58,7 +58,8 @@ pip install agentUniverse
 [Python代码生成与执行Agent](./docs/guidebook/zh/7_1_1_Python自动执行案例.md)
 
 [基于多轮多Agent的讨论小组](./docs/guidebook/zh/6_2_1_讨论组.md)
-[基于PEER协同模式的金融事件分析](./docs/guidebook/zh/6_4_1_金融事件分析案例.md)]
+
+[基于PEER协同模式的金融事件分析](./docs/guidebook/zh/6_4_1_金融事件分析案例.md)
 
 ### 🌟 示例项目
 [agentUniverse 示例项目](sample_standard_app)
@@ -78,7 +79,7 @@ pip install agentUniverse
 
 * **轻松融入领域经验：** 提供领域prompt、知识构建与管理的能力，同时支持领域级SOP编排与注入，将智能体对齐至领域专家级别；
 
-💡 更多特定见[agentUniverse核心特性](docs/guidebook/zh/1_核心特性.md)部分。
+💡 更多特点见[agentUniverse核心特性](docs/guidebook/zh/1_核心特性.md)部分。
 
 ### 用户指南
 💡 更多详细信息，请阅读[用户指南](docs/guidebook/zh/0_%E7%9B%AE%E5%BD%95.md) 。
