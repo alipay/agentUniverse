@@ -1,5 +1,6 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
+from queue import Queue
 
 # @Time    : 2024/6/25 16:56
 # @Author  : weizjajj 
@@ -31,6 +32,12 @@ def calculate_chunk_size(token_count: int, token_limit: int) -> int:
     return chunk_size
 
 
+def output_middle_result(input_object: InputObject, data: any):
+    output_stream: Queue = input_object.get_data('output_stream',None)
+    if output_stream:
+        output_stream.put(data)
+
+
 class TranslationAgent(Agent):
     def input_keys(self) -> list[str]:
         return self.agent_model.profile.get('input_keys')
@@ -46,23 +53,26 @@ class TranslationAgent(Agent):
     def parse_result(self, planner_result: dict) -> dict:
         return planner_result
 
-    def execute_agents(self, planner_input: dict) -> dict:
+    def execute_agents(self, input_object: InputObject, planner_input: dict) -> dict:
         work_agent = 'translation_work_agent'
         reflection_agent = 'translation_reflection_agent'
         improve_agent = 'translation_improve_agent'
 
         init_agent_result = self.execute_agent(work_agent, planner_input)
         LOGGER.info(f"init_agent_result: {init_agent_result.to_json_str()}")
+        output_middle_result(input_object, {'init_agent_result': init_agent_result})
 
         planner_input['init_agent_result'] = init_agent_result.get_data('output')
 
         reflection_result = self.execute_agent(reflection_agent, planner_input)
         LOGGER.info(f"reflection_result: {reflection_result.to_json_str()}")
+        output_middle_result(input_object, {'reflection_agent_result': reflection_result})
 
         planner_input['reflection_agent_result'] = reflection_result.get_data('output')
 
         improve_result = self.execute_agent(improve_agent, planner_input)
         LOGGER.info(f"improve_agent_result: {improve_result.to_json_str()}")
+        output_middle_result(input_object, {'improve_agent_result': improve_result})
 
         return improve_result.to_dict()
 
