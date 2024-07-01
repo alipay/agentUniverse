@@ -76,28 +76,24 @@ class TranslationAgent(Agent):
         llm_name = self.agent_model.profile.get('llm_model').get('name')
         llm: LLM = LLMManager().get_instance_obj(llm_name)
         source_text = agent_input.get('source_text')
-        text_tokens = llm.get_num_tokens(source_text)
+        text_tokens = len(source_text)
         # 这里使用最大输入token，因为必须要保证有足够的token输出翻译结果
-        max_context_length = llm.max_tokens
-        if text_tokens < max_context_length:
+        if text_tokens < llm.max_tokens:
             return self.execute_agents(agent_input)
         agent_input['execute_type'] = 'multi'
         chunk_result = list[str]()
-        chunk_size = calculate_chunk_size(text_tokens, max_context_length)
+        chunk_size = calculate_chunk_size(text_tokens, llm.max_tokens)
         source_text_chunks = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=0).split_text(
             source_text)
 
         for i in range(len(source_text_chunks)):
-            tagged_text = ""
-            if i - 1 > 0:
-                tagged_text += source_text_chunks[i - 1]
-            tagged_text += (
-                    "<TRANSLATE_THIS>"
+            tagged_text = (
+                    "".join(source_text_chunks[0:i])
+                    + "<TRANSLATE_THIS>"
                     + source_text_chunks[i]
                     + "</TRANSLATE_THIS>"
+                    + "".join(source_text_chunks[i + 1:])
             )
-            if i + 1 < len(source_text_chunks):
-                tagged_text += source_text_chunks[i + 1]
             agent_input['chunk_to_translate'] = source_text_chunks[i]
             agent_input['tagged_text'] = tagged_text
             result = self.execute_agents(agent_input)
