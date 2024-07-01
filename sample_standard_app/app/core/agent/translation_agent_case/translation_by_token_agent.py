@@ -39,7 +39,7 @@ class TranslationAgent(Agent):
         return self.agent_model.profile.get('output_keys')
 
     def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
-        for key in self.input_keys():
+        for key in input_object.to_dict():
             agent_input[key] = input_object.get_data(key)
         return agent_input
 

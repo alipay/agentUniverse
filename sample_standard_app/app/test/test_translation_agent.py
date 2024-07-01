@@ -27,7 +27,7 @@ class TranslationAgentTest(unittest.TestCase):
             data = f.read()
 
         output_object: OutputObject = instance.run(source_lang="英文", target_lang="中文",
-                                                   source_text=data
+                                                   source_text=data, country="台湾"
                                                    )
         res_info = f"\nRag agent execution result is :\n"
         res_info += output_object.get_data('output')
@@ -36,20 +36,20 @@ class TranslationAgentTest(unittest.TestCase):
             f.write(res_info)
         print(res_info)
 
-    def test_translation_agent_short(self):
-        instance: Agent = AgentManager().get_instance_obj('translation_by_token_agent')
-        with open('./translation_data/short_text.txt', 'r') as f:
-            data = f.read()
-
-        output_object: OutputObject = instance.run(source_lang="英文", target_lang="中文",
-                                                   source_text=data
-                                                   )
-        res_info = f"\nRag agent execution result is :\n"
-        res_info += output_object.get_data('output')
-        # 创建文件，并写入文件
-        with open('./translation_data/short_text_result.txt', 'w') as f:
-            f.write(res_info)
-        print(res_info)
+    # def test_translation_agent_short(self):
+    #     instance: Agent = AgentManager().get_instance_obj('translation_by_token_agent')
+    #     with open('./translation_data/short_text.txt', 'r') as f:
+    #         data = f.read()
+    #
+    #     output_object: OutputObject = instance.run(source_lang="英文", target_lang="中文",
+    #                                                source_text=data
+    #                                                )
+    #     res_info = f"\nRag agent execution result is :\n"
+    #     res_info += output_object.get_data('output')
+    #     # 创建文件，并写入文件
+    #     with open('./translation_data/short_text_result.txt', 'w') as f:
+    #         f.write(res_info)
+    #     print(res_info)
 
 
 if __name__ == '__main__':

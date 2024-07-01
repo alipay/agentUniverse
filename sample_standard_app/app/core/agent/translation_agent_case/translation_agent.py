@@ -35,5 +35,8 @@ class TranslationAgent(Agent):
         translation_type = input_object.get_data('execute_type')
         if translation_type == "multi":
             agent_model.profile['prompt_version'] = translation_type + "_" + agent_model.profile['prompt_version']
+        if input_object.get_data('country') and self.agent_model.info.get('name') == 'translation_reflection_agent':
+            agent_model.profile['prompt_version'] = "country_" + agent_model.profile['prompt_version']
+
         planner_result = planner_base.invoke(agent_model, agent_input, input_object)
         return planner_result
