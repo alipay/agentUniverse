@@ -27,7 +27,7 @@ class TranslationAgentTest(unittest.TestCase):
             data = f.read()
 
         output_object: OutputObject = instance.run(source_lang="英文", target_lang="中文",
-                                                   source_text=data, country="台湾"
+                                                   source_text=data
                                                    )
         res_info = f"\nRag agent execution result is :\n"
         res_info += output_object.get_data('output')

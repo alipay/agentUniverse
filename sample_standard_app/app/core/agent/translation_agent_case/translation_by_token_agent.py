@@ -47,6 +47,8 @@ class TranslationAgent(Agent):
 
     def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
         for key in input_object.to_dict():
+            if key == 'output_stream':
+                continue
             agent_input[key] = input_object.get_data(key)
         return agent_input
 
@@ -60,19 +62,19 @@ class TranslationAgent(Agent):
 
         init_agent_result = self.execute_agent(work_agent, planner_input)
         LOGGER.info(f"init_agent_result: {init_agent_result.to_json_str()}")
-        output_middle_result(input_object, {'init_agent_result': init_agent_result})
+        output_middle_result(input_object, {'init_agent_result': init_agent_result.get_data('output')})
 
         planner_input['init_agent_result'] = init_agent_result.get_data('output')
 
         reflection_result = self.execute_agent(reflection_agent, planner_input)
         LOGGER.info(f"reflection_result: {reflection_result.to_json_str()}")
-        output_middle_result(input_object, {'reflection_agent_result': reflection_result})
+        output_middle_result(input_object, {'reflection_agent_result': reflection_result.get_data('output')})
 
         planner_input['reflection_agent_result'] = reflection_result.get_data('output')
 
         improve_result = self.execute_agent(improve_agent, planner_input)
         LOGGER.info(f"improve_agent_result: {improve_result.to_json_str()}")
-        output_middle_result(input_object, {'improve_agent_result': improve_result})
+        output_middle_result(input_object, {'improve_agent_result': improve_result.get_data('output')})
 
         return improve_result.to_dict()
 
@@ -89,7 +91,7 @@ class TranslationAgent(Agent):
         text_tokens = len(source_text)
         # 这里使用最大输入token，因为必须要保证有足够的token输出翻译结果
         if text_tokens < llm.max_tokens:
-            return self.execute_agents(agent_input)
+            return self.execute_agents(input_object,agent_input)
         agent_input['execute_type'] = 'multi'
         chunk_result = list[str]()
         chunk_size = calculate_chunk_size(text_tokens, llm.max_tokens)
@@ -106,7 +108,7 @@ class TranslationAgent(Agent):
             )
             agent_input['chunk_to_translate'] = source_text_chunks[i]
             agent_input['tagged_text'] = tagged_text
-            result = self.execute_agents(agent_input)
+            result = self.execute_agents(input_object,agent_input)
             chunk_result.append(result.get('output'))
 
         return {
