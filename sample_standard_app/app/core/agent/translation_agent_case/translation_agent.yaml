@@ -2,6 +2,7 @@ info:
   name: 'translation_by_token_agent'
   description: '翻译Agent'
 profile:
+  tracing: false
   prompt_version: 'one_chunk_improve.en'
   input_keys: ['source_lang','target_lang','source_text']
   output_keys: ['output']
