@@ -1,0 +1,5 @@
+name: 'translation_service'
+description: '吴恩达教授翻译智能体'
+agent: 'translation_by_token_agent'
+metadata:
+  type: 'SERVICE'
