@@ -76,7 +76,8 @@ class ExecutingAgent(Agent):
         framework = agent_input.get('framework', [])
         futures = []
         for task in framework:
-            agent_input_copy: dict = copy.deepcopy(agent_input)
+            # note: agent input shallow copy.
+            agent_input_copy: dict = dict(agent_input)
             agent_input_copy['input'] = task
             planner: Planner = PlannerManager().get_instance_obj(self.agent_model.plan.get('planner').get('name'))
             futures.append(
@@ -99,7 +100,8 @@ class ExecutingAgent(Agent):
         # get agent toolsets.
         action: dict = self.agent_model.action or dict()
         tools: list = action.get('tool') or list()
-        input_object_copy: InputObject = copy.deepcopy(input_object)
+        # note: input object shallow copy.
+        input_object_copy: InputObject = InputObject(input_object.to_dict())
         # wrap input_object for agent knowledge.
         input_object_copy.add_data(planner_input_key, subtask)
         # wrap input_object for agent toolsets.
