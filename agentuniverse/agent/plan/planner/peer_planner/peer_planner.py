@@ -109,15 +109,22 @@ class PeerPlanner(Planner):
         expressingAgent = agents.get('expressing')
         reviewingAgent = agents.get('reviewing')
 
-        for _ in range(retry_count):
-            LOGGER.info(f"Starting peer agents, retry_count is {_ + 1}.")
+        for i in range(retry_count):
+            LOGGER.info(f"Starting peer agents, retry_count is {i + 1}.")
             if not planning_result or jump_step == "planning":
                 if not planningAgent:
                     LOGGER.warn("no planning agent.")
                     planning_result = OutputObject({"framework": [agent_input.get('input')]})
                 else:
                     LOGGER.info(f"Starting planning agent.")
-                    planning_result = planningAgent.run(**input_object.to_dict())
+                    try:
+                        planning_result = planningAgent.run(**input_object.to_dict())
+                    except Exception as e:
+                        LOGGER.error(f"Exception occurred during the planning agent's invocation, exception: {e}")
+                        if i >= retry_count - 1:
+                            raise e
+                        else:
+                            continue
 
                 input_object.add_data('planning_result', planning_result)
                 # add planning agent log info
@@ -132,7 +139,14 @@ class PeerPlanner(Planner):
                     executing_result = OutputObject({})
                 else:
                     LOGGER.info(f"Starting executing agent.")
-                    executing_result = executingAgent.run(**input_object.to_dict())
+                    try:
+                        executing_result = executingAgent.run(**input_object.to_dict())
+                    except Exception as e:
+                        LOGGER.error(f"Exception occurred during the executing agent's invocation, exception: {e}")
+                        if i >= retry_count - 1:
+                            raise e
+                        else:
+                            continue
 
                 input_object.add_data('executing_result', executing_result)
                 # add executing agent log info
@@ -150,7 +164,14 @@ class PeerPlanner(Planner):
                     expressing_result = OutputObject({})
                 else:
                     LOGGER.info(f"Starting expressing agent.")
-                    expressing_result = expressingAgent.run(**input_object.to_dict())
+                    try:
+                        expressing_result = expressingAgent.run(**input_object.to_dict())
+                    except Exception as e:
+                        LOGGER.error(f"Exception occurred during the expressing agent's invocation, exception: {e}")
+                        if i >= retry_count - 1:
+                            raise e
+                        else:
+                            continue
 
                 input_object.add_data('expressing_result', expressing_result)
                 # add expressing agent log info
@@ -171,7 +192,14 @@ class PeerPlanner(Planner):
                     return result
                 else:
                     LOGGER.info(f"Starting reviewing agent.")
-                    reviewing_result = reviewingAgent.run(**input_object.to_dict())
+                    try:
+                        reviewing_result = reviewingAgent.run(**input_object.to_dict())
+                    except Exception as e:
+                        LOGGER.error(f"Exception occurred during the reviewing agent's invocation, exception: {e}")
+                        if i >= retry_count - 1:
+                            raise e
+                        else:
+                            continue
                     input_object.add_data('reviewing_result', reviewing_result)
 
                     # add reviewing agent log info
