@@ -1,0 +1,14 @@
+info:
+  name: 'eval_agent'
+  description: 'eval agent'
+profile:
+  prompt_version: eval_agent.cn
+  max_eval_lines: 10
+  llm_model:
+    name: 'demo_llm'
+    model_name: 'gpt-4o'
+    temperature: 0.1
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.app.core.agent.data_agent_case.eval_agent'
+  class: 'EvalAgent'
