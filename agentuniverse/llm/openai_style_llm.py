@@ -49,7 +49,7 @@ class OpenAIStyleLLM(LLM):
             base_url=self.api_base,
             timeout=self.request_timeout,
             max_retries=self.max_retries,
-            http_client=httpx.Client(proxy=self.openai_proxy) if self.proxy else None,
+            http_client=httpx.Client(proxy=self.proxy) if self.proxy else None,
             **(self.client_args or {}),
         )
 
