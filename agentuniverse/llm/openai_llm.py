@@ -93,8 +93,7 @@ class OpenAILLM(LLM):
             **kwargs: Arbitrary keyword arguments.
         """
         streaming = kwargs.pop("streaming") if "streaming" in kwargs else self.streaming
-        if self.client is None:
-            self.client = self._new_client()
+        self.client = self._new_client()
         chat_completion = self.client.chat.completions.create(
             messages=messages,
             model=kwargs.pop('model', self.model_name),
@@ -116,8 +115,7 @@ class OpenAILLM(LLM):
             **kwargs: Arbitrary keyword arguments.
         """
         streaming = kwargs.pop("streaming") if "streaming" in kwargs else self.streaming
-        if self.async_client is None:
-            self.async_client = self._new_async_client()
+        self.async_client = self._new_async_client()
         chat_completion = await self.async_client.chat.completions.create(
             messages=messages,
             model=kwargs.pop('model', self.model_name),
@@ -135,17 +133,18 @@ class OpenAILLM(LLM):
         """Convert the agentUniverse(aU) openai llm class to the langchain openai llm class."""
         return LangchainOpenAI(self)
 
-    def set_by_agent_model(self, **kwargs) -> None:
+    def set_by_agent_model(self, **kwargs):
         """ Assign values of parameters to the OpenAILLM model in the agent configuration."""
-        super().set_by_agent_model(**kwargs)
+        copied_obj = super().set_by_agent_model(**kwargs)
         if 'openai_api_key' in kwargs and kwargs['openai_api_key']:
-            self.openai_api_key = kwargs['openai_api_key']
+            copied_obj.openai_api_key = kwargs['openai_api_key']
         if 'openai_api_base' in kwargs and kwargs['openai_api_base']:
-            self.openai_api_base = kwargs['openai_api_base']
+            copied_obj.openai_api_base = kwargs['openai_api_base']
         if 'openai_proxy' in kwargs and kwargs['openai_proxy']:
-            self.openai_proxy = kwargs['openai_proxy']
+            copied_obj.openai_proxy = kwargs['openai_proxy']
         if 'openai_client_args' in kwargs and kwargs['openai_client_args']:
-            self.openai_client_args = kwargs['openai_client_args']
+            copied_obj.openai_client_args = kwargs['openai_client_args']
+        return copied_obj
 
     def max_context_length(self) -> int:
         """Max context length.

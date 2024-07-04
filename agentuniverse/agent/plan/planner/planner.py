@@ -84,11 +84,10 @@ class Planner(ComponentBase):
         params['input_key'] = self.input_key
         params['output_key'] = self.output_key
 
-        memory: ChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name, new_instance=True)
+        memory: ChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
         if memory is None:
             return None
-        memory.set_by_agent_model(**params)
-        return memory
+        return memory.set_by_agent_model(**params)
 
     def run_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
         """Tool and knowledge processing.
@@ -142,9 +141,8 @@ class Planner(ComponentBase):
             LLM: The language model.
         """
         llm_name = agent_model.profile.get('llm_model').get('name')
-        llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name, new_instance=True)
-        llm.set_by_agent_model(**agent_model.profile.get('llm_model'))
-        return llm
+        llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name)
+        return llm.set_by_agent_model(**agent_model.profile.get('llm_model'))
 
     def initialize_by_component_configer(self, component_configer: PlannerConfiger) -> 'Planner':
         """Initialize the planner by the PlannerConfiger object.
