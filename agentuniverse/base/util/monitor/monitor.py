@@ -99,7 +99,13 @@ class Monitor(BaseModel):
             return obj.to_dict()
         elif isinstance(obj, OutputObject):
             return obj.to_dict()
-        raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+        elif isinstance(obj, BaseModel):
+            try:
+                return obj.dict()
+            except TypeError:
+                raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+        else:
+            raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
     def serialize_obj(self, obj):
         """Serialize an object and filter out non-serializable values."""
