@@ -125,6 +125,7 @@ class PeerPlanner(Planner):
                 for index, one_framework in enumerate(planning_result.get_data('framework')):
                     logger_info += f"[{index + 1}] {one_framework} \n"
                 LOGGER.info(logger_info)
+                self.stream_output(input_object, {"data": planning_result.to_dict(), "type": "planning"})
 
             if not executing_result or jump_step in ["planning", "executing"]:
                 if not executingAgent:
@@ -143,6 +144,7 @@ class PeerPlanner(Planner):
                         one_exec_log_info += f"[{index + 1}] output: {one_exec_res['output']}\n"
                         logger_info += one_exec_log_info
                 LOGGER.info(logger_info)
+                self.stream_output(input_object, {"data": executing_result.to_dict(), "type": "executing"})
 
             if not expressing_result or jump_step in ["planning", "executing", "expressing"]:
                 if not expressingAgent:
@@ -157,6 +159,7 @@ class PeerPlanner(Planner):
                 logger_info = f"\nExpressing agent execution result is :\n"
                 logger_info += f"{expressing_result.get_data('output')}"
                 LOGGER.info(logger_info)
+                self.stream_output(input_object, {"data": executing_result.to_dict(), "type": "expressing"})
 
             if not reviewing_result or jump_step in ["planning", "executing", "expressing", "reviewing"]:
                 if not reviewingAgent:
@@ -179,7 +182,7 @@ class PeerPlanner(Planner):
                     reviewing_info_str = f"review suggestion: {reviewing_result.get_data('suggestion')} \n"
                     reviewing_info_str += f"review score: {reviewing_result.get_data('score')} \n"
                     LOGGER.info(logger_info + reviewing_info_str)
-
+                    self.stream_output(input_object, {"data": reviewing_result.to_dict(), "type": "reviewing"})
                     if reviewing_result.get_data('score') and reviewing_result.get_data('score') >= eval_threshold:
                         loopResults.append({
                             "planning_result": planning_result,

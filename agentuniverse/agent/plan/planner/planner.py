@@ -8,6 +8,7 @@
 from abc import abstractmethod
 import copy
 import logging
+from queue import Queue
 from typing import Optional, List
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
@@ -159,3 +160,16 @@ class Planner(ComponentBase):
         self.input_key = component_configer.input_key or self.input_key
         self.output_key = component_configer.output_key or self.output_key
         return self
+
+    @staticmethod
+    def stream_output(input_object: InputObject, data: dict):
+        """Stream output.
+
+        Args:
+            input_object (InputObject): Agent input object.
+            data (dict): The data to be streamed.
+        """
+        output_stream:Queue = input_object.get_data('output_stream', None)
+        if output_stream is None:
+            return
+        output_stream.put_nowait(data)
