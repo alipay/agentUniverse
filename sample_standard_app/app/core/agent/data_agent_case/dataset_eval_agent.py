@@ -4,13 +4,13 @@
 # @Time    : 2024/7/1 17:00
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
-# @FileName: eval_agent.py
+# @FileName: dataset_eval_agent.py
 from typing import Tuple, List
 
-import pandas as pd
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.utils.json import parse_json_markdown
 from openpyxl.reader.excel import load_workbook
+import pandas as pd
 
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
@@ -21,11 +21,10 @@ from agentuniverse.prompt.chat_prompt import ChatPrompt
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
-from sample_standard_app.app.util.jsonl_file_utils import JsonFileWriter
 
 
-class EvalAgent(Agent):
-    """Evaluation Agent class."""
+class DatasetEvalAgent(Agent):
+    """Dataset Evaluation Agent class."""
 
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
@@ -78,11 +77,11 @@ class EvalAgent(Agent):
         LOGGER.info(f"End: evaluate the dataset in multiple dimensions done.")
 
         LOGGER.info("-------------------------------------------")
-        # step2: write the eval results to excel file.
-        self.generate_eval_results_excel(prompt_answer_list, eval_dims_json_list)
+        # step2: write the eval results to Excel file.
+        self.generate_eval_results_excel(prompt_answer_list, eval_dims_json_list, input_object.get_data('date', ''))
 
         # step3: generate eval report
-        eval_report_json_list = self.generate_eval_report(eval_dims_json_list)
+        eval_report_json_list = self.generate_eval_report(eval_dims_json_list, input_object.get_data('date', ''))
         LOGGER.info(f"End: generate evaluation report done.")
         LOGGER.info("-------------------------------------------")
         return {'eval_report_json_list': eval_report_json_list, 'eval_dims_json_list': eval_dims_json_list}
@@ -143,7 +142,7 @@ class EvalAgent(Agent):
                         # calculate avg score from multiple dimensions.
                         avg_score = sum(data['score'] for data in dimensions)
                 except Exception as e:
-                    LOGGER.warn(f'except[eval_prompt_answer_from_jsonl]>>>{e}:{res[0]}')
+                    LOGGER.warn(f'except[eval_prompt_answer_from_jsonl]>>> res: {res}, exception: {e}')
                     continue
                 if len(dimensions) > 0:
                     avg_score = avg_score / len(dimensions)
@@ -192,13 +191,14 @@ class EvalAgent(Agent):
         llm.set_by_agent_model(**self.agent_model.profile.get('llm_model'))
         return llm
 
-    def generate_eval_report(self, eval_dims_json_list: List[List[dict]]):
+    def generate_eval_report(self, eval_dims_json_list: List[List[dict]], date: str):
         """Integrate multidimensional evaluation scores and generate evaluation report
 
         Args:
             eval_dims_json_list (List[List[dict]]) : The list of evaluation results from multiple turns,
             the type of single turn is List[dict].
 
+            date (str): The date of the evaluation.
         Returns:
             eval_report_json_list (List[dict]): The list of evaluation report.
         """
@@ -245,7 +245,7 @@ class EvalAgent(Agent):
             LOGGER.info(f"Progress: total evaluation report has generated successfully.")
 
         # generate excel report
-        self.generate_eval_report_excel(eval_report_json_list)
+        self.generate_eval_report_excel(eval_report_json_list, date)
         return eval_report_json_list
 
     @staticmethod
@@ -279,11 +279,11 @@ class EvalAgent(Agent):
 
     @staticmethod
     def generate_eval_results_excel(prompt_answer_list: List[List[Tuple[str, str]]],
-                                    eval_dims_json_list: List[List[dict]]):
+                                    eval_dims_json_list: List[List[dict]], date: str):
         """Generate evaluation results in excel format."""
 
         rows = []
-        columns: List[str] = ['Line Number', 'Avg Score', 'Prompt', 'Answer']
+        columns: List[str] = ['Line Number', 'Overall Score', 'Prompt', 'Answer']
         if len(eval_dims_json_list) > 0 and len(eval_dims_json_list[0]) > 0:
             one_row_eval_result = eval_dims_json_list[0][0]
             dims = one_row_eval_result.get('dimensions', [])
@@ -313,12 +313,12 @@ class EvalAgent(Agent):
 
                 df = pd.DataFrame(rows, columns=columns)
 
-                df.to_excel(f"./data/eval_results_turn_{i + 1}.xlsx", index=False, engine='openpyxl')
+                df.to_excel(f"./data/eval_result_turn_{i + 1}_{date}.xlsx", index=False, engine='openpyxl')
             LOGGER.info(f"Progress: generate evaluation detailed results in excel format successfully.")
             LOGGER.info("-------------------------------------------")
 
     @staticmethod
-    def generate_eval_report_excel(eval_report_json_list: List[dict]):
+    def generate_eval_report_excel(eval_report_json_list: List[dict], date: str):
         """Generate excel eval report."""
 
         rows = []
@@ -338,13 +338,13 @@ class EvalAgent(Agent):
 
         df = pd.DataFrame(rows, columns=columns)
 
-        df.to_excel("./data/eval_report.xlsx", index=False, engine='openpyxl')
+        df.to_excel(f"./data/eval_report_{date}.xlsx", index=False, engine='openpyxl')
 
         # tweak column width
-        workbook = load_workbook('./data/eval_report.xlsx')
+        workbook = load_workbook(f"./data/eval_report_{date}.xlsx")
         worksheet = workbook.active
         column_widths = [25, 20] + [20] * (len(columns) - 2)
         for i, column_width in enumerate(column_widths, 1):
             worksheet.column_dimensions[chr(64 + i)].width = column_width
-        workbook.save('./data/eval_report.xlsx')
+        workbook.save(f"./data/eval_report_{date}.xlsx")
         LOGGER.info(f"Progress: generate evaluation excel file successfully.")

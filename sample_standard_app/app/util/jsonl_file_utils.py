@@ -60,8 +60,8 @@ class JsonFileReader(object):
 
 
 class JsonFileWriter(object):
-    def __init__(self, output_file_name: str, extension='jsonl'):
-        self.outfile_path = DATA_DIR + output_file_name + '.' + extension
+    def __init__(self, output_file_name: str, extension='jsonl', directory=DATA_DIR):
+        self.outfile_path = directory + output_file_name + '.' + extension
         directory = os.path.dirname(self.outfile_path)
         if not os.path.exists(directory):
             os.makedirs(directory)
