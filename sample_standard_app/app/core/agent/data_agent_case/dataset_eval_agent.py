@@ -28,7 +28,7 @@ class DatasetEvalAgent(Agent):
 
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
-        return ['prompt_answer_list']
+        return ['query_answer_list']
 
     def output_keys(self) -> list[str]:
         """Return the output keys of the Agent."""
@@ -43,7 +43,7 @@ class DatasetEvalAgent(Agent):
         Returns:
             dict: agent input parsed from `input_object` by the user.
         """
-        agent_input['prompt_answer_list'] = input_object.get_data('prompt_answer_list')
+        agent_input['query_answer_list'] = input_object.get_data('query_answer_list')
         return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:
@@ -67,18 +67,18 @@ class DatasetEvalAgent(Agent):
         LOGGER.info(f"Start: use the evaluator agent to evaluate q&a dataset.")
         LOGGER.info("-------------------------------------------")
 
-        prompt_answer_list: List[List[Tuple[str, str]]] = input_object.get_data('prompt_answer_list')
+        query_answer_list: List[List[Tuple[str, str]]] = input_object.get_data('query_answer_list')
         max_eval_lines = self.agent_model.profile.get('max_eval_lines', 100)
-        if len(prompt_answer_list) == 0:
-            raise ValueError('the `prompt_answer_list` is empty')
+        if len(query_answer_list) == 0:
+            raise ValueError('the `query_answer_list` is empty')
 
         # step1: evaluate the dataset in multiple dimensions and give specific scores.
-        eval_dims_json_list: List[List[dict]] = self.eval(prompt_answer_list, max_eval_lines)
+        eval_dims_json_list: List[List[dict]] = self.eval(query_answer_list, max_eval_lines)
         LOGGER.info(f"End: evaluate the dataset in multiple dimensions done.")
 
         LOGGER.info("-------------------------------------------")
         # step2: write the eval results to Excel file.
-        self.generate_eval_results_excel(prompt_answer_list, eval_dims_json_list, input_object.get_data('date', ''))
+        self.generate_eval_results_excel(query_answer_list, eval_dims_json_list, input_object.get_data('date', ''))
 
         # step3: generate eval report
         eval_report_json_list = self.generate_eval_report(eval_dims_json_list, input_object.get_data('date', ''))
@@ -86,11 +86,11 @@ class DatasetEvalAgent(Agent):
         LOGGER.info("-------------------------------------------")
         return {'eval_report_json_list': eval_report_json_list, 'eval_dims_json_list': eval_dims_json_list}
 
-    def eval(self, prompt_answer_list: List[List[Tuple[str, str]]], max_eval_lines: int) -> List[List[dict]]:
+    def eval(self, query_answer_list: List[List[Tuple[str, str]]], max_eval_lines: int) -> List[List[dict]]:
         """Evaluate the dataset in multiple dimensions and give specific scores.
 
         Args:
-            prompt_answer_list (List[List[Tuple[str, str]]]): the list of q&a pair from multiple turns,
+            query_answer_list (List[List[Tuple[str, str]]]): the list of q&a pair from multiple turns,
             the type of single turn is List[Tuple[str, str]].
 
             max_eval_lines (int): the maximum number of lines to evaluate.
@@ -102,25 +102,25 @@ class DatasetEvalAgent(Agent):
 
         eval_dims_json_list = []
         # the q&a dataset from multiple turns.
-        for i in range(len(prompt_answer_list)):
+        for i in range(len(query_answer_list)):
             line_num = 0
-            one_turn_prompt_answer_list = prompt_answer_list[i]
+            one_turn_query_answer_list = query_answer_list[i]
             one_turn_eval_dims_json_list = []
 
-            # single turn prompt answer list.
-            for j in range(len(one_turn_prompt_answer_list)):
+            # single turn query answer list.
+            for j in range(len(one_turn_query_answer_list)):
 
-                prompt = one_turn_prompt_answer_list[j][0]
-                answer = one_turn_prompt_answer_list[j][1]
-                if prompt is None or answer is None:
+                query = one_turn_query_answer_list[j][0]
+                answer = one_turn_query_answer_list[j][1]
+                if query is None or answer is None:
                     break
 
                 line_num += 1
                 if line_num > max_eval_lines:
                     break
 
-                if len(prompt) > 2000:
-                    prompt = prompt[0:2000]
+                if len(query) > 2000:
+                    query = query[0:2000]
                 if len(answer) > 5000:
                     answer = answer[0:5000]
 
@@ -129,24 +129,24 @@ class DatasetEvalAgent(Agent):
                 llm: LLM = self.handle_llm()
 
                 chain = version_prompt.as_langchain() | llm.as_langchain() | StrOutputParser()
-                res = chain.invoke(input={'prompt': prompt, 'answer': answer})
+                res = chain.invoke(input={'query': query, 'answer': answer})
 
                 dim_score_json = {'line': line_num}
                 dimensions = []
-                avg_score = 0.0
+                overall_score = 0.0
 
                 try:
                     if res is not None:
                         data = parse_json_markdown(res)
                         dimensions = data['dimensions']
-                        # calculate avg score from multiple dimensions.
-                        avg_score = sum(data['score'] for data in dimensions)
+                        # calculate overall score from multiple dimensions.
+                        overall_score = sum(data['score'] for data in dimensions)
                 except Exception as e:
-                    LOGGER.warn(f'except[eval_prompt_answer_from_jsonl]>>> res: {res}, exception: {e}')
+                    LOGGER.warn(f'except[eval_query_answer_from_jsonl]>>> res: {res}, exception: {e}')
                     continue
                 if len(dimensions) > 0:
-                    avg_score = avg_score / len(dimensions)
-                dim_score_json['avg_score'] = avg_score
+                    overall_score = overall_score / len(dimensions)
+                dim_score_json['overall_score'] = overall_score
                 dim_score_json['dimensions'] = dimensions
                 LOGGER.info(f"Progress: the turn {i + 1} query line {line_num} has been evaluated successfully.")
 
@@ -207,7 +207,7 @@ class DatasetEvalAgent(Agent):
         eval_report_json_list = []
         for i in range(0, len(eval_dims_json_list)):
             line_num = 0
-            total_avg_score = 0.0
+            overall_avg_score = 0.0
             dim_avg_score = {}
             # single turn eval dim json list.
             one_turn_eval_dims_json_list = eval_dims_json_list[i]
@@ -215,7 +215,7 @@ class DatasetEvalAgent(Agent):
                 one_row_eval_dims_json = one_turn_eval_dims_json_list[j]
                 line_num += 1
 
-                total_avg_score += one_row_eval_dims_json['avg_score']
+                overall_avg_score += one_row_eval_dims_json['overall_score']
                 dimensions = one_row_eval_dims_json['dimensions']
                 for k in range(0, len(dimensions)):
                     name = dimensions[k]['name']
@@ -225,16 +225,16 @@ class DatasetEvalAgent(Agent):
                     else:
                         dim_avg_score[name] = float(score)
 
-            # calculate single turn total avg score and dim avg score.
+            # calculate single turn overall avg score and dim avg score.
             for key in dim_avg_score:
                 dim_total_score = dim_avg_score[key]
                 dim_avg_score[key] = dim_total_score / line_num
-            total_avg_score = total_avg_score / line_num
+            overall_avg_score = overall_avg_score / line_num
 
             # generate one turn report.
             one_turn_report = {
-                'line_name': f"query turn {i + 1}",
-                'total_avg_score': total_avg_score,
+                'line_name': f"Queryset Turn {i + 1}",
+                'overall_avg_score': overall_avg_score,
                 'dim_avg_score': dim_avg_score
             }
             LOGGER.info(f"Progress: turn {i + 1} evaluation report has generated successfully.")
@@ -260,7 +260,7 @@ class DatasetEvalAgent(Agent):
             total_avg_score = 0.0
             total_dim_avg_score = {}
             for i in range(len(eval_report_json_list)):
-                total_avg_score += eval_report_json_list[i]['total_avg_score']
+                total_avg_score += eval_report_json_list[i]['overall_avg_score']
                 dim_avg_score: dict = eval_report_json_list[i]['dim_avg_score']
                 for key in dim_avg_score:
                     if key in total_dim_avg_score:
@@ -271,44 +271,44 @@ class DatasetEvalAgent(Agent):
             for key in total_dim_avg_score:
                 total_dim_avg_score[key] = total_dim_avg_score[key] / len(eval_report_json_list)
             report_line_obj = {
-                'line_name': 'total avg score',
-                'total_avg_score': total_avg_score,
+                'line_name': 'Turn Avg Score',
+                'overall_avg_score': total_avg_score,
                 'dim_avg_score': total_dim_avg_score
             }
             eval_report_json_list.append(report_line_obj)
 
     @staticmethod
-    def generate_eval_results_excel(prompt_answer_list: List[List[Tuple[str, str]]],
+    def generate_eval_results_excel(query_answer_list: List[List[Tuple[str, str]]],
                                     eval_dims_json_list: List[List[dict]], date: str):
         """Generate evaluation results in excel format."""
 
         rows = []
-        columns: List[str] = ['Line Number', 'Overall Score', 'Prompt', 'Answer']
+        columns: List[str] = ['Line Number', 'Overall Score', 'Query', 'Answer']
         if len(eval_dims_json_list) > 0 and len(eval_dims_json_list[0]) > 0:
             one_row_eval_result = eval_dims_json_list[0][0]
             dims = one_row_eval_result.get('dimensions', [])
             # wrap excel columns
             for dim in dims:
                 columns.append(dim['name'] + ' Score')
-                columns.append(dim['name'] + ' Negative Point')
+                columns.append(dim['name'] + ' Suggestion')
 
             for i in range(len(eval_dims_json_list)):
                 one_turn_eval_results = eval_dims_json_list[i]
-                one_turn_prompt_answers = prompt_answer_list[i]
+                one_turn_query_answers = query_answer_list[i]
 
                 # write for each turn
                 for j in range(len(one_turn_eval_results)):
                     one_row_eval_result = one_turn_eval_results[j]
-                    one_row_prompt_answer = one_turn_prompt_answers[j]
+                    one_row_query_answer = one_turn_query_answers[j]
                     # wrap rows.
                     line_number = one_row_eval_result['line']
-                    avg_score = one_row_eval_result['avg_score']
+                    overall_score = one_row_eval_result['overall_score']
                     dims = one_row_eval_result['dimensions']
 
-                    row = [line_number, avg_score, one_row_prompt_answer[0], one_row_prompt_answer[1]]
+                    row = [line_number, overall_score, one_row_query_answer[0], one_row_query_answer[1]]
                     for dim in dims:
                         row.append(dim['score'])
-                        row.append(dim['negative point'])
+                        row.append(dim['suggestion'])
                     rows.append(row)
 
                 df = pd.DataFrame(rows, columns=columns)
@@ -322,16 +322,16 @@ class DatasetEvalAgent(Agent):
         """Generate excel eval report."""
 
         rows = []
-        columns: List[str] = ['Line Name', 'Total Avg Score']
+        columns: List[str] = ['Line Name', 'Overall Avg Score']
         dim_avg_scores = eval_report_json_list[0]['dim_avg_score']
         for dim, score in dim_avg_scores.items():
             columns.append(dim + ' Avg Score')
         for item in eval_report_json_list:
             line_name = item['line_name']
-            total_avg_score = item['total_avg_score']
+            overall_avg_score = item['overall_avg_score']
             dim_avg_scores = item['dim_avg_score']
 
-            row = [line_name, total_avg_score]
+            row = [line_name, overall_avg_score]
             for dim, score in dim_avg_scores.items():
                 row.append(score)
             rows.append(row)

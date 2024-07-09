@@ -1,5 +1,5 @@
 introduction: |
-  You are an extremely rigorous financial expert and need help me evaluate prompt (user input) and answer (model output) scores in various dimensions according to the following requirements.   
+  You are an extremely rigorous financial expert and need help me evaluate query (user input) and answer (model output) scores in various dimensions according to the following requirements.   
 
   The full score for each dimension is 5 points. If you do not meet the entry conditions, you will be awarded 0 points directly, and if you meet the threshold value, you will be awarded 0-3 points. If you meet the additional requirements, you will add 0-2 points to the threshold value.
   For scoring requirements, please be accurate to 1 decimal place:
@@ -10,8 +10,8 @@ introduction: |
   Note: Strict scoring and high scores cannot be easily given
 instruction: |
   --------------------------------
-    prompt:
-    {prompt}
+    query:
+    {query}
 
     --------------------------------
     answer:
@@ -22,7 +22,7 @@ instruction: |
     
     The quality scoring dimensions are described as follows:
 
-    dimension name: relevance 
+    dimension name: Relevance 
     dimension requirement: 
       1. non-compliance with access conditions
       Answer is irrelevant.
@@ -44,7 +44,7 @@ instruction: |
       c、The answers are comprehensive and easy to understand
 
     --------------------------------
-    dimension name: factual 
+    dimension name: Factual 
     dimension requirement: 
       1. non-compliance with access conditions
       The data is wrong and does not conform to the facts
@@ -54,9 +54,9 @@ instruction: |
 
       3.bonus points
       All quoted data in the interpretation content are true and credible, and the data source is officially credible
+    
     --------------------------------
-
-    dimension name: rationality 
+    dimension name: Rationality 
     dimension requirement: 
       1. non-compliance with access conditions
       Professional error occurred
@@ -69,7 +69,7 @@ instruction: |
     The interpretation throughout the text must be consistent and logically coherent, with the logical reasoning advancing step by step (subsequent analysis is based on previous conclusions).
 
     --------------------------------
-    dimension name: timeliness 
+    dimension name: Timeliness 
     dimension requirement: 
       1. non-compliance with access conditions
       The data is stale and no longer corresponds to the present reality.
@@ -81,7 +81,7 @@ instruction: |
       Cite the latest official data, including a clear publication date.
 
     --------------------------------
-    dimension name: structural
+    dimension name: Structural
     dimension requirement: 
       1. non-compliance with access conditions
       If the answer follows a general-specific structure:
@@ -111,8 +111,9 @@ instruction: |
       If the answer is a summary structure:
         a、The summary content and arguments are detailed and sufficient, logical and organized
         b、The summary should be expressed with clear logic and concise language.
+    
     --------------------------------
-    dimension name: integrity 
+    dimension name: Integrity 
     dimension requirement: 
       1. non-compliance with access conditions
       If any of the following points are satisfied, the score is 0:
@@ -132,8 +133,8 @@ instruction: |
 
     --------------------------------
     Output format requirements:
-    1. According to the specific scoring dimension requirements, evaluate prompt and answer content at the same time and score.
-    2. Be sure to give a negative point, combine prompt and answer, and give specific reasons for deducting points and specific optimization suggestions.
+    1. According to the specific scoring dimension requirements, evaluate query and answer content at the same time and score.
+    2. Be sure to give the suggestion, combine query and answer, and give specific reasons for deducting points and specific optimization suggestions.
 
     Please score strictly in accordance with the quality scoring dimensions. High scores cannot be easily given. 
     Please ensure that the output only contains the following json format fields, and each field cannot be empty:
@@ -142,12 +143,12 @@ instruction: |
           {{
               "name": dimension name(string),
               "score": score(float),
-              "negative point": Reasons for deductions and optimization suggestions given(string)
+              "suggestion": Reasons for deductions and optimization suggestions given(string)
           }},
           {{
               "name": dimension name(string),
               "score": score(float),
-              "negative point": Reasons for deductions and optimization suggestions given(string)
+              "suggestion": Reasons for deductions and optimization suggestions given(string)
           }}
       ]
     }}

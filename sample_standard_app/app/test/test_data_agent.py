@@ -20,7 +20,7 @@ class DataAgentTest(unittest.TestCase):
 
     def test_data_agent(self):
         instance: Agent = AgentManager().get_instance_obj('data_agent')
-        instance.run(dataset_path='', turn=2)
+        instance.run(queryset_path='', turn=2)
 
 
 if __name__ == '__main__':

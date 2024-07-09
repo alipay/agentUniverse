@@ -18,4 +18,6 @@ def data_process(queryset_path: str, turn: int, **kwargs):
 
 
 if __name__ == '__main__':
-    data_process(queryset_path="data/queryset_cn.jsonl", turn=1)
+    queryset_path_list = ["./data/queryset_cn.jsonl"]
+    for path in queryset_path_list:
+        data_process(queryset_path=path, turn=2)

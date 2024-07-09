@@ -82,10 +82,10 @@ class JsonFileWriter(object):
             self.write_json_obj(json_obj_list[i])
         return
 
-    def write_json_prompt_answer(self, prompt: str, answer: str):
-        json_obj = {"prompt": prompt, "answer": answer}
+    def write_json_query_answer(self, query: str, answer: str):
+        json_obj = {"query": query, "answer": answer}
         self.write_json_obj(json_obj)
 
-    def write_json_prompt_answer_list(self, prompt_answer_list: list):
-        for i in range(0, len(prompt_answer_list)):
-            self.write_json_prompt_answer(prompt_answer_list[i][0], prompt_answer_list[i][1])
+    def write_json_query_answer_list(self, query_answer_list: list):
+        for i in range(0, len(query_answer_list)):
+            self.write_json_query_answer(query_answer_list[i][0], query_answer_list[i][1])

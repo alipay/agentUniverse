@@ -27,7 +27,7 @@ class DatasetBuildAgent(Agent):
 
     def output_keys(self) -> list[str]:
         """Return the output keys of the Agent."""
-        return ['prompt_answer_list']
+        return ['query_answer_list']
 
     def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
         """Agent parameter parsing.
@@ -67,8 +67,8 @@ class DatasetBuildAgent(Agent):
             thread_name_prefix="data_agent")
 
         # step1: build q&a dataset from the candidate agent which needs to be evaluated.
-        prompt_answer_list = self.build_dataset(agent_input)
-        input_object.add_data('prompt_answer_list', prompt_answer_list)
+        query_answer_list = self.build_dataset(agent_input)
+        input_object.add_data('query_answer_list', query_answer_list)
 
         LOGGER.info("-------------------------------------------")
         LOGGER.info("End: build q&a dataset from the candidate agent done.")
@@ -76,12 +76,12 @@ class DatasetBuildAgent(Agent):
 
         # step2: write the q&a dataset to json file.
         date = input_object.get_data('date', '')
-        for i in range(len(prompt_answer_list)):
-            one_turn_prompt_answer_list = prompt_answer_list[i]
+        for i in range(len(query_answer_list)):
+            one_turn_query_answer_list = query_answer_list[i]
             json_writer = JsonFileWriter(f'dataset_turn_{i + 1}_{date}')
-            json_writer.write_json_prompt_answer_list(one_turn_prompt_answer_list)
+            json_writer.write_json_query_answer_list(one_turn_query_answer_list)
         LOGGER.info(f"Progress: write the q&a dataset to local jsonl files.")
-        return {'prompt_answer_list': prompt_answer_list}
+        return {'query_answer_list': query_answer_list}
 
     def build_dataset(self, agent_input: dict) -> List[List[Tuple[str, str]]]:
         """Build q&a dataset from the candidate agent which needs to be evaluated."""
@@ -104,12 +104,12 @@ class DatasetBuildAgent(Agent):
         first_input_key = candidate_agent.input_keys()[0]
         first_output_key = candidate_agent.output_keys()[0]
 
-        prompt_answer_list = []
+        query_answer_list = []
 
         for i in range(agent_input.get('turn')):
             LOGGER.info("-------------------------------------------")
             LOGGER.info(f"Start: build q&a dataset from the candidate agent `{candidate_agent_name}`, turn {i + 1}.")
-            one_turn_prompt_answer_list = []
+            one_turn_query_answer_list = []
             futures_to_query = {}
 
             # single turn query and answer processing.
@@ -125,14 +125,14 @@ class DatasetBuildAgent(Agent):
             for future in done:
                 output_object: OutputObject = future.result()
                 # note: the first index of input_keys and output_keys is identified as the prompt and answer.
-                prompt = futures_to_query.get(future, {}).get(first_input_key, '')
+                query = futures_to_query.get(future, {}).get(first_input_key, '')
                 answer = output_object.get_data(first_output_key, '')
 
-                one_turn_prompt_answer_list.append((prompt, answer))
-                LOGGER.info(f"Progress: the turn {i + 1} query: `{prompt}` has generated the answer successfully.")
+                one_turn_query_answer_list.append((query, answer))
+                LOGGER.info(f"Progress: the turn {i + 1} query: `{query}` has generated the answer successfully.")
 
             LOGGER.info(f"End: the turn {i + 1} has generated the answer successfully.")
 
             # build q&a dataset
-            prompt_answer_list.append(one_turn_prompt_answer_list)
-        return prompt_answer_list
+            query_answer_list.append(one_turn_query_answer_list)
+        return query_answer_list
