@@ -11,8 +11,6 @@ instruction: |
   7. Try to use numerical information as much as possible.
   8. The answer should not exceed 500 words
   
-  Today's date is: {date}
-
   Background is:
   {background}
   

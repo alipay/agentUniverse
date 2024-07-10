@@ -282,7 +282,6 @@ class DatasetEvalAgent(Agent):
                                     eval_dims_json_list: List[List[dict]], date: str):
         """Generate evaluation results in excel format."""
 
-        rows = []
         columns: List[str] = ['Line Number', 'Overall Score', 'Query', 'Answer']
         if len(eval_dims_json_list) > 0 and len(eval_dims_json_list[0]) > 0:
             one_row_eval_result = eval_dims_json_list[0][0]
@@ -295,7 +294,7 @@ class DatasetEvalAgent(Agent):
             for i in range(len(eval_dims_json_list)):
                 one_turn_eval_results = eval_dims_json_list[i]
                 one_turn_query_answers = query_answer_list[i]
-
+                rows = []
                 # write for each turn
                 for j in range(len(one_turn_eval_results)):
                     one_row_eval_result = one_turn_eval_results[j]
