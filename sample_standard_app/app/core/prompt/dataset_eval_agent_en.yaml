@@ -44,7 +44,7 @@ instruction: |
       c、The answers are comprehensive and easy to understand
 
     --------------------------------
-    dimension name: Factual 
+    dimension name: Factuality 
     dimension requirement: 
       1. non-compliance with access conditions
       The data is wrong and does not conform to the facts
@@ -81,7 +81,7 @@ instruction: |
       Cite the latest official data, including a clear publication date.
 
     --------------------------------
-    dimension name: Structural
+    dimension name: Structure
     dimension requirement: 
       1. non-compliance with access conditions
       If the answer follows a general-specific structure:
@@ -138,17 +138,18 @@ instruction: |
 
     Please score strictly in accordance with the quality scoring dimensions. High scores cannot be easily given. 
     Please ensure that the output only contains the following json format fields, and each field cannot be empty:
+  
     {{
       "dimensions": [
           {{
               "name": dimension name(string),
               "score": score(float),
-              "suggestion": Reasons for deductions and optimization suggestions given(string)
+              "suggestion": Reasons for deductions and optimization suggestions given in English(string)
           }},
           {{
               "name": dimension name(string),
               "score": score(float),
-              "suggestion": Reasons for deductions and optimization suggestions given(string)
+              "suggestion": Reasons for deductions and optimization suggestions given in English(string)
           }}
       ]
     }}
