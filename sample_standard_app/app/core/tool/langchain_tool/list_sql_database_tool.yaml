@@ -1,5 +1,5 @@
 name: 'list_sql_database_tool'
-description: 'sql'
+description: ''
 tool_type: 'api'
 input_keys: ['input']
 langchain:
