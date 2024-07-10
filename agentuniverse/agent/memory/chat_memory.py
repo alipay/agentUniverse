@@ -50,17 +50,18 @@ class ChatMemory(Memory):
                                                      max_token_limit=self.max_tokens, messages=self.messages,
                                                      prompt_version=self.prompt_version)
 
-    def set_by_agent_model(self, **kwargs) -> None:
+    def set_by_agent_model(self, **kwargs):
         """ Assign values of parameters to the ChatMemory model in the agent configuration."""
-        super().set_by_agent_model(**kwargs)
+        copied_obj = super().set_by_agent_model(**kwargs)
         if 'messages' in kwargs and kwargs['messages']:
-            self.messages = kwargs['messages']
+            copied_obj.messages = kwargs['messages']
         if 'llm' in kwargs and kwargs['llm']:
-            self.llm = kwargs['llm']
+            copied_obj.llm = kwargs['llm']
         if 'input_key' in kwargs and kwargs['input_key']:
-            self.input_key = kwargs['input_key']
+            copied_obj.input_key = kwargs['input_key']
         if 'output_key' in kwargs and kwargs['output_key']:
-            self.output_key = kwargs['output_key']
+            copied_obj.output_key = kwargs['output_key']
+        return copied_obj
 
     def initialize_by_component_configer(self, component_configer: MemoryConfiger) -> 'ChatMemory':
         """Initialize the chat memory by the ComponentConfiger object.

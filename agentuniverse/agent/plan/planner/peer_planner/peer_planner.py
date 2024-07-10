@@ -175,6 +175,7 @@ class PeerPlanner(Planner):
                 else:
                     LOGGER.info(f"Starting reviewing agent.")
                     reviewing_result = reviewingAgent.run(**input_object.to_dict())
+
                     input_object.add_data('reviewing_result', reviewing_result)
 
                     # add reviewing agent log info

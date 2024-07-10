@@ -62,7 +62,7 @@ You can get the Memory instance corresponding to its name using the `.get_instan
 ```python
 from agentuniverse.agent.memory.memory_manager import MemoryManager
 
-memory = MemoryManager().get_instance_obj(component_instance_name=memory_name, new_instance=True)
+memory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
 ```
 
 # Conclusion
