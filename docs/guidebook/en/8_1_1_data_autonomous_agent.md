@@ -9,7 +9,7 @@ Currently, the evaluation of the performance of Agents within the industry often
 
 The dataAgent hopes to use the agent's own capabilities to **self-collect**, **self-manage**, and **intelligently evaluate the data of the Agent**.
 
-In the MVP version, you can use the `dataset_build_agent` to make multiple rounds of batch invocation on the query sets to be evaluated, producing evaluation datasets; then, by using the `dataset_eval_agent`, you can apply the **Fin-Eva** data evaluation standards published by Ant Group based on seven dimensions (relevance, factuality, rationality, timeliness, structure, coherence, and comprehensiveness) to conduct intelligent data assessment and annotation. The results of multiple rounds of evaluation are subjected to a rich statistical analysis to provide users with a more intuitive view of the changes in the Agent's capabilities.
+In the MVP version, you can use the `dataset_build_agent` to make multiple rounds of batch invocation on the query sets to be evaluated, producing evaluation datasets. Then, by using the `dataset_eval_agent`, you can apply the **Fin-Eva** data evaluation standards published by Ant Group based on seven dimensions (relevance, factuality, rationality, timeliness, structure, integrity, and comprehensiveness) to conduct intelligent data assessment and annotation. The results of multiple rounds of evaluation are subjected to a rich statistical analysis to provide users with a more intuitive view of the changes in the Agent's capabilities.
 
 By utilizing a complete set of data autonomy capabilities, you can easily understand the current level of your agent through intelligently generated evaluation reports.
 
@@ -21,7 +21,7 @@ It needs to be particularly emphasized that the scores in the entire evaluation 
 - **dataset_eval_agent** is responsible for automating the multidimensional evaluation of the dataset and generating evaluation report.
 
 ## DataAgent Execution Steps
-### step1 Establish Agent Queryset
+### Step1 Establish Agent Queryset
 In DataAgent, you first need to construct an agent queryset in the JSONL file format, where each line represents a complete input for an agent invocation.
 
 As shown below, establish a queryset of 3 items, where "input" corresponds to the query information for the agent:
@@ -31,7 +31,7 @@ As shown below, establish a queryset of 3 items, where "input" corresponds to th
 {"input": "What's the weather in New York today?"}
 ```
 
-### step2 Configure DataAgent
+### Step2 Configure DataAgent
 Configure the DataAgent as follows, the configuration file, in addition to the basic configuration of the agent, mainly includes two important items: `dataset_builder` corresponds to the name of the agent for producing the evaluation dataset, and `dataset_evaluator` corresponds to the name of the agent for dataset evaluation and annotation.
 ```yaml
 info:
@@ -50,7 +50,7 @@ metadata:
 
 [data_agent sample python file](../../../sample_standard_app/app/core/agent/data_agent_case/data_agent.py)
 
-### step3 Configure the agent for producing the evaluation dataset.
+### Step3 Configure the agent for producing the evaluation dataset.
 Use the **dataset_build_agent** configured in step2 `dataset_builder`, and the following is the configuration file of dataset_build_agent. In addition to the basic configuration of the agent, the configuration file mainly includes two important items: `candidate` configures the name of the agent to be evaluated (for example, to evaluate the effectiveness of demo_rag_agent, candidate is configured as demo_rag_agent), and `concurrency_level` configures the level of concurrency when executing batch agent invocation (for example, setting it to 5 represents calling the candidate agent concurrently with 5).
 ```yaml
 info:
@@ -70,7 +70,7 @@ metadata:
 
 [dataset_build_agent sample python file](../../../sample_standard_app/app/core/agent/data_agent_case/dataset_build_agent.py)
 
-### step4 Configure the agent for dataset evaluation and annotation
+### Step4 Configure the agent for dataset evaluation and annotation
 Use the **dataset_eval_agent** configured in step2 `dataset_evaluator`, and the following is the configuration file of dataset_eval_agent. In addition to the basic configuration of the agent, the configuration file mainly includes two important items: `llm_model` configures the agent model, and `max_eval_lines` configures the number of evaluation data lines (for example, setting it to 10 means only evaluate the first 10 rows of data, to avoid global evaluation and the consumption of a large number of tokens).
 ```yaml
 info:
@@ -117,11 +117,11 @@ After producing the evaluation dataset, dataAgent begins multidimensional data a
 As shown in the figure below:
 - Line Number: The line number of the current evaluation data within the dataset.
 - Overall Score: comprehensive score = total of assessment scores from multiple dimensions / number of assessment dimensions (full score is 5, score range 0-5).
-Query: agent question.
-Answer: agent answer.
-Relevance Score: represents the relevance of the agent answer to the question, the higher the score, the more relevant (full score is 5, score range 0-5).
-Relevance Suggestion: represents issues and suggestions for improvement in the relevance dimension.
-More dimensions Score/Suggestion: and so on for additional dimensions.
+- Query: agent question.
+- Answer: agent answer.
+- Relevance Score: represents the relevance of the agent answer to the question, the higher the score, the more relevant (full score is 5, score range 0-5).
+- Relevance Suggestion: represents issues and suggestions for improvement in the relevance dimension.
+- More dimensions Score/Suggestion: similar to the Relevance dimension.
 ![data_agent_eval_result](../_picture/data_agent_eval_result_en.png)
 
 [dataAgent sample eval result](../../../sample_standard_app/app/examples/data/eval_result_turn_1_2024-07-10-15:06:24.xlsx)
@@ -133,7 +133,7 @@ Generate a comprehensive evaluation report based on multiple complete evaluation
 
 As shown in the figure below:
 - Line Name: Includes two types, such as `Queryset Turn x` representing the evaluation dataset generated in the x-th round based on the queryset, and `Turn Avg Score` representing the average score of multiple rounds and dimensions.
-- Overall Avg Score: The sum of the comprehensive scores of all data in a single round of the dataset / the amount of data in the dataset (full score is 5, score range 0-5).
+- Overall Avg Score: The sum of the overall scores of all data in a single round of the dataset / the amount of data in the dataset (full score is 5, score range 0-5).
 - Relevance Avg Score: The sum of the relevance scores of all data in a single round of the dataset / the amount of data in the dataset (full score is 5, score range 0-5).
 - More dimensions Avg Score: similar to the Relevance dimension.
 
@@ -164,6 +164,6 @@ Comparing the two comprehensive evaluation reports, it can be observed that afte
 ### dataset_eval_agent
 - [configuration file](../../../sample_standard_app/app/core/agent/data_agent_case/dataset_eval_agent.yaml)
 - [agent file](../../../sample_standard_app/app/core/agent/data_agent_case/dataset_eval_agent.py)
-- [prompt file](../../../sample_standard_app/app/core/prompt/dataset_eval_agent_en.yaml)：agentUniverse currently opens six agent evaluation standards that are validated in the industry (the MVP version does not open **comprehensive dimension**. The current comprehensive evaluation standard is biased towards the financial field, so it is not mentioned in the open source community)
+- [prompt file](../../../sample_standard_app/app/core/prompt/dataset_eval_agent_en.yaml)：agentUniverse currently opens six agent evaluation dimensions that are validated in the industry (the MVP version does not open **comprehensive dimension**. The current comprehensive evaluation standard is biased towards the financial field, so it is not mentioned in the open source community)
 - The **complete evaluation results** produced by dataset_eval_agent are stored locally in Excel format (the file name is eval_result_turn_{i}_{date}, `i` represents the round, and `date` represents the generation time)
 - The **comprehensive evaluation report** of dataset_eval_a_agent production is stored locally in Excel format (the file name is eval_report_{date}, and date represents the generation time)
