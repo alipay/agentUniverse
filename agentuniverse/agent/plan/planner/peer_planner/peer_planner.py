@@ -159,7 +159,7 @@ class PeerPlanner(Planner):
                 logger_info = f"\nExpressing agent execution result is :\n"
                 logger_info += f"{expressing_result.get_data('output')}"
                 LOGGER.info(logger_info)
-                self.stream_output(input_object, {"data": executing_result.to_dict(), "type": "expressing"})
+                self.stream_output(input_object, {"data": expressing_result.to_dict(), "type": "expressing"})
 
             if not reviewing_result or jump_step in ["planning", "executing", "expressing", "reviewing"]:
                 if not reviewingAgent:
