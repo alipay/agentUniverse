@@ -54,7 +54,7 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
         """If not the final action, print out observation."""
         if observation_prefix is not None:
             self.queueStream.put_nowait({
-                " type": "ReAct",
+                "type": "ReAct",
                 "data": {
                     "output": '\n' + observation_prefix + output,
                     "agent_info": self.agent_info
@@ -62,7 +62,7 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
             })
         else:
             self.queueStream.put_nowait({
-                " type": "ReAct",
+                "type": "ReAct",
                 "data": {
                     "output": '\n Observation:' + output,
                     "agent_info": self.agent_info
@@ -83,7 +83,7 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
     ) -> None:
         """Run on agent end."""
         self.queueStream.put_nowait({
-            " type": "ReAct",
+            "type": "ReAct",
             "data": {
                 "output": '\nThought:' + finish.output,
                 "agent_info": self.agent_info
