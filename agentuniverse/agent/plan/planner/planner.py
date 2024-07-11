@@ -6,16 +6,18 @@
 # @FileName: planner.py
 """Base class for Planner."""
 from abc import abstractmethod
-import copy
 import logging
 from queue import Queue
-from typing import Optional, List
+from typing import Optional, List, Any
+
+from langchain_core.runnables import RunnableSerializable
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
 from agentuniverse.agent.action.knowledge.store.document import Document
 from agentuniverse.agent.action.knowledge.store.query import Query
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
+from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.chat_memory import ChatMemory
@@ -28,7 +30,7 @@ from agentuniverse.base.config.component_configer.configers.planner_configer imp
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
-from agentuniverse.base.util.memory_util import generate_messages
+from agentuniverse.base.util.memory_util import generate_messages, generate_memories
 
 logging.getLogger().setLevel(logging.ERROR)
 
@@ -101,6 +103,7 @@ class Planner(ComponentBase):
         action: dict = agent_model.action or dict()
         tools: list = action.get('tool') or list()
         knowledge: list = action.get('knowledge') or list()
+        agents: list = action.get('agent') or list()
 
         action_result: list = list()
 
@@ -119,6 +122,16 @@ class Planner(ComponentBase):
                 Query(query_str=input_object.get_data(self.input_key), similarity_top_k=2), **input_object.to_dict())
             for document in knowledge_res:
                 action_result.append(document.text)
+
+        for agent_name in agents:
+            agent = AgentManager().get_instance_obj(agent_name)
+            if agent is None:
+                continue
+            agent_input = {key: input_object.get_data(key) for key in agent.input_keys()}
+            output_object = agent.run(**agent_input)
+            action_result.append("\n".join([output_object.get_data(key)
+                                            for key in agent.output_keys()
+                                            if output_object.get_data(key) is not None]))
 
         planner_input['background'] = planner_input['background'] or '' + "\n".join(action_result)
 
@@ -167,7 +180,26 @@ class Planner(ComponentBase):
             input_object (InputObject): Agent input object.
             data (dict): The data to be streamed.
         """
-        output_stream:Queue = input_object.get_data('output_stream', None)
+        output_stream: Queue = input_object.get_data('output_stream', None)
         if output_stream is None:
             return
         output_stream.put_nowait(data)
+
+    def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict, chat_history,
+               input_object: InputObject):
+
+        if not input_object.get_data('output_stream'):
+            res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
+            return res
+        result = []
+        for token in chain.stream(input=planner_input, config={"configurable": {"session_id": "unused"}}):
+            self.stream_output(input_object, {
+                'type': 'token',
+                'data': {
+                    'chunk': token,
+                    'agent_info': agent_model.info
+                }
+            })
+            result.append(token)
+        return "".join(result)
+

@@ -64,14 +64,14 @@ class ReActPlanner(Planner):
                                        max_iterations=agent_model.plan.get('planner').get("max_iterations", 15))
 
         return agent_executor.invoke(input=planner_input, memory=memory.as_langchain() if memory else None,
-                                     chat_history=chat_history, config=self.get_run_config(input_object))
+                                     chat_history=chat_history, config=self.get_run_config(agent_model, input_object))
 
     @staticmethod
-    def get_run_config(input_object: InputObject) -> RunnableConfig:
+    def get_run_config(agent_model: AgentModel, input_object: InputObject) -> RunnableConfig:
         config = RunnableConfig()
         callbacks = []
         output_stream = input_object.get_data('output_stream')
-        callbacks.append(StreamOutPutCallbackHandler(output_stream))
+        callbacks.append(StreamOutPutCallbackHandler(output_stream, agent_info=agent_model.info))
         config.setdefault("callbacks", callbacks)
         return config
 

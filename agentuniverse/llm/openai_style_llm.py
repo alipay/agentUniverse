@@ -207,4 +207,3 @@ class OpenAIStyleLLM(LLM):
         """Return the maximum length of the context."""
         if super().max_context_length():
             return super().max_context_length()
-        return 4000
