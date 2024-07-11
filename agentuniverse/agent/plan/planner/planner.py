@@ -130,7 +130,9 @@ class Planner(ComponentBase):
                 continue
             agent_input = {key: input_object.get_data(key) for key in agent.input_keys()}
             output_object = agent.run(**agent_input)
-            action_result.append("\n".join(output_object.get_data(key) for key in agent.output_keys()))
+            action_result.append("\n".join([output_object.get_data(key)
+                                            for key in agent.output_keys()
+                                            if output_object.get_data(key) is not None]))
 
         planner_input['background'] = planner_input['background'] or '' + "\n".join(action_result)
 
