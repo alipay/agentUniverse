@@ -128,11 +128,8 @@ def trace_agent(func):
 
         # invoke function
         result = func(*args, **kwargs)
-        # serialize agent input and output dict
-        agent_input = serialize_agent_invocation(agent_input)
-        agent_output = serialize_agent_invocation(result)
         # add agent invocation info to monitor
-        Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=agent_output)
+        Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
         return result
 
     # sync function
@@ -145,16 +142,3 @@ def _get_agent_input(func, *args, **kwargs) -> dict:
     bound_args = sig.bind(*args, **kwargs)
     bound_args.apply_defaults()
     return {k: v for k, v in bound_args.arguments.items()}
-
-
-def default_serializer(obj):
-    if isinstance(obj, InputObject):
-        return obj.to_dict()
-    elif isinstance(obj, OutputObject):
-        return obj.to_dict()
-    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
-
-
-def serialize_agent_invocation(agent_invocation):
-    agent_invocation_serialized = json.loads(json.dumps(agent_invocation, default=default_serializer))
-    return agent_invocation_serialized
