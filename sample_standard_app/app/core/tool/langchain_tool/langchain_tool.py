@@ -29,7 +29,7 @@ class LangChainTool(Tool):
     def initialize_by_component_configer(self, component_configer: ToolConfiger) -> 'Tool':
         super().initialize_by_component_configer(component_configer)
         self.tool = self.init_langchain_tool(component_configer)
-        if not component_configer.description:
+        if not component_configer.description and self.tool is not None:
             self.description = self.tool.description
         return self
 

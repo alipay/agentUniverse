@@ -49,7 +49,7 @@ class OpenAIStyleLLM(LLM):
             base_url=self.api_base,
             timeout=self.request_timeout,
             max_retries=self.max_retries,
-            http_client=httpx.Client(proxy=self.openai_proxy) if self.proxy else None,
+            http_client=httpx.Client(proxy=self.proxy) if self.proxy else None,
             **(self.client_args or {}),
         )
 
@@ -121,15 +121,17 @@ class OpenAIStyleLLM(LLM):
 
     def set_by_agent_model(self, **kwargs) -> None:
         """ Assign values of parameters to the OpenAILLM model in the agent configuration."""
-        super().set_by_agent_model(**kwargs)
+        copied_obj = super().set_by_agent_model(**kwargs)
         if 'api_key' in kwargs and kwargs['api_key']:
-            self.api_key = kwargs['api_key']
+            copied_obj.api_key = kwargs['api_key']
         if 'api_base' in kwargs and kwargs['api_base']:
-            self.api_base = kwargs['api_base']
+            copied_obj.api_base = kwargs['api_base']
         if 'proxy' in kwargs and kwargs['proxy']:
-            self.proxy = kwargs['proxy']
+            copied_obj.proxy = kwargs['proxy']
         if 'client_args' in kwargs and kwargs['client_args']:
-            self.client_args = kwargs['client_args']
+            copied_obj.client_args = kwargs['client_args']
+        return copied_obj
+
 
     @staticmethod
     def parse_result(chunk):
@@ -205,4 +207,3 @@ class OpenAIStyleLLM(LLM):
         """Return the maximum length of the context."""
         if super().max_context_length():
             return super().max_context_length()
-        return 4000

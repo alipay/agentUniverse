@@ -30,6 +30,9 @@ class ThreadWithReturnValue(Thread):
                 self._return = self.target(*self.args, **self.kwargs)
             except Exception as e:
                 self.error = e
+            finally:
+                if 'output_stream' in self.kwargs:
+                    self.kwargs['output_stream'].put('{"type": "EOF"}')
 
     def result(self):
         """Wait for target func finished, then return the result or raise an

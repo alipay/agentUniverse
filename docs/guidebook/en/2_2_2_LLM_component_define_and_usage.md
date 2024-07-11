@@ -467,7 +467,7 @@ module: 'agentuniverse.llm.default.default_openai_llm'
 class: 'DefaultOpenAILLM'
 ```
 
-If we need to configure and define an LLM instance based on the `gpt-3.5-turbo model`, with a maximum token limit of 1000 and a retry count of 2 for failures, the configuration would be as follows:
+If we need to configure and define an LLM instance based on the `gpt-3.5-turbo model`, with a maximum token limit of 1000 and a retry count is 2, the configuration would be as follows:
 ```yaml
 name: 'demo_llm'
 description: 'demo openai'

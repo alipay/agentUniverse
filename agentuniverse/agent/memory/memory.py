@@ -40,12 +40,15 @@ class Memory(ComponentBase):
         """Convert the agentUniverse(aU) memory class to the langchain memory class."""
         pass
 
-    def set_by_agent_model(self, **kwargs) -> None:
+    def set_by_agent_model(self, **kwargs):
         """ Assign values of parameters to the Memory model in the agent configuration."""
+        # note: default shallow copy
+        copied_obj = self.model_copy()
         if 'memory_key' in kwargs and kwargs['memory_key']:
-            self.memory_key = kwargs['memory_key']
+            copied_obj.memory_key = kwargs['memory_key']
         if 'max_tokens' in kwargs and kwargs['max_tokens']:
-            self.max_tokens = kwargs['max_tokens']
+            copied_obj.max_tokens = kwargs['max_tokens']
+        return copied_obj
 
     def get_instance_code(self) -> str:
         """Return the full name of the memory."""
