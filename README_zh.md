@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.10-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.11-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -134,7 +134,7 @@ BibTeX formatted
       url={https://arxiv.org/abs/2407.06985}, 
 }
 ```
-文献简介：该文献在研究实验部分分别从**完整性、相关性、紧凑性、事实性、逻辑性、结构性和全面性七个维度进行打分（各纬度满分为5分）**，**PEER模式在每个测评维度的平均分数均高于BabyAGI**，且在**完整性、相关性、逻辑性、结构性和全面性五个纬度有显著优势**；同时PEER模式在 GPT-3.5 turbo (16k) 模型下相较于 BabyAGI 的择优胜率达到 83%，在 GPT-4o 模型下择优胜率达到 81%，更多详情请阅读文献。
+文献简介：该文献详细介绍了介绍了PEER多智能体框架的机制原理，同时在实验部分分别从**完整性、相关性、紧凑性、事实性、逻辑性、结构性和全面性七个维度进行打分（各纬度满分为5分）**，PEER模式在每个测评维度的平均分数均高于BabyAGI，且在**完整性、相关性、逻辑性、结构性和全面性五个纬度有显著优势**；同时PEER模式在 GPT-3.5 turbo (16k) 模型下相较于 BabyAGI 的择优胜率达到 83%，在 GPT-4o 模型下择优胜率达到 81%，更多详情请阅读文献。
 https://arxiv.org/pdf/2407.06985
 
 ## 鸣谢

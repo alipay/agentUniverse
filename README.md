@@ -5,7 +5,7 @@ Language version: [English](./README.md) | [中文](./README_zh.md) | [日本語
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.10-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.11-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -122,7 +122,7 @@ BibTeX formatted
       url={https://arxiv.org/abs/2407.06985}, 
 }
 ```
-Overview: In the experimental section of this study, scores were assigned across seven dimensions: completeness, relevance, conciseness, factualness, logicality, structure, and comprehensiveness (each dimension has a maximum score of 5 points). The PEER model scored higher on average in each evaluation dimension compared to BabyAGI, and demonstrated significant advantages in the dimensions of completeness, relevance, logicality, structure, and comprehensiveness. Additionally, the PEER model achieved an 83% superior rate over BabyAGI using the GPT-3.5 turbo (16k) model, and an 81% superior rate using the GPT-4o model. For more details, please refer to the literature.
+Overview: This document provides a detailed introduction to the mechanisms and principles of the PEER multi-agent framework. In the experimental section, scores were assigned across seven dimensions: completeness, relevance, conciseness, factualness, logicality, structure, and comprehensiveness (each dimension has a maximum score of 5 points). The PEER model scored higher on average in each evaluation dimension compared to BabyAGI and demonstrated significant advantages in the dimensions of completeness, relevance, logicality, structure, and comprehensiveness. Additionally, the PEER model achieved a superior rate of 83% over BabyAGI using the GPT-3.5 Turbo (16k) model, and 81% using the GPT-4 model. For more details, please refer to the document.
 https://arxiv.org/pdf/2407.06985
 
 ## Acknowledgements
