@@ -5,11 +5,9 @@
 # @Email   : lc299034@antgroup.com
 # @FileName: rag_planner.py
 """Rag planner module."""
-from typing import Any
 
 from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnableSerializable
 from langchain_core.runnables.history import RunnableWithMessageHistory
 
 from agentuniverse.agent.agent_model import AgentModel
@@ -56,26 +54,8 @@ class RagPlanner(Planner):
             history_messages_key="chat_history",
             input_messages_key=self.input_key,
         ) | StrOutputParser()
-
-        if not input_object.get_data('output_stream'):
-            res = chain_with_history.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
-            return {**planner_input, self.output_key: res, 'chat_history': generate_memories(chat_history)}
-        else:
-            return self.stream(agent_model, chain_with_history, planner_input, chat_history, input_object)
-
-    def stream(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict, chat_history,
-               input_object: InputObject):
-        result = []
-        for token in chain.stream(input=planner_input, config={"configurable": {"session_id": "unused"}}):
-            self.stream_output(input_object, {
-                'type': 'token',
-                'data': {
-                    'token': token,
-                    'agent_info': agent_model.info
-                }
-            })
-            result.append(token)
-        return {**planner_input, self.output_key: ''.join(result), 'chat_history': generate_memories(chat_history)}
+        res = self.invoke_chain(agent_model, chain_with_history, planner_input, chat_history, input_object)
+        return {**planner_input, self.output_key: res, 'chat_history': generate_memories(chat_history)}
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> ChatPrompt:
         """Prompt module processing.

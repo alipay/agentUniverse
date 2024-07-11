@@ -6,17 +6,17 @@
 # @FileName: planner.py
 """Base class for Planner."""
 from abc import abstractmethod
-import copy
 import logging
 from queue import Queue
-from typing import Optional, List
+from typing import Optional, List, Any
+
+from langchain_core.runnables import RunnableSerializable
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
 from agentuniverse.agent.action.knowledge.store.document import Document
 from agentuniverse.agent.action.knowledge.store.query import Query
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
-from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
@@ -30,7 +30,7 @@ from agentuniverse.base.config.component_configer.configers.planner_configer imp
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
-from agentuniverse.base.util.memory_util import generate_messages
+from agentuniverse.base.util.memory_util import generate_messages, generate_memories
 
 logging.getLogger().setLevel(logging.ERROR)
 
@@ -124,7 +124,7 @@ class Planner(ComponentBase):
                 action_result.append(document.text)
 
         for agent_name in agents:
-            agent: Agent = AgentManager().get_instance_obj(agent_name)
+            agent = AgentManager().get_instance_obj(agent_name)
             if agent is None:
                 continue
             agent_input = {key: input_object.get_data(key) for key in agent.input_keys()}
@@ -184,3 +184,22 @@ class Planner(ComponentBase):
         if output_stream is None:
             return
         output_stream.put_nowait(data)
+
+    def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict, chat_history,
+               input_object: InputObject):
+
+        if not input_object.get_data('output_stream'):
+            res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
+            return res
+        result = []
+        for token in chain.stream(input=planner_input, config={"configurable": {"session_id": "unused"}}):
+            self.stream_output(input_object, {
+                'type': 'token',
+                'data': {
+                    'chunk': token,
+                    'agent_info': agent_model.info
+                }
+            })
+            result.append(token)
+        return "".join(result)
+
