@@ -43,6 +43,8 @@
     * 2.4.4.1 [Logging Component](2_6_Logging_Utils.md)
   * 2.4.5 Data Collection
     * 2.4.5.1 [Monitor Module](2_5_1_Monitor_Module.md)
+  * 2.4.6 Data Autonomous
+    * 2.4.6.1 [Data Autonomous Agent](8_1_1_data_autonomous_agent.md)
 
 **3. Component Reference Manual**
 * 3.1 Domain Components
@@ -89,9 +91,12 @@
 * 6.3 [Discussion Group Based on Multi-Turn Multi-Agent Mode](6_2_1_Discussion_Group.md)
 * 6.4 PEER Multi-Agent Cooperation Examples
   * 6.4.1 [Financial Event Analysis Case](./6_4_1_Financial_Event_Analysis_Case.md)
+* 6.5 [Andrew Ng's Reflexive Workflow Translation Agent Replication](./7_1_1_Translation_Case.md)
 
 **7. Series of Articles**
 
 **8. Frequently Asked Questions (FAQ)**
 
-**[9. Contact Us](6_1_Contact_Us.md)**
+**[9.Citation](9_1_Citation.md)**
+
+**[10. Contact Us](6_1_Contact_Us.md)**

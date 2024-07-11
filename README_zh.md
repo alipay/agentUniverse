@@ -34,6 +34,7 @@
   * [用户指南](#用户指南)
   * [API参考](#API参考)
   * [支持](#支持)
+  * [文献](#文献)
   * [鸣谢](#鸣谢)
 ****************************************
 ## 快速开始
@@ -60,6 +61,12 @@ pip install agentUniverse
 [基于多轮多Agent的讨论小组](./docs/guidebook/zh/6_2_1_讨论组.md)
 
 [基于PEER协同模式的金融事件分析](./docs/guidebook/zh/6_4_1_金融事件分析案例.md)
+
+[吴恩达反思工作流翻译智能体复刻](./docs/guidebook/zh/7_1_1_翻译案例.md)
+
+
+#### 🚩 DataAgent - 数据自治智能体
+agentUniverse推出了DataAgent（Minimum Viable Product版本）, DataAgent旨在使用智能体能力让您的Agent拥有自我评价与演进的能力。详情见文档: [DataAgent - 数据自治智能体](./docs/guidebook/zh/8_1_1_数据自治智能体.md)
 
 ### 🌟 示例项目
 [agentUniverse 示例项目](sample_standard_app)
@@ -105,7 +112,30 @@ pip install agentUniverse
 
 😊 公众号ID：**agentUniverse智多星**
 
+![](./docs/guidebook/_picture/wechat_official.png)
+
 更多相关的文章与资讯你可以在微信公众号中获取。
+
+#### twitter
+ID: [@agentuniverse_](https://x.com/agentuniverse_)
+
+### 文献
+agentUniverse项目基于以下的研究成果支撑。
+
+BibTeX formatted
+```text
+@misc{wang2024peerexpertizingdomainspecifictasks,
+      title={PEER: Expertizing Domain-Specific Tasks with a Multi-Agent Framework and Tuning Methods}, 
+      author={Yiying Wang and Xiaojing Li and Binzhu Wang and Yueyang Zhou and Han Ji and Hong Chen and Jinshi Zhang and Fei Yu and Zewei Zhao and Song Jin and Renji Gong and Wanqing Xu},
+      year={2024},
+      eprint={2407.06985},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2407.06985}, 
+}
+```
+文献简介：该文献在研究实验部分分别从**完整性、相关性、紧凑性、事实性、逻辑性、结构性和全面性七个维度进行打分（各纬度满分为5分）**，**PEER模式在每个测评维度的平均分数均高于BabyAGI**，且在**完整性、相关性、逻辑性、结构性和全面性五个纬度有显著优势**；同时PEER模式在 GPT-3.5 turbo (16k) 模型下相较于 BabyAGI 的择优胜率达到 83%，在 GPT-4o 模型下择优胜率达到 81%，更多详情请阅读文献。
+https://arxiv.org/pdf/2407.06985
 
 ## 鸣谢
 本项目部分基于langchain、pydantic、gunicorn、flask、SQLAlchemy、chromadb等（详细依赖列表可见pyproject.toml）优秀开源项目实现，在此特别感谢相关项目与关联方。 🙏🙏🙏
