@@ -16,6 +16,8 @@ from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeMana
 from agentuniverse.agent.action.knowledge.store.document import Document
 from agentuniverse.agent.action.knowledge.store.query import Query
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
+from agentuniverse.agent.agent import Agent
+from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.chat_memory import ChatMemory
@@ -102,6 +104,7 @@ class Planner(ComponentBase):
         action: dict = agent_model.action or dict()
         tools: list = action.get('tool') or list()
         knowledge: list = action.get('knowledge') or list()
+        agents: list = action.get('agent') or list()
 
         action_result: list = list()
 
@@ -120,6 +123,14 @@ class Planner(ComponentBase):
                 Query(query_str=input_object.get_data(self.input_key), similarity_top_k=2), **input_object.to_dict())
             for document in knowledge_res:
                 action_result.append(document.text)
+
+        for agent_name in agents:
+            agent: Agent = AgentManager().get_instance_obj(agent_name)
+            if agent is None:
+                continue
+            agent_input = {key: input_object.get_data(key) for key in agent.input_keys()}
+            output_object = agent.run(**agent_input)
+            action_result.append("\n".join(output_object.get_data(key) for key in agent.output_keys()))
 
         planner_input['background'] = planner_input['background'] or '' + "\n".join(action_result)
 
@@ -169,7 +180,7 @@ class Planner(ComponentBase):
             input_object (InputObject): Agent input object.
             data (dict): The data to be streamed.
         """
-        output_stream:Queue = input_object.get_data('output_stream', None)
+        output_stream: Queue = input_object.get_data('output_stream', None)
         if output_stream is None:
             return
         output_stream.put_nowait(data)
