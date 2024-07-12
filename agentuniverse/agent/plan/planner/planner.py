@@ -6,6 +6,7 @@
 # @FileName: planner.py
 """Base class for Planner."""
 from abc import abstractmethod
+import copy
 import logging
 from queue import Queue
 from typing import Optional, List, Any
@@ -27,6 +28,7 @@ from agentuniverse.agent.memory.memory_manager import MemoryManager
 from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.component_configer.configers.planner_configer import PlannerConfiger
+from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
@@ -75,6 +77,7 @@ class Planner(ComponentBase):
              Memory: The memory.
         """
         chat_history: list = planner_input.get('chat_history')
+        LOGGER.debug(f"handle_memory chat_history {chat_history}")
         memory_name = agent_model.memory.get('name')
         llm_model = agent_model.memory.get('llm_model') or dict()
         llm_name = llm_model.get('name') or agent_model.profile.get('llm_model').get('name')
@@ -101,6 +104,7 @@ class Planner(ComponentBase):
             input_object (InputObject): Agent input object.
         """
         action: dict = agent_model.action or dict()
+        LOGGER.debug(action)
         tools: list = action.get('tool') or list()
         knowledge: list = action.get('knowledge') or list()
         agents: list = action.get('agent') or list()
@@ -119,8 +123,15 @@ class Planner(ComponentBase):
             if knowledge is None:
                 continue
             knowledge_res: List[Document] = knowledge.store.query(
-                Query(query_str=input_object.get_data(self.input_key), similarity_top_k=2), **input_object.to_dict())
+                Query(
+                    query_str=input_object.get_data(self.input_key),
+                    similarity_top_k=2),
+                **input_object.to_dict()
+            )
+            query_str = input_object.get_data(self.input_key)
+            LOGGER.debug(f"{knowledge_name} query_str {query_str} res_len {len(knowledge_res)}")
             for document in knowledge_res:
+                LOGGER.debug(f"knowledge_res {document.text}")
                 action_result.append(document.text)
 
         for agent_name in agents:

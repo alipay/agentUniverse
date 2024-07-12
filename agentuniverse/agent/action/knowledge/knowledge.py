@@ -18,6 +18,7 @@ from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
 from agentuniverse.base.config.component_configer.configers.knowledge_configer import KnowledgeConfiger
+from agentuniverse.base.util.logging.logging_util import LOGGER
 
 
 class Knowledge(ComponentBase):
@@ -43,6 +44,7 @@ class Knowledge(ComponentBase):
     ext_info: Optional[Dict] = None
 
     def __init__(self, **kwargs):
+        # LOGGER.debug(f"ComponentEnum.KNOWLEDGE {ComponentEnum.KNOWLEDGE}")
         super().__init__(component_type=ComponentEnum.KNOWLEDGE, **kwargs)
 
     def insert_knowledge(self, **kwargs) -> None:
@@ -58,6 +60,7 @@ class Knowledge(ComponentBase):
 
         Query documents from the store and return the results.
         """
+        LOGGER.debug(f"query_knowledge {kwargs}")
         query = Query(**kwargs)
         return self.store.query(query)
 

@@ -42,9 +42,11 @@ def service_run(service_id: str, params: dict, saved: bool = False):
         result: This key points to a nested dictionary that includes the
             result of the task.
     """
+    LOGGER.debug("触发 service_run !!!")
     params = {} if params is None else params
     request_task = RequestTask(ServiceInstance(service_id).run, saved, **params)
     result = request_task.run()
+    LOGGER.debug(f"request_task.run() {result}")
     return make_standard_response(success=True, result=result,
                                   request_id=request_task.request_id)
 

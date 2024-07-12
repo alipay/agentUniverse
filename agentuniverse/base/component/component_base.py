@@ -15,23 +15,23 @@ from agentuniverse.base.config.component_configer.component_configer import Comp
 
 
 class ComponentBase(BaseModel):
-    """The ComponentBase class, which is used to define the base class of the component."""
+    """组件基类，用于定义组件的基础类."""
 
     component_type: ComponentEnum
-    # pydantic protected_namespaces config
+    # Pydantic 的受保护命名空间配置
     model_config = ConfigDict(protected_namespaces=())
 
     def get_instance_code(self) -> str:
-        """Return the full name of the component."""
+        """返回组件的完整名称."""
         appname = ApplicationConfigManager().app_configer.base_info_appname
         return f'{appname}.{self.component_type.value.lower()}.{self.name}'
 
     def initialize_by_component_configer(self, component_configer: ComponentConfiger) -> 'ComponentBase':
-        """Initialize the component by the ComponentConfiger object.
+        """通过 ComponentConfiger 对象初始化组件.
 
-        Args:
-            component_configer(ComponentConfiger): the ComponentConfiger object
-        Returns:
-            ComponentBase: the component object
+        参数:
+            component_configer (ComponentConfiger): ComponentConfiger 对象
+        返回:
+            ComponentBase: 组件对象
         """
         pass

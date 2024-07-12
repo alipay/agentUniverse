@@ -14,6 +14,7 @@ from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.chat_memory import ChatMemory
 from agentuniverse.agent.plan.planner.planner import Planner
+from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.base.util.memory_util import generate_memories
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
@@ -24,30 +25,37 @@ from agentuniverse.prompt.prompt_model import AgentPromptModel
 
 
 class RagPlanner(Planner):
-    """Rag planner class."""
+    """Rag 计划器类。"""
 
     def invoke(self, agent_model: AgentModel, planner_input: dict,
                input_object: InputObject) -> dict:
-        """Invoke the planner.
+        """调用计划器。
 
-        Args:
-            agent_model (AgentModel): Agent model object.
-            planner_input (dict): Planner input object.
-            input_object (InputObject): The input parameters passed by the user.
-        Returns:
-            dict: The planner result.
+        参数:
+            agent_model (AgentModel): Agent 模型对象。
+            planner_input (dict): 计划器输入对象。
+            input_object (InputObject): 用户传递的输入参数。
+        返回:
+            dict: 计划器结果。
         """
+        # 处理内存模块
         memory: ChatMemory = self.handle_memory(agent_model, planner_input)
 
+        LOGGER.debug("↓↓↓↓↓↓↓")
+        # 运行所有工具和知识模块
         self.run_all_actions(agent_model, planner_input, input_object)
-
+        LOGGER.debug("↑↑↑↑↑↑↑")
+        # 处理语言模型
         llm: LLM = self.handle_llm(agent_model)
 
+        # 处理提示模块
         prompt: ChatPrompt = self.handle_prompt(agent_model, planner_input)
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
+        # 获取聊天历史，如果内存为空则使用默认的内存
         chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
 
+        # 生成包含历史记录的可运行链
         chain_with_history = RunnableWithMessageHistory(
             prompt.as_langchain() | llm.as_langchain(),
             lambda session_id: chat_history,
@@ -58,13 +66,13 @@ class RagPlanner(Planner):
         return {**planner_input, self.output_key: res, 'chat_history': generate_memories(chat_history)}
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> ChatPrompt:
-        """Prompt module processing.
+        """提示模块处理。
 
-        Args:
-            agent_model (AgentModel): Agent model object.
-            planner_input (dict): Planner input object.
-        Returns:
-            ChatPrompt: The chat prompt instance.
+        参数:
+            agent_model (AgentModel): Agent 模型对象。
+            planner_input (dict): 计划器输入对象。
+        返回:
+            ChatPrompt: 聊天提示实例。
         """
         profile: dict = agent_model.profile
 
@@ -72,13 +80,15 @@ class RagPlanner(Planner):
                                                                   target=profile.get('target'),
                                                                   instruction=profile.get('instruction'))
 
-        # get the prompt by the prompt version
+        # 获取提示版本
         prompt_version: str = profile.get('prompt_version')
         version_prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
 
+        # 检查提示版本和提示模型是否存在
         if version_prompt is None and not profile_prompt_model:
-            raise Exception("Either the `prompt_version` or `introduction & target & instruction`"
-                            " in agent profile configuration should be provided.")
+            raise Exception("在 Agent 配置文件中应该提供 `prompt_version` 或 `introduction & target & instruction`。")
+
+        # 如果存在提示版本，合并提示模型
         if version_prompt:
             version_prompt_model: AgentPromptModel = AgentPromptModel(
                 introduction=getattr(version_prompt, 'introduction', ''),
@@ -86,8 +96,12 @@ class RagPlanner(Planner):
                 instruction=getattr(version_prompt, 'instruction', ''))
             profile_prompt_model = profile_prompt_model + version_prompt_model
 
+        # 构建聊天提示
         chat_prompt = ChatPrompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
+
+        # 处理图像 URL
         image_urls: list = planner_input.pop('image_urls', []) or []
         if image_urls:
             chat_prompt.generate_image_prompt(image_urls)
+
         return chat_prompt

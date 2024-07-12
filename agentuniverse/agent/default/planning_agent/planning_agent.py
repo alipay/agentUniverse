@@ -45,6 +45,7 @@ class PlanningAgent(Agent):
             dict: Agent result object.
         """
         output = planner_result.get('output')
+        print(f"out: {output}")
         output = parse_json_markdown(output)
         planner_result['framework'] = output['framework']
         planner_result['thought'] = output['thought']

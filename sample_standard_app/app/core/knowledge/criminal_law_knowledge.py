@@ -14,6 +14,8 @@ from agentuniverse.agent.action.knowledge.store.document import Document
 from langchain.text_splitter import TokenTextSplitter
 from pathlib import Path
 
+from agentuniverse.base.util.logging.logging_util import LOGGER
+
 SPLITTER = TokenTextSplitter(chunk_size=600, chunk_overlap=100)
 
 
@@ -21,6 +23,8 @@ class CriminalLawKnowledge(Knowledge):
     """The demo knowledge."""
 
     def __init__(self, **kwargs):
+        # LOGGER.debug(f"Knowledge1 {kwargs}")
+
         """The __init__ method.
 
         Some parameters, such as name and description,

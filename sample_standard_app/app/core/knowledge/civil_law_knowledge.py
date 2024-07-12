@@ -14,6 +14,8 @@ from agentuniverse.agent.action.knowledge.store.document import Document
 from langchain.text_splitter import TokenTextSplitter
 from pathlib import Path
 
+from agentuniverse.base.util.logging.logging_util import LOGGER
+
 SPLITTER = TokenTextSplitter(chunk_size=600, chunk_overlap=100)
 
 
@@ -21,6 +23,7 @@ class CivilLawKnowledge(Knowledge):
     """The demo knowledge."""
 
     def __init__(self, **kwargs):
+        # LOGGER.debug(f"Knowledge {kwargs}")
         super().__init__(**kwargs)
         self.store = ChromaStore(
             collection_name="law_store",
