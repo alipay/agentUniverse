@@ -1,0 +1,6 @@
+name: 'test_planner'
+description: '测试 planner'
+metadata:
+  type: 'PLANNER'
+  module: 'sample_standard_app.app.core.planner.law_planner.test_planner'
+  class: 'TestPlanner'

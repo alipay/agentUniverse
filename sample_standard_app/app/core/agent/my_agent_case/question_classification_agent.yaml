@@ -1,0 +1,17 @@
+info:
+  name: 'question_classification_agent'
+  description: 'question_classification_agent'
+profile:
+  prompt_version: my_planning_agent.cn
+  llm_model:
+    name: 'demo_llm'
+    temperature: 0.1
+plan:
+  planner:
+    name: 'rag_planner'
+#memory:
+#  name: ''
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.app.core.agent.my_agent_case.question_classification_agent'
+  class: 'QuestionClassificationAgent'
