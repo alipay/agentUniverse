@@ -125,6 +125,8 @@ class LLM(ComponentBase):
             copied_obj.streaming = kwargs['streaming']
         if 'max_context_length' in kwargs and kwargs['max_context_length']:
             copied_obj._max_context_length = kwargs['max_context_length']
+        if 'ext_info' in kwargs and kwargs['ext_info']:
+            copied_obj.ext_info = kwargs['ext_info']
         return copied_obj
 
     def max_context_length(self) -> int:

@@ -8,6 +8,7 @@
 
 from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnablePassthrough
 from langchain_core.runnables.history import RunnableWithMessageHistory
 
 from agentuniverse.agent.agent_model import AgentModel
@@ -47,9 +48,8 @@ class RagPlanner(Planner):
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
         chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
-
         chain_with_history = RunnableWithMessageHistory(
-            prompt.as_langchain() | llm.as_langchain(),
+            prompt.as_langchain() | llm.as_langchain().bind(**self.bind_params(agent_model)),
             lambda session_id: chat_history,
             history_messages_key="chat_history",
             input_messages_key=self.input_key,

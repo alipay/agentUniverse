@@ -25,10 +25,11 @@ profile:
     需要回答的问题是: {input}
   llm_model:
     name: 'default_qwen_llm'
-#    model_name: 'gpt-4o'
+    model_name: 'qwen-max'
+    temperature: 0.1
 plan:
   planner:
-    name: 'test_planner'
+    name: 'rag_planner'
 action:
   tool:
     - 'google_search_tool'

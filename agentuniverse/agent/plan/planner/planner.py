@@ -156,7 +156,46 @@ class Planner(ComponentBase):
         """
         llm_name = agent_model.profile.get('llm_model').get('name')
         llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name)
-        return llm.set_by_agent_model(**agent_model.profile.get('llm_model'))
+        return llm
+
+    def bind_params(self,agent_model: AgentModel) -> dict:
+        """Load the language model with bind.
+
+        Args:
+            agent_model (AgentModel): Agent model object.
+        Returns:
+            LLM: The language model.
+        """
+        bind_params = {}
+        for key, value in agent_model.profile.get('llm_model').items():
+            if key == 'name':
+                continue
+            if key == 'model_name':
+                bind_params['model'] = value
+                continue
+            bind_params[key] = value
+        return bind_params
+
+    def load_langchain_llm_with_bind(self, agent_model: AgentModel):
+        """Load the language model with bind.
+
+        Args:
+            agent_model (AgentModel): Agent model object.
+        Returns:
+            LLM: The language model.
+        """
+        llm_name = agent_model.profile.get('llm_model').get('name')
+        llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name)
+        params = agent_model.profile.get('llm_model')
+        bind_params = {}
+        for key, value in params.items():
+            if key == 'name':
+                continue
+            if key == 'model_name':
+                bind_params['model'] = value
+                continue
+            bind_params[key] = value
+        return llm.as_langchain().bind(**bind_params)
 
     def initialize_by_component_configer(self, component_configer: PlannerConfiger) -> 'Planner':
         """Initialize the planner by the PlannerConfiger object.
@@ -185,8 +224,9 @@ class Planner(ComponentBase):
             return
         output_stream.put_nowait(data)
 
-    def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict, chat_history,
-               input_object: InputObject):
+    def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict,
+                     chat_history,
+                     input_object: InputObject):
 
         if not input_object.get_data('output_stream'):
             res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
@@ -202,4 +242,3 @@ class Planner(ComponentBase):
             })
             result.append(token)
         return "".join(result)
-

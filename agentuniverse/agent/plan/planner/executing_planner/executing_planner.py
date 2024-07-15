@@ -42,14 +42,13 @@ class ExecutingPlanner(Planner):
         self.run_all_actions(agent_model, planner_input, input_object)
 
         llm: LLM = self.handle_llm(agent_model)
-
         prompt: Prompt = self.handle_prompt(agent_model, planner_input)
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
         chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
 
         chain_with_history = RunnableWithMessageHistory(
-            prompt.as_langchain() | llm.as_langchain(),
+            prompt.as_langchain() | llm.as_langchain().bind(**self.bind_params(agent_model)),
             lambda session_id: chat_history,
             history_messages_key="chat_history",
             input_messages_key=self.input_key,
