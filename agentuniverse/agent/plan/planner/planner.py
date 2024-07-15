@@ -158,7 +158,7 @@ class Planner(ComponentBase):
         llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name)
         return llm
 
-    def bind_params(self,agent_model: AgentModel) -> dict:
+    def bind_params(self, agent_model: AgentModel) -> dict:
         """Load the language model with bind.
 
         Args:
@@ -175,27 +175,6 @@ class Planner(ComponentBase):
                 continue
             bind_params[key] = value
         return bind_params
-
-    def load_langchain_llm_with_bind(self, agent_model: AgentModel):
-        """Load the language model with bind.
-
-        Args:
-            agent_model (AgentModel): Agent model object.
-        Returns:
-            LLM: The language model.
-        """
-        llm_name = agent_model.profile.get('llm_model').get('name')
-        llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name)
-        params = agent_model.profile.get('llm_model')
-        bind_params = {}
-        for key, value in params.items():
-            if key == 'name':
-                continue
-            if key == 'model_name':
-                bind_params['model'] = value
-                continue
-            bind_params[key] = value
-        return llm.as_langchain().bind(**bind_params)
 
     def initialize_by_component_configer(self, component_configer: PlannerConfiger) -> 'Planner':
         """Initialize the planner by the PlannerConfiger object.
