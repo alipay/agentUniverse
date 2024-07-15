@@ -1,0 +1,6 @@
+[LOG_CONFIG]
+[LOG_CONFIG.BASIC_CONFIG]
+# Loguru log level.
+log_level = "DEBUG"
+# Output path of the log file. If value is empty, agentuniverse will create a subdir under your workdir to save logs.
+log_path = "./.test_log_dir"

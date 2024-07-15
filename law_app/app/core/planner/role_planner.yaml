@@ -1,0 +1,6 @@
+name: 'role_planner'
+description: 'role_planner'
+metadata:
+  type: 'PLANNER'
+  module: 'law_app.app.core.planner.role_planner'
+  class: 'role_planner'

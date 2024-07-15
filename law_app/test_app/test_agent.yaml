@@ -17,5 +17,5 @@ memory:
   name: 'default_memory'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.law_agent_case.test_agent'
+  module: 'sample_standard_app.test_app.test_agent'
   class: 'TestAgent'

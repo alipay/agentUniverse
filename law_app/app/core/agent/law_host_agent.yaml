@@ -1,0 +1,22 @@
+info:
+  name: 'law_host_agent'
+  description: 'law_host_agent'
+profile:
+  prompt_version: law_host_agent.cn
+  llm_model:
+    name: 'qwen_llm'
+    temperature: 0.6
+plan:
+  planner:
+    name: 'discussion_planner'
+    round: 2
+    participant:
+      name:
+        - 'role_agent_one'
+        - 'role_agent_two'
+memory:
+  name: 'demo_memory'
+metadata:
+  type: 'AGENT'
+  module: 'law_app.app.core.agent.law_host_agent'
+  class: 'law_host_agent'

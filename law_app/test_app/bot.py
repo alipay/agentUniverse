@@ -13,17 +13,17 @@ from agentuniverse.base.agentuniverse import AgentUniverse
 from agentuniverse.base.util.logging.logging_util import LOGGER
 import sys
 # print(sys.path)
-relative_path='../../../../config/config.toml'
-absolute_path = os.path.abspath(relative_path)
-LOGGER.debug(f'{relative_path} -> {absolute_path}')
+# relative_path='../../../../config/config.toml'
+# absolute_path = os.path.abspath(relative_path)
+# LOGGER.debug(f'{relative_path} -> {absolute_path}')
 
-with open(absolute_path, 'r', encoding='utf-8') as file:
-    content = file.read()
-    print(content)
+# with open(absolute_path, 'r', encoding='utf-8') as file:
+#     content = file.read()
+#     print(content)
 
 
-AgentUniverse().start(config_path=absolute_path)
-
+# AgentUniverse().start(config_path=absolute_path)
+AgentUniverse().start("../../config/config.toml")
 # C:\Users\wuss\Desktop\xuexi\python\agentUniverse\sample_standard_app\app\examples\question_chat_bot.py
 # C:\Users\wuss\Desktop\xuexi\python\agentUniverse\sample_standard_app\app\core\agent\law_agent_case\bot.py
 def chat(question: str):
@@ -57,5 +57,5 @@ def chat(question: str):
 
 if __name__ == '__main__':
     LOGGER.debug("测试bot↓")
-    chat("劳动合同")
+    chat("广州哪里好玩")
     LOGGER.debug("测试bot↑")

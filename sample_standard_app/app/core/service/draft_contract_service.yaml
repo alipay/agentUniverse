@@ -1,0 +1,5 @@
+name: 'draft_contract_service'
+description: 'draft contract service of draft contract agent'
+agent: 'draft_contract_agent'
+metadata:
+  type: 'SERVICE'

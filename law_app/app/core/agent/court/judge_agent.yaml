@@ -1,0 +1,17 @@
+info:
+  name: judge_agent
+  description: judge_agent
+profile:
+  prompt_version: judge_agent
+  llm_model:
+    name: qwen_llm
+    temperature: 0.3
+plan:
+  planner:
+    name: role_planner
+memory:
+  name: demo_memory
+metadata:
+  type: AGENT
+  module: law_app.app.core.agent.role_agent
+  class: role_agent

@@ -6,6 +6,7 @@
 # @Email   : jerry.zzw@antgroup.com
 # @FileName: agentuniverse.py
 import importlib
+import os
 import sys
 import threading
 from pathlib import Path
@@ -23,7 +24,7 @@ from agentuniverse.base.config.custom_configer.custom_key_configer import Custom
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.util.monitor.monitor import Monitor
 from agentuniverse.base.util.system_util import get_project_root_path
-from agentuniverse.base.util.logging.logging_util import init_loggers
+from agentuniverse.base.util.logging.logging_util import init_loggers, LOGGER
 from agentuniverse.agent_serve.web.request_task import RequestLibrary
 from agentuniverse.agent_serve.web.rpc.grpc.grpc_server_booster import set_grpc_config
 from agentuniverse.agent_serve.web.web_booster import ACTIVATE_OPTIONS
@@ -49,22 +50,29 @@ class AgentUniverse(object):
         project_root_path = get_project_root_path()
         sys.path.append(str(project_root_path.parent))
         app_path = project_root_path / 'app'
+        LOGGER.debug(str(app_path))
+
         if app_path.exists():
             sys.path.append(str(app_path))
         if not config_path:
+            LOGGER.debug("if not config_path")
             config_path = project_root_path / 'config' / 'config.toml'
             config_path = str(config_path)
 
+        LOGGER.debug(f"config_path {config_path} -> {os.path.abspath(config_path)}")
         # load the configuration file
         configer = Configer(path=config_path).load()
         app_configer = AppConfiger().load_by_configer(configer)
         self.__config_container.app_configer = app_configer
+        LOGGER.debug(f"configer {configer.value.get('SUB_CONFIG_PATH', {})}")
 
         # load user custom key
         custom_key_configer_path = self.__parse_sub_config_path(
             configer.value.get('SUB_CONFIG_PATH', {}).get('custom_key_path'),
             config_path)
+
         CustomKeyConfiger(custom_key_configer_path)
+        LOGGER.debug(f"custom_key_configer_path {custom_key_configer_path}")
 
         # init loguru loggers
         log_config_path = self.__parse_sub_config_path(

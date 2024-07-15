@@ -108,7 +108,7 @@ class Agent(ComponentBase):
 
         if self.agent_model is None:
             raise Exception("代理模型未初始化")
-
+        LOGGER.debug(f"planner name {self.agent_model.plan.get('planner').get('name')}")
         planner_base: Planner = PlannerManager().get_instance_obj(self.agent_model.plan.get('planner').get('name'))
         planner_result = planner_base.invoke(self.agent_model, agent_input, input_object)
         LOGGER.debug(f"agent planner_result {planner_result}")
