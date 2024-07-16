@@ -41,7 +41,6 @@ class BAICHUANOpenAIStyleLLM(OpenAIStyleLLM):
             return super().max_context_length()
         return BAICHUAN_Max_CONTEXT_LENGTH.get(self.model_name, 8000)
 
-    @trace_llm
     def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """ The call method of the LLM.
 
@@ -53,7 +52,6 @@ class BAICHUANOpenAIStyleLLM(OpenAIStyleLLM):
         """
         return super().call(messages, **kwargs)
 
-    @trace_llm
     async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """ The async call method of the LLM.
 

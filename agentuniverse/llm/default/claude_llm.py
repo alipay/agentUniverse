@@ -66,7 +66,7 @@ class ClaudeLLM(LLM):
             connection_pool_limits=self.connection_pool_limits
         )
         return client
-    @trace_llm
+
     def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the Claude LLM.
 
@@ -89,7 +89,6 @@ class ClaudeLLM(LLM):
             return self.parse_result(chat_completion)
         return self.generate_stream_result(chat_completion)
 
-    @trace_llm
     async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         streaming = kwargs.pop("streaming") if "streaming" in kwargs else self.streaming
         self.client = self._new_async_client()

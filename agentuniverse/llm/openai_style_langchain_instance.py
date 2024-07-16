@@ -27,14 +27,14 @@ async def acompletion_with_retry(
 ) -> Any:
     """Use tenacity to retry the async completion call."""
     if is_openai_v1():
-        return await llm.llm.acall(**kwargs)
+        return await llm.llm.execute(**kwargs)
 
     retry_decorator = _create_retry_decorator(llm, run_manager=run_manager)
 
     @retry_decorator
     async def _completion_with_retry(**kwargs: Any) -> Any:
         # Use OpenAI's async api https://github.com/openai/openai-python#async-api
-        return await llm.llm.acall(**kwargs)
+        return await llm.llm.aexecute(**kwargs)
 
     return await _completion_with_retry(**kwargs)
 
@@ -79,7 +79,7 @@ class LangchainOpenAIStyleInstance(ChatOpenAI):
         should_stream = stream if stream is not None else self.streaming
         message_dicts, params = self._create_message_dicts(messages, stop)
         params = {**params, **kwargs}
-        llm_output = self.llm.call(messages=message_dicts, **params)
+        llm_output = self.llm.execute(messages=message_dicts, **params)
         if not should_stream:
             return self._create_chat_result(llm_output.raw)
         stream_iter = self.as_langchain_chunk(llm_output)
@@ -98,7 +98,7 @@ class LangchainOpenAIStyleInstance(ChatOpenAI):
         should_stream = stream if stream is not None else self.streaming
         message_dicts, params = self._create_message_dicts(messages, stop)
         params = {**params, **kwargs}
-        llm_output = await self.llm.acall(messages=message_dicts, **params)
+        llm_output = await self.llm.aexecute(messages=message_dicts, **params)
         if not should_stream:
             return self._create_chat_result(llm_output.raw)
         stream_iter = self.as_langchain_achunk(llm_output)
@@ -160,13 +160,13 @@ class LangchainOpenAIStyleInstance(ChatOpenAI):
     ) -> Any:
         """Use tenacity to retry the completion call."""
         if is_openai_v1():
-            return self.llm.call(**kwargs)
+            return self.llm.execute(**kwargs)
 
         retry_decorator = _create_retry_decorator(self, run_manager=run_manager)
 
         @retry_decorator
         def _completion_with_retry(**kwargs: Any) -> Any:
-            return self.llm.call(**kwargs)
+            return self.llm.aexecute(**kwargs)
 
         return _completion_with_retry(**kwargs)
 

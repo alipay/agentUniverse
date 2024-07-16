@@ -10,7 +10,6 @@ from typing import Optional, Any, Union, Iterator, AsyncIterator
 import requests
 from pydantic import Field
 
-from agentuniverse.base.annotation.trace import trace_llm
 from agentuniverse.base.util.env_util import get_from_env
 from agentuniverse.llm.llm_output import LLMOutput
 from agentuniverse.llm.openai_style_llm import OpenAIStyleLLM
@@ -34,7 +33,6 @@ class KIMIOpenAIStyleLLM(OpenAIStyleLLM):
     proxy: Optional[str] = Field(default_factory=lambda: get_from_env("KIMI_PROXY"))
     organization: Optional[str] = Field(default_factory=lambda: get_from_env("KIMI_ORGANIZATION"))
 
-    @trace_llm
     def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """ The call method of the LLM.
 
@@ -46,7 +44,6 @@ class KIMIOpenAIStyleLLM(OpenAIStyleLLM):
         """
         return super().call(messages, **kwargs)
 
-    @trace_llm
     async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """ The async call method of the LLM.
 

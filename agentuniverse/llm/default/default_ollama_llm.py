@@ -47,7 +47,6 @@ class OllamaLLM(LLM):
             **(self.ext_info if self.ext_info else {}),
         })
 
-    @trace_llm
     def call(self, messages, stop=None, **kwargs) -> Union[LLMOutput, Iterator[LLMOutput]]:
         should_stream = kwargs.pop("stream", self.streaming)
         client = self._new_client()
@@ -59,7 +58,6 @@ class OllamaLLM(LLM):
         else:
             return LLMOutput(text=res.get("message").get('content'), raw=json.dumps(res))
 
-    @trace_llm
     async def acall(self, messages, stop=None, **kwargs) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         client = self._new_async_client()
         should_stream = kwargs.pop("stream", self.streaming)

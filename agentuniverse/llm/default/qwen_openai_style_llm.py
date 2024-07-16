@@ -39,7 +39,6 @@ class QWenOpenAIStyleLLM(OpenAIStyleLLM):
     proxy: Optional[str] = Field(default_factory=lambda: get_from_env("DASHSCOPE_PROXY"))
     organization: Optional[str] = Field(default_factory=lambda: get_from_env("DASHSCOPE_ORGANIZATION"))
 
-    @trace_llm
     def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """ The call method of the LLM.
 
@@ -51,7 +50,6 @@ class QWenOpenAIStyleLLM(OpenAIStyleLLM):
         """
         return super().call(messages, **kwargs)
 
-    @trace_llm
     async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """ The async call method of the LLM.
 

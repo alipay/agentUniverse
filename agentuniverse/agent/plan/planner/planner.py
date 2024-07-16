@@ -158,24 +158,6 @@ class Planner(ComponentBase):
         llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name)
         return llm
 
-    def bind_params(self, agent_model: AgentModel) -> dict:
-        """Load the language model with bind.
-
-        Args:
-            agent_model (AgentModel): Agent model object.
-        Returns:
-            LLM: The language model.
-        """
-        bind_params = {}
-        for key, value in agent_model.profile.get('llm_model').items():
-            if key == 'name':
-                continue
-            if key == 'model_name':
-                bind_params['model'] = value
-                continue
-            bind_params[key] = value
-        return bind_params
-
     def initialize_by_component_configer(self, component_configer: PlannerConfiger) -> 'Planner':
         """Initialize the planner by the PlannerConfiger object.
 

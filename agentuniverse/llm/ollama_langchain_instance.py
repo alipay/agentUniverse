@@ -20,7 +20,7 @@ class OllamaLangchainInstance(ChatOllama):
             stop: Optional[List[str]] = None,
             **kwargs: Any,
     ) -> Iterator[str]:
-        data = self.llm.call(
+        data = self.llm.execute(
             messages=self._convert_messages_to_ollama_messages(messages), stop=stop, **kwargs
         )
         for llm_output in data:
@@ -32,7 +32,7 @@ class OllamaLangchainInstance(ChatOllama):
             stop: Optional[List[str]] = None,
             **kwargs: Any,
     ) -> AsyncIterator[str]:
-        data = await self.llm.acall(
+        data = await self.llm.aexecute(
                 messages=self._convert_messages_to_ollama_messages(messages), stop=stop, **kwargs
         )
         async for llm_output in data:
