@@ -24,7 +24,7 @@ class DeepSeekLLMTest(unittest.TestCase):
 
     def test_reviewing_agent(self):
         llm: WenXinLLM = LLMManager().get_instance_obj("deep_seek_llm")
-        res = llm.call(
+        res = llm.execute(
             messages=[{"role": "user", "content": "你好"}],
             streaming=True
         )
@@ -39,7 +39,7 @@ class DeepSeekLLMTest(unittest.TestCase):
 
     async def call_stream(self):
         llm: WenXinLLM = LLMManager().get_instance_obj("deep_seek_llm")
-        res = await llm.acall(
+        res = await llm.aexecute(
             messages=[{"role": "user", "content": "你好"}],
             streaming=True
         )
