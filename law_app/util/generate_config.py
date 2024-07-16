@@ -157,11 +157,11 @@ def generate_judge_agent():
 
     一共{total_round}轮讨论，当前是第{cur_round}轮讨论。
 
-    请用中文回答，需要裁决的案件是: {input_case}
+    请用中文回答，需要裁决的案件是: {input}
     """
     generate_config(agent_name, introduction, target, instruction)
 
 
-# generate_plaintiff_lawyer_agent()
-# generate_defendant_lawyer_agent()
+generate_plaintiff_lawyer_agent()
+generate_defendant_lawyer_agent()
 generate_judge_agent()

@@ -8,7 +8,7 @@ profile:
     temperature: 0.6
 plan:
   planner:
-    name: 'discussion_planner'
+    name: 'court_planner'
     round: 2
     participant:
       name:

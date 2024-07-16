@@ -4,7 +4,7 @@
 # @Time    : 2024/6/7 10:47
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
-# @FileName: discussion_planner.py
+# @FileName: court_planner.py
 import asyncio
 
 from langchain_core.chat_history import InMemoryChatMessageHistory
@@ -29,8 +29,9 @@ from agentuniverse.prompt.prompt_model import AgentPromptModel
 default_round = 2
 
 
-class DiscussionPlanner(Planner):
+class court_planner(Planner):
     """Discussion planner class."""
+    current_round = 0
 
     def invoke(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject) -> dict:
         """Invoke the planner.
@@ -78,36 +79,38 @@ class DiscussionPlanner(Planner):
         LOGGER.info(f"The participant agents are {'|'.join(participant_agents.keys())}")
         agent_input['total_round'] = total_round
         agent_input['participants'] = ' and '.join(participant_agents.keys())
-        for i in range(total_round):
+        # for i in range(total_round):
+        LOGGER.info("------------------------------------------------------------------")
+        LOGGER.info(f"Start a discussion, round is {self.current_round + 1}.")
+        for agent_name, agent in participant_agents.items():
             LOGGER.info("------------------------------------------------------------------")
-            LOGGER.info(f"Start a discussion, round is {i + 1}.")
-            for agent_name, agent in participant_agents.items():
-                LOGGER.info("------------------------------------------------------------------")
-                LOGGER.info(f"Start speaking: agent is {agent_name}.")
-                LOGGER.info("------------------------------------------------------------------")
-                # invoke participant agent
-                agent_input['agent_name'] = agent_name
-                agent_input['cur_round'] = i + 1
-                output_object: OutputObject = agent.run(**agent_input)
-                current_output = output_object.get_data('output', '')
+            LOGGER.info(f"Start speaking: agent is {agent_name}.")
+            LOGGER.info("------------------------------------------------------------------")
+            # invoke participant agent
+            agent_input['agent_name'] = agent_name
+            agent_input['cur_round'] = self.current_round + 1
+            output_object: OutputObject = agent.run(**agent_input)
+            current_output = output_object.get_data('output', '')
 
-                # process chat history
-                chat_history.append({'content': agent_input.get('input'), 'type': 'human'})
-                chat_history.append(
-                    {'content': f'the round {i + 1} agent {agent_name} thought: {current_output}', 'type': 'ai'})
-                agent_input['chat_history'] = chat_history
+            # process chat history
+            chat_history.append({'content': agent_input.get('input'), 'type': 'human'})
+            chat_history.append(
+                {'content': f'the round {self.current_round + 1} agent {agent_name} thought: {current_output}',
+                 'type': 'ai'})
+            agent_input['chat_history'] = chat_history
 
+            LOGGER.info(
+                f"the round {self.current_round + 1} agent {agent_name} thought: {output_object.get_data('output', '')}")
 
-                LOGGER.info(f"the round {i + 1} agent {agent_name} thought: {output_object.get_data('output', '')}")
-                yield chat_history[-1]
+            self.current_round += 1
+            yield chat_history[-1]
 
         agent_input['chat_history'] = chat_history
 
         for i in agent_input['chat_history']:
-
             LOGGER.info(f"re chat_history {i}")
         # finally invoke host agent
-        return self.invoke_host_agent(agent_model, agent_input)
+        yield self.invoke_host_agent(agent_model, agent_input)
 
     def invoke_host_agent(self, agent_model: AgentModel, planner_input: dict) -> dict:
         """ Invoke the host agent.
