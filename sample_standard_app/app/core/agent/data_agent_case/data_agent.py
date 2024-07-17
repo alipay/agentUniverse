@@ -53,7 +53,7 @@ class DataAgent(Agent):
             input_object (InputObject): input parameters passed by the user.
             agent_input (dict): agent input parsed from `input_object` by the user.
         """
-        date = datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+        date = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         input_object.add_data('date', date)
 
         # step1: build q&a dataset from the candidate agent which needs to be evaluated.
