@@ -88,6 +88,8 @@ class DiscussionPlanner(Planner):
                 # invoke participant agent
                 agent_input['agent_name'] = agent_name
                 agent_input['cur_round'] = i + 1
+
+                LOGGER.debug(f'{agent_name} {agent_input}')
                 output_object: OutputObject = agent.run(**agent_input)
                 current_output = output_object.get_data('output', '')
 
@@ -99,7 +101,7 @@ class DiscussionPlanner(Planner):
 
 
                 LOGGER.info(f"the round {i + 1} agent {agent_name} thought: {output_object.get_data('output', '')}")
-                yield chat_history[-1]
+                # yield chat_history[-1]
 
         agent_input['chat_history'] = chat_history
 
