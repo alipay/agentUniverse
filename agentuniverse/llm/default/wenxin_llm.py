@@ -52,7 +52,7 @@ class WenXinLLM(LLM):
         """Create a new Qianfan client."""
         return self.client
 
-    def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
+    def _call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the OpenAI LLM.
 
         Args:
@@ -74,7 +74,7 @@ class WenXinLLM(LLM):
             return self.parse_result(chat_completion)
         return self.generate_stream_result(chat_completion)
 
-    async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
+    async def _acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the OpenAI LLM.
 
         Args:

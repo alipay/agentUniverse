@@ -72,7 +72,7 @@ class WenXinLangChainInstance(QianfanChatEndpoint):
             )
         params = self._convert_prompt_msg_params(messages, **kwargs)
         params["stop"] = stop
-        response_payload = self.llm.execute(**params).raw
+        response_payload = self.llm.call(**params).raw
         lc_msg = _convert_dict_to_message(response_payload)
         gen = ChatGeneration(
             message=lc_msg,
@@ -118,7 +118,7 @@ class WenXinLangChainInstance(QianfanChatEndpoint):
             )
         params = self._convert_prompt_msg_params(messages, **kwargs)
         params["stop"] = stop
-        response_payload = await self.llm.aexecute(**params)
+        response_payload = await self.llm.acall(**params)
         response_payload = response_payload.raw
         lc_msg = _convert_dict_to_message(response_payload)
         generations = []
@@ -155,7 +155,7 @@ class WenXinLangChainInstance(QianfanChatEndpoint):
         params = self._convert_prompt_msg_params(messages, **kwargs)
         params["stop"] = stop
         params["stream"] = True
-        for res in self.llm.execute(**params):
+        for res in self.llm.call(**params):
             if res:
                 res = res.raw
                 msg = _convert_dict_to_message(res)
@@ -183,7 +183,7 @@ class WenXinLangChainInstance(QianfanChatEndpoint):
         params = self._convert_prompt_msg_params(messages, **kwargs)
         params["stop"] = stop
         params["stream"] = True
-        async for res in await self.llm.aexecute(**params):
+        async for res in await self.llm.acall(**params):
             res = res.raw
             if res:
                 msg = _convert_dict_to_message(res)

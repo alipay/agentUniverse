@@ -67,7 +67,7 @@ class ClaudeLLM(LLM):
         )
         return client
 
-    def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
+    def _call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the Claude LLM.
 
         Args:
@@ -89,7 +89,7 @@ class ClaudeLLM(LLM):
             return self.parse_result(chat_completion)
         return self.generate_stream_result(chat_completion)
 
-    async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
+    async def _acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         streaming = kwargs.pop("streaming") if "streaming" in kwargs else self.streaming
         self.client = self._new_async_client()
         chat_completion = await self.client.messages.create(

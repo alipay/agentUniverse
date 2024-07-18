@@ -62,7 +62,7 @@ class ClaudeLangChainInstance(ChatAnthropic):
         if _tools_in_params(params):
             data = self._client.beta.tools.messages.create(**params)
         else:
-            data = self.llm.execute(**params).raw
+            data = self.llm.call(**params).raw
         return self._format_output(data, **kwargs)
 
     async def _agenerate(
@@ -88,6 +88,6 @@ class ClaudeLangChainInstance(ChatAnthropic):
         if _tools_in_params(params):
             data = await self._async_client.beta.tools.messages.create(**params)
         else:
-            data = await self.llm.aexecute(**params)
+            data = await self.llm.acall(**params)
             data = data.raw
         return self._format_output(data, **kwargs)

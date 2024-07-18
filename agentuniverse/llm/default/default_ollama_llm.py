@@ -47,7 +47,7 @@ class OllamaLLM(LLM):
             **(self.ext_info if self.ext_info else {}),
         })
 
-    def call(self, messages, stop=None, **kwargs) -> Union[LLMOutput, Iterator[LLMOutput]]:
+    def _call(self, messages, stop=None, **kwargs) -> Union[LLMOutput, Iterator[LLMOutput]]:
         should_stream = kwargs.pop("stream", self.streaming)
         client = self._new_client()
         options = self._options()
@@ -58,7 +58,7 @@ class OllamaLLM(LLM):
         else:
             return LLMOutput(text=res.get("message").get('content'), raw=json.dumps(res))
 
-    async def acall(self, messages, stop=None, **kwargs) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
+    async def _acall(self, messages, stop=None, **kwargs) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         client = self._new_async_client()
         should_stream = kwargs.pop("stream", self.streaming)
         options = self._options()

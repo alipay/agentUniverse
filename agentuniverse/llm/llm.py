@@ -68,11 +68,11 @@ class LLM(ComponentBase):
         pass
 
     @abstractmethod
-    def call(self, *args: Any, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
+    def _call(self, *args: Any, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the LLM."""
 
     @abstractmethod
-    async def acall(self, *args: Any, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
+    async def _acall(self, *args: Any, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the LLM."""
 
     def as_langchain(self) -> BaseLanguageModel:
@@ -164,19 +164,19 @@ class LLM(ComponentBase):
         return self.langchain_instance.bind(**params)
 
     @trace_llm
-    def execute(self, *args: Any, **kwargs: Any):
+    def call(self, *args: Any, **kwargs: Any):
         """Run the LLM."""
         try:
-            return self.call(*args, **kwargs)
+            return self._call(*args, **kwargs)
         except Exception as e:
             LOGGER.error(f'Error in LLM call: {e}')
             raise e
 
     @trace_llm
-    async def aexecute(self, *args: Any, **kwargs: Any):
+    async def acall(self, *args: Any, **kwargs: Any):
         """Asynchronously run the LLM."""
         try:
-            return await self.acall(*args, **kwargs)
+            return await self._acall(*args, **kwargs)
         except Exception as e:
             LOGGER.error(f'Error in LLM acall: {e}')
             raise e
