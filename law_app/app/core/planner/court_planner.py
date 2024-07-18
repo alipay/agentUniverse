@@ -25,7 +25,6 @@ from agentuniverse.prompt.chat_prompt import ChatPrompt
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
-from law_app.util.event_dispatcher import EventDispatcher
 
 default_round = 2
 
@@ -91,11 +90,17 @@ class court_planner(Planner):
         for i in range(total_round):
             LOGGER.info("------------------------------------------------------------------")
             LOGGER.info(f"Start a discussion, round is {i + 1}.")
-            LOGGER.info("轮到你发言了 : ")
+
+            event_dispatcher.trigger_event("NEED_INPUT", {"msg":"需要用户输入"})
+
+            # def get_user_input():
+            #     agent_input['input'] = q = event_dispatcher.event_queue.get()
+            #
+            # event_dispatcher.register_listener("USER_INPUT",get_user_input)
+
             agent_input['input'] = input()
 
             for agent_name, agent in participant_agents.items():
-
                 # invoke participant agent
                 agent_input['agent_name'] = agent_name
                 agent_input['cur_round'] = i + 1
@@ -118,8 +123,8 @@ class court_planner(Planner):
                 LOGGER.info(f" for {agent_name} \n{agent_input}")
                 LOGGER.info("------------------------------------------------------------------")
 
-
-                event_dispatcher.trigger_event(cnt)
+                # event_dispatcher.trigger_event("AGENT_CNT", cnt)
+                event_dispatcher.trigger_event("AGENT_CNT", {"msg": f"测试{i} {agent_name}"})
 
         agent_input['chat_history'] = chat_history
 
