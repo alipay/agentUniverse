@@ -9,6 +9,7 @@ from typing import List, Optional, Dict, Any
 
 from langchain_core.messages import BaseMessage, get_buffer_string
 from langchain.memory import ConversationSummaryBufferMemory, ConversationTokenBufferMemory
+from langchain_core.output_parsers import StrOutputParser
 
 from agentuniverse.agent.memory.enum import ChatMessageEnum
 from agentuniverse.agent.memory.message import Message
@@ -115,9 +116,8 @@ class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory):
         )
         prompt_version = self.prompt_version if self.prompt_version else 'chat_memory.summarizer_cn'
         prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
-        chain = prompt.as_langchain() | self.llm
-        res = chain.invoke(input={'summary': existing_summary, 'new_lines': new_lines})
-        return res.content
+        chain = prompt.as_langchain() | self.llm | StrOutputParser()
+        return chain.invoke(input={'summary': existing_summary, 'new_lines': new_lines})
 
 
 class AuConversationTokenBufferMemory(ConversationTokenBufferMemory):

@@ -73,8 +73,13 @@ class RequestTask:
                                        ensure_ascii=False) + "\n\n"
         if self.canceled():
             return
-        yield "data:" + json.dumps({"result": self.thread.result()},
-                                   ensure_ascii=False) + "\n\n"
+        try:
+            result = self.thread.result()
+            yield "data:" + json.dumps({"result": result},
+                                       ensure_ascii=False) + "\n\n "
+        except Exception as e:
+            LOGGER.error("request task execute Fail: " + str(e))
+            yield "data:" + json.dumps({"error": {"error_msg": str(e)}}) + "\n\n "
 
     def append_steps(self):
         """Tracing async service running state and update it to database."""
@@ -225,7 +230,7 @@ class RequestTask:
         self.__request_do__.state = TaskStateEnum.FINISHED.value
 
     @staticmethod
-    def query_request_state(request_id: str) -> dict|None:
+    def query_request_state(request_id: str) -> dict | None:
         """Query the request data in database by given request_id.
 
         Args:

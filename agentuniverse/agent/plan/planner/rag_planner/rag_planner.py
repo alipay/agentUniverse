@@ -5,7 +5,6 @@
 # @Email   : lc299034@antgroup.com
 # @FileName: rag_planner.py
 """Rag planner module."""
-import asyncio
 
 from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
@@ -55,8 +54,7 @@ class RagPlanner(Planner):
             history_messages_key="chat_history",
             input_messages_key=self.input_key,
         ) | StrOutputParser()
-        res = asyncio.run(
-            chain_with_history.ainvoke(input=planner_input, config={"configurable": {"session_id": "unused"}}))
+        res = self.invoke_chain(agent_model, chain_with_history, planner_input, chat_history, input_object)
         return {**planner_input, self.output_key: res, 'chat_history': generate_memories(chat_history)}
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> ChatPrompt:

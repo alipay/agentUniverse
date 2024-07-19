@@ -5,7 +5,10 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: knowledge.py
-from typing import Optional, Dict, List, Any
+from typing import Optional, Dict, List
+
+from langchain_core.utils.json import parse_json_markdown
+from langchain.tools import Tool as LangchainTool
 
 from agentuniverse.agent.action.knowledge.reader.reader import Reader
 from agentuniverse.agent.action.knowledge.store.document import Document
@@ -77,3 +80,37 @@ class Knowledge(ComponentBase):
         if component_configer.ext_info:
             self.ext_info = component_configer.ext_info
         return self
+
+    def langchain_query(self, query: str) -> str:
+        """Query the knowledge using LangChain.
+
+        Query documents from the store and return the results.
+        """
+        parse_query = parse_json_markdown(query)
+        query = Query(**parse_query)
+        knowledge = self.store.query(query)
+        res = ['This is Query Result']
+        for doc in knowledge:
+            res.append(doc.text)
+        return "\n=========================================\n".join(res)
+
+    def as_langchain_tool(self) -> LangchainTool:
+        """Convert the Knowledge object to a LangChain tool.
+
+        Returns:
+            Any: the LangChain tool object
+        """
+        args_description = """
+        This is a knowledge base tool, which stores the content you may need. To use this tool, you need to give a json string with the following format:
+        ```json
+        {
+            "query_str": "<your query here>",
+            "top_k": <number of results to return>,
+        }
+        ```
+        """
+        return LangchainTool(
+            name=self.name,
+            description=self.description + args_description,
+            func=self.langchain_query,
+        )

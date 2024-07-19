@@ -103,24 +103,29 @@ class LLM(ComponentBase):
         if component_configer.ext_info:
             self.ext_info = component_configer.ext_info
         self.tracing = component_configer.tracing
+        if 'max_context_length' in component_configer.configer.value:
+            self._max_context_length = component_configer.configer.value['max_context_length']
         return self
 
-    def set_by_agent_model(self, **kwargs) -> None:
+    def set_by_agent_model(self, **kwargs):
         """ Assign values of parameters to the LLM model in the agent configuration."""
+        # note: default shallow copy
+        copied_obj = self.model_copy()
         if 'model_name' in kwargs and kwargs['model_name']:
-            self.model_name = kwargs['model_name']
+            copied_obj.model_name = kwargs['model_name']
         if 'temperature' in kwargs and kwargs['temperature']:
-            self.temperature = kwargs['temperature']
+            copied_obj.temperature = kwargs['temperature']
         if 'request_timeout' in kwargs and kwargs['request_timeout']:
-            self.request_timeout = kwargs['request_timeout']
+            copied_obj.request_timeout = kwargs['request_timeout']
         if 'max_tokens' in kwargs and kwargs['max_tokens']:
-            self.max_tokens = kwargs['max_tokens']
+            copied_obj.max_tokens = kwargs['max_tokens']
         if 'max_retries' in kwargs and kwargs['max_retries']:
-            self.max_retries = kwargs['max_retries']
+            copied_obj.max_retries = kwargs['max_retries']
         if 'streaming' in kwargs and kwargs['streaming']:
-            self.streaming = kwargs['streaming']
+            copied_obj.streaming = kwargs['streaming']
         if 'max_context_length' in kwargs and kwargs['max_context_length']:
-            self._max_context_length = kwargs['max_context_length']
+            copied_obj._max_context_length = kwargs['max_context_length']
+        return copied_obj
 
     def max_context_length(self) -> int:
         """Max context length.

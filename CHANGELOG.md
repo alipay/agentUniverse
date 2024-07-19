@@ -24,6 +24,35 @@ Note - Additional remarks regarding the version.
 ***************************************************
 
 # Version Update History
+## [0.0.11] - 2024-07-11
+### Added
+- DataAgent Autonomous Data Agent MVP Version Released
+  - Minimum Viable Product version, DataAgent aims to empower your agent with the capability of self-assessment and evolution through intelligent agent abilities. For detailed information, please refer to the user documentation.
+- Added intermediate information streaming output capabilities in PEER and ReAct modes
+
+### Note
+- Latest PEER research findings released
+  - This paper provides a detailed introduction to the mechanisms and principles of the PEER multi-agent framework. Experimental validation proves the advancement of the PEER model. For detailed information, please refer to the user documentation.
+- Added use cases
+  - Andrew Ng's Reflexive Workflow Translation Agent Replication
+- Some code optimizations and documentation updates.
+
+## [0.0.10] - 2024-06-28
+### Added
+- Added standard integration for the DeepSeek model in the LLM module.
+- Added a new OpenAI general protocol wrapper class, OpenAIStyleLLM.
+  - Models using the OpenAI protocol can be configured directly.
+- Added a new LangChain tool wrapper class, LangChainTool, with several example tools for search and execution.
+  - LangChain tools can be configured directly.
+- Added Agent information collection capability in the monitor module.
+
+### Note
+- Added use cases.
+  - Supplemented documentation with a financial event analysis case study using PEER collaborative mode.
+- Added several new documents for LLM components, tool components, and the Monitor module.
+- Updated the new README.
+- Some code optimizations and documentation updates.
+
 ## [0.0.9] - 2024-06-14
 ### Added
 - Added standard integration for Claude and Ollama LLM components

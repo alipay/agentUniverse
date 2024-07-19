@@ -6,21 +6,26 @@
 # @Email   : lc299034@antgroup.com
 # @FileName: agent.py
 """The definition of agent paradigm."""
+import json
 from abc import abstractmethod
 from datetime import datetime
 from typing import Optional
+
+from langchain_core.utils.json import parse_json_markdown
 
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.output_object import OutputObject
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
+from agentuniverse.base.annotation.trace import trace_agent
 from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.application_configer.application_config_manager \
     import ApplicationConfigManager
 from agentuniverse.base.config.component_configer.configers.agent_configer \
     import AgentConfiger
+from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.llm.llm import LLM
 
 
@@ -66,6 +71,7 @@ class Agent(ComponentBase):
         """
         pass
 
+    @trace_agent
     def run(self, **kwargs) -> OutputObject:
         """Agent instance running entry.
 
@@ -156,3 +162,35 @@ class Agent(ComponentBase):
                                                        plan=plan, memory=memory, action=action)
         self.agent_model = agent_model
         return self
+
+    def langchain_run(self, input: str, callbacks=None, **kwargs):
+        """Run the agent model using LangChain."""
+        try:
+            parse_result = parse_json_markdown(input)
+        except Exception as e:
+            LOGGER.error(f"langchain run parse_json_markdown error,input(parse_result) error({str(e)})")
+            return "Error , Your Action Input is not a valid JSON string"
+        output_object = self.run(**parse_result, callbacks=callbacks, **kwargs)
+        result_dict = {}
+        for key in self.output_keys():
+            result_dict[key] = output_object.get_data(key)
+        return result_dict
+
+    def as_langchain_tool(self):
+        """Convert to LangChain tool."""
+        from langchain.agents.tools import Tool
+        format_dict = {}
+        for key in self.input_keys():
+            format_dict.setdefault(key, "input val")
+        format_str = json.dumps(format_dict)
+
+        args_description = f"""
+        to use this tool,your input must be a json string,must contain all keys of {self.input_keys()},
+        and the value of the key must be a json string,the format of the json string is as follows:
+        ```{format_str}```
+        """
+        return Tool(
+            name=self.agent_model.info.get("name"),
+            func=self.langchain_run,
+            description=self.agent_model.info.get("description") + args_description
+        )

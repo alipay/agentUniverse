@@ -8,8 +8,11 @@
 import copy
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 from typing import Optional, Any
+
+from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
+from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
 
 
@@ -73,11 +76,39 @@ class ExecutingAgent(Agent):
         framework = agent_input.get('framework', [])
         futures = []
         for task in framework:
-            agent_input_copy: dict = copy.deepcopy(agent_input)
+            # note: agent input shallow copy.
+            agent_input_copy: dict = dict(agent_input)
             agent_input_copy['input'] = task
+            planner: Planner = PlannerManager().get_instance_obj(self.agent_model.plan.get('planner').get('name'))
             futures.append(
-                self.executor.submit(
-                    PlannerManager().get_instance_obj(self.agent_model.plan.get('planner').get('name')).invoke,
-                    self.agent_model, agent_input_copy, input_object))
+                self.executor.submit(planner.invoke, self.agent_model, agent_input_copy,
+                                     self.process_intput_object(input_object, task, planner.input_key)))
         wait(futures, return_when=ALL_COMPLETED)
         return {'futures': futures}
+
+    def process_intput_object(self, input_object: InputObject, subtask: str, planner_input_key: str) -> InputObject:
+        """Process input object for the executing agent.
+
+        Args:
+            input_object (InputObject): input parameters passed by the user.
+            subtask (str): subtask to be executed.
+            planner_input_key (str): planner input key.
+
+        Returns:
+            input_object (InputObject): processed input object.
+        """
+        # get agent toolsets.
+        action: dict = self.agent_model.action or dict()
+        tools: list = action.get('tool') or list()
+        # note: input object shallow copy.
+        input_object_copy: InputObject = InputObject(input_object.to_dict())
+        # wrap input_object for agent knowledge.
+        input_object_copy.add_data(planner_input_key, subtask)
+        # wrap input_object for agent toolsets.
+        for tool_name in tools:
+            tool = ToolManager().get_instance_obj(tool_name)
+            if tool is None:
+                continue
+            # note: only insert the first key of tool input.
+            input_object_copy.add_data(tool.input_keys[0], subtask)
+        return input_object_copy

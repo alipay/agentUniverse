@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.9-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.10-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -45,8 +45,12 @@ pip install agentUniverse
 
 ## 使用ケース
 [法律相談Agent](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
+
 [Pythonコード生成と実行Agent](./docs/guidebook/en/7_1_1_Python_Auto_Runner.md)
+
 [多回多Agentによるディスカッショングループ](./docs/guidebook/en/6_2_1_Discussion_Group.md)
+
+[PEERマルチAgentモードに基づいた金融イベント分析](./docs/guidebook/en/6_4_1_Financial_Event_Analysis_Case.md)
 
 ## ガイドブック
 詳細情報については、[ガイドブック](docs/guidebook/en/0_index.md)を参照してください。
@@ -59,7 +63,5 @@ pip install agentUniverse
 * gitee: https://gitee.com/agentUniverse/agentUniverse
 * gitcode: https://gitcode.com/agentUniverse
 * Stack Overflow: https://stackoverflowteams.com/c/agentuniverse/questions
-* Discord: https://discord.gg/VfhEvJzQ
+* Discord: https://discord.gg/DHFcdkWAhn
 * WeChat公式アカウント: agentUniverse智多星
-* DingTalkグループ:
-![](./docs/guidebook/_picture/dingtalk_util20250429.png)
