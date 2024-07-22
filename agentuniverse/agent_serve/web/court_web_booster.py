@@ -43,7 +43,7 @@ def start_web_server(**kwargs):
         GunicornApplication().update_config(kwargs)
         GunicornApplication().run()
     else:
-        from .flask_server import app
+        from .court_flask_server  import app
         if 'bind' in kwargs:
             host, port = kwargs['bind'].split(':')
             port = int(port)

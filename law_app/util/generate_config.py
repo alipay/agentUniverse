@@ -88,7 +88,7 @@ def generate_plaintiff_lawyer_agent():
 
     开始!
 
-    你是讨论组参与者，你的名字是:{agent_name}，讨论参与者包括:{participants}
+    你是讨论组参与者，你的角色是:{agent_name}，讨论参与者包括:{participants}
 
     一共{total_round}轮讨论，当前是第{cur_round}轮讨论。
 
@@ -121,7 +121,7 @@ def generate_defendant_lawyer_agent():
 
     开始!
 
-    你是讨论组参与者，你的名字是:{agent_name}，讨论参与者包括:{participants}
+    你是讨论组参与者，你的角色是:{agent_name}，讨论参与者包括:{participants}
 
     一共{total_round}轮讨论，当前是第{cur_round}轮讨论。
 
@@ -153,7 +153,7 @@ def generate_judge_agent():
 
     开始!
 
-    你是讨论组参与者，你的名字是:{agent_name}，讨论参与者包括:{participants}
+    你是讨论组参与者，你的角色是:{agent_name}，讨论参与者包括:{participants}
 
     一共{total_round}轮讨论，当前是第{cur_round}轮讨论。
 

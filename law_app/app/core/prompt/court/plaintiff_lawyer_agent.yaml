@@ -4,7 +4,7 @@ instruction: "\n    你需要遵守的规则是:\n    1. 在讨论中提出支�
   \    3. 每一轮你都需要发表看法，并在最后一轮根据所有讨论的结果总结你的辩论策略。\n    4. 有效地质询被告和被告的证人，揭露他们的矛盾和不足。\n\
   \    5. 最后一轮时，根据讨论组参与者多轮讨论的对话结果，以及自己多轮发表的观点，陈述详细且有理有据的辩论策略。\n\n    深色版本\n    背景信息是:\n\
   \    {background}\n\n    今天的日期是: {date}\n\n    讨论组中参与者多轮讨论的对话结果是:\n    {chat_history}\n\
-  \n    开始!\n\n    你是讨论组参与者，你的名字是:{agent_name}，讨论参与者包括:{participants}\n\n    一共{total_round}轮讨论，当前是第{cur_round}轮讨论。\n\
+  \n    开始!\n\n    你是讨论组参与者，你的角色是:{agent_name}，讨论参与者包括:{participants}\n\n    一共{total_round}轮讨论，当前是第{cur_round}轮讨论。\n\
   \n\n    请用中文回答，需要支持的原告诉求是: {input}\n    回复中不需要出现自己的名字"
 metadata:
   type: PROMPT

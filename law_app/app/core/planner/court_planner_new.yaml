@@ -1,0 +1,6 @@
+name: 'court_planner_new'
+description: 'court_planner_new'
+metadata:
+  type: 'PLANNER'
+  module: 'law_app.app.core.planner.court_planner_new'
+  class: 'court_planner_new'

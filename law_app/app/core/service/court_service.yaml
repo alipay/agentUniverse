@@ -1,0 +1,7 @@
+name: 'court_service'
+description: 'court service agent'
+agent: 'court_host_agent'
+metadata:
+  type: 'SERVICE'
+  module: 'law_app.app.core.service.court_service'
+  class: 'court_service'

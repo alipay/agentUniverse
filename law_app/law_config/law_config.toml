@@ -17,7 +17,7 @@ planner = ['law_app.app.core.planner']
 # 扫描并为此列表下的所有路径注册记忆组件，优先级高于默认设置。
 memory = ['law_app.app.core.memory']
 # 扫描并为此列表下的所有路径注册服务组件，优先级高于默认设置。
-# service = ['law_app.app.core.service']
+service = ['law_app.app.core.service']
 # 扫描并为此列表下的所有路径注册提示组件，优先级高于默认设置。
 prompt = ['law_app.app.core.prompt']
 # 扫描并为此列表下的所有路径注册SQL数据库包装器组件，优先级高于默认设置。

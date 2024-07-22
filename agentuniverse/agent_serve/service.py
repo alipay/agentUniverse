@@ -7,6 +7,7 @@ from ..base.config.application_configer.application_config_manager import (
 )
 from ..base.component.component_base import ComponentBase
 from ..base.component.component_enum import ComponentEnum
+from ..base.util.logging.logging_util import LOGGER
 
 
 class Service(ComponentBase):
@@ -46,6 +47,8 @@ class Service(ComponentBase):
 
     def run(self, **kwargs) -> str:
         """The executed function when the service is called."""
+        redata = self.agent.run(**kwargs).to_json_str()
+        LOGGER.debug(f"re service {redata}")
         return self.agent.run(**kwargs).to_json_str()
 
     @property

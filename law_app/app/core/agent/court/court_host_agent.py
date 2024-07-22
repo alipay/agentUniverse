@@ -42,6 +42,7 @@ class court_host_agent(Agent):
         agent_input['participants'] = input_object.get_data('participants')
         agent_input['total_round'] = input_object.get_data('total_round')
         agent_input['current_round'] = input_object.get_data('current_round')
+        agent_input['role'] = input_object.get_data('role')
 
         LOGGER.debug(f"当前轮次 {agent_input['current_round']}")
 
@@ -71,9 +72,12 @@ class court_host_agent(Agent):
         agent_input['background'] = input_object.get_data('background') or ''
         agent_input['image_urls'] = input_object.get_data('image_urls') or []
         agent_input['date'] = datetime.now().strftime('%Y-%m-%d')
-        agent_input['event'] = input_object.get_data('event') or EventDispatcher()
+        # agent_input['event'] = input_object.get_data('event') or EventDispatcher()
 
         self.parse_input(input_object, agent_input)
+
+        keys = list(agent_input.keys())
+        LOGGER.debug(f"court_host_agent keys {keys}")
         return agent_input
 
     @trace_agent
@@ -88,15 +92,26 @@ class court_host_agent(Agent):
 
         agent_input = self.pre_parse_input(input_object)
         LOGGER.debug(f"agent_input {agent_input}")
-        planner_result = self.execute(input_object, agent_input)
+        planner_results = self.execute(input_object, agent_input)
 
-        LOGGER.debug(f"planner_result {planner_result}")
-        agent_result = self.parse_result(planner_result)
-        # print(agent_result)
+        for planner_result in planner_results:
 
-        self.output_check(agent_result)
-        output_object = OutputObject(agent_result)
-        return output_object
+            LOGGER.debug(f"planner_result {planner_result}")
+            agent_result = self.parse_result(planner_result).to_dict()
+            # print(agent_result)
+            LOGGER.debug(f"agent_result {type(agent_result)} {agent_result}")
+            self.output_check(agent_result)
+            output_object = OutputObject(agent_result)
+            yield output_object
+        # return output_object
+
+    def output_check(self, kwargs: dict):
+        """Agent result check."""
+        if not isinstance(kwargs, dict):
+            raise Exception('Output type must be dict.')
+        for key in self.output_keys():
+            if key not in kwargs.keys():
+                raise Exception(f'Output must have key: {key}.')
 
     def execute(self, input_object: InputObject, agent_input: dict) -> dict:
         """执行代理实例。
