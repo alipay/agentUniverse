@@ -31,6 +31,7 @@ class ExpressingAgent(Agent):
         """
         agent_input['input'] = input_object.get_data('input')
         agent_input['background'] = self.build_background(input_object)
+        agent_input['session_id'] += '_expressing_agent'
         self.agent_model.profile.setdefault('prompt_version', 'default_expressing_agent.cn')
         return agent_input
 

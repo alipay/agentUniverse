@@ -1,0 +1,9 @@
+name: 'demo_temporary_memory'
+description: 'demo temporary memory'
+type: 'short_term'
+memory_key: 'chat_history'
+max_tokens: 2000
+metadata:
+  type: 'MEMORY'
+  module: 'agentuniverse.agent.memory.temporary_memory'
+  class: 'TemporaryMemory'

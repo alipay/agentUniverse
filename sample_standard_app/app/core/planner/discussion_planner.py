@@ -116,6 +116,7 @@ class DiscussionPlanner(Planner):
         LOGGER.info(f"Discussion end.")
         LOGGER.info(f"Host agent starts summarize the discussion.")
         LOGGER.info("------------------------------------------------------------------")
+        # TODO
         memory: ChatMemory = self.handle_memory(agent_model, planner_input)
 
         llm: LLM = self.handle_llm(agent_model)

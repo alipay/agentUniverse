@@ -8,8 +8,9 @@
 from abc import abstractmethod
 import logging
 from queue import Queue
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Type
 
+from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.runnables import RunnableSerializable
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
@@ -30,7 +31,7 @@ from agentuniverse.base.config.component_configer.configers.planner_configer imp
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
-from agentuniverse.base.util.memory_util import generate_messages, generate_memories
+from agentuniverse.base.util.memory_util import generate_messages, generate_memories, generate_message
 
 logging.getLogger().setLevel(logging.ERROR)
 
@@ -65,7 +66,7 @@ class Planner(ComponentBase):
         """
         pass
 
-    def handle_memory(self, agent_model: AgentModel, planner_input: dict) -> ChatMemory | None:
+    def handle_memory(self, agent_model: AgentModel, planner_input: dict) -> Memory | None:
         """Memory module processing.
 
         Args:
@@ -76,21 +77,26 @@ class Planner(ComponentBase):
         """
         chat_history: list = planner_input.get('chat_history')
         memory_name = agent_model.memory.get('name')
-        llm_model = agent_model.memory.get('llm_model') or dict()
-        llm_name = llm_model.get('name') or agent_model.profile.get('llm_model').get('name')
 
-        messages: list[Message] = generate_messages(chat_history)
-        llm: LLM = LLMManager().get_instance_obj(llm_name)
-        params: dict = dict()
-        params['messages'] = messages
-        params['llm'] = llm
-        params['input_key'] = self.input_key
-        params['output_key'] = self.output_key
-
-        memory: ChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
+        # get memory instance
+        memory: Memory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
         if memory is None:
             return None
-        return memory.set_by_agent_model(**params)
+
+        # generate a list of messages from the given chat history
+        messages: list[Message] = generate_messages(chat_history)
+
+        llm_name = agent_model.profile.get('llm_model', {}).get('name')
+        llm: LLM = LLMManager().get_instance_obj(llm_name)
+
+        params: dict = dict()
+        params['llm_name'] = llm_name
+        params['llm'] = llm
+
+        # init memory and add messages to it
+        copied_memory = memory.set_by_agent_model(**params)
+        copied_memory.add(messages, **planner_input)
+        return copied_memory
 
     def run_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
         """Tool and knowledge processing.
@@ -185,14 +191,19 @@ class Planner(ComponentBase):
             return
         output_stream.put_nowait(data)
 
-    def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict, chat_history,
-               input_object: InputObject):
-
+    def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict,
+                     chat_history: BaseChatMessageHistory, memory: Memory,
+                     input_object: InputObject):
         if not input_object.get_data('output_stream'):
-            res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
+            res = chain.invoke(input=planner_input,
+                               config={"configurable": {"session_id": planner_input.get('session_id', '')}})
+            # add planner results to the memory
+            if memory:
+                memory.add(message_list=generate_message(chat_history), **planner_input)
             return res
         result = []
-        for token in chain.stream(input=planner_input, config={"configurable": {"session_id": "unused"}}):
+        for token in chain.stream(input=planner_input,
+                                  config={"configurable": {"session_id": planner_input.get('session_id', '')}}):
             self.stream_output(input_object, {
                 'type': 'token',
                 'data': {
@@ -201,5 +212,7 @@ class Planner(ComponentBase):
                 }
             })
             result.append(token)
+        # add planner results to the memory
+        if memory:
+            memory.add(message_list=generate_message(chat_history), **planner_input)
         return "".join(result)
-

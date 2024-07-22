@@ -188,8 +188,7 @@ class DatasetEvalAgent(Agent):
         """
         llm_name = self.agent_model.profile.get('llm_model').get('name')
         llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name, new_instance=True)
-        llm.set_by_agent_model(**self.agent_model.profile.get('llm_model'))
-        return llm
+        return llm.set_by_agent_model(**self.agent_model.profile.get('llm_model'))
 
     def generate_eval_report(self, eval_dims_json_list: List[List[dict]], date: str):
         """Integrate multidimensional evaluation scores and generate evaluation report

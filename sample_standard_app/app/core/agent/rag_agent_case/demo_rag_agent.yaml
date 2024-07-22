@@ -13,7 +13,7 @@ action:
   tool:
     - 'google_search_tool'
 memory:
-  name: ''
+  name: 'demo_sql_memory'
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'

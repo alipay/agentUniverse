@@ -5,11 +5,12 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: memory.py
-from typing import Optional
+from typing import Optional, List
 
 from langchain_core.memory import BaseMemory
 
 from agentuniverse.agent.memory.enum import MemoryTypeEnum
+from agentuniverse.agent.memory.message import Message
 from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
@@ -35,10 +36,6 @@ class Memory(ComponentBase):
 
     def __init__(self, **kwargs):
         super().__init__(component_type=ComponentEnum.MEMORY, **kwargs)
-
-    def as_langchain(self) -> BaseMemory:
-        """Convert the agentUniverse(aU) memory class to the langchain memory class."""
-        pass
 
     def set_by_agent_model(self, **kwargs):
         """ Assign values of parameters to the Memory model in the agent configuration."""
@@ -73,3 +70,27 @@ class Memory(ComponentBase):
         if component_configer.max_tokens:
             self.max_tokens = component_configer.max_tokens
         return self
+
+    def clear(self, **kwargs) -> None:
+        """Clear memory."""
+        pass
+
+    def add(self, message_list: List[Message], **kwargs) -> None:
+        """Add messages to the memory."""
+        pass
+
+    def delete(self, **kwargs) -> None:
+        """Delete messages from the memory."""
+        pass
+
+    def get(self, **kwargs) -> List[Message]:
+        """Get messages from the memory."""
+        pass
+
+    def prune(self, **kwargs) -> None:
+        """Prune messages from the memory due to memory max token limitation."""
+        pass
+
+    def as_langchain(self) -> BaseMemory:
+        """Convert the agentUniverse(aU) memory class to the langchain memory class."""
+        pass

@@ -1,0 +1,7 @@
+name: 'memory_sqldb_wrapper'
+description: 'memory_sqldb_wrapper'
+db_uri: "sqlite:///memory.db"
+engine_args:
+  pool_size: 5
+metadata:
+  type: 'SQLDB_WRAPPER'

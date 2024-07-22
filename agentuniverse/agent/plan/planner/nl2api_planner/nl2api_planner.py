@@ -16,9 +16,9 @@ from agentuniverse.agent.action.tool.tool import Tool
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
-from agentuniverse.agent.memory.chat_memory import ChatMemory
+from agentuniverse.agent.memory.memory import Memory
 from agentuniverse.agent.plan.planner.planner import Planner
-from agentuniverse.base.util.memory_util import generate_memories
+from agentuniverse.base.util.memory_util import generate_memories, generate_langchain_message, generate_message
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
 from agentuniverse.prompt.prompt import Prompt
@@ -39,7 +39,7 @@ class Nl2ApiPlanner(Planner):
         Returns:
             dict: The planner result.
         """
-        memory: ChatMemory = self.handle_memory(agent_model, planner_input)
+        memory: Memory = self.handle_memory(agent_model, planner_input)
 
         llm: LLM = self.handle_llm(agent_model)
 
@@ -47,17 +47,20 @@ class Nl2ApiPlanner(Planner):
 
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
-        chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
+        lc_chat_history = generate_langchain_message(
+            memory.get(**planner_input)) if memory else InMemoryChatMessageHistory()
 
         chain_with_history = RunnableWithMessageHistory(
             prompt.as_langchain() | llm.as_langchain(),
-            lambda session_id: chat_history,
-            history_messages_key="chat_history",
+            lambda session_id: lc_chat_history,
+            history_messages_key=memory.memory_key if memory else 'chat_history',
             input_messages_key=self.input_key,
         ) | JsonOutputParser()
         res = asyncio.run(
             chain_with_history.ainvoke(input=planner_input, config={"configurable": {"session_id": "unused"}}))
-        return {**planner_input, self.output_key: res, 'chat_history': generate_memories(chat_history)}
+        if memory:
+            memory.add(message_list=generate_message(lc_chat_history), **planner_input)
+        return {**planner_input, self.output_key: res, 'chat_history': generate_memories(lc_chat_history)}
 
     @staticmethod
     def acquire_tools(action) -> list[LangchainTool]:
