@@ -1,0 +1,6 @@
+name: 'court_planner'
+description: 'court_planner'
+metadata:
+  type: 'PLANNER'
+  module: 'law_game_app.app.core.planner.court_planner'
+  class: 'court_planner'

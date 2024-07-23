@@ -1,0 +1,24 @@
+info:
+  name: 'game_part_1_agent'
+  description: 'game_part_1_agent'
+profile:
+  prompt_version: law_host_agent.cn
+  llm_model:
+    name: 'qwen_llm'
+    temperature: 0.6
+plan:
+  planner:
+    name: 'game_part_1_planner'
+    round: 2
+    roles:
+      name:
+        - '法官_agent'
+        - '审判员_agent'
+        - '被告方_agent'
+        - '原告方_agent'
+memory:
+  name: 'demo_memory'
+metadata:
+  type: 'AGENT'
+  module: 'law_game_app.app.core.agent.game.game_part_1_agent'
+  class: 'game_part_1_agent'

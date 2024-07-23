@@ -1,0 +1,6 @@
+name: 'game_part_1_planner'
+description: 'game_part_1_planner'
+metadata:
+  type: 'PLANNER'
+  module: 'law_game_app.app.core.planner.game.game_part_1_planner'
+  class: 'game_part_1_planner'

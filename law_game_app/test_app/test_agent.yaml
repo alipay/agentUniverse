@@ -1,0 +1,21 @@
+info:
+  name: 'test_agent'
+  description: '快乐小助手'
+profile:
+  introduction: 你是一名快乐小助手,为用户服务
+  target: 你的目标是让用户快乐。
+  instruction: |
+    之前的对话是:{chat_history}
+    用户的输入是:{input}
+  llm_model:
+    name: 'demo_llm'
+    model_name: 'qwen-turbo'
+plan:
+  planner:
+    name: 'test_planner'
+memory:
+  name: 'default_memory'
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.test_app.test_agent'
+  class: 'TestAgent'

@@ -1,0 +1,50 @@
+# 应用名称将应用于所有进程，包括与代理服务的集成。
+appname = 'demo_app'
+
+[CORE_PACKAGE]
+# 对此列表下的所有路径执行完整的组件扫描和注册。
+default = ['law_game_app.app.core']
+# 扫描并为此列表下的所有路径注册代理组件，优先级高于默认设置。
+agent = ['law_game_app.app.core.agent']
+# 扫描并为此列表下的所有路径注册知识组件，优先级高于默认设置。
+# knowledge = ['law_game_app.app.core.knowledge']
+# 扫描并为此列表下的所有路径注册LLM（语言模型）组件，优先级高于默认设置。
+llm = ['law_game_app.app.core.llm']
+# 扫描并为此列表下的所有路径注册规划器组件，优先级高于默认设置。
+planner = ['law_game_app.app.core.planner']
+# 扫描并为此列表下的所有路径注册工具组件，优先级高于默认设置。
+# tool = ['law_game_app.app.core.tool']
+# 扫描并为此列表下的所有路径注册记忆组件，优先级高于默认设置。
+memory = ['law_game_app.app.core.memory']
+# 扫描并为此列表下的所有路径注册服务组件，优先级高于默认设置。
+service = ['law_game_app.app.core.service']
+# 扫描并为此列表下的所有路径注册提示组件，优先级高于默认设置。
+prompt = ['law_game_app.app.core.prompt']
+# 扫描并为此列表下的所有路径注册SQL数据库包装器组件，优先级高于默认设置。
+# sqldb_wrapper = ['law_game_app.app.core.sqldb_wrapper']
+
+[SUB_CONFIG_PATH]
+# 日志配置文件路径，可以是绝对路径，也可以是基于当前配置文件所在目录的相对路径。
+log_config_path = './log_config.toml'
+# 自定义密钥文件路径，用于保存您自己的秘密密钥，如Open AI的密钥或其他。请记得将其添加到.gitignore中。
+custom_key_path = './custom_key.toml'
+
+[DB]
+# 用于存储各种信息的SQLAlchemy数据库URI，例如，在应用程序运行期间生成的服务请求。
+# 如果为空，agentUniverse将创建一个本地SQLite数据库作为默认选择。
+system_db_uri = ''
+
+[GUNICORN]
+# 当激活设置为'true'时，使用Gunicorn作为HTTP服务器，否则仅使用Flask。
+activate = 'false'
+# Gunicorn配置文件路径，可以是绝对路径，也可以是基于当前配置文件所在目录的相对路径。
+gunicorn_config_path = './gunicorn_config.toml'
+
+[GRPC]
+activate = 'false'
+max_workers = 10
+server_port = 50051
+
+[MONITOR]
+activate = false
+dir = './monitor'

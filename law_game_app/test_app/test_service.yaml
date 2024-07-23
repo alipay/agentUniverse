@@ -1,0 +1,5 @@
+name: 'test_service'
+description: 'test service of test agent'
+agent: 'test_agent'
+metadata:
+  type: 'SERVICE'
