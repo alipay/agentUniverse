@@ -5,6 +5,9 @@
 # @Email  : zerozed00@qq.com
 # @File   ：game_part_1_planner.py
 import asyncio
+import json
+import os
+from typing import Dict, Any
 
 from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
@@ -24,14 +27,25 @@ from agentuniverse.prompt.chat_prompt import ChatPrompt
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
+from pydantic import Field
 
-default_round = 1
 
 
-class game_part_1_planner(Planner):
+class game_drama_planner(Planner):
     """Discussion planner class."""
 
-    # current_round = 0
+    dramas: dict = Field(default_factory=dict)  # 使用 pydantic 的方式定义字段
+
+    def __init__(self):
+        super().__init__()
+        self.load_dramas()  # 调用方法加载数据
+
+    def load_dramas(self):
+        relative_path = "../core/drama/game.json"
+        abs_path = os.path.abspath(relative_path)
+
+        with open(abs_path, 'r', encoding='utf-8') as file:
+            self.dramas = json.load(file)  # 加载数据到实例属性
 
     def invoke(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject) -> dict:
         """Invoke the planner.
@@ -79,140 +93,116 @@ class game_part_1_planner(Planner):
             dict: The planner result.
         """
         total_round: int = 1
-        chat_history = []
         LOGGER.info(f"The topic of discussion is {agent_input.get(self.input_key)}")
         LOGGER.info(f"The role agents are {'|'.join(role_agents.keys())}")
         agent_input['total_round'] = total_round
         agent_input['roles'] = ' and '.join(role_agents.keys())
 
         LOGGER.info(f"agent_input \n{agent_input}")
-
+        chat_history = agent_input['chat_history']
+        # chat_history = []
+        LOGGER.debug(f"chat_history = {chat_history}")
         # event_dispatcher = agent_input["event"]
         for i in range(total_round):
             LOGGER.info("------------------------------------------------------------------")
             LOGGER.info(f"Start a discussion, round is {i + 1}.")
 
-            # event_dispatcher.trigger_event("NEED_INPUT", {"msg":"需要用户输入"})
-
-            # def get_user_input():
-            #     agent_input['input'] = q = event_dispatcher.event_queue.get()
-            #
-            # event_dispatcher.register_listener("USER_INPUT",get_user_input)
             user_role = agent_input['role']
-            # if user_role == '原告':
+
+            # dramas = {
             #
-            #     drama = {
-            #         0: {'name': '法官','action': '开庭'},
-            #         1: {'name': '原告方', 'action': '陈述'},
-            #         2: {'name': '审判员', 'action': '判断原告方的陈述是否与当前背景有关'},
-            #         3: {'name': '被告方律师', 'action': '陈述'},
-            #         4: {'name': '审判员', 'action': '判断被告方的陈述是否与当前背景有关'},
-            #         5: {'name': '原告方', 'action': '陈述'},
-            #         6: {'name': '法官', 'action': '向两方提问'}
-            #     }
-            # elif user_role == '被告':
-            #     drama = {
-            #         0: {'name': '法官','action': '开庭'},
-            #         1: {'name': '原告方律师', 'action': '陈述'},
-            #         2: {'name': '审判员', 'action': '判断原告方的陈述是否与当前背景有关'},
-            #         3: {'name': '被告方', 'action': '陈述'},
-            #         4: {'name': '审判员', 'action': '判断被告方的陈述是否与当前背景有关'},
-            #         5: {'name': '原告方律师', 'action': '陈述'},
-            #         6: {'name': '法官', 'action': '向两方提问'}
-            #     }
-            # else:
-            drama = {
-                0: {'name': '法官','action': '开庭'},
-                1: {'name': '原告方', 'action': '陈述'},
-                2: {'name': '审判员', 'action': '判断原告方的陈述是否与当前背景有关'},
-                3: {'name': '被告方', 'action': '陈述'},
-                4: {'name': '审判员', 'action': '判断被告方的陈述是否与当前背景有关'},
-                5: {'name': '原告方', 'action': '陈述'},
-                6: {'name': '法官', 'action': '向两方提问'}
-            }
+            #     'a0': {'role': '法官', 'action': '开庭', 'next': 'a1', 'type': 'normal'},
+            #     'a1': {'role': '原告方', 'action': '陈述', 'next': 'a2', 'type': 'normal'},
+            #     'a2': {'role': '审判员', 'action': '判断原告方的陈述是否与当前背景有关', 'next': {'选择重新描述': 'a1', '选择继续': 'a3'},
+            #            'type': 'branch'},
+            #     'a3': {'role': '被告方', 'action': '陈述', 'next': 'a4', 'type': 'normal'},
+            #     'a4': {'role': '审判员', 'action': '判断被告方的陈述是否与当前背景有关', 'next': {'选择重新描述': 'a3', '选择继续': 'a5'},
+            #            'type': 'branch'},
+            #     'a5': {'role': '原告方', 'action': '陈述', 'next': 'a6', 'type': 'normal'},
+            #     'a6': {'role': '法官', 'action': '提出让双方互相提问', 'next': 'b0', 'type': 'normal'},
+            #
+            #     # 'b0': {'role': '原告方', 'action': '原告向被告提问', 'next': 'b1', 'type': 'normal'},
+            #     # 'b1': {'role': '被告方', 'action': '被告选择回答或者不回答', 'next': {'选择回答': 'b2', '选择不回答': 'b4'},
+            #     #        'type': 'branch'},
+            #     # 'b2': {'role': '原告方', 'action': '原告向合议庭提交数据进行明示', 'next': 'b3', 'type': 'normal'},
+            #     # 'b3': {'role': '被告方', 'action': '被告选择回答或者不回答', 'next': {'选择回答': 'b2', '选择不回答': 'b4'},
+            #     #        'type': 'branch'},
+            #     # 'b4': {'role': '被告方', 'action': '被告向原告提问', 'next': 'b5', 'type': 'normal'},
+            #     # 'b5': {'role': '原告方', 'action': '原告回答', 'next': 'b6', 'type': 'normal'},
+            #     # 'b6': {'role': '法官', 'action': '双方没有问题了吧', 'next': {'有问题': 'b0', '没问题': 'c0'}, 'type': 'normal'},
+            #     #
+            #     # 'c0': {'role': '法官', 'action': '下面进行法庭辩论,绕着三个焦点进行辩论', 'next': 'c1', 'type': 'normal'},
+            #     #
+            #     # 'c1': {'role': '原告方', 'action': '原告对三个焦点进行辩论', 'next': 'c2', 'type': 'normal'},
+            #     # 'c2': {'role': '被告方', 'action': '被告对三个焦点进行辩论', 'next': 'c3', 'type': 'normal'},
+            #     #
+            #     # 'c3': {'role': '法官', 'action': '原告要不要发表第二轮辩论意见', 'next': 'c1', 'type': 'normal'},
+            #     #
+            #     # 'c4': {'role': '原告方', 'action': '原告对被告的输出进行辩论', 'next': 'c5', 'type': 'normal'},
+            #     # 'c5': {'role': '法官', 'action': '判决', 'next': 'd0', 'type': 'normal'},
+            #     #
+            #     # 'd0': {'role': '法官', 'action': '判决', 'next': None, 'type': 'normal'}
+            #
+            # }
             # agent_input['input'] = input()
             LOGGER.debug(f"role_agents {role_agents}")
 
-            for stage in range(len(drama)):
-                segment = drama[stage]
-                role = segment['name']
-                action = segment['action']
+            cur_node = agent_input['cur_node']
+            # for stage in range(len(drama)):
+            # dramas = agent_input['dramas']
+            drama = self.dramas[cur_node]
+            role = drama['role']
+            action = drama['action']
 
-                agent_input['role'] = role
-                agent_input['action'] = action
+            agent_input['role'] = role
+            agent_input['action'] = action
+            agent_input['drama'] = drama
+            agent = role_agents[role + '_agent']
 
-                agent = role_agents[role + '_agent']
+            if role != user_role:
+                output_object: OutputObject = agent.run(**agent_input)
 
-                if role != user_role:
-                    output_object: OutputObject = agent.run(**agent_input)
+                LOGGER.debug(f"output_object {output_object.to_dict()}")
 
-                    LOGGER.debug(f"output_object {output_object.to_dict()}")
+                current_output = output_object.get_data('output', '')
+            else:
+                LOGGER.info("轮到用户输入")
+                # useri = """尊敬的法官大人，我是本案的原告，李明。今天站在这里，内心五味杂陈，既有对公正的渴望，也有对过去友情的惋惜。事情是这样的：我和王芳曾经是好朋友，关系甚密。2019年的春天，她来找我，说遇到了些经济上的困难，急需一笔钱周转。出于对朋友的信任和帮助的愿望，我毫不犹豫地借给了她十万元人民币。当时，我们并没有签订正式的合同，因为我觉得朋友之间不需要那么多手续，而且我们还有微信聊天记录作为借款的证明。然而，时间过得很快，转眼间还款期限到了。我曾多次联系王芳，提醒她还款的事情，但她总是找各种借口拖延，甚至后来连电话都不接了。这让我感到十分失望和无助。我并不是非要她立刻还清所有债务，但至少应该有个明确的态度和计划，而不是逃避。这笔钱对我来说很重要，它是我辛苦工作多年积攒下来的。我并不是要追究什么法律责任，只是希望能够得到一个公平的对待，让我的权益得到保障。我希望法庭能够理解我的处境，给予公正的裁决，让王芳能够认识到自己的责任，履行她的承诺。最后，我想说的是，我始终相信法律的公正，也愿意配合法庭的一切调查和安排。谢谢法官大人的聆听。
+                # """
 
-                    current_output = output_object.get_data('output', '')
-                else:
-                    LOGGER.info("轮到用户输入")
-                    # useri = """尊敬的法官大人，我是本案的原告，李明。今天站在这里，内心五味杂陈，既有对公正的渴望，也有对过去友情的惋惜。事情是这样的：我和王芳曾经是好朋友，关系甚密。2019年的春天，她来找我，说遇到了些经济上的困难，急需一笔钱周转。出于对朋友的信任和帮助的愿望，我毫不犹豫地借给了她十万元人民币。当时，我们并没有签订正式的合同，因为我觉得朋友之间不需要那么多手续，而且我们还有微信聊天记录作为借款的证明。然而，时间过得很快，转眼间还款期限到了。我曾多次联系王芳，提醒她还款的事情，但她总是找各种借口拖延，甚至后来连电话都不接了。这让我感到十分失望和无助。我并不是非要她立刻还清所有债务，但至少应该有个明确的态度和计划，而不是逃避。这笔钱对我来说很重要，它是我辛苦工作多年积攒下来的。我并不是要追究什么法律责任，只是希望能够得到一个公平的对待，让我的权益得到保障。我希望法庭能够理解我的处境，给予公正的裁决，让王芳能够认识到自己的责任，履行她的承诺。最后，我想说的是，我始终相信法律的公正，也愿意配合法庭的一切调查和安排。谢谢法官大人的聆听。
-                    # """
+                current_output = agent_input['input']
+                # current_output = "快还钱"
+                # current_output = useri
 
-                    # current_output = input()
-                    current_output = "快还钱"
-                    # current_output = useri
-                # process chat history
-                # 这行不能去掉    必须添加human的空输入
-                # chat_history.append({'role':role,'type': role,'content': ''})
-                chat_history.append({'role':role,'type': 'human','content': ''})
+            # 这行不能去掉    必须添加human的空输入
+            # chat_history.append({'role':role,'type': role,'content': ''})
 
-                cnt = f"\n第 {i + 1} 回合 role {role} 发言: \n{current_output}"
-                # ai_msg = {'role': role, 'type': role, 'content': current_output}
-                ai_msg = {'role': role, 'type': 'ai', 'content': current_output}
-                chat_history.append(ai_msg)
-                agent_input['chat_history'] = chat_history
+            chat_history.append({'role': role, 'type': 'human', 'content': ''})
 
-                LOGGER.info("------------------------------------------------------------------")
-                LOGGER.info(f"开始发言: agent is {role}.")
-                LOGGER.info(cnt)
-                # yield chat_history[-1]
-                LOGGER.info(f" for {role} \n{agent_input}")
-                LOGGER.info(f"agent_input['chat_history'] {agent_input['chat_history']}")
-                LOGGER.info("------------------------------------------------------------------")
+            cnt = f"\n第 {i + 1} 回合 role {role} 发言: \n{current_output}"
+            # ai_msg = {'role': role, 'type': role, 'content': current_output}
+            ai_msg = {'role': role, 'type': 'ai', 'content': current_output}
+            chat_history.append(ai_msg)
+            agent_input['chat_history'] = chat_history
 
-            # for agent_name, agent in role_agents.items():
-            #     # invoke role agent
-            #     agent_input['agent_name'] = agent_name
-            #     agent_input['cur_round'] = i + 1
-            #     agent_input['role'] = agent_name
-            #     output_object: OutputObject = agent.run(**agent_input)
-            #     LOGGER.debug(f"output_object {output_object.to_dict()}")
-            #
-            #
-            #     current_output = output_object.get_data('output', '')
-            #
-            #     # process chat history
-            #     chat_history.append({'role':'human','type': 'human','content': agent_input.get('input')})
-            #
-            #     cnt = f"第 {i + 1} 回合 agent {agent_name} 发言: {current_output}"
-            #     ai_msg = {'role':agent_name,'type': 'ai','content': cnt}
-            #     chat_history.append(ai_msg)
-            #     agent_input['chat_history'] = chat_history
-            #
-            #     LOGGER.info("------------------------------------------------------------------")
-            #     LOGGER.info(f"开始发言: agent is {agent_name}.")
-            #     LOGGER.info(cnt)
-            #     # yield chat_history[-1]
-            #     LOGGER.info(f" for {agent_name} \n{agent_input}")
-            #     LOGGER.info("------------------------------------------------------------------")
-
-            # event_dispatcher.trigger_event("AGENT_CNT", cnt)
-            # event_dispatcher.trigger_event("AGENT_CNT", {"msg": f"测试{i} {agent_name}"})
-            # yield output_object
+            LOGGER.info("------------------------------------------------------------------")
+            LOGGER.info(f"开始发言: agent is {role}.")
+            LOGGER.info(cnt)
+            # yield chat_history[-1]
+            LOGGER.info(f" for {role} \n{agent_input}")
+            LOGGER.info(f"agent_input['chat_history'] {agent_input['chat_history']}")
+            LOGGER.info("------------------------------------------------------------------")
 
         agent_input['chat_history'] = chat_history
+        agent_input['output'] = current_output
+        agent_input['drama'] = drama
 
         for i in agent_input['chat_history']:
             LOGGER.info(f"re chat_history {i}")
         # yield chat_history
         # finally invoke host agent
-        return self.invoke_host_agent(agent_model, agent_input)
+        return agent_input
+        # return self.invoke_host_agent(agent_model, agent_input)
 
     def invoke_host_agent(self, agent_model: AgentModel, planner_input: dict) -> dict:
         """ Invoke the host agent.

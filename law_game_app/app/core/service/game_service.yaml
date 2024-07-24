@@ -1,6 +1,6 @@
 name: 'game_service'
 description: 'game service agent'
-agent: 'game_host_agent'
+agent: 'game_drama_agent'
 metadata:
   type: 'SERVICE'
   module: 'law_game_app.app.core.service.game_service'

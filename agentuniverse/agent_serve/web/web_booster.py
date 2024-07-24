@@ -10,7 +10,6 @@ import sys
 import threading
 
 from .post_fork_queue import POST_FORK_QUEUE
-from ...base.util.logging.logging_util import LOGGER
 
 ACTIVATE_OPTIONS = {
     "gunicorn": False,
@@ -28,7 +27,6 @@ def start_web_server(**kwargs):
     """
     # Start grpc server.
     if ACTIVATE_OPTIONS["grpc"]:
-        LOGGER.debug("run grpc")
         from .rpc.grpc.grpc_server_booster import start_grpc_server
         grpc_thread = threading.Thread(
             target=start_grpc_server
@@ -37,8 +35,6 @@ def start_web_server(**kwargs):
 
     # Start http server.
     if ACTIVATE_OPTIONS["gunicorn"]:
-        LOGGER.debug("run gunicorn")
-
         from .gunicorn_server import GunicornApplication
         GunicornApplication().update_config(kwargs)
         GunicornApplication().run()
@@ -48,7 +44,7 @@ def start_web_server(**kwargs):
             host, port = kwargs['bind'].split(':')
             port = int(port)
         else:
-            port = 8888
+            port = 8881
             host = '0.0.0.0'
         for _func, args, kwargs in POST_FORK_QUEUE:
             _func(*args, **kwargs)

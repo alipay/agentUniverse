@@ -1,0 +1,6 @@
+name: 'game_drama_planner'
+description: 'game_drama_planner'
+metadata:
+  type: 'PLANNER'
+  module: 'law_game_app.app.core.planner.game.game_drama_planner'
+  class: 'game_drama_planner'

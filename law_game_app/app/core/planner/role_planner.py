@@ -19,7 +19,6 @@ from agentuniverse.agent.memory.memory_manager import MemoryManager
 from agentuniverse.agent.memory.message import Message
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.base.util.logging.logging_util import LOGGER
-from agentuniverse.base.util.memory_util import generate_messages, generate_memories
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
@@ -27,6 +26,7 @@ from agentuniverse.prompt.chat_prompt import ChatPrompt
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
+
 
 class role_planner(Planner):
     """Rag 计划器类。"""
@@ -73,10 +73,11 @@ class role_planner(Planner):
                 chat_history = InMemoryChatMessageHistory()
         except Exception as e:
             logger.exception(f"未预料的错误：{e}")
+
         # LOGGER.debug(f"chat_history {chat_history}")
 
         def get_chat_history(session_id):
-            LOGGER.debug(f"chat_history2 {chat_history}")
+            # LOGGER.debug(f"chat_history2 {chat_history}")
             return chat_history
 
         # 生成包含历史记录的可运行链
@@ -99,15 +100,15 @@ class role_planner(Planner):
         LOGGER.debug(f"redata {redata}")
         return redata
 
-    def generate_messages(self,memories: list) -> List[Message]:
+    def generate_messages(self, memories: list) -> List[Message]:
         messages = []
         for memory in memories:
             LOGGER.debug(memory)
             message: Message = Message(type=memory.get('type'), content=memory.get('content'))
             messages.append(message)
         return messages
-    #
-    def generate_memories(self,chat_messages: BaseChatMessageHistory) -> list:
+
+    def generate_memories(self, chat_messages: BaseChatMessageHistory) -> list:
         memories = []
         if chat_messages.messages:
             LOGGER.debug(f"chat_messages.messages {chat_messages.messages}")

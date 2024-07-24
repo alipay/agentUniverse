@@ -1,0 +1,29 @@
+{
+    "a0": {"role": "法官", "action": "开庭", "next": "a1", "type": "normal"},
+
+    "a1": {"role": "原告方", "action": "陈述", "next": "a2", "type": "normal"},
+    "a2": {"role": "审判员", "action": "判断原告方的陈述是否与当前背景有关", "next": {"选择重新描述": "a1", "选择继续": "a3"}, "type": "branch"},
+    "a3": {"role": "被告方", "action": "陈述", "next": "a4", "type": "normal"},
+    "a4": {"role": "审判员", "action": "判断被告方的陈述是否与当前背景有关", "next": {"选择重新描述": "a3", "选择继续": "a5"}, "type": "branch"},
+
+    "a5": {"role": "法官", "action": "提出让双方互相提问", "next": "b0", "type": "normal"},
+
+    "b0": {"role": "原告方", "action": "原告向被告提问", "next": "b0", "type": "normal"},
+    "b1": {"role": "被告方", "action": "回应原告的提问", "next": {"选择不回答": "b2", "选择回答": "b4"}, "type": "branch"},
+    "b2": {"role": "原告方", "action": "提交真实数据进行明示", "next": "b3","type": "normal"},
+    "b3": {"role": "被告方", "action": "回应原告的提问", "next": {"选择不回答": "b2", "选择回答": "b4"}, "type": "branch"},
+    "b4": {"role": "被告方", "action": "被告向原告提问", "next": "b5","type": "normal"},
+    "b5": {"role": "原告方", "action": "回应原告的提问", "next": "b6","type": "normal"},
+
+    "b6": {"role": "法官", "action": "询问双方是否需要继续发问", "next": {"原告需要": "b0", "被告需要": "b4","都不需要": "c0"}, "type": "branch"},
+
+    "c0": {"role": "法官", "action": "下面进行法庭辩论,绕着三个焦点进行辩论", "next": "c1", "type": "normal"},
+    "c1": {"role": "原告方", "action": "原告对三个焦点进行辩论", "next": "c2", "type": "normal"},
+    "c2": {"role": "被告方", "action": "被告对三个焦点进行辩论", "next": "c3", "type": "normal"},
+
+    "c3": {"role": "法官", "action": "询问原告方是否需要发表第二轮辩论意见", "next": {"原告方需要": "c4","原告方不需要": "c6"}, "type": "branch"},
+
+    "c4": {"role": "原告方", "action": "原告对被告说明的三个焦点进行辩论", "next": "c5", "type": "normal"},
+    "c5": {"role": "被告方", "action": "被告对原告的输出进行辩论", "next": {"原告有反对意见": "c4", "原告没有反对意见": "c6"}, "type": "branch"},
+    "c6": {"role": "法官", "action": "给出判决结果,宣布结束", "next": "a0", "type": "end"}
+}
