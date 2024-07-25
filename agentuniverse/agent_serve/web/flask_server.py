@@ -3,19 +3,16 @@ import traceback
 from flask import Flask, Response
 from werkzeug.exceptions import HTTPException
 
-from ..service_instance import ServiceInstance, ServiceNotFoundError
 from .request_task import RequestTask
 from .web_util import request_param, service_run_queue, make_standard_response
+from ..service_instance import ServiceInstance, ServiceNotFoundError
 from ...base.util.logging.logging_util import LOGGER
 
-from flask_session import Session
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 app.json.ensure_ascii = False
 
-app.config['SECRET_KEY'] = 'supersecretkey'
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
+
 @app.route("/echo")
 def echo():
     return 'Welcome to agentUniverse!!!'

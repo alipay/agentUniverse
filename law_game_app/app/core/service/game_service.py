@@ -41,12 +41,12 @@ class game_service(Service):
         user_id = kwargs.get('user_id')
         if not user_id:
             return {'message': '没有用户id,请检查'}
-
+        LOGGER.info(f"kwargs {kwargs}")
         # 获取或生成 session_id
-        if 'session_id' not in session:
-            session['session_id'] = str(uuid.uuid4())
-        session_id = session['session_id']
-        kwargs['session_id'] = session_id
+        # if 'session_id' not in session:
+        #     session['session_id'] = str(uuid.uuid4())
+        session_id = kwargs.get('session_id')
+        # kwargs['session_id'] = session_id
 
         # 获取用户和聊天记录的历史数据
         history_key = f"{user_id}_{session_id}"

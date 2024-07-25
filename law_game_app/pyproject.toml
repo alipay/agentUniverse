@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "law-game-app"
+version = "0.1.0"
+description = ""
+authors = ["Fluchw <2427607997@qq.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

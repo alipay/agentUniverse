@@ -47,6 +47,8 @@ class Service(ComponentBase):
 
     def run(self, **kwargs) -> str:
         """The executed function when the service is called."""
+        LOGGER.debug(f"re service kwargs {kwargs}")
+
         redata = self.agent.run(**kwargs).to_json_str()
         LOGGER.debug(f"re service {redata}")
         return self.agent.run(**kwargs).to_json_str()

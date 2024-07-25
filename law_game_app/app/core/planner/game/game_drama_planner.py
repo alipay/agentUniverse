@@ -41,7 +41,7 @@ class game_drama_planner(Planner):
         self.load_dramas()  # 调用方法加载数据
 
     def load_dramas(self):
-        relative_path = "../core/drama/game.json"
+        relative_path = "../core/drama/game1.json"
         abs_path = os.path.abspath(relative_path)
 
         with open(abs_path, 'r', encoding='utf-8') as file:
@@ -109,42 +109,7 @@ class game_drama_planner(Planner):
 
             user_role = agent_input['role']
 
-            # dramas = {
-            #
-            #     'a0': {'role': '法官', 'action': '开庭', 'next': 'a1', 'type': 'normal'},
-            #     'a1': {'role': '原告方', 'action': '陈述', 'next': 'a2', 'type': 'normal'},
-            #     'a2': {'role': '审判员', 'action': '判断原告方的陈述是否与当前背景有关', 'next': {'选择重新描述': 'a1', '选择继续': 'a3'},
-            #            'type': 'branch'},
-            #     'a3': {'role': '被告方', 'action': '陈述', 'next': 'a4', 'type': 'normal'},
-            #     'a4': {'role': '审判员', 'action': '判断被告方的陈述是否与当前背景有关', 'next': {'选择重新描述': 'a3', '选择继续': 'a5'},
-            #            'type': 'branch'},
-            #     'a5': {'role': '原告方', 'action': '陈述', 'next': 'a6', 'type': 'normal'},
-            #     'a6': {'role': '法官', 'action': '提出让双方互相提问', 'next': 'b0', 'type': 'normal'},
-            #
-            #     # 'b0': {'role': '原告方', 'action': '原告向被告提问', 'next': 'b1', 'type': 'normal'},
-            #     # 'b1': {'role': '被告方', 'action': '被告选择回答或者不回答', 'next': {'选择回答': 'b2', '选择不回答': 'b4'},
-            #     #        'type': 'branch'},
-            #     # 'b2': {'role': '原告方', 'action': '原告向合议庭提交数据进行明示', 'next': 'b3', 'type': 'normal'},
-            #     # 'b3': {'role': '被告方', 'action': '被告选择回答或者不回答', 'next': {'选择回答': 'b2', '选择不回答': 'b4'},
-            #     #        'type': 'branch'},
-            #     # 'b4': {'role': '被告方', 'action': '被告向原告提问', 'next': 'b5', 'type': 'normal'},
-            #     # 'b5': {'role': '原告方', 'action': '原告回答', 'next': 'b6', 'type': 'normal'},
-            #     # 'b6': {'role': '法官', 'action': '双方没有问题了吧', 'next': {'有问题': 'b0', '没问题': 'c0'}, 'type': 'normal'},
-            #     #
-            #     # 'c0': {'role': '法官', 'action': '下面进行法庭辩论,绕着三个焦点进行辩论', 'next': 'c1', 'type': 'normal'},
-            #     #
-            #     # 'c1': {'role': '原告方', 'action': '原告对三个焦点进行辩论', 'next': 'c2', 'type': 'normal'},
-            #     # 'c2': {'role': '被告方', 'action': '被告对三个焦点进行辩论', 'next': 'c3', 'type': 'normal'},
-            #     #
-            #     # 'c3': {'role': '法官', 'action': '原告要不要发表第二轮辩论意见', 'next': 'c1', 'type': 'normal'},
-            #     #
-            #     # 'c4': {'role': '原告方', 'action': '原告对被告的输出进行辩论', 'next': 'c5', 'type': 'normal'},
-            #     # 'c5': {'role': '法官', 'action': '判决', 'next': 'd0', 'type': 'normal'},
-            #     #
-            #     # 'd0': {'role': '法官', 'action': '判决', 'next': None, 'type': 'normal'}
-            #
-            # }
-            # agent_input['input'] = input()
+
             LOGGER.debug(f"role_agents {role_agents}")
 
             cur_node = agent_input['cur_node']
