@@ -142,16 +142,16 @@ class AgentUniverse(object):
         for component_enum, package_list in component_package_map.items():
             if not package_list:
                 continue
-            component_configer_list = self.__scan(package_list, ConfigTypeEnum.YAML, component_enum)
+            component_configer_list = self.scan(package_list, ConfigTypeEnum.YAML, component_enum)
             component_configer_list_map[component_enum] = component_configer_list
 
         for component_enum, component_configer_list in component_configer_list_map.items():
             self.__register(component_enum, component_configer_list)
 
-    def __scan(self,
-               package_list: [str],
-               config_type_enum: ConfigTypeEnum,
-               component_enum: ComponentEnum) -> list:
+    def scan(self,
+             package_list: [str],
+             config_type_enum: ConfigTypeEnum,
+             component_enum: ComponentEnum) -> list:
         """Scan the component directory and return certain component configer list.
 
         Args:
@@ -191,6 +191,7 @@ class AgentUniverse(object):
             component_instance: ComponentBase = component_clz().initialize_by_component_configer(configer_instance)
             if component_instance is None:
                 continue
+            component_instance.component_config_path = component_configer.configer.path
             component_manager_clz().register(component_instance.get_instance_code(), component_instance)
 
     def __package_name_to_path(self, package_name: str) -> str:
