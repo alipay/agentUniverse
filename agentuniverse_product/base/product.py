@@ -11,7 +11,7 @@ from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_configer_util import ComponentConfigerUtil
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
-from agentuniverse_product.base.product.product_configer import ProductConfiger
+from agentuniverse_product.base.product_configer import ProductConfiger
 
 
 class Product(ComponentBase):

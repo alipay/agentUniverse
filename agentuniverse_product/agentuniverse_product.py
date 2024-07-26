@@ -20,9 +20,9 @@ from agentuniverse.base.config.configer import Configer
 from agentuniverse.base.util.system_util import get_project_root_path
 from agentuniverse.base.annotation.singleton import singleton
 from agentuniverse.database.sqldb_wrapper_manager import SQLDBWrapperManager
-from agentuniverse_product.base.product.product import Product
-from agentuniverse_product.base.product.product_configer import ProductConfiger
-from agentuniverse_product.base.product.product_manager import ProductManager
+from agentuniverse_product.base.product import Product
+from agentuniverse_product.base.product_configer import ProductConfiger
+from agentuniverse_product.base.product_manager import ProductManager
 from agentuniverse_product.dal.message_library import MESSAGE_TABLE_NAME, MessageORM
 from agentuniverse_product.dal.session_library import SESSION_TABLE_NAME
 

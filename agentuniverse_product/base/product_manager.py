@@ -8,7 +8,7 @@
 from agentuniverse.base.annotation.singleton import singleton
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.component.component_manager_base import ComponentManagerBase
-from agentuniverse_product.base.product.product import Product
+from agentuniverse_product.base.product import Product
 
 
 @singleton

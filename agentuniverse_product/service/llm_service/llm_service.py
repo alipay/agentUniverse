@@ -8,12 +8,13 @@
 from typing import List
 
 from agentuniverse.base.component.component_enum import ComponentEnum
-from agentuniverse_product.base.product.product import Product
-from agentuniverse_product.base.product.product_manager import ProductManager
-from agentuniverse_product.service.llm_service.model.llm_dto import LlmDTO
+from agentuniverse_product.base.constant.llm_constant import LLM_MODEL_NAME
+from agentuniverse_product.base.product import Product
+from agentuniverse_product.base.product_manager import ProductManager
+from agentuniverse_product.service.model.llm_dto import LlmDTO
 
 
-class LlmService:
+class LLMService:
 
     @staticmethod
     def get_llm_list() -> List[LlmDTO]:
@@ -26,5 +27,6 @@ class LlmService:
                 llm_dto = LlmDTO(nickname=product.nickname, id=product.id)
                 llm = product.instance
                 llm_dto.temperature = llm.temperature
+                llm_dto.model_name = LLM_MODEL_NAME.get(product.id, [])
                 res.append(llm_dto)
         return res

@@ -8,9 +8,9 @@
 from typing import List
 
 from agentuniverse.base.component.component_enum import ComponentEnum
-from agentuniverse_product.base.product.product import Product
-from agentuniverse_product.base.product.product_manager import ProductManager
-from agentuniverse_product.service.tool_service.model.tool_dto import ToolDTO
+from agentuniverse_product.base.product import Product
+from agentuniverse_product.base.product_manager import ProductManager
+from agentuniverse_product.service.model.tool_dto import ToolDTO
 
 
 class ToolService:

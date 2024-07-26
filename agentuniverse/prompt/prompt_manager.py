@@ -17,5 +17,5 @@ class PromptManager(ComponentManagerBase):
     def __init__(self):
         super().__init__(ComponentEnum.PROMPT)
 
-    def get_instance_obj(self, component_instance_name: str, appname: str = None):
+    def get_instance_obj(self, component_instance_name: str, appname: str = None, new_instance: bool = False):
         return self._instance_obj_map.get(component_instance_name)
