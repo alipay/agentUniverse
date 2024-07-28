@@ -7,7 +7,6 @@
 # @FileName: agentuniverse_product.py
 import sys
 
-from agentuniverse.agent_serve.web.dal.request_library import RequestORM
 from agentuniverse.base.agentuniverse import AgentUniverse
 from agentuniverse.base.component.application_component_manager import ApplicationComponentManager
 from agentuniverse.base.component.component_configer_util import ComponentConfigerUtil
@@ -24,7 +23,7 @@ from agentuniverse_product.base.product import Product
 from agentuniverse_product.base.product_configer import ProductConfiger
 from agentuniverse_product.base.product_manager import ProductManager
 from agentuniverse_product.dal.message_library import MESSAGE_TABLE_NAME, MessageORM
-from agentuniverse_product.dal.session_library import SESSION_TABLE_NAME
+from agentuniverse_product.dal.session_library import SESSION_TABLE_NAME, SessionORM
 
 
 @singleton
@@ -67,7 +66,7 @@ class AgentUniverseProduct(object):
         with system_sqldb_wrapper.sql_database._engine.connect() as conn:
             # init session db
             if not conn.dialect.has_table(conn, SESSION_TABLE_NAME):
-                RequestORM.metadata.create_all(system_sqldb_wrapper.sql_database._engine)
+                SessionORM.metadata.create_all(system_sqldb_wrapper.sql_database._engine)
             # init message db
             if not conn.dialect.has_table(conn, MESSAGE_TABLE_NAME):
                 MessageORM.metadata.create_all(system_sqldb_wrapper.sql_database._engine)
