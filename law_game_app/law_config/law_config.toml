@@ -36,6 +36,7 @@ system_db_uri = ''
 
 [GUNICORN]
 # 当激活设置为'true'时，使用Gunicorn作为HTTP服务器，否则仅使用Flask。
+#activate = 'true'
 activate = 'false'
 # Gunicorn配置文件路径，可以是绝对路径，也可以是基于当前配置文件所在目录的相对路径。
 gunicorn_config_path = './gunicorn_config.toml'

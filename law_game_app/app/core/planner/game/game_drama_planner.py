@@ -122,7 +122,7 @@ class game_drama_planner(Planner):
             agent_input['role'] = role
             agent_input['action'] = action
             agent_input['drama'] = drama
-            agent = role_agents[role + '_agent']
+            agent = role_agents[role]
 
             if role != user_role:
                 output_object: OutputObject = agent.run(**agent_input)
@@ -140,13 +140,14 @@ class game_drama_planner(Planner):
                 # current_output = useri
 
             # 这行不能去掉    必须添加human的空输入
-            # chat_history.append({'role':role,'type': role,'content': ''})
-
-            chat_history.append({'role': role, 'type': 'human', 'content': ''})
+            chat_history.append({'role':role,'type': 'chat','content': ''})
+            # chat_history.append({'role': role, 'type': 'human', 'content': ''})
 
             cnt = f"\n第 {i + 1} 回合 role {role} 发言: \n{current_output}"
-            # ai_msg = {'role': role, 'type': role, 'content': current_output}
-            ai_msg = {'role': role, 'type': 'ai', 'content': current_output}
+
+            ai_msg = {'role': role, 'type': 'chat', 'content': current_output}
+            # ai_msg = {'role': role, 'type': 'ai', 'content': current_output}
+
             chat_history.append(ai_msg)
             agent_input['chat_history'] = chat_history
 

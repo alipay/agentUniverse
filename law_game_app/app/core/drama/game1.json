@@ -5,13 +5,12 @@
 
     "a3":{"role":"被告方","action":"陈述","next":{"继续":{"next_node":"a4","role":"审判员","action":"判断被告方的陈述是否与当前背景有关"}},"default_next":"a4"},
     "a4":{"role":"审判员","action":"判断被告方的陈述是否与当前背景有关","next":{"重新描述":{"next_node":"a3","role":"被告方","action":"陈述"},"继续":{"next_node":"a5","role":"法官","action":"提出让双方互相提问"}},"default_next":"a5"},
-    "a5":{"role":"法官","action":"提出让双方互相提问","next":{"继续":{"next_node":"b0","role":"法官","action":"提出让双方互相提问"}},"default_next":"b0"},
+    "a5":{"role":"法官","action":"提出让双方互相提问","next":{"继续":{"next_node":"b0","role":"原告方","action":"原告向被告提问"}},"default_next":"b0"},
 
     "b0":{"role":"原告方","action":"原告向被告提问","next":{"继续":{"next_node":"b1","role":"被告方","action":"回应原告的提问"}},"default_next":"b1"},
     "b1":{"role":"被告方","action":"回应原告的提问","next":{"选择不回答":{"next_node":"b2","role":"原告方","action":"提交真实数据进行明示"},"选择回答":{"next_node":"b4","role":"被告方","action":"被告向原告提问"}},"default_next":"b2"},
     "b2":{"role":"原告方","action":"提交真实数据进行明示","next":{"继续":{"next_node":"b3","role":"被告方","action":"回应原告的提问"}},"default_next":"b3"},
     "b3":{"role":"被告方","action":"回应原告的提问","next":{"选择不回答":{"next_node":"b2","role":"原告方","action":"提交真实数据进行明示"},"选择回答":{"next_node":"b4","role":"被告方","action":"被告向原告提问"}},"default_next":"b4"},
-
 
     "b4":{"role":"被告方","action":"被告向原告提问","next":{"继续":{"next_node":"b5","role":"原告方","action":"回应被告的提问"}},"default_next":"b5"},
     "b5":{"role":"原告方","action":"回应被告的提问","next":{"继续":{"next_node":"b6","role":"法官","action":"询问双方是否需要继续发问"}},"default_next":"b6"},

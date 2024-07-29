@@ -1,5 +1,5 @@
 info:
-  name: 法官_agent
+  name: 法官
   description: 法官_agent
 profile:
   prompt_version: 法官_agent

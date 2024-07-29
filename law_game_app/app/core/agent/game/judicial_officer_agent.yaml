@@ -1,5 +1,5 @@
 info:
-  name: 审判员_agent
+  name: 审判员
   description: 审判员_agent
 profile:
   prompt_version: 审判员_agent

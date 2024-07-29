@@ -23,6 +23,7 @@ class role_agent(Agent):
 
     def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
         agent_input['input'] = input_object.get_data('input')
+        agent_input['chat_history'] = input_object.get_data('chat_history')
         agent_input['background'] = input_object.get_data('background')
         agent_input['agent_name'] = input_object.get_data('agent_name')
         agent_input['total_round'] = input_object.get_data('total_round')

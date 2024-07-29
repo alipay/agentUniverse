@@ -1,5 +1,5 @@
 info:
-  name: 原告方_agent
+  name: 原告方
   description: 原告方_agent
 profile:
   prompt_version: 原告方_agent

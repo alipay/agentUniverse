@@ -4,19 +4,18 @@
 # @Author : fluchw
 # @Email  : zerozed00@qq.com
 # @File   ：draft_contract_planner.py
-import asyncio
-from typing import List
+from typing import List, Any
 
 from langchain_core.chat_history import InMemoryChatMessageHistory, BaseChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnableSerializable
 from langchain_core.runnables.history import RunnableWithMessageHistory
-from loguru import logger
 
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
-from agentuniverse.agent.memory.chat_memory import ChatMemory
+# from agentuniverse.agent.memory.chat_memory import RoleMemory
 from agentuniverse.agent.memory.memory_manager import MemoryManager
-from agentuniverse.agent.memory.message import Message
+# from agentuniverse.agent.memory.message import RoleMessage
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.base.util.prompt_util import process_llm_token
@@ -26,6 +25,8 @@ from agentuniverse.prompt.chat_prompt import ChatPrompt
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
+from law_game_app.app.core.memory.role_memory import RoleMemory
+from law_game_app.app.core.memory.role_message import RoleMessage
 
 
 class role_planner(Planner):
@@ -42,8 +43,8 @@ class role_planner(Planner):
         返回:
             dict: 计划器结果。
         """
-        # 处理内存模块
-        memory: ChatMemory = self.handle_memory(agent_model, planner_input)
+        # 处理记忆模块
+        memory: RoleMemory = self.handle_memory(agent_model, planner_input)
 
         LOGGER.debug("↓↓↓↓↓↓↓")
         # 运行所有工具和知识模块
@@ -52,59 +53,77 @@ class role_planner(Planner):
         # 处理语言模型
         llm: LLM = self.handle_llm(agent_model)
 
+        LOGGER.debug(f"planner_input {planner_input}")
         # 处理提示模块
         prompt: ChatPrompt = self.handle_prompt(agent_model, planner_input)
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
+        LOGGER.debug(f"prompt {prompt}")
 
         # 首先检查memory是否存在，如果存在，则使用memory提供的聊天历史管理器
-        # chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
-        try:
-            if memory is not None:
-                LOGGER.debug(f"memory已存在: {memory}")
+        if memory:
+            LOGGER.debug("使用来自 memory 的聊天历史记录。")
+            chat_history = memory.as_langchain().chat_memory
+            LOGGER.debug(f"chat_history {chat_history}")
 
-                # memory对象必须提供as_langchain()方法，该方法返回一个LangChain兼容的接口
-                # .chat_memory是从这个接口获取的聊天历史管理器
-                chat_history = memory.as_langchain().chat_memory
-            else:
-                # 如果memory不存在，则创建一个新的InMemoryChatMessageHistory实例
-                # 这将用于在内存中存储聊天历史
-                LOGGER.debug("memory不存在")
+        else:
+            LOGGER.debug("创建新的内存聊天历史记录。")
+            chat_history = InMemoryChatMessageHistory()
+            LOGGER.debug(f"chat_history {chat_history}")
 
-                chat_history = InMemoryChatMessageHistory()
-        except Exception as e:
-            logger.exception(f"未预料的错误：{e}")
+        # chat_history: BaseChatMessageHistory = add_message
+        LOGGER.debug(f"chat_history {chat_history}")
 
-        # LOGGER.debug(f"chat_history {chat_history}")
-
-        def get_chat_history(session_id):
-            # LOGGER.debug(f"chat_history2 {chat_history}")
-            return chat_history
-
-        # 生成包含历史记录的可运行链
         chain_with_history = RunnableWithMessageHistory(
             prompt.as_langchain() | llm.as_langchain(),
-            # lambda session_id: chat_history,
-            get_chat_history,
+            lambda session_id: chat_history,
             history_messages_key="chat_history",
             input_messages_key=self.input_key,
         ) | StrOutputParser()
 
-        # 异步调用链并获取结果
-        res = asyncio.run(
-            chain_with_history.ainvoke(input=planner_input, config={"configurable": {"session_id": "unused"}}))
-        LOGGER.debug(f"chat_history0 --> {chat_history}")
+        LOGGER.debug(f"chain_with_history {chain_with_history}")
+        res = self.invoke_chain(agent_model, chain_with_history, planner_input, chat_history, input_object)
+
+        LOGGER.debug(f"res {res}")
+        r = {**planner_input, self.output_key: res, 'chat_history': chat_history}
+        LOGGER.debug(f"r {r}")
+
+        return r
 
         # LOGGER.debug(f"chat_history1 --> {self.generate_memories(chat_history)}")
         # 返回结果，包括计划器输入、输出和生成的聊天历史
-        redata = {**planner_input, self.output_key: res, 'chat_history': self.generate_memories(chat_history)}
-        LOGGER.debug(f"redata {redata}")
-        return redata
+        # redata = {**planner_input, self.output_key: res, 'chat_history': self.generate_memories(chat_history)}
+        # LOGGER.debug(f"redata {redata}")
+        # return redata
 
-    def generate_messages(self, memories: list) -> List[Message]:
+    def invoke_chain(self,
+                     agent_model: AgentModel,
+                     chain: RunnableSerializable[Any, str],
+                     planner_input: dict,
+                     chat_history,
+                     input_object: InputObject):
+
+        LOGGER.debug(f"role invoke_chain\n{chat_history}")
+        LOGGER.debug(f"planner_input\n{planner_input}")
+        if not input_object.get_data('output_stream'):
+            res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
+            return res
+        result = []
+        for token in chain.stream(input=planner_input, config={"configurable": {"session_id": "unused"}}):
+            self.stream_output(input_object, {
+                'type': 'token',
+                'data': {
+                    'chunk': token,
+                    'agent_info': agent_model.info
+                }
+            })
+            result.append(token)
+        return "".join(result)
+
+    def generate_messages(self, memories: list) -> List[RoleMessage]:
         messages = []
         for memory in memories:
             LOGGER.debug(memory)
-            message: Message = Message(type=memory.get('type'), content=memory.get('content'))
+            message: RoleMessage = RoleMessage(role =memory.get('role') ,type=memory.get('type'), content=memory.get('content'))
             messages.append(message)
         return messages
 
@@ -115,11 +134,11 @@ class role_planner(Planner):
             for message in chat_messages.messages:
                 LOGGER.debug(f'generate_memories -> {message}')
                 LOGGER.debug(f'message.type -> {message.type}')
-                memory_dict = {"content": message.content, "type": message.type}
+                memory_dict = {"role":message.role,"content": message.content, "type": message.type}
                 memories.append(memory_dict)
         return memories
 
-    def handle_memory(self, agent_model: AgentModel, planner_input: dict) -> ChatMemory | None:
+    def handle_memory(self, agent_model: AgentModel, planner_input: dict) -> RoleMemory | None:
         """Memory module processing.
 
         Args:
@@ -134,7 +153,7 @@ class role_planner(Planner):
         llm_model = agent_model.memory.get('llm_model') or dict()
         llm_name = llm_model.get('name') or agent_model.profile.get('llm_model').get('name')
 
-        messages: list[Message] = self.generate_messages(chat_history)
+        messages: list[RoleMessage] = self.generate_messages(chat_history)
         LOGGER.debug(f'generate_messages(chat_history) -> {messages}')
         llm: LLM = LLMManager().get_instance_obj(llm_name)
         params: dict = dict()
@@ -143,10 +162,13 @@ class role_planner(Planner):
         params['input_key'] = self.input_key
         params['output_key'] = self.output_key
 
-        memory: ChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
+        memory: RoleMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
         if memory is None:
             return None
-        return memory.set_by_agent_model(**params)
+
+        rem = memory.set_by_agent_model(**params)
+        LOGGER.debug(f"rem {rem}")
+        return rem
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> ChatPrompt:
         """提示模块处理。

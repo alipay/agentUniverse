@@ -1,5 +1,5 @@
 info:
-  name: 被告方_agent
+  name: 被告方
   description: 被告方_agent
 profile:
   prompt_version: 被告方_agent
