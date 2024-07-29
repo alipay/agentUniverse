@@ -76,7 +76,7 @@ class RequestLibrary:
         if not self.session:
             self.__init_request_table()
             self.session = self.sqldb_wrapper.get_session()
-        return self.session
+        return self.session()
 
 
     def query_request_by_request_id(self, request_id: str) -> RequestDO | None:
