@@ -7,6 +7,7 @@
 from typing import List, Any
 
 from langchain_core.chat_history import InMemoryChatMessageHistory, BaseChatMessageHistory
+from langchain_core.messages import ChatMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableSerializable
 from langchain_core.runnables.history import RunnableWithMessageHistory
@@ -15,7 +16,7 @@ from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 # from agentuniverse.agent.memory.chat_memory import RoleMemory
 from agentuniverse.agent.memory.memory_manager import MemoryManager
-# from agentuniverse.agent.memory.message import RoleMessage
+# from agentuniverse.agent.memory.message import ChatMessage
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.base.util.prompt_util import process_llm_token
@@ -26,7 +27,7 @@ from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
 from law_game_app.app.core.memory.role_memory import RoleMemory
-from law_game_app.app.core.memory.role_message import RoleMessage
+# from law_game_app.app.core.memory.role_message import ChatMessage
 
 
 class role_planner(Planner):
@@ -119,11 +120,11 @@ class role_planner(Planner):
             result.append(token)
         return "".join(result)
 
-    def generate_messages(self, memories: list) -> List[RoleMessage]:
+    def generate_messages(self, memories: list) -> List[ChatMessage]:
         messages = []
         for memory in memories:
             LOGGER.debug(memory)
-            message: RoleMessage = RoleMessage(role =memory.get('role') ,type=memory.get('type'), content=memory.get('content'))
+            message: ChatMessage = ChatMessage(role =memory.get('role') ,type=memory.get('type'), content=memory.get('content'))
             messages.append(message)
         return messages
 
@@ -153,7 +154,7 @@ class role_planner(Planner):
         llm_model = agent_model.memory.get('llm_model') or dict()
         llm_name = llm_model.get('name') or agent_model.profile.get('llm_model').get('name')
 
-        messages: list[RoleMessage] = self.generate_messages(chat_history)
+        messages: list[ChatMessage] = self.generate_messages(chat_history)
         LOGGER.debug(f'generate_messages(chat_history) -> {messages}')
         llm: LLM = LLMManager().get_instance_obj(llm_name)
         params: dict = dict()
