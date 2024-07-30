@@ -4,10 +4,7 @@
 # @Author : fluchw
 # @Email  : zerozed00@qq.com
 # @File   ：court_service.py
-import uuid
 from typing import Dict, List, Any
-
-from flask import session
 
 from agentuniverse.agent_serve.service import Service
 from agentuniverse.base.util.logging.logging_util import LOGGER
@@ -68,6 +65,11 @@ class game_service(Service):
         self.chat_history[history_key] = rsp["chat_history"]
         LOGGER.debug(f"ser chat_history {self.chat_history}")
         msg = {
+            'cur_drama': {
+                'noed': rsp['cur_node'],
+                'role': rsp['role'],
+                'action': rsp['action']
+            },
             'drama': rsp['drama'],
             'user_id': user_id,
             'session_id': session_id,

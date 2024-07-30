@@ -8,7 +8,6 @@ from typing import Optional, List
 
 from langchain.memory.chat_memory import BaseChatMemory
 
-from agentuniverse.agent.memory.enum import MemoryTypeEnum
 from agentuniverse.agent.memory.memory import Memory
 from agentuniverse.agent.memory.message import Message
 # from agentuniverse.agent.memory.langchain_instance import AuConversationSummaryBufferMemory, \
@@ -16,8 +15,7 @@ from agentuniverse.agent.memory.message import Message
 from agentuniverse.base.config.component_configer.configers.memory_configer import MemoryConfiger
 from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.llm.llm import LLM
-from law_game_app.app.core.memory.langchain_role_memory import BaseRoleMemory
-from law_game_app.app.core.memory.role_langchain_instance import AuConversationSummaryBufferMemory
+from law_game_app.app.core.memory.role_langchain_instance import RoleConversationSummaryBufferMemory
 from law_game_app.app.core.memory.role_message import RoleMessage
 
 
@@ -39,7 +37,7 @@ class RoleMemory(Memory):
     messages: Optional[List[RoleMessage]] = None
     prompt_version: Optional[str] = None
 
-    def as_langchain(self) -> BaseRoleMemory:
+    def as_langchain(self) -> BaseChatMemory:
         """Convert the agentUniverse(aU) chat memory class to the langchain chat memory class."""
         LOGGER.debug('RoleMemory as_langchain')
         if self.llm is None:
@@ -50,10 +48,10 @@ class RoleMemory(Memory):
         #                                            max_token_limit=self.max_tokens, messages=self.messages)
         # elif self.type == MemoryTypeEnum.LONG_TERM:
         LOGGER.debug(f"RoleMemory as_langchain, self.messages: {self.messages}")
-        return AuConversationSummaryBufferMemory(llm=self.llm.as_langchain(), memory_key=self.memory_key,
-                                                 input_key=self.input_key, output_key=self.output_key,
-                                                 max_token_limit=self.max_tokens, messages=self.messages,
-                                                 prompt_version=self.prompt_version)
+        return RoleConversationSummaryBufferMemory(llm=self.llm.as_langchain(), memory_key=self.memory_key,
+                                                   input_key=self.input_key, output_key=self.output_key,
+                                                   max_token_limit=self.max_tokens, messages=self.messages,
+                                                   prompt_version=self.prompt_version)
 
     def set_by_agent_model(self, **kwargs):
         """ Assign values of parameters to the ChatMemory model in the agent configuration."""

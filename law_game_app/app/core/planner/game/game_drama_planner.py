@@ -7,11 +7,11 @@
 import asyncio
 import json
 import os
-from typing import Dict, Any
 
 from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables.history import RunnableWithMessageHistory
+from pydantic import Field
 
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
@@ -27,8 +27,6 @@ from agentuniverse.prompt.chat_prompt import ChatPrompt
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
-from pydantic import Field
-
 
 
 class game_drama_planner(Planner):
@@ -109,7 +107,6 @@ class game_drama_planner(Planner):
 
             user_role = agent_input['role']
 
-
             LOGGER.debug(f"role_agents {role_agents}")
 
             cur_node = agent_input['cur_node']
@@ -140,7 +137,7 @@ class game_drama_planner(Planner):
                 # current_output = useri
 
             # 这行不能去掉    必须添加human的空输入
-            chat_history.append({'role':role,'type': 'chat','content': ''})
+            # chat_history.append({'role':role,'type': 'chat','content': ''})
             # chat_history.append({'role': role, 'type': 'human', 'content': ''})
 
             cnt = f"\n第 {i + 1} 回合 role {role} 发言: \n{current_output}"
