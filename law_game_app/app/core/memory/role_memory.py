@@ -19,9 +19,6 @@ from agentuniverse.llm.llm import LLM
 from law_game_app.app.core.memory.role_langchain_instance import RoleConversationSummaryBufferMemory
 
 
-# from law_game_app.app.core.memory.role_message import RoleMessage
-
-
 class RoleMemory(Memory):
     """The basic class for chat memory model.
 
@@ -52,9 +49,9 @@ class RoleMemory(Memory):
         # elif self.type == MemoryTypeEnum.LONG_TERM:
         LOGGER.debug(f"RoleMemory as_langchain, self.messages: {self.messages}")
         return RoleConversationSummaryBufferMemory(llm=self.llm.as_langchain(), memory_key=self.memory_key,
-                                                 input_key=self.input_key, output_key=self.output_key,
-                                                 max_token_limit=self.max_tokens, messages=self.messages,
-                                                 prompt_version=self.prompt_version)
+                                                   input_key=self.input_key, output_key=self.output_key,
+                                                   max_token_limit=self.max_tokens, messages=self.messages,
+                                                   prompt_version=self.prompt_version)
 
     def set_by_agent_model(self, **kwargs):
         """ Assign values of parameters to the ChatMemory model in the agent configuration."""
