@@ -9,7 +9,7 @@ from typing import List, Optional, Dict, Any
 
 from langchain.memory import ConversationSummaryBufferMemory, ConversationTokenBufferMemory
 from langchain.memory.utils import get_prompt_input_key
-from langchain_core.messages import BaseMessage, get_buffer_string, HumanMessage, AIMessage, ChatMessage
+from langchain_core.messages import BaseMessage, get_buffer_string, ChatMessage
 from langchain_core.output_parsers import StrOutputParser
 
 from agentuniverse.agent.memory.enum import ChatMessageEnum
@@ -20,8 +20,7 @@ from agentuniverse.prompt.prompt_manager import PromptManager
 
 # AuConversationSummaryBufferMemory -> ConversationSummaryBufferMemory -> BaseChatMemory
 
-
-class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory):
+class RoleConversationSummaryBufferMemory(ConversationSummaryBufferMemory):
     """Long term memory to store conversation memory.
 
     If memories exceeds the max tokens limit,
@@ -98,7 +97,7 @@ class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory):
 
     def generate_chat_messages(self, *pairs: ChatMessage):
         """generate pairs of Human and AI conversation messages"""
-        return role_generate_chat_messages(self,*pairs)
+        return role_generate_chat_messages(self, *pairs)
 
     def _get_input_output(
             self, inputs: Dict[str, Any], outputs: Dict[str, str]
@@ -151,7 +150,7 @@ class AuConversationSummaryBufferMemory(ConversationSummaryBufferMemory):
         return chain.invoke(input={'summary': existing_summary, 'new_lines': new_lines})
 
 
-class AuConversationTokenBufferMemory(ConversationTokenBufferMemory):
+class RoleConversationTokenBufferMemory(ConversationTokenBufferMemory):
     """Short term memory to store conversation memory.
 
     If memories exceeds the max tokens limit, the requirement is met by truncating part of memories
@@ -202,7 +201,7 @@ class AuConversationTokenBufferMemory(ConversationTokenBufferMemory):
 
     def generate_chat_messages(self, *pairs: ChatMessage):
         """generate pairs of Human and AI conversation messages"""
-        return role_generate_chat_messages(self,*pairs)
+        return role_generate_chat_messages(self, *pairs)
         # human_dict = {}
         # ai_dict = {}
         # role_dict0 = {}
