@@ -6,10 +6,19 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: react_planner.py
 
+
+from typing import Sequence, Optional, Union, List
+
+from langchain.agents.format_scratchpad import format_log_to_str
+from langchain.agents.output_parsers import ReActSingleInputOutputParser
+
 from langchain_core.chat_history import InMemoryChatMessageHistory
-from langchain.agents import AgentExecutor, create_react_agent
+from langchain.agents import AgentExecutor, AgentOutputParser
 from langchain.tools import Tool as LangchainTool
-from langchain_core.runnables import RunnableConfig
+from langchain_core.language_models import BaseLanguageModel
+from langchain_core.prompts import BasePromptTemplate
+from langchain_core.runnables import RunnableConfig, RunnablePassthrough, Runnable
+from langchain_core.tools import BaseTool, ToolsRenderer, render_text_description
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
@@ -50,14 +59,15 @@ class ReActPlanner(Planner):
         memory: ChatMemory = self.handle_memory(agent_model, planner_input)
 
         llm: LLM = self.handle_llm(agent_model)
-
         tools = self.acquire_tools(agent_model.action)
-
         prompt: Prompt = self.handle_prompt(agent_model, planner_input)
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
         chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
-
-        agent = create_react_agent(llm.as_langchain(), tools, prompt.as_langchain())
+        stop_sequence = []
+        if agent_model.plan.get('stop_sequence'):
+            stop_sequence = agent_model.profile.get('stop_sequence')
+        agent = create_react_agent(llm.as_langchain(), tools, prompt.as_langchain(), stop_sequence=stop_sequence,
+                                   bind_params=agent_model.llm_params())
         agent_executor = AgentExecutor(agent=agent, tools=tools,
                                        verbose=True,
                                        handle_parsing_errors=True,
@@ -133,3 +143,40 @@ class ReActPlanner(Planner):
 
         prompt = Prompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
         return prompt
+
+
+def create_react_agent(
+        llm: BaseLanguageModel,
+        tools: Sequence[BaseTool],
+        prompt: BasePromptTemplate,
+        output_parser: Optional[AgentOutputParser] = None,
+        tools_renderer: ToolsRenderer = render_text_description,
+        *,
+        stop_sequence: Union[bool, List[str]] = True,
+        bind_params: Optional[dict],
+) -> Runnable:
+    missing_vars = {"tools", "tool_names", "agent_scratchpad"}.difference(
+        prompt.input_variables + list(prompt.partial_variables)
+    )
+    if missing_vars:
+        raise ValueError(f"Prompt missing required variables: {missing_vars}")
+
+    prompt = prompt.partial(
+        tools=tools_renderer(list(tools)),
+        tool_names=", ".join([t.name for t in tools]),
+    )
+    if stop_sequence:
+        stop = ["\nObservation"] if stop_sequence is True else stop_sequence
+        llm_with_stop = llm.bind(stop=stop, **(bind_params or {}))
+    else:
+        llm_with_stop = llm.bind(**(bind_params or {}))
+    output_parser = output_parser or ReActSingleInputOutputParser()
+    agent = (
+            RunnablePassthrough.assign(
+                agent_scratchpad=lambda x: format_log_to_str(x["intermediate_steps"]),
+            )
+            | prompt
+            | llm_with_stop
+            | output_parser
+    )
+    return agent

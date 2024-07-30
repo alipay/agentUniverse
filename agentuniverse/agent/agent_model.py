@@ -17,3 +17,18 @@ class AgentModel(BaseModel):
     plan: Optional[dict] = dict()
     memory: Optional[dict] = dict()
     action: Optional[dict] = dict()
+
+    def llm_params(self) -> dict:
+        """
+        Returns:
+            dict: The parameters for the LLM.
+        """
+        params = {}
+        for key, value in self.profile.get('llm_model').items():
+            if key == 'name' or key == 'prompt_processor':
+                continue
+            if key == 'model_name':
+                params['model'] = value
+            else:
+                params[key] = value
+        return params

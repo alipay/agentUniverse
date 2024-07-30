@@ -43,6 +43,8 @@ class OpenAIStyleLLM(LLM):
 
     def _new_client(self):
         """Initialize the openai client."""
+        if self.client is not None:
+            return self.client
         return OpenAI(
             api_key=self.api_key,
             organization=self.organization,
@@ -55,6 +57,8 @@ class OpenAIStyleLLM(LLM):
 
     def _new_async_client(self):
         """Initialize the openai async client."""
+        if self.async_client is not None:
+            return self.async_client
         return AsyncOpenAI(
             api_key=self.api_key,
             organization=self.organization,
@@ -65,7 +69,7 @@ class OpenAIStyleLLM(LLM):
             **(self.client_args or {}),
         )
 
-    def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
+    def _call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the OpenAI LLM.
 
         Args:
@@ -87,11 +91,10 @@ class OpenAIStyleLLM(LLM):
         )
         if not streaming:
             text = chat_completion.choices[0].message.content
-            self.close()
             return LLMOutput(text=text, raw=chat_completion.model_dump())
         return self.generate_stream_result(chat_completion)
 
-    async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
+    async def _acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the OpenAI LLM.
 
         Args:
@@ -111,7 +114,6 @@ class OpenAIStyleLLM(LLM):
         )
         if not streaming:
             text = chat_completion.choices[0].message.content
-            await self.aclose()
             return LLMOutput(text=text, raw=chat_completion.model_dump())
         return self.agenerate_stream_result(chat_completion)
 
@@ -154,7 +156,6 @@ class OpenAIStyleLLM(LLM):
             llm_output = self.parse_result(chunk)
             if llm_output:
                 yield llm_output
-        self.close()
 
     async def agenerate_stream_result(self, stream: AsyncIterator) -> AsyncIterator[LLMOutput]:
         """Generate the result of the stream."""
@@ -162,8 +163,6 @@ class OpenAIStyleLLM(LLM):
             llm_output = self.parse_result(chunk)
             if llm_output:
                 yield llm_output
-
-        await self.aclose()
 
     def initialize_by_component_configer(self, component_configer: LLMConfiger) -> 'LLM':
         if 'api_base' in component_configer.configer.value:
@@ -192,16 +191,6 @@ class OpenAIStyleLLM(LLM):
         except KeyError:
             encoding = tiktoken.get_encoding("cl100k_base")
         return len(encoding.encode(text))
-
-    def close(self):
-        """Close the client."""
-        if hasattr(self, 'client') and self.client:
-            self.client.close()
-
-    async def aclose(self):
-        """Async close the client."""
-        if hasattr(self, 'async_client') and self.async_client:
-            await self.async_client.close()
 
     def max_context_length(self) -> int:
         """Return the maximum length of the context."""

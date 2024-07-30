@@ -47,9 +47,8 @@ class RagPlanner(Planner):
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
         chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
-
         chain_with_history = RunnableWithMessageHistory(
-            prompt.as_langchain() | llm.as_langchain(),
+            prompt.as_langchain() | llm.as_langchain_runnable(agent_model.llm_params()),
             lambda session_id: chat_history,
             history_messages_key="chat_history",
             input_messages_key=self.input_key,

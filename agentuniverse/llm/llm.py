@@ -1,18 +1,22 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
-
+import queue
 # @Time    : 2024/4/2 16:04
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: llm.py
+
 from abc import abstractmethod
 from typing import Optional, Any, AsyncIterator, Iterator, Union
 from langchain_core.language_models.base import BaseLanguageModel
+from langchain_core.runnables import Runnable
 
+from agentuniverse.base.annotation.trace import trace_llm
 from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
 from agentuniverse.base.config.component_configer.configers.llm_configer import LLMConfiger
+from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.llm.llm_output import LLMOutput
 
 
@@ -33,6 +37,9 @@ class LLM(ComponentBase):
         ext_info (Optional[dict]): The extended information of the llm model.
     """
 
+    class Config:
+        arbitrary_types_allowed = True
+
     client: Any = None
     async_client: Any = None
     name: Optional[str] = None
@@ -46,6 +53,7 @@ class LLM(ComponentBase):
     ext_info: Optional[dict] = None
     tracing: Optional[bool] = None
     _max_context_length: Optional[int] = None
+    langchain_instance: Optional[BaseLanguageModel] = None
 
     def __init__(self, **kwargs):
         """Initialize the llm."""
@@ -60,11 +68,11 @@ class LLM(ComponentBase):
         pass
 
     @abstractmethod
-    def call(self, *args: Any, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
+    def _call(self, *args: Any, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the LLM."""
 
     @abstractmethod
-    async def acall(self, *args: Any, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
+    async def _acall(self, *args: Any, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the LLM."""
 
     def as_langchain(self) -> BaseLanguageModel:
@@ -146,3 +154,29 @@ class LLM(ComponentBase):
         Returns:
             The integer number of tokens in the text.
         """
+
+    def as_langchain_runnable(self, params=None) -> Runnable:
+        """Get the langchain llm class."""
+        if params is None:
+            params = {}
+        if self.langchain_instance is None:
+            self.langchain_instance = self.as_langchain()
+        return self.langchain_instance.bind(**params)
+
+    @trace_llm
+    def call(self, *args: Any, **kwargs: Any):
+        """Run the LLM."""
+        try:
+            return self._call(*args, **kwargs)
+        except Exception as e:
+            LOGGER.error(f'Error in LLM call: {e}')
+            raise e
+
+    @trace_llm
+    async def acall(self, *args: Any, **kwargs: Any):
+        """Asynchronously run the LLM."""
+        try:
+            return await self._acall(*args, **kwargs)
+        except Exception as e:
+            LOGGER.error(f'Error in LLM acall: {e}')
+            raise e
