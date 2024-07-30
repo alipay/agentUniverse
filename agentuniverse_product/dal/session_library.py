@@ -61,7 +61,7 @@ class SessionLibrary:
             else:
                 return None
 
-    def get_session(self, agent_id: str) -> list[SessionDO]:
+    def get_session_list(self, agent_id: str) -> list[SessionDO]:
         with self.get_db_session() as db_session:
             session_orm_list = db_session.query(SessionORM).filter(
                 SessionORM.agent_id == agent_id)
@@ -70,6 +70,15 @@ class SessionLibrary:
                 for session_orm in session_orm_list:
                     res.append(self.__session_orm_to_do(session_orm))
             return res
+
+    def get_session_detail(self, session_id: str) -> SessionDO | None:
+        with self.get_db_session() as db_session:
+            session_orm = db_session.query(SessionORM).filter(
+                SessionORM.session_id == session_id).first()
+            if session_orm:
+                return self.__session_orm_to_do(session_orm)
+            else:
+                return None
 
     @staticmethod
     def __session_orm_to_do(session_orm: SessionORM) -> SessionDO:

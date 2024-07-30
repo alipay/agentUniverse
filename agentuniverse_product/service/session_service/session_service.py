@@ -40,10 +40,10 @@ class SessionService:
         return session_id or ''
 
     @staticmethod
-    def get_session(agent_id: str) -> List[SessionDTO]:
+    def get_session_list(agent_id: str) -> List[SessionDTO]:
         if agent_id is None:
             raise ValueError("agent_id is required parameter.")
-        session_do_list: List[SessionDO] = SessionLibrary().get_session(agent_id)
+        session_do_list: List[SessionDO] = SessionLibrary().get_session_list(agent_id)
         if len(session_do_list) == 0:
             return []
         session_messages_map = {}
@@ -51,6 +51,16 @@ class SessionService:
             message_do_list: List[MessageDO] = MessageLibrary().get_messages(session_do.session_id)
             session_messages_map[session_do.session_id] = message_do_list
         return SessionService().convert_to_session_dto(session_do_list, session_messages_map)
+
+    @staticmethod
+    def get_session_detail(id: str) -> SessionDTO | None:
+        if id is None:
+            raise ValueError("Session id is required parameter.")
+        session_do: SessionDO = SessionLibrary().get_session_detail(id)
+        if session_do is None:
+            return session_do
+        message_do_list: List[MessageDO] = MessageLibrary().get_messages(session_do.session_id)
+        return SessionService().convert_to_session_dto([session_do], {session_do.session_id: message_do_list})[0]
 
     @staticmethod
     def convert_to_session_dto(session_do_list: List[SessionDO], session_messages_map: dict[str, List[MessageDO]]) -> \

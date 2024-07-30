@@ -8,6 +8,7 @@
 from typing import List
 
 from agentuniverse.agent.agent import Agent
+from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.llm.llm import LLM
@@ -17,12 +18,14 @@ from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
 from agentuniverse_product.base.product import Product
 from agentuniverse_product.base.product_manager import ProductManager
+from agentuniverse_product.base.util.yaml_util import update_nested_yaml_value
 from agentuniverse_product.service.model.agent_dto import AgentDTO
 from agentuniverse_product.service.model.knowledge_dto import KnowledgeDTO
 from agentuniverse_product.service.model.llm_dto import LlmDTO
 from agentuniverse_product.service.model.planner_dto import PlannerDTO
 from agentuniverse_product.service.model.prompt_dto import PromptDTO
 from agentuniverse_product.service.model.tool_dto import ToolDTO
+from agentuniverse_product.service.session_service.session_service import SessionService
 
 
 class AgentService:
@@ -62,6 +65,27 @@ class AgentService:
                 agent_dto.planner = AgentService.get_planner_dto(agent_model)
                 return agent_dto
         return None
+
+    @staticmethod
+    def update_agent(agent_dto: AgentDTO) -> None:
+        if agent_dto.id is None:
+            raise ValueError("Agent id cannot be None.")
+        product: Product = ProductManager().get_instance_obj(agent_dto.id)
+        agent: Agent = AgentManager().get_instance_obj(agent_dto.id)
+        if product is None or agent is None:
+            raise ValueError("The agent or product instance corresponding to the agent id cannot be found.")
+        # update agent product yaml configuration file
+        AgentService().update_agent_product_config(product, agent_dto, product.component_config_path)
+        # update agent yaml configuration file
+        AgentService().update_agent_config(agent, agent_dto, agent.component_config_path)
+
+    @staticmethod
+    def chat(agent_id: str, session_id: str, params: dict):
+        if agent_id is None or session_id is None:
+            raise ValueError("Agent id or session id cannot be None.")
+        agent: Agent = AgentManager().get_instance_obj(agent_id)
+        if agent is None:
+            raise ValueError("The agent instance corresponding to the agent id cannot be found.")
 
     @staticmethod
     def get_planner_dto(agent_model: AgentModel) -> PlannerDTO | None:
@@ -132,3 +156,46 @@ class AgentService:
         if llm is None:
             return None
         return LlmDTO(id=llm_id, nickname=product.nickname if product else '', temperature=llm.temperature)
+
+    @staticmethod
+    def update_agent_product_config(agent_product: Product, agent_dto: AgentDTO, product_config_path: str) -> None:
+        if agent_dto is None or agent_dto.opening_speech is None:
+            return
+        agent_product.opening_speech = agent_dto.opening_speech
+        update_nested_yaml_value(product_config_path, {'opening_speech': agent_dto.opening_speech})
+
+    @staticmethod
+    def update_agent_config(agent: Agent, agent_dto: AgentDTO, agent_config_path: str) -> None:
+        agent_updates = {}
+        if agent_dto.description is not None and agent_dto.description != "":
+            agent_updates['info.description'] = agent_dto.description
+            agent.agent_model.info['description'] = agent_dto.description
+        if agent_dto.prompt is not None:
+            prompt_dto = agent_dto.prompt
+            if prompt_dto.target is not None:
+                agent_updates['profile.target'] = agent_dto.prompt.target
+                agent.agent_model.profile['target'] = agent_dto.prompt.target
+            if prompt_dto.introduction is not None:
+                agent_updates['profile.introduction'] = agent_dto.prompt.introduction
+                agent.agent_model.profile['introduction'] = agent_dto.prompt.introduction
+            if prompt_dto.instruction is not None:
+                agent_updates['profile.instruction'] = agent_dto.prompt.instruction
+                agent.agent_model.profile['instruction'] = agent_dto.prompt.instruction
+        if agent_dto.llm is not None:
+            llm_dto = agent_dto.llm
+            if llm_dto.id is not None:
+                agent_updates['profile.llm_model.name'] = agent_dto.llm.id
+                agent.agent_model.profile.get('llm_model')['name'] = agent_dto.llm.id
+            if llm_dto.temperature is not None:
+                agent_updates['profile.llm_model.temperature'] = agent_dto.llm.temperature
+                agent.agent_model.profile.get('llm_model')['temperature'] = agent_dto.llm.temperature
+            if llm_dto.model_name is not None:
+                agent_updates['profile.llm_model.model_name'] = agent_dto.llm.model_name[0]
+                agent.agent_model.profile.get('llm_model')['model_name'] = agent_dto.llm.model_name[0]
+        if agent_dto.tool is not None and len(agent_dto.tool) > 0:
+            tool_dto_list: List[ToolDTO] = agent_dto.tool
+            tool_name_list = [tool_dto.id for tool_dto in tool_dto_list]
+            agent_updates['action.tool'] = tool_name_list
+            agent.agent_model.action['tool'] = tool_name_list
+        if agent_updates:
+            update_nested_yaml_value(agent_config_path, agent_updates)

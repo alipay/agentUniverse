@@ -26,7 +26,7 @@ class AgentProduct(Product):
     def get_instance_code(self) -> str:
         """Return the full name of the product."""
         appname = ApplicationConfigManager().app_configer.base_info_appname
-        return f"{appname}.product.{self.nickname}"
+        return f"{appname}.product.{self.id}"
 
     def initialize_by_component_configer(self,
                                          product_configer: ProductConfiger) -> 'Product':
