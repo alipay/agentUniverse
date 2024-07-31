@@ -17,7 +17,7 @@ plan:
         - '被告方'
         - '原告方'
 memory:
-  name: 'demo_memory'
+  name: 'role_memory'
 metadata:
   type: 'AGENT'
   module: 'law_game_app.app.core.agent.game.game_drama_agent'

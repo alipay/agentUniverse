@@ -10,7 +10,7 @@ plan:
   planner:
     name: role_planner
 memory:
-  name: demo_memory
+  name: role_memory
 metadata:
   type: AGENT
   module: law_game_app.app.core.agent.role_agent

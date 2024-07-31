@@ -14,7 +14,7 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
-# from agentuniverse.agent.memory.chat_memory import RoleMemory
+# from agentuniverse.agent.memory.chat_memory import RoleChatMemory
 from agentuniverse.agent.memory.memory_manager import MemoryManager
 # from agentuniverse.agent.memory.message import ChatMessage
 from agentuniverse.agent.plan.planner.planner import Planner
@@ -26,7 +26,7 @@ from agentuniverse.prompt.chat_prompt import ChatPrompt
 from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
-from law_game_app.app.core.memory.role_memory import RoleMemory
+from law_game_app.app.core.memory.role.role_chat_memory import RoleChatMemory
 # from law_game_app.app.core.memory.role_message import ChatMessage
 
 
@@ -45,7 +45,7 @@ class role_planner(Planner):
             dict: 计划器结果。
         """
         # 处理记忆模块
-        memory: RoleMemory = self.handle_memory(agent_model, planner_input)
+        memory: RoleChatMemory = self.handle_memory(agent_model, planner_input)
 
         LOGGER.debug("↓↓↓↓↓↓↓")
         # 运行所有工具和知识模块
@@ -103,7 +103,7 @@ class role_planner(Planner):
                      chat_history,
                      input_object: InputObject):
 
-        LOGGER.debug(f"role invoke_chain\n{chat_history}")
+        LOGGER.info(f"role invoke_chain\n{chat_history}")
         LOGGER.debug(f"planner_input\n{planner_input}")
         if not input_object.get_data('output_stream'):
             res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
@@ -139,7 +139,7 @@ class role_planner(Planner):
                 memories.append(memory_dict)
         return memories
 
-    def handle_memory(self, agent_model: AgentModel, planner_input: dict) -> RoleMemory | None:
+    def handle_memory(self, agent_model: AgentModel, planner_input: dict) -> RoleChatMemory | None:
         """Memory module processing.
 
         Args:
@@ -163,7 +163,7 @@ class role_planner(Planner):
         params['input_key'] = self.input_key
         params['output_key'] = self.output_key
 
-        memory: RoleMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
+        memory: RoleChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
         if memory is None:
             return None
 

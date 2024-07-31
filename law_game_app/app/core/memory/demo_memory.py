@@ -5,12 +5,10 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: demo_memory.py
-from agentuniverse.agent.memory.chat_memory import ChatMemory
-from agentuniverse.llm.default.qwen_openai_style_llm import QWenOpenAIStyleLLM
-from law_game_app.app.core.memory.role_memory import RoleMemory
+from law_game_app.app.core.memory.role.role_chat_memory import RoleChatMemory
 
 
-class DemoMemory(RoleMemory):
+class DemoMemory(RoleChatMemory):
     """The aU demo memory module."""
 
     def __init__(self, **kwargs):

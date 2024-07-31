@@ -16,10 +16,10 @@ from agentuniverse.agent.memory.message import Message
 from agentuniverse.base.config.component_configer.configers.memory_configer import MemoryConfiger
 from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.llm.llm import LLM
-from law_game_app.app.core.memory.role_langchain_instance import RoleConversationSummaryBufferMemory
+from law_game_app.app.core.memory.role.role_langchain_instance import RoleConversationSummaryBufferMemory
 
 
-class RoleMemory(Memory):
+class RoleChatMemory(Memory):
     """The basic class for chat memory model.
 
     Attributes:
@@ -39,7 +39,7 @@ class RoleMemory(Memory):
 
     def as_langchain(self) -> BaseChatMemory:
         """Convert the agentUniverse(aU) chat memory class to the langchain chat memory class."""
-        LOGGER.debug('RoleMemory as_langchain')
+        LOGGER.debug('RoleChatMemory as_langchain')
         if self.llm is None:
             raise ValueError("Must set `llm` when using langchain memory.")
         # if self.type is None or self.type == MemoryTypeEnum.SHORT_TERM:
@@ -47,7 +47,7 @@ class RoleMemory(Memory):
         #                                            input_key=self.input_key, output_key=self.output_key,
         #                                            max_token_limit=self.max_tokens, messages=self.messages)
         # elif self.type == MemoryTypeEnum.LONG_TERM:
-        LOGGER.debug(f"RoleMemory as_langchain, self.messages: {self.messages}")
+        LOGGER.debug(f"RoleChatMemory as_langchain, self.messages: {self.messages}")
         return RoleConversationSummaryBufferMemory(llm=self.llm.as_langchain(), memory_key=self.memory_key,
                                                    input_key=self.input_key, output_key=self.output_key,
                                                    max_token_limit=self.max_tokens, messages=self.messages,
@@ -66,7 +66,7 @@ class RoleMemory(Memory):
             copied_obj.output_key = kwargs['output_key']
         return copied_obj
 
-    def initialize_by_component_configer(self, component_configer: MemoryConfiger) -> 'RoleMemory':
+    def initialize_by_component_configer(self, component_configer: MemoryConfiger) -> 'RoleChatMemory':
         """Initialize the chat memory by the ComponentConfiger object.
         Args:
             component_configer(MemoryConfiger): the ComponentConfiger object
