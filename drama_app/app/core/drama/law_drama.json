@@ -1,0 +1,26 @@
+{
+    "a0":{"role":"法官","action":"开庭","next":{"继续":{"next_node":"a1","role":"原告方","action":"陈述"}},"default_next":"a1"},
+    "a1":{"role":"原告方","action":"陈述","next":{"继续":{"next_node":"a2","role":"审判员","action":"判断原告方的陈述是否与当前背景有关"}},"default_next":"a2"},
+    "a2":{"role":"审判员","action":"判断原告方的陈述是否与当前背景有关","next":{"重新描述":{"next_node":"a1","role":"原告方","action":"陈述"},"继续":{"next_node":"a3","role":"被告方","action":"陈述"}},"default_next":"a3"},
+
+    "a3":{"role":"被告方","action":"陈述","next":{"继续":{"next_node":"a4","role":"审判员","action":"判断被告方的陈述是否与当前背景有关"}},"default_next":"a4"},
+    "a4":{"role":"审判员","action":"判断被告方的陈述是否与当前背景有关","next":{"重新描述":{"next_node":"a3","role":"被告方","action":"陈述"},"继续":{"next_node":"a5","role":"法官","action":"提出让双方互相提问"}},"default_next":"a5"},
+    "a5":{"role":"法官","action":"提出让双方互相提问","next":{"继续":{"next_node":"b0","role":"原告方","action":"原告向被告提问"}},"default_next":"b0"},
+
+    "b0":{"role":"原告方","action":"原告向被告提问","next":{"继续":{"next_node":"b1","role":"被告方","action":"回应原告的提问"}},"default_next":"b1"},
+    "b1":{"role":"被告方","action":"回应原告的提问","next":{"选择不回答":{"next_node":"b2","role":"原告方","action":"提交真实数据进行明示"},"选择回答":{"next_node":"b4","role":"被告方","action":"被告向原告提问"}},"default_next":"b2"},
+    "b2":{"role":"原告方","action":"提交真实数据进行明示","next":{"继续":{"next_node":"b3","role":"被告方","action":"回应原告的提问"}},"default_next":"b3"},
+    "b3":{"role":"被告方","action":"回应原告的提问","next":{"选择不回答":{"next_node":"b2","role":"原告方","action":"提交真实数据进行明示"},"选择回答":{"next_node":"b4","role":"被告方","action":"被告向原告提问"}},"default_next":"b4"},
+
+    "b4":{"role":"被告方","action":"被告向原告提问","next":{"继续":{"next_node":"b5","role":"原告方","action":"回应被告的提问"}},"default_next":"b5"},
+    "b5":{"role":"原告方","action":"回应被告的提问","next":{"继续":{"next_node":"b6","role":"法官","action":"询问双方是否需要继续发问"}},"default_next":"b6"},
+    "b6":{"role":"法官","action":"询问双方是否需要继续发问","next":{"原告需要":{"next_node":"b0","role":"原告方","action":"原告向被告提问"},"被告需要":{"next_node":"b4","role":"被告方","action":"被告向原告提问"},"都不需要":{"next_node":"c0","role":"法官","action":"下面进行法庭辩论,绕着三个焦点进行辩论"}},"default_next":"c0"},
+
+    "c0":{"role":"法官","action":"下面进行法庭辩论,绕着三个焦点进行辩论","next":{"继续":{"next_node":"c1","role":"原告方","action":"原告对三个焦点进行辩论"}},"default_next":"c1"},
+    "c1":{"role":"原告方","action":"原告对三个焦点进行辩论","next":{"继续":{"next_node":"c2","role":"被告方","action":"被告对三个焦点进行辩论"}},"default_next":"c2"},
+    "c2":{"role":"被告方","action":"被告对三个焦点进行辩论","next":{"继续":{"next_node":"c3","role":"法官","action":"询问原告方是否需要发表第二轮辩论意见"}},"default_next":"c3"},
+    "c3":{"role":"法官","action":"询问原告方是否需要发表第二轮辩论意见","next":{"原告方需要":{"next_node":"c4","role":"原告方","action":"原告对被告说明的三个焦点进行辩论"},"原告方不需要":{"next_node":"c6","role":"法官","action":"给出判决结果,宣布结束"}},"default_next":"c4"},
+    "c4":{"role":"原告方","action":"原告对被告说明的三个焦点进行辩论","next":{"继续":{"next_node":"c5","role":"被告方","action":"被告对原告的输出进行辩论"}},"default_next":"c5"},
+    "c5":{"role":"被告方","action":"被告对原告的输出进行辩论","next":{"原告有反对意见":{"next_node":"c4","role":"原告方","action":"原告对被告说明的三个焦点进行辩论"},"原告没有反对意见":{"next_node":"c6","role":"法官","action":"给出判决结果,宣布结束"}},"default_next":"c6"},
+    "c6":{"role":"法官","action":"给出判决结果,宣布结束","next":{"重新开始":{"next_node":"a0","role":"法官","action":"开庭"}},"default_next":"a0"}
+}

@@ -1,0 +1,17 @@
+info:
+  name: 审判员
+  description: 审判员_agent
+profile:
+  prompt_version: 审判员_agent
+  llm_model:
+    name: qwen_llm
+    temperature: 0.3
+plan:
+  planner:
+    name: role_planner
+memory:
+  name: role_memory
+metadata:
+  type: AGENT
+  module: drama_app.app.core.agent.role_agent
+  class: role_agent

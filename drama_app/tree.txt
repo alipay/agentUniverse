@@ -1,0 +1,56 @@
+----drama_app\
+    |----app\
+    |    |----bootstrap\
+    |    |    |----server_application.py
+    |    |----core\
+    |    |    |----agent\
+    |    |    |    |----law_drama\
+    |    |    |    |    |----law_drama_agent.py
+    |    |    |    |    |----law_drama_agent.yaml
+    |    |    |    |    |----law_drama_chat_bots.py
+    |    |    |    |    |----law_role\
+    |    |    |    |    |    |----defendant_lawyer_agent.yaml
+    |    |    |    |    |    |----judge_agent.yaml
+    |    |    |    |    |    |----judicial_officer_agent.yaml
+    |    |    |    |    |    |----plaintiff_lawyer_agent.yaml
+    |    |    |    |----role_agent.py
+    |    |    |----drama\
+    |    |    |    |----game.json
+    |    |    |    |----law_drama.json
+    |    |    |    |----readme.md
+    |    |    |----llm\
+    |    |    |    |----qwen_llm.yaml
+    |    |    |----memory\
+    |    |    |    |----demo_memory.py
+    |    |    |    |----demo_memory.yaml
+    |    |    |    |----readme.md
+    |    |    |    |----role\
+    |    |    |    |    |----role_chat_memory.py
+    |    |    |    |    |----role_langchain_instance.py
+    |    |    |    |    |----role_memory.py
+    |    |    |    |    |----role_memory.yaml
+    |    |    |----planner\
+    |    |    |    |----law_drama\
+    |    |    |    |    |----law_drama_planner.py
+    |    |    |    |    |----law_drama_planner.yaml
+    |    |    |    |----readme.md
+    |    |    |    |----role_planner.py
+    |    |    |    |----role_planner.yaml
+    |    |    |----prompt\
+    |    |    |    |----law_drama\
+    |    |    |    |    |----defendant_lawyer_agent.yaml
+    |    |    |    |    |----judge_agent.yaml
+    |    |    |    |    |----judicial_officer_agent.yaml
+    |    |    |    |    |----plaintiff_lawyer_agent.yaml
+    |    |    |----service\
+    |    |    |    |----drama_service.py
+    |    |    |    |----law_drama_service.yaml
+    |    |    |    |----readme.md
+    |----drama_config\
+    |    |----custom_key.toml
+    |    |----custom_key.toml.sample
+    |    |----debug_log_config.toml
+    |    |----drama_config.toml
+    |    |----gunicorn_config.toml
+    |    |----log_config.toml
+

@@ -1,0 +1,6 @@
+name: 'law_drama_planner'
+description: 'law_drama_planner'
+metadata:
+  type: 'PLANNER'
+  module: 'drama_app.app.core.planner.law_drama.law_drama_planner'
+  class: 'law_drama_planner'

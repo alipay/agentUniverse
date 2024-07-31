@@ -1,0 +1,7 @@
+name: 'law_drama_service'
+description: 'law drama service agent'
+agent: 'law_drama_agent'
+metadata:
+  type: 'SERVICE'
+  module: 'drama_app.app.core.service.drama_service'
+  class: 'drama_service'

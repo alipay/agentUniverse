@@ -1,0 +1,33 @@
+[LOG_CONFIG]
+[LOG_CONFIG.BASIC_CONFIG]
+# Loguru 日志级别。
+log_level = "DEBUG"
+#log_level = "INFO"
+# 日志文件的输出路径。如果值为空，agentuniverse 将在你的工作目录下创建一个子目录来保存日志。
+log_path = "./.test_log_dir"
+# 指定日志轮转策略，控制何时创建新的日志文件。它可以是一个时间周期
+# （例如，“1 周”），一个文件大小（例如，“100 MB”），或者一个当需要轮转时返回 True 的函数。
+log_rotation = "100 MB"
+# 指定保留旧日志文件的持续时间。它可以是一个时间段（例如，“30 天”）或者一个过滤要保留的
+# 文件的函数。超出此策略的文件将被清除。
+log_retention = "7 days"
+
+[LOG_CONFIG.EXTEND_MODULE]
+# 是否使用阿里云简单日志服务。如果值为 True，则应填写下面的 ALIYUN_SLS_CONFIG。
+sls_log = "False"
+
+[LOG_CONFIG.ALIYUN_SLS_CONFIG]
+# 阿里云 sls 终端。
+sls_endpoint = "mock_endpoint"
+# 你的 sls 日志项目名称。
+sls_project = "mock_project"
+# 你的 sls 日志存储名称。
+sls_log_store = "mock_log_store"
+# 阿里云 sls access_key_id。
+access_key_id = "mock_key_id"
+# 阿里云 sls access_key_secret。
+access_key_secret = "mock_key_secret"
+# 日志队列的最大大小，agentuniverse 使用一个队列来保存待发送的日志，它们将定期发送。
+sls_log_queue_max_size = 1000
+# 发送日志到阿里云 sls 的间隔。
+sls_log_send_interval = 3.0
