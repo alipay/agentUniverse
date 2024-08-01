@@ -19,7 +19,7 @@ from agentuniverse.prompt.prompt_manager import PromptManager
 
 
 # AuConversationSummaryBufferMemory -> ConversationSummaryBufferMemory -> BaseChatMemory
-
+# 参考于 agentuniverse/agent/memory/langchain_instance.py
 class RoleConversationSummaryBufferMemory(ConversationSummaryBufferMemory):
     """Long term memory to store conversation memory.
 

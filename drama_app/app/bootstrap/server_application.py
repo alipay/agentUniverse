@@ -19,7 +19,7 @@ class ServerApplication:
     def start(cls):
         # AgentUniverse().start()
         AgentUniverse().start(config_path='../../drama_config/drama_config.toml')
-        start_web_server()
+        start_web_server(bind="0.0.0.0:8002")
 
 
 if __name__ == "__main__":

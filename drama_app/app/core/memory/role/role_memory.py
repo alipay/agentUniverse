@@ -8,6 +8,7 @@
 from drama_app.app.core.memory.role.role_chat_memory import RoleChatMemory
 
 
+# 参考于 sample_standard_app.app.core.memory.demo_memory.DemoMemory
 class RoleMemory(RoleChatMemory):
     """The aU demo memory module."""
 

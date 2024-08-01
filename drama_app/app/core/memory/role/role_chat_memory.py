@@ -18,7 +18,7 @@ from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.llm.llm import LLM
 from drama_app.app.core.memory.role.role_langchain_instance import RoleConversationSummaryBufferMemory
 
-
+# 参考于 agentuniverse.agent.memory.chat_memory.ChatMemory
 class RoleChatMemory(Memory):
     """The basic class for chat memory model.
 
