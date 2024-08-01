@@ -6,14 +6,14 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: session_library.py
 import datetime
-from typing import Any
 
-from sqlalchemy import JSON, Integer, String, DateTime, Column, Index
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import JSON, Integer, String, DateTime, Column, Index, desc
+from sqlalchemy.orm import declarative_base
 
 from agentuniverse.base.annotation.singleton import singleton
 from agentuniverse.database.sqldb_wrapper_manager import SQLDBWrapperManager
 from agentuniverse_product.dal.model.session_do import SessionDO
+from agentuniverse.base.util.logging.logging_util import LOGGER
 
 SESSION_TABLE_NAME = 'session'
 Base = declarative_base()
@@ -50,6 +50,22 @@ class SessionLibrary:
             db_session.commit()
             return session_orm.session_id
 
+    def update_session(self, session_do: SessionDO) -> str:
+        try:
+            with self.get_db_session() as db_session:
+                session_orm = db_session.query(SessionORM).filter(
+                    SessionORM.session_id == session_do.session_id).first()
+                if session_orm:
+                    update_data = session_do.model_dump(exclude_unset=True)
+                    update_data['gmt_modified'] = datetime.datetime.now()
+                    for key, value in update_data.items():
+                        setattr(session_orm, key, value)
+                    db_session.commit()
+                    return session_orm.session_id
+        except Exception as e:
+            LOGGER.error("session library update failed, exception: {}", e)
+            db_session.rollback()
+
     def delete_session(self, session_id: str) -> str | None:
         with self.get_db_session() as db_session:
             session_orm = db_session.query(SessionORM).filter(
@@ -64,7 +80,7 @@ class SessionLibrary:
     def get_session_list(self, agent_id: str) -> list[SessionDO]:
         with self.get_db_session() as db_session:
             session_orm_list = db_session.query(SessionORM).filter(
-                SessionORM.agent_id == agent_id)
+                SessionORM.agent_id == agent_id).order_by(desc(SessionORM.gmt_modified)).all()
             res = []
             if session_orm_list:
                 for session_orm in session_orm_list:

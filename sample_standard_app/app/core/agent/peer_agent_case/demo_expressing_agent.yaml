@@ -4,7 +4,7 @@ info:
 profile:
   prompt_version: demo_expressing_agent.cn
   llm_model:
-    name: demo_llm
+    name: qwen_llm
     temperature: 0.2
     prompt_processor:
       type: stuff

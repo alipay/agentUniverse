@@ -31,6 +31,10 @@ class SessionService:
         return SessionLibrary().add_session(session_do)
 
     @staticmethod
+    def update_session(session_id: str, agent_id: str) -> str:
+        return SessionLibrary().update_session(SessionDO(session_id=session_id, agent_id=agent_id))
+
+    @staticmethod
     def delete_session(session_id: str) -> str:
         if session_id is None:
             raise ValueError("session_id is required parameter.")
@@ -46,6 +50,8 @@ class SessionService:
         session_do_list: List[SessionDO] = SessionLibrary().get_session_list(agent_id)
         if len(session_do_list) == 0:
             return []
+        # newest 10 sessions
+        session_do_list = session_do_list[:10]
         session_messages_map = {}
         for session_do in session_do_list:
             message_do_list: List[MessageDO] = MessageLibrary().get_messages(session_do.session_id)
@@ -53,13 +59,15 @@ class SessionService:
         return SessionService().convert_to_session_dto(session_do_list, session_messages_map)
 
     @staticmethod
-    def get_session_detail(id: str) -> SessionDTO | None:
+    def get_session_detail(id: str, top_k: int = None) -> SessionDTO | None:
         if id is None:
             raise ValueError("Session id is required parameter.")
         session_do: SessionDO = SessionLibrary().get_session_detail(id)
         if session_do is None:
             return session_do
         message_do_list: List[MessageDO] = MessageLibrary().get_messages(session_do.session_id)
+        if top_k:
+            message_do_list = message_do_list[:top_k]
         return SessionService().convert_to_session_dto([session_do], {session_do.session_id: message_do_list})[0]
 
     @staticmethod

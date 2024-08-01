@@ -3,7 +3,7 @@ info:
   description: 'demo reviewing agent'
 profile:
   llm_model:
-    name: 'demo_llm'
+    name: 'qwen_llm'
     temperature: 0.5
 plan:
   planner:

@@ -20,6 +20,7 @@ from .dal.request_library import RequestLibrary
 from .dal.entity.request_do import RequestDO
 from .thread_with_result import ThreadWithReturnValue
 from agentuniverse.base.util.logging.logging_util import LOGGER
+from ...agent.output_object import OutputObject
 
 EOF_SIGNAL = '{"type": "EOF"}'
 
@@ -75,6 +76,8 @@ class RequestTask:
             return
         try:
             result = self.thread.result()
+            if isinstance(result, OutputObject):
+                result = result.to_dict()
             yield "data:" + json.dumps({"result": result},
                                        ensure_ascii=False) + "\n\n "
         except Exception as e:

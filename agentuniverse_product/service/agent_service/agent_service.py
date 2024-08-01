@@ -5,11 +5,17 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: agent_service.py
-from typing import List
+from datetime import datetime
+import json
+import time
+from typing import List, Tuple, Iterator
 
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
+from agentuniverse.agent.output_object import OutputObject
+from agentuniverse.agent_serve.web.request_task import RequestTask
+from agentuniverse.agent_serve.web.web_util import agent_run_queue
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
@@ -19,11 +25,14 @@ from agentuniverse.prompt.prompt_model import AgentPromptModel
 from agentuniverse_product.base.product import Product
 from agentuniverse_product.base.product_manager import ProductManager
 from agentuniverse_product.base.util.yaml_util import update_nested_yaml_value
+from agentuniverse_product.service.message_service.message_service import MessageService
 from agentuniverse_product.service.model.agent_dto import AgentDTO
 from agentuniverse_product.service.model.knowledge_dto import KnowledgeDTO
 from agentuniverse_product.service.model.llm_dto import LlmDTO
+from agentuniverse_product.service.model.message_dto import MessageDTO
 from agentuniverse_product.service.model.planner_dto import PlannerDTO
 from agentuniverse_product.service.model.prompt_dto import PromptDTO
+from agentuniverse_product.service.model.session_dto import SessionDTO
 from agentuniverse_product.service.model.tool_dto import ToolDTO
 from agentuniverse_product.service.session_service.session_service import SessionService
 
@@ -80,12 +89,71 @@ class AgentService:
         AgentService().update_agent_config(agent, agent_dto, agent.component_config_path)
 
     @staticmethod
-    def chat(agent_id: str, session_id: str, params: dict):
+    def chat(agent_id: str, session_id: str, input: str) -> dict:
         if agent_id is None or session_id is None:
             raise ValueError("Agent id or session id cannot be None.")
         agent: Agent = AgentManager().get_instance_obj(agent_id)
         if agent is None:
             raise ValueError("The agent instance corresponding to the agent id cannot be found.")
+        # invoke agent
+        start_time = time.time()
+        output_object: OutputObject = agent.run(input=input,
+                                                chat_history=AgentService().get_agent_chat_history(session_id))
+        end_time = time.time()
+        # calculate response time
+        response_time = round((end_time - start_time) * 1000, 2)
+        output = output_object.get_data('output')
+
+        # add agent chat history
+        session_id, message_id = AgentService().add_agent_chat_history(agent_id, session_id, input, output)
+
+        return {'response_time': response_time, 'message_id': message_id, 'session_id': session_id, 'output': output,
+                'start_time': datetime.fromtimestamp(start_time).strftime("%Y-%m-%d %H:%M:%S"),
+                'end_time': datetime.fromtimestamp(end_time).strftime("%Y-%m-%d %H:%M:%S")}
+
+    @staticmethod
+    def stream_chat(agent_id: str, session_id: str, input: str) -> Iterator:
+        if agent_id is None or session_id is None:
+            raise ValueError("Agent id or session id cannot be None.")
+        agent: Agent = AgentManager().get_instance_obj(agent_id)
+        if agent is None:
+            raise ValueError("The agent instance corresponding to the agent id cannot be found.")
+
+        # invoke agent
+        start_time = time.time()
+        task = RequestTask(agent_run_queue, False,
+                           **{'input': input, 'chat_history': AgentService().get_agent_chat_history(session_id),
+                              'agent_id': agent_id})
+        # get output stream
+        output_iterator = task.stream_run()
+
+        final_result: dict = dict()
+        # generate iterator
+        for chunk in output_iterator:
+            chunk = chunk.replace("data:", "", 1)
+            chunk_dict = json.loads(chunk)
+            if "process" in chunk_dict:
+                data = chunk_dict['process'].get('data')
+                if data and "chunk" in data:
+                    yield {'output': data['chunk'], 'type': 'token'}
+                elif data and "output" in data:
+                    yield {'output': data['output'], 'type': 'intermediate_steps'}
+            elif "result" in chunk_dict:
+                final_result = chunk_dict['result']
+
+        end_time = time.time()
+        # calculate response time
+        response_time = round((end_time - start_time) * 1000, 2)
+
+        output = final_result.get('output')
+
+        # add agent chat history
+        session_id, message_id = AgentService().add_agent_chat_history(agent_id, session_id, input, output)
+
+        # return final yield
+        yield {'response_time': response_time, 'message_id': message_id, 'session_id': session_id, 'output': output,
+               'start_time': datetime.fromtimestamp(start_time).strftime("%Y-%m-%d %H:%M:%S"),
+               'end_time': datetime.fromtimestamp(end_time).strftime("%Y-%m-%d %H:%M:%S"), 'type': 'final_result'}
 
     @staticmethod
     def get_planner_dto(agent_model: AgentModel) -> PlannerDTO | None:
@@ -199,3 +267,25 @@ class AgentService:
             agent.agent_model.action['tool'] = tool_name_list
         if agent_updates:
             update_nested_yaml_value(agent_config_path, agent_updates)
+
+    @staticmethod
+    def get_agent_chat_history(session_id: str) -> list:
+        session_dto: SessionDTO = SessionService().get_session_detail(session_id, 10)
+        chat_history = []
+        if session_dto:
+            messages: List[MessageDTO] = session_dto.messages
+            if len(messages) > 0:
+                for message in messages:
+                    content: str = message.content
+                    # todo
+                    if content is not None:
+                        chat_history.extend(json.loads(content))
+        return chat_history
+
+    @staticmethod
+    def add_agent_chat_history(agent_id: str, session_id: str, input: str, output: str) -> Tuple[str, int]:
+        content = json.dumps([{'type': 'human', 'content': input}, {'type': 'ai', 'content': output}],
+                             ensure_ascii=False)
+        session_id = SessionService.update_session(session_id, agent_id)
+        message_id = MessageService.add_message(session_id, content)
+        return session_id, message_id

@@ -127,7 +127,7 @@ class PeerPlanner(Planner):
                     logger_info += f"[{index + 1}] {one_framework} \n"
                 LOGGER.info(logger_info)
                 self.stream_output(input_object, {"data": {
-                    'output': planning_result.to_dict(),
+                    'output': planning_result.get_data('framework'),
                     "agent_info": agent_mode.info
                 }, "type": "planning"})
 
@@ -149,7 +149,7 @@ class PeerPlanner(Planner):
                         logger_info += one_exec_log_info
                 LOGGER.info(logger_info)
                 self.stream_output(input_object, {"data": {
-                    'output': executing_result.to_dict(),
+                    'output': executing_result.get_data('executing_result'),
                     "agent_info": agent_mode.info
                 }, "type": "executing"})
 
@@ -193,7 +193,8 @@ class PeerPlanner(Planner):
                     reviewing_info_str = f"review suggestion: {reviewing_result.get_data('suggestion')} \n"
                     reviewing_info_str += f"review score: {reviewing_result.get_data('score')} \n"
                     LOGGER.info(logger_info + reviewing_info_str)
-                    self.stream_output(input_object, {"data": reviewing_result.to_dict(), "type": "reviewing"})
+                    self.stream_output(input_object,
+                                       {"data": reviewing_result.get_data('suggestion'), "type": "reviewing"})
                     if reviewing_result.get_data('score') and reviewing_result.get_data('score') >= eval_threshold:
                         loopResults.append({
                             "planning_result": planning_result,

@@ -7,7 +7,7 @@
 # @FileName: message_library.py
 import datetime
 
-from sqlalchemy import JSON, Integer, String, DateTime, Column, Index
+from sqlalchemy import JSON, Integer, String, DateTime, Column, Index, asc
 from sqlalchemy.orm import declarative_base
 
 from agentuniverse.base.annotation.singleton import singleton
@@ -41,6 +41,13 @@ class MessageLibrary:
         system_sqldb_wrapper = SQLDBWrapperManager().get_instance_obj('__system_db__')
         return system_sqldb_wrapper.get_session()
 
+    def add_message(self, message_do: MessageDO) -> int:
+        with self.get_db_session() as db_session:
+            message_orm = MessageORM(**message_do.model_dump())
+            db_session.add(message_orm)
+            db_session.commit()
+            return message_orm.id
+
     def delete_messages(self, session_id: str):
         with self.get_db_session() as db_session:
             message_orm_list = db_session.query(MessageORM).filter(
@@ -53,7 +60,7 @@ class MessageLibrary:
     def get_messages(self, session_id: str) -> list[MessageDO]:
         with self.get_db_session() as db_session:
             message_orm_list = db_session.query(MessageORM).filter(
-                MessageORM.session_id == session_id)
+                MessageORM.session_id == session_id).order_by(asc(MessageORM.gmt_modified)).all()
             res = []
             if message_orm_list:
                 for message_orm in message_orm_list:

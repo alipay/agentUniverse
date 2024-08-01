@@ -13,10 +13,13 @@ import json
 from flask import request, make_response, jsonify
 
 from ..service_instance import ServiceInstance
+from ...agent.agent import Agent
+from ...agent.agent_manager import AgentManager
 
 
 def request_param(func):
     """An annotation used to parse the flask request params."""
+
     def wrapper(*args, **kwargs):
         if request.method == "GET":
             req_data = request.args.to_dict()
@@ -59,6 +62,17 @@ def service_run_queue(service_id, **kwargs):
     stream: queue.Queue = kwargs.get('output_stream')
     try:
         res = ServiceInstance(service_id).run(**kwargs)
+        return res
+    finally:
+        if stream:
+            stream.put_nowait('{"type": "EOF"}')
+
+
+def agent_run_queue(agent_id, **kwargs):
+    stream: queue.Queue = kwargs.get('output_stream')
+    try:
+        agent: Agent = AgentManager().get_instance_obj(agent_id)
+        res = agent.run(**kwargs)
         return res
     finally:
         if stream:

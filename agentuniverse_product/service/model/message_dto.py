@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 
 class MessageDTO(BaseModel):
-    id: str = Field(description="ID")
+    id: int = Field(description="ID")
     session_id: str = Field(description="Session ID")
     content: Optional[str] = Field(description="message content", default="")
     gmt_created: Optional[str] = Field(description="message create time")
