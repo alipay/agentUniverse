@@ -147,8 +147,8 @@ description: 'A portal to the internet. Use this when you need to get specific
         ```'
 headers:
   content-type: 'application/json'
-method: 'POST'
-json_parser: true
+method: 'GET'
+json_parser: false
 response_content_type: json
 tool_type: 'api'
 input_keys: ['input']
