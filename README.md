@@ -74,7 +74,7 @@ agentUniverse has launched DataAgent (Minimum Viable Product Version). DataAgent
 [agentUniverse Example Projects](sample_standard_app)
 
 ### 🌟 Product Cases Built with agentUniverse
-['Zhi Xiao Zhu' AI Assistant for Financial Professionals](https://zhu.alipay.com/)
+['Zhi Xiao Zhu' AI Assistant for Financial Professionals](https://zhu.alipay.com/?from=au)
 ****************************************
 ## More
 ### Why Use agentUniverse
