@@ -5,7 +5,6 @@
 # @Author  : fanen.lhy
 # @Email   : fanen.lhy@antgroup.com
 # @FileName: request_task.py
-
 import enum
 from enum import Enum
 import json
@@ -125,6 +124,7 @@ class RequestTask:
     def stream_run(self):
         """Run the service in a separate thread and yield result stream."""
         self.kwargs['output_stream'] = self.queue
+
         self.thread = ThreadWithReturnValue(target=self.func,
                                             kwargs=self.kwargs)
         self.thread.start()

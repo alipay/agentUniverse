@@ -1,0 +1,7 @@
+id: host_agent
+nickname: 简单的多智能体讨论组样例
+type: AGENT
+metadata:
+  class: AgentProduct
+  module: agentuniverse_product.base.agent_product
+  type: PRODUCT

@@ -8,9 +8,12 @@
 
 from threading import Thread
 
+from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
+
 
 class ThreadWithReturnValue(Thread):
     """A thread can save the target func exec result."""
+
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None):
         super().__init__(group, target, name, args, kwargs)
@@ -22,10 +25,16 @@ class ThreadWithReturnValue(Thread):
         self.target = target
         self._return = None
         self.error = None
+        self._context_values: dict = FrameworkContextManager().get_all_contexts()
+        self._context_tokens = {}
 
     def run(self):
         """Run the target func and save result in _return."""
         if self.target is not None:
+            for var_name, var_value in self._context_values.items():
+                token = FrameworkContextManager().set_context(var_name, var_value)
+                self._context_tokens[var_name] = token
+
             try:
                 self._return = self.target(*self.args, **self.kwargs)
             except Exception as e:
@@ -33,6 +42,8 @@ class ThreadWithReturnValue(Thread):
             finally:
                 if 'output_stream' in self.kwargs:
                     self.kwargs['output_stream'].put('{"type": "EOF"}')
+                for var_name, token in self._context_tokens.items():
+                    FrameworkContextManager().reset_context(var_name, token)
 
     def result(self):
         """Wait for target func finished, then return the result or raise an

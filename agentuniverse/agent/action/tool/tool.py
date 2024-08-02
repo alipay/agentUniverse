@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from langchain.tools import Tool as LangchainTool
 
 from agentuniverse.agent.action.tool.enum import ToolTypeEnum
+from agentuniverse.base.annotation.trace import trace_tool
 from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
@@ -61,6 +62,7 @@ class Tool(ComponentBase):
     def __init__(self, **kwargs):
         super().__init__(component_type=ComponentEnum.TOOL, **kwargs)
 
+    @trace_tool
     def run(self, **kwargs):
         """The callable method that runs the tool."""
         self.input_check(kwargs)
@@ -73,6 +75,7 @@ class Tool(ComponentBase):
             if key not in kwargs.keys():
                 raise Exception(f'{self.get_instance_code()} - The input must include key: {key}.')
 
+    @trace_tool
     def langchain_run(self, *args, callbacks=None, **kwargs):
         """The callable method that runs the tool."""
         kwargs["callbacks"] = callbacks

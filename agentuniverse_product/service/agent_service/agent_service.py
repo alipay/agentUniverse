@@ -17,6 +17,7 @@ from agentuniverse.agent.output_object import OutputObject
 from agentuniverse.agent_serve.web.request_task import RequestTask
 from agentuniverse.agent_serve.web.web_util import agent_run_queue
 from agentuniverse.base.component.component_enum import ComponentEnum
+from agentuniverse.base.util.monitor.monitor import Monitor
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
@@ -95,6 +96,11 @@ class AgentService:
         agent: Agent = AgentManager().get_instance_obj(agent_id)
         if agent is None:
             raise ValueError("The agent instance corresponding to the agent id cannot be found.")
+
+        # init the invocation chain and token usage of the monitor module
+        Monitor.init_invocation_chain()
+        Monitor.init_token_usage()
+
         # invoke agent
         start_time = time.time()
         output_object: OutputObject = agent.run(input=input,
@@ -104,12 +110,19 @@ class AgentService:
         response_time = round((end_time - start_time) * 1000, 2)
         output = output_object.get_data('output')
 
+        # get and clear invocation chain and token usage.
+        invocation_chain = Monitor.get_invocation_chain()
+        token_usage = Monitor.get_token_usage()
+        Monitor.clear_invocation_chain()
+        Monitor.clear_token_usage()
+
         # add agent chat history
         session_id, message_id = AgentService().add_agent_chat_history(agent_id, session_id, input, output)
 
         return {'response_time': response_time, 'message_id': message_id, 'session_id': session_id, 'output': output,
                 'start_time': datetime.fromtimestamp(start_time).strftime("%Y-%m-%d %H:%M:%S"),
-                'end_time': datetime.fromtimestamp(end_time).strftime("%Y-%m-%d %H:%M:%S")}
+                'end_time': datetime.fromtimestamp(end_time).strftime("%Y-%m-%d %H:%M:%S"),
+                'invocation_chain': invocation_chain, 'token_usage': token_usage}
 
     @staticmethod
     def stream_chat(agent_id: str, session_id: str, input: str) -> Iterator:
@@ -118,6 +131,10 @@ class AgentService:
         agent: Agent = AgentManager().get_instance_obj(agent_id)
         if agent is None:
             raise ValueError("The agent instance corresponding to the agent id cannot be found.")
+
+        # init the invocation chain and token usage of the monitor module
+        Monitor.init_invocation_chain()
+        Monitor.init_token_usage()
 
         # invoke agent
         start_time = time.time()
@@ -128,6 +145,7 @@ class AgentService:
         output_iterator = task.stream_run()
 
         final_result: dict = dict()
+        error_result: dict = dict()
         # generate iterator
         for chunk in output_iterator:
             chunk = chunk.replace("data:", "", 1)
@@ -140,20 +158,32 @@ class AgentService:
                     yield {'output': data['output'], 'type': 'intermediate_steps'}
             elif "result" in chunk_dict:
                 final_result = chunk_dict['result']
+            elif "error" in chunk_dict:
+                error_result = chunk_dict['error']
 
         end_time = time.time()
         # calculate response time
         response_time = round((end_time - start_time) * 1000, 2)
 
-        output = final_result.get('output')
+        if len(final_result) > 0:
+            output = final_result.get('output')
 
-        # add agent chat history
-        session_id, message_id = AgentService().add_agent_chat_history(agent_id, session_id, input, output)
+            # add agent chat history
+            session_id, message_id = AgentService().add_agent_chat_history(agent_id, session_id, input, output)
 
-        # return final yield
-        yield {'response_time': response_time, 'message_id': message_id, 'session_id': session_id, 'output': output,
-               'start_time': datetime.fromtimestamp(start_time).strftime("%Y-%m-%d %H:%M:%S"),
-               'end_time': datetime.fromtimestamp(end_time).strftime("%Y-%m-%d %H:%M:%S"), 'type': 'final_result'}
+            # get and clear invocation chain and invocation chain.
+            invocation_chain = Monitor.get_invocation_chain()
+            token_usage = Monitor.get_token_usage()
+            Monitor.clear_invocation_chain()
+            Monitor.clear_token_usage()
+
+            # return final yield
+            yield {'response_time': response_time, 'message_id': message_id, 'session_id': session_id, 'output': output,
+                   'start_time': datetime.fromtimestamp(start_time).strftime("%Y-%m-%d %H:%M:%S"),
+                   'end_time': datetime.fromtimestamp(end_time).strftime("%Y-%m-%d %H:%M:%S"),
+                   'invocation_chain': invocation_chain, 'token_usage': token_usage, 'type': 'final_result'}
+        else:
+            yield {'error': error_result, 'type': 'error'}
 
     @staticmethod
     def get_planner_dto(agent_model: AgentModel) -> PlannerDTO | None:
@@ -270,7 +300,7 @@ class AgentService:
 
     @staticmethod
     def get_agent_chat_history(session_id: str) -> list:
-        session_dto: SessionDTO = SessionService().get_session_detail(session_id, 10)
+        session_dto: SessionDTO = SessionService().get_session_detail(session_id, 5)
         chat_history = []
         if session_dto:
             messages: List[MessageDTO] = session_dto.messages

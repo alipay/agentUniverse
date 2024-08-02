@@ -27,6 +27,7 @@ if __name__ == '__main__':
     for chunk in AgentService().stream_chat('demo_peer_agent', session_list[0].id,
                                             '巴菲特为什么减持比亚迪'):
         print(chunk)
+
     print('----------------------------------')
 
     agent_list: List[AgentDTO] = AgentService.get_agent_list()
@@ -42,3 +43,17 @@ if __name__ == '__main__':
     tool_list: List[ToolDTO] = ToolService.get_tool_list()
 
     llm_list: List[LlmDTO] = LLMService.get_llm_list()
+
+    print('----------------------------------')
+
+    SessionService().create_session('demo_rag_agent')
+    session_list: List[SessionDTO] = SessionService.get_session_list('demo_rag_agent')
+    for chunk in AgentService().stream_chat('demo_rag_agent', session_list[0].id,
+                                            '巴菲特为什么减持比亚迪'):
+        print(chunk)
+    print('----------------------------------')
+
+    for chunk in AgentService().stream_chat('demo_rag_agent', session_list[0].id,
+                                            '我刚才问了什么？'):
+        print(chunk)
+    print('----------------------------------')

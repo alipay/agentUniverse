@@ -5,21 +5,23 @@
 # @Email   : lc299034@antgroup.com
 # @FileName: executing_agent.py
 """Executing Agent module."""
-import copy
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 from typing import Optional, Any
 
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent import Agent
+from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
+from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 
 
 class ExecutingAgent(Agent):
     """Executing Agent class."""
 
     executor: Optional[Any] = ThreadPoolExecutor(max_workers=10, thread_name_prefix="executing_agent")
+    _context_values: Optional[dict] = {}
 
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
@@ -73,6 +75,7 @@ class ExecutingAgent(Agent):
         Returns:
             dict: Agent result object.
         """
+        self._context_values: dict = FrameworkContextManager().get_all_contexts()
         framework = agent_input.get('framework', [])
         futures = []
         for task in framework:
@@ -81,10 +84,23 @@ class ExecutingAgent(Agent):
             agent_input_copy['input'] = task
             planner: Planner = PlannerManager().get_instance_obj(self.agent_model.plan.get('planner').get('name'))
             futures.append(
-                self.executor.submit(planner.invoke, self.agent_model, agent_input_copy,
+                self.executor.submit(self.run_in_executor, planner, self.agent_model, agent_input_copy,
                                      self.process_intput_object(input_object, task, planner.input_key)))
         wait(futures, return_when=ALL_COMPLETED)
         return {'futures': futures}
+
+    def run_in_executor(self, planner: Planner, agent_model: AgentModel, planner_input: dict,
+                        input_object: InputObject) -> dict:
+        context_tokens = {}
+        try:
+            for var_name, var_value in self._context_values.items():
+                token = FrameworkContextManager().set_context(var_name, var_value)
+                context_tokens[var_name] = token
+            res = planner.invoke(agent_model, planner_input, input_object)
+            return res
+        finally:
+            for var_name, token in context_tokens.items():
+                FrameworkContextManager().reset_context(var_name, token)
 
     def process_intput_object(self, input_object: InputObject, subtask: str, planner_input_key: str) -> InputObject:
         """Process input object for the executing agent.
