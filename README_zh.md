@@ -72,7 +72,7 @@ agentUniverse推出了DataAgent（Minimum Viable Product版本）, DataAgent旨�
 [agentUniverse 示例项目](sample_standard_app)
 
 ### 🌟 使用aU构建的产品案例
-[支小助 金融从业专家AI助手](https://zhu.alipay.com/)
+[支小助 金融从业专家AI助手](https://zhu.alipay.com/?from=au)
 ****************************************
 ## 更多
 ### 为什么使用agentUniverse
