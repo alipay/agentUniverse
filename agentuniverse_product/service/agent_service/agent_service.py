@@ -10,6 +10,8 @@ import json
 import time
 from typing import List, Tuple, Iterator
 
+from agentuniverse.agent.action.knowledge.knowledge import Knowledge
+from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
@@ -65,15 +67,7 @@ class AgentService:
                 agent_dto = AgentDTO(nickname=product.nickname, avatar=product.avatar, id=product.id,
                                      opening_speech=product.opening_speech)
                 agent: Agent = product.instance
-                agent_model: AgentModel = agent.agent_model
-                agent_dto.description = agent_model.info.get('description', '')
-                agent_dto.prompt = AgentService.get_prompt_dto(agent_model)
-                agent_dto.llm = AgentService.get_llm_dto(agent_model)
-                agent_dto.memory = agent_model.memory.get('name', '')
-                agent_dto.tool = AgentService.get_tool_dto_list(agent_model)
-                agent_dto.knowledge = AgentService.get_knowledge_dto_list(agent_model)
-                agent_dto.planner = AgentService.get_planner_dto(agent_model)
-                return agent_dto
+                return AgentService().assemble_agent_dto(agent, agent_dto)
         return None
 
     @staticmethod
@@ -117,7 +111,8 @@ class AgentService:
         Monitor.clear_token_usage()
 
         # add agent chat history
-        session_id, message_id = AgentService().add_agent_chat_history(agent_id, session_id, input, output)
+        session_id, message_id = AgentService().add_agent_chat_history(agent_id, session_id, input, output,
+                                                                       datetime.fromtimestamp(end_time))
 
         return {'response_time': response_time, 'message_id': message_id, 'session_id': session_id, 'output': output,
                 'start_time': datetime.fromtimestamp(start_time).strftime("%Y-%m-%d %H:%M:%S"),
@@ -152,10 +147,11 @@ class AgentService:
             chunk_dict = json.loads(chunk)
             if "process" in chunk_dict:
                 data = chunk_dict['process'].get('data')
+                agent_id = data.get('agent_info', {}).get('name') if "agent_info" in data else ""
                 if data and "chunk" in data:
-                    yield {'output': data['chunk'], 'type': 'token'}
+                    yield {'output': data['chunk'], 'type': 'token', 'agent_id': agent_id}
                 elif data and "output" in data:
-                    yield {'output': data['output'], 'type': 'intermediate_steps'}
+                    yield {'output': data['output'], 'type': 'intermediate_steps', 'agent_id': agent_id}
             elif "result" in chunk_dict:
                 final_result = chunk_dict['result']
             elif "error" in chunk_dict:
@@ -169,7 +165,8 @@ class AgentService:
             output = final_result.get('output')
 
             # add agent chat history
-            session_id, message_id = AgentService().add_agent_chat_history(agent_id, session_id, input, output)
+            session_id, message_id = AgentService().add_agent_chat_history(agent_id, session_id, input, output,
+                                                                           datetime.fromtimestamp(end_time))
 
             # get and clear invocation chain and invocation chain.
             invocation_chain = Monitor.get_invocation_chain()
@@ -192,7 +189,8 @@ class AgentService:
         if planner_name is None:
             return None
         product: Product = ProductManager().get_instance_obj(planner_name)
-        return PlannerDTO(nickname=product.nickname if product else '', id=planner_name)
+        members = AgentService().assemble_planner_members(planner, ['planning', 'executing', 'expressing', 'reviewing'])
+        return PlannerDTO(nickname=product.nickname if product else '', id=planner_name, members=members)
 
     @staticmethod
     def get_knowledge_dto_list(agent_model: AgentModel) -> List[KnowledgeDTO]:
@@ -202,8 +200,10 @@ class AgentService:
             return res
         for knowledge_name in knowledge_name_list:
             product: Product = ProductManager().get_instance_obj(knowledge_name)
-            knowledge_dto = KnowledgeDTO(nickname=product.nickname, id=product.id)
-            knowledge = product.instance
+            knowledge: Knowledge = KnowledgeManager().get_instance_obj(knowledge_name)
+            if knowledge is None:
+                continue
+            knowledge_dto = KnowledgeDTO(nickname=product.nickname if product else '', id=knowledge_name)
             knowledge_dto.description = knowledge.description
             res.append(knowledge_dto)
         return res
@@ -232,9 +232,6 @@ class AgentService:
         prompt_version = agent_model.profile.get('prompt_version')
         version_prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
 
-        if version_prompt is None and not profile_prompt_model:
-            raise Exception("Either the `prompt_version` or `introduction & target & instruction`"
-                            " in agent profile configuration should be provided.")
         if version_prompt:
             version_prompt_model: AgentPromptModel = AgentPromptModel(
                 introduction=getattr(version_prompt, 'introduction', ''),
@@ -253,7 +250,9 @@ class AgentService:
         product: Product = ProductManager().get_instance_obj(llm_id)
         if llm is None:
             return None
-        return LlmDTO(id=llm_id, nickname=product.nickname if product else '', temperature=llm.temperature)
+        llm_model_name = llm_model.get('model_name') if llm_model.get('model_name') else llm.model_name
+        return LlmDTO(id=llm_id, nickname=product.nickname if product else '', temperature=llm.temperature,
+                      model_name=[llm_model_name])
 
     @staticmethod
     def update_agent_product_config(agent_product: Product, agent_dto: AgentDTO, product_config_path: str) -> None:
@@ -313,9 +312,36 @@ class AgentService:
         return chat_history
 
     @staticmethod
-    def add_agent_chat_history(agent_id: str, session_id: str, input: str, output: str) -> Tuple[str, int]:
+    def add_agent_chat_history(agent_id: str, session_id: str,
+                               input: str, output: str, cur_time: datetime) -> Tuple[str, int]:
         content = json.dumps([{'type': 'human', 'content': input}, {'type': 'ai', 'content': output}],
                              ensure_ascii=False)
-        session_id = SessionService.update_session(session_id, agent_id)
-        message_id = MessageService.add_message(session_id, content)
+        session_id = SessionService.update_session(session_id, agent_id, cur_time)
+        message_id = MessageService.add_message(session_id, content, cur_time)
         return session_id, message_id
+
+    @staticmethod
+    def assemble_agent_dto(agent: Agent, agent_dto: AgentDTO) -> AgentDTO:
+        agent_model: AgentModel = agent.agent_model
+        agent_dto.description = agent_model.info.get('description', '')
+        agent_dto.prompt = AgentService.get_prompt_dto(agent_model)
+        agent_dto.llm = AgentService.get_llm_dto(agent_model)
+        agent_dto.memory = agent_model.memory.get('name', '')
+        agent_dto.tool = AgentService.get_tool_dto_list(agent_model)
+        agent_dto.knowledge = AgentService.get_knowledge_dto_list(agent_model)
+        agent_dto.planner = AgentService.get_planner_dto(agent_model)
+        return agent_dto
+
+    @staticmethod
+    def assemble_planner_members(planner: dict, member_keys: List[str]) -> List[AgentDTO]:
+        members = []
+        if planner is None or member_keys is None:
+            return members
+        for key in member_keys:
+            agent_name = planner.get(key, '')
+            agent: Agent = AgentManager().get_instance_obj(agent_name)
+            if agent is None:
+                continue
+            agent_dto = AgentDTO(id=agent_name)
+            members.append(AgentService().assemble_agent_dto(agent, agent_dto))
+        return members

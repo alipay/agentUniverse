@@ -57,7 +57,6 @@ class SessionLibrary:
                     SessionORM.session_id == session_do.session_id).first()
                 if session_orm:
                     update_data = session_do.model_dump(exclude_unset=True)
-                    update_data['gmt_modified'] = datetime.datetime.now()
                     for key, value in update_data.items():
                         setattr(session_orm, key, value)
                     db_session.commit()

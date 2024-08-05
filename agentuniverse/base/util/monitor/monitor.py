@@ -108,7 +108,7 @@ class Monitor(BaseModel):
         FrameworkContextManager().del_context('trace_id')
 
     @staticmethod
-    def add_invocation_chain(source: str):
+    def add_invocation_chain(source: dict):
         trace_id = FrameworkContextManager().get_context('trace_id')
         if trace_id is not None:
             invocation_chain = FrameworkContextManager().get_context(trace_id + '_invocation_chain')

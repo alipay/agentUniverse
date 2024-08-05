@@ -6,6 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: session_service.py
 import uuid
+from datetime import datetime
 from typing import List
 
 from agentuniverse_product.dal.message_library import MessageLibrary
@@ -31,8 +32,9 @@ class SessionService:
         return SessionLibrary().add_session(session_do)
 
     @staticmethod
-    def update_session(session_id: str, agent_id: str) -> str:
-        return SessionLibrary().update_session(SessionDO(session_id=session_id, agent_id=agent_id))
+    def update_session(session_id: str, agent_id: str, update_time: datetime) -> str:
+        return SessionLibrary().update_session(
+            SessionDO(session_id=session_id, agent_id=agent_id, gmt_modified=update_time))
 
     @staticmethod
     def delete_session(session_id: str) -> str:

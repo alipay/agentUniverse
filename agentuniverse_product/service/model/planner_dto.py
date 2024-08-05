@@ -5,7 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: planner_dto.py
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, Field
 
@@ -13,3 +13,4 @@ from pydantic import BaseModel, Field
 class PlannerDTO(BaseModel):
     id: str = Field(description="ID")
     nickname: Optional[str] = Field(description="planner nickname", default="")
+    members: Optional[list] = Field(description="planner members", default=[])

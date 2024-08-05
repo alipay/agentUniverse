@@ -5,6 +5,8 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: message_service.py
+from datetime import datetime
+
 from agentuniverse_product.dal.message_library import MessageLibrary
 from agentuniverse_product.dal.model.message_do import MessageDO
 
@@ -12,7 +14,8 @@ from agentuniverse_product.dal.model.message_do import MessageDO
 class MessageService:
 
     @staticmethod
-    def add_message(session_id: str, content: str) -> int:
+    def add_message(session_id: str, content: str, add_time: datetime) -> int:
         if content is None:
             raise ValueError("message content is required parameter.")
-        return MessageLibrary().add_message(MessageDO(session_id=session_id, content=content))
+        return MessageLibrary().add_message(
+            MessageDO(session_id=session_id, content=content, gmt_created=add_time, gmt_modified=add_time))

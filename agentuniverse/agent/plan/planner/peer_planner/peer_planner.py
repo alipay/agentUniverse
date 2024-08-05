@@ -194,7 +194,10 @@ class PeerPlanner(Planner):
                     reviewing_info_str += f"review score: {reviewing_result.get_data('score')} \n"
                     LOGGER.info(logger_info + reviewing_info_str)
                     self.stream_output(input_object,
-                                       {"data": reviewing_result.get_data('suggestion'), "type": "reviewing"})
+                                       {"data": {
+                                           'output': reviewing_result.get_data('suggestion'),
+                                           'agent_info': agent_mode.info
+                                       }, "type": "reviewing"})
                     if reviewing_result.get_data('score') and reviewing_result.get_data('score') >= eval_threshold:
                         loopResults.append({
                             "planning_result": planning_result,

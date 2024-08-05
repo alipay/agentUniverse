@@ -38,7 +38,7 @@ def trace_llm(func):
                 source = name
 
         # add invocation chain to the monitor module.
-        Monitor.add_invocation_chain(source=source)
+        Monitor.add_invocation_chain({'source': source, 'type': 'llm'})
 
         if self and hasattr(self, 'tracing'):
             if self.tracing is False:
@@ -80,7 +80,7 @@ def trace_llm(func):
                 source = name
 
         # add invocation chain to the monitor module.
-        Monitor.add_invocation_chain(source=source)
+        Monitor.add_invocation_chain({'source': source, 'type': 'llm'})
 
         if self and hasattr(self, 'tracing'):
             if self.tracing is False:
@@ -158,7 +158,7 @@ def trace_agent(func):
                     tracing = profile.get('tracing', None)
 
         # add invocation chain to the monitor module.
-        Monitor.add_invocation_chain(source=source)
+        Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
 
         if tracing is False:
             return func(*args, **kwargs)
@@ -193,7 +193,7 @@ def trace_tool(func):
                 source = name
 
         # add invocation chain to the monitor module.
-        Monitor.add_invocation_chain(source=source)
+        Monitor.add_invocation_chain({'source': source, 'type': 'tool'})
 
         # invoke function
         return func(*args, **kwargs)
