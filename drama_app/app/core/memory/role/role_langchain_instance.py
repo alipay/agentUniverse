@@ -7,10 +7,12 @@
 # @File   ：role_langchain_instance.py
 from typing import List, Optional, Dict, Any
 
+from langchain.memory import ChatMessageHistory
 from langchain.memory import ConversationSummaryBufferMemory, ConversationTokenBufferMemory
 from langchain.memory.utils import get_prompt_input_key
 from langchain_core.messages import BaseMessage, get_buffer_string, ChatMessage
 from langchain_core.output_parsers import StrOutputParser
+from langchain_core.pydantic_v1 import Field
 
 from agentuniverse.agent.memory.enum import ChatMessageEnum
 from agentuniverse.base.util.logging.logging_util import LOGGER
@@ -20,6 +22,7 @@ from agentuniverse.prompt.prompt_manager import PromptManager
 
 # AuConversationSummaryBufferMemory -> ConversationSummaryBufferMemory -> BaseChatMemory
 # 参考于 agentuniverse/agent/memory/langchain_instance.py
+
 class RoleConversationSummaryBufferMemory(ConversationSummaryBufferMemory):
     """Long term memory to store conversation memory.
 

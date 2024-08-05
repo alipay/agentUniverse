@@ -7,6 +7,7 @@
 from typing import Optional, List
 
 from langchain.memory.chat_memory import BaseChatMemory
+from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.messages import ChatMessage
 
 from agentuniverse.agent.memory.memory import Memory
@@ -17,6 +18,10 @@ from agentuniverse.base.config.component_configer.configers.memory_configer impo
 from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.llm.llm import LLM
 from drama_app.app.core.memory.role.role_langchain_instance import RoleConversationSummaryBufferMemory
+
+from langchain.memory import ChatMessageHistory
+from langchain_core.pydantic_v1 import Field
+
 
 # 参考于 agentuniverse.agent.memory.chat_memory.ChatMemory
 class RoleChatMemory(Memory):
@@ -51,7 +56,7 @@ class RoleChatMemory(Memory):
         return RoleConversationSummaryBufferMemory(llm=self.llm.as_langchain(), memory_key=self.memory_key,
                                                    input_key=self.input_key, output_key=self.output_key,
                                                    max_token_limit=self.max_tokens, messages=self.messages,
-                                                   prompt_version=self.prompt_version)
+                                                   prompt_version=self.prompt_version,return_messages=True)
 
     def set_by_agent_model(self, **kwargs):
         """ Assign values of parameters to the ChatMemory model in the agent configuration."""

@@ -30,6 +30,7 @@ class role_agent(Agent):
         agent_input['cur_round'] = input_object.get_data('cur_round')
         agent_input['roles'] = input_object.get_data('roles')
         agent_input['role'] = input_object.get_data('role')
+        agent_input['type'] = 'chat'
         agent_input['action'] = input_object.get_data('action')
 
         keys = list(agent_input.keys())

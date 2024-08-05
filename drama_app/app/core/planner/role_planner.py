@@ -6,12 +6,6 @@
 # @File   ：draft_contract_planner.py
 from typing import List, Any
 
-from langchain_core.chat_history import InMemoryChatMessageHistory, BaseChatMessageHistory
-from langchain_core.messages import ChatMessage
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnableSerializable
-from langchain_core.runnables.history import RunnableWithMessageHistory
-
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 # from agentuniverse.agent.memory.chat_memory import RoleChatMemory
@@ -27,6 +21,14 @@ from agentuniverse.prompt.prompt import Prompt
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.prompt.prompt_model import AgentPromptModel
 from drama_app.app.core.memory.role.role_chat_memory import RoleChatMemory
+from langchain.memory import ChatMessageHistory
+from langchain_core.chat_history import InMemoryChatMessageHistory
+from langchain_core.messages import ChatMessage
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.runnables import RunnableSerializable
+from langchain_core.runnables.history import RunnableWithMessageHistory
+
+
 # from drama_app.app.core.memory.role_message import ChatMessage
 
 
@@ -78,14 +80,18 @@ class role_planner(Planner):
             prompt.as_langchain() | llm.as_langchain(),
             lambda session_id: chat_history,
             history_messages_key="chat_history",
-            input_messages_key=self.input_key,
+            # input_messages_key=self.input_key,
+            # verbose=True,
         ) | StrOutputParser()
+        LOGGER.debug(f"chat_history {chat_history}")
 
         LOGGER.debug(f"chain_with_history {chain_with_history}")
         res = self.invoke_chain(agent_model, chain_with_history, planner_input, chat_history, input_object)
 
         LOGGER.debug(f"res {res}")
-        r = {**planner_input, self.output_key: res, 'chat_history': chat_history}
+        LOGGER.debug(f"chat_history {chat_history}")
+        # r = {**planner_input, self.output_key: res, 'chat_history': chat_history}
+        r = {**planner_input, self.output_key: res, 'chat_history': self.generate_memories(chat_history)}
         LOGGER.debug(f"r {r}")
 
         return r
@@ -105,8 +111,12 @@ class role_planner(Planner):
 
         LOGGER.info(f"role invoke_chain\n{chat_history}")
         LOGGER.debug(f"planner_input\n{planner_input}")
+        del planner_input['input']
         if not input_object.get_data('output_stream'):
-            res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
+            res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "test_session_id"}})
+            LOGGER.debug(f"返回res {res}")
+            LOGGER.info(f"role invoke_chain\n{chat_history}")
+
             return res
         result = []
         for token in chain.stream(input=planner_input, config={"configurable": {"session_id": "unused"}}):
@@ -118,24 +128,26 @@ class role_planner(Planner):
                 }
             })
             result.append(token)
+            LOGGER.debug(f"返回resule {result}")
         return "".join(result)
 
     def generate_messages(self, memories: list) -> List[ChatMessage]:
         messages = []
         for memory in memories:
             LOGGER.debug(memory)
-            message: ChatMessage = ChatMessage(role =memory.get('role') ,type=memory.get('type'), content=memory.get('content'))
+            message: ChatMessage = ChatMessage(role=memory.get('role'), type=memory.get('type'),
+                                               content=memory.get('content'))
             messages.append(message)
         return messages
 
-    def generate_memories(self, chat_messages: BaseChatMessageHistory) -> list:
+    def generate_memories(self, chat_messages: ChatMessageHistory) -> list:
         memories = []
         if chat_messages.messages:
             LOGGER.debug(f"chat_messages.messages {chat_messages.messages}")
             for message in chat_messages.messages:
                 LOGGER.debug(f'generate_memories -> {message}')
                 LOGGER.debug(f'message.type -> {message.type}')
-                memory_dict = {"role":message.role,"content": message.content, "type": message.type}
+                memory_dict = {"role": message.role, "content": message.content, "type": message.type}
                 memories.append(memory_dict)
         return memories
 
@@ -162,7 +174,7 @@ class role_planner(Planner):
         params['llm'] = llm
         params['input_key'] = self.input_key
         params['output_key'] = self.output_key
-
+        LOGGER.debug(f"params {params}")
         memory: RoleChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
         if memory is None:
             return None
