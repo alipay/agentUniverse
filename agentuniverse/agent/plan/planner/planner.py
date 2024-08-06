@@ -118,8 +118,8 @@ class Planner(ComponentBase):
             knowledge: Knowledge = KnowledgeManager().get_instance_obj(knowledge_name)
             if knowledge is None:
                 continue
-            knowledge_res: List[Document] = knowledge.store.query(
-                Query(query_str=input_object.get_data(self.input_key), similarity_top_k=2), **input_object.to_dict())
+            knowledge_res: List[Document] = knowledge.query_knowledge(query_str=input_object.get_data(self.input_key),
+                                                                      **input_object.to_dict())
             for document in knowledge_res:
                 action_result.append(document.text)
 
@@ -185,8 +185,9 @@ class Planner(ComponentBase):
             return
         output_stream.put_nowait(data)
 
-    def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict, chat_history,
-               input_object: InputObject):
+    def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict,
+                     chat_history,
+                     input_object: InputObject):
 
         if not input_object.get_data('output_stream'):
             res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
@@ -202,4 +203,3 @@ class Planner(ComponentBase):
             })
             result.append(token)
         return "".join(result)
-

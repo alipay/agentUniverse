@@ -1,6 +1,6 @@
-id: google_search_tool
-nickname: 谷歌搜索
-type: TOOL
+id: baichuan_llm
+nickname: 百川系列大模型
+type: LLM
 metadata:
   type: 'PRODUCT'
   module: 'agentuniverse_product.base.product'

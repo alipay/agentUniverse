@@ -1,0 +1,8 @@
+id: demo_react_agent
+nickname: ReAct智能体
+opening_speech: 欢迎使用ReAct智能体！根据您预先配置好的工具集，结合您的提问，我将进行自治的推理并采取行动，最终给您提供满意的答案。
+type: AGENT
+metadata:
+  class: AgentProduct
+  module: agentuniverse_product.base.agent_product
+  type: PRODUCT

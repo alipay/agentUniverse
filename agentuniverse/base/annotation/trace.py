@@ -141,7 +141,7 @@ def trace_agent(func):
     @functools.wraps(func)
     def wrapper_sync(*args, **kwargs):
         # get agent input from arguments
-        agent_input = _get_agent_input(func, *args, **kwargs)
+        agent_input = _get_input(func, *args, **kwargs)
         # check whether the tracing switch is enabled
         source = func.__qualname__
         self = agent_input.pop('self', None)
@@ -182,7 +182,7 @@ def trace_tool(func):
     @functools.wraps(func)
     def wrapper_sync(*args, **kwargs):
         # get tool input from arguments
-        tool_input = _get_agent_input(func, *args, **kwargs)
+        tool_input = _get_input(func, *args, **kwargs)
 
         source = func.__qualname__
         self = tool_input.pop('self', None)
@@ -202,7 +202,36 @@ def trace_tool(func):
     return wrapper_sync
 
 
-def _get_agent_input(func, *args, **kwargs) -> dict:
+def trace_knowledge(func):
+    """Annotation: @trace_knowledge
+
+    Decorator to trace the knowledge invocation.
+    """
+
+    @functools.wraps(func)
+    def wrapper_sync(*args, **kwargs):
+        # get knowledge input from arguments
+        knowledge_input = _get_input(func, *args, **kwargs)
+
+        source = func.__qualname__
+        self = knowledge_input.pop('self', None)
+
+        if isinstance(self, object):
+            name = getattr(self, 'name', None)
+            if name is not None:
+                source = name
+
+        # add invocation chain to the monitor module.
+        Monitor.add_invocation_chain({'source': source, 'type': 'knowledge'})
+
+        # invoke function
+        return func(*args, **kwargs)
+
+    # sync function
+    return wrapper_sync
+
+
+def _get_input(func, *args, **kwargs) -> dict:
     """Get the agent input from arguments."""
     sig = inspect.signature(func)
     bound_args = sig.bind(*args, **kwargs)

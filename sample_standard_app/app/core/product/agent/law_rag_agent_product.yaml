@@ -1,0 +1,8 @@
+id: law_rag_agent
+nickname: 法律顾问智能体
+opening_speech: 您好，欢迎使用法律顾问智能体，我将根据您给出的法律事件，以及提供的背景知识做出客观的司法判断。
+type: AGENT
+metadata:
+  class: AgentProduct
+  module: agentuniverse_product.base.agent_product
+  type: PRODUCT

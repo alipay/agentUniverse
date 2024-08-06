@@ -1,7 +1,0 @@
-id: demo_react_agent
-nickname: 简单的ReAct智能体样例
-type: AGENT
-metadata:
-  class: AgentProduct
-  module: agentuniverse_product.base.agent_product
-  type: PRODUCT

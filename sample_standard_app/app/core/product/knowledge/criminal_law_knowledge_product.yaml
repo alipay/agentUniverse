@@ -1,0 +1,7 @@
+id: criminal_law_knowledge
+nickname: 刑法知识库，可以查询与刑法相关的内容
+type: KNOWLEDGE
+metadata:
+  type: 'PRODUCT'
+  module: 'agentuniverse_product.base.product'
+  class: 'Product'

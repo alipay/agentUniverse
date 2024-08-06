@@ -12,6 +12,8 @@ from typing import List, Tuple, Iterator
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
+from agentuniverse.agent.action.tool.tool import Tool
+from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
@@ -50,7 +52,8 @@ class AgentService:
             return res
         for product in product_list:
             if product.type == ComponentEnum.AGENT.value:
-                agent_dto = AgentDTO(nickname=product.nickname, avatar=product.avatar, id=product.id)
+                agent_dto = AgentDTO(nickname=product.nickname, avatar=product.avatar, id=product.id,
+                                     opening_speech=product.opening_speech)
                 agent = product.instance
                 agent_model: AgentModel = agent.agent_model
                 agent_dto.description = agent_model.info.get('description', '')
@@ -216,8 +219,10 @@ class AgentService:
             return res
         for tool_name in tool_name_list:
             product: Product = ProductManager().get_instance_obj(tool_name)
-            tool_dto = ToolDTO(nickname=product.nickname, avatar=product.avatar, id=product.id)
-            tool = product.instance
+            tool: Tool = ToolManager().get_instance_obj(tool_name)
+            tool_dto = ToolDTO(nickname=product.nickname if product is not None else '',
+                               avatar=product.avatar if product is not None else '',
+                               id=tool.name)
             tool_dto.description = tool.description
             res.append(tool_dto)
         return res
@@ -251,7 +256,8 @@ class AgentService:
         if llm is None:
             return None
         llm_model_name = llm_model.get('model_name') if llm_model.get('model_name') else llm.model_name
-        return LlmDTO(id=llm_id, nickname=product.nickname if product else '', temperature=llm.temperature,
+        llm_temperature = llm_model.get('temperature') if llm_model.get('temperature') else llm.temperature
+        return LlmDTO(id=llm_id, nickname=product.nickname if product else '', temperature=llm_temperature,
                       model_name=[llm_model_name])
 
     @staticmethod

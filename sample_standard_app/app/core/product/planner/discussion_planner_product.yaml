@@ -1,0 +1,7 @@
+id: discussion_planner
+nickname: 多智能体讨论组SOP
+type: PLANNER
+metadata:
+  type: 'PRODUCT'
+  module: 'agentuniverse_product.base.product'
+  class: 'Product'

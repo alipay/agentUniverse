@@ -1,0 +1,8 @@
+id: host_agent
+nickname: 多智能体讨论组
+opening_speech: 您好，欢迎使用多智能体讨论组，讨论组包含一名主持人和若干讨论组成员，根据您提出的问题，进行多轮组内讨论，最终由主持人总结讨论组的讨论结果，提供给您最终答案。
+type: AGENT
+metadata:
+  class: AgentProduct
+  module: agentuniverse_product.base.agent_product
+  type: PRODUCT

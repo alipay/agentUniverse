@@ -1,0 +1,7 @@
+id: peer_planner
+nickname: 多智能体PEER范式
+type: PLANNER
+metadata:
+  type: 'PRODUCT'
+  module: 'agentuniverse_product.base.product'
+  class: 'Product'

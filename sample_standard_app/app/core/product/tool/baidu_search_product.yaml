@@ -1,6 +1,6 @@
-id: qwen_llm
-nickname: 千问模型
-type: LLM
+id: search_api_baidu_tool
+nickname: 百度web搜索工具
+type: TOOL
 metadata:
   type: 'PRODUCT'
   module: 'agentuniverse_product.base.product'

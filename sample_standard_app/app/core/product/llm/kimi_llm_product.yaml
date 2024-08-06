@@ -1,5 +1,5 @@
-id: demo_llm
-nickname: openai_llm
+id: kimi_llm
+nickname: moonshot月之暗面系列大模型
 type: LLM
 metadata:
   type: 'PRODUCT'

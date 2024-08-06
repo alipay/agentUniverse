@@ -1,0 +1,8 @@
+id: demo_rag_agent
+nickname: rag智能体
+type: AGENT
+opening_speech: 欢迎使用rag chatbot！根据您的提问，我将结合实时信息及我个人掌握的知识，给您提供合理的解答。
+metadata:
+  class: AgentProduct
+  module: agentuniverse_product.base.agent_product
+  type: PRODUCT
