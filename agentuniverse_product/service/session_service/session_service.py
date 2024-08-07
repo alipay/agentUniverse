@@ -69,7 +69,7 @@ class SessionService:
             return session_do
         message_do_list: List[MessageDO] = MessageLibrary().get_messages(session_do.session_id)
         if top_k:
-            message_do_list = message_do_list[:top_k]
+            message_do_list = message_do_list[-top_k:]
         return SessionService().convert_to_session_dto([session_do], {session_do.session_id: message_do_list})[0]
 
     @staticmethod

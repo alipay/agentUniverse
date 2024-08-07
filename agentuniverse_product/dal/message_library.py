@@ -39,7 +39,7 @@ class MessageLibrary:
     @staticmethod
     def get_db_session():
         system_sqldb_wrapper = SQLDBWrapperManager().get_instance_obj('__system_db__')
-        return system_sqldb_wrapper.get_session()
+        return system_sqldb_wrapper.get_session()()
 
     def add_message(self, message_do: MessageDO) -> int:
         with self.get_db_session() as db_session:

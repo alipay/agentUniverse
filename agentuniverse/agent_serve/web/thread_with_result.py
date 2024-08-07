@@ -26,14 +26,14 @@ class ThreadWithReturnValue(Thread):
         self._return = None
         self.error = None
         self._context_values: dict = FrameworkContextManager().get_all_contexts()
-        self._context_tokens = {}
 
     def run(self):
         """Run the target func and save result in _return."""
         if self.target is not None:
+            context_tokens = {}
             for var_name, var_value in self._context_values.items():
                 token = FrameworkContextManager().set_context(var_name, var_value)
-                self._context_tokens[var_name] = token
+                context_tokens[var_name] = token
 
             try:
                 self._return = self.target(*self.args, **self.kwargs)
@@ -42,7 +42,7 @@ class ThreadWithReturnValue(Thread):
             finally:
                 if 'output_stream' in self.kwargs:
                     self.kwargs['output_stream'].put('{"type": "EOF"}')
-                for var_name, token in self._context_tokens.items():
+                for var_name, token in context_tokens.items():
                     FrameworkContextManager().reset_context(var_name, token)
 
     def result(self):

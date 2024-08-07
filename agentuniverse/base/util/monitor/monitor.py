@@ -134,6 +134,8 @@ class Monitor(BaseModel):
 
     @staticmethod
     def add_token_usage(cur_token_usage: dict):
+        if cur_token_usage is None:
+            return
         trace_id = FrameworkContextManager().get_context('trace_id')
         if trace_id is not None:
             old_token_usage: dict = FrameworkContextManager().get_context(trace_id + '_token_usage')
