@@ -57,7 +57,14 @@ class AgentUniverseProduct(object):
         # scan and register the product components
         self.__scan_and_register_product(self.__config_container.app_configer)
 
-        # TODO difizen initialization
+        try:
+            from magent_ui import launch
+            launch()
+        except ImportError as e:
+            raise ImportError(
+                "Could not start product server provided by magent-ui."
+                "Please install it with `pip install magent-ui."
+            )
 
     def __init_product_tables(self):
         system_sqldb_wrapper = SQLDBWrapperManager().get_instance_obj('__system_db__')
@@ -66,10 +73,12 @@ class AgentUniverseProduct(object):
         with system_sqldb_wrapper.sql_database._engine.connect() as conn:
             # init session db
             if not conn.dialect.has_table(conn, SESSION_TABLE_NAME):
-                SessionORM.metadata.create_all(system_sqldb_wrapper.sql_database._engine)
+                SessionORM.metadata.create_all(
+                    system_sqldb_wrapper.sql_database._engine)
             # init message db
             if not conn.dialect.has_table(conn, MESSAGE_TABLE_NAME):
-                MessageORM.metadata.create_all(system_sqldb_wrapper.sql_database._engine)
+                MessageORM.metadata.create_all(
+                    system_sqldb_wrapper.sql_database._engine)
 
     def __scan_and_register_product(self, app_configer: AppConfiger):
         """Scan the product component directory and register the product components.
@@ -92,9 +101,12 @@ class AgentUniverseProduct(object):
             product_configer_list(list): the product component configer list
         """
         for product_configer in product_configer_list:
-            configer_instance: ProductConfiger = ProductConfiger().load_by_configer(product_configer.configer)
-            component_clz = ComponentConfigerUtil.get_component_object_clz_by_component_configer(configer_instance)
-            product_instance: Product = component_clz().initialize_by_component_configer(configer_instance)
+            configer_instance: ProductConfiger = ProductConfiger(
+            ).load_by_configer(product_configer.configer)
+            component_clz = ComponentConfigerUtil.get_component_object_clz_by_component_configer(
+                configer_instance)
+            product_instance: Product = component_clz(
+            ).initialize_by_component_configer(configer_instance)
             if product_instance is None:
                 continue
             product_instance.component_config_path = product_configer.configer.path
