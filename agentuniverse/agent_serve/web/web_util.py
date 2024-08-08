@@ -69,6 +69,12 @@ def service_run_queue(service_id, **kwargs):
 
 
 def agent_run_queue(agent_id, **kwargs):
+    """
+    The func used in a separate thread to run an agent, and the result will be saved in a queue if provided.
+    Args:
+        agent_id: The agent id
+        **kwargs: Arbitrary keyword arguments.
+    """
     stream: queue.Queue = kwargs.get('output_stream')
     try:
         agent: Agent = AgentManager().get_instance_obj(agent_id)

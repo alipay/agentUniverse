@@ -28,6 +28,7 @@ from agentuniverse_product.dal.session_library import SESSION_TABLE_NAME, Sessio
 
 @singleton
 class AgentUniverseProduct(object):
+    """Initialize the agentUniverse product."""
 
     def __init__(self):
         self.__application_container = ApplicationComponentManager()
@@ -57,6 +58,7 @@ class AgentUniverseProduct(object):
         # scan and register the product components
         self.__scan_and_register_product(self.__config_container.app_configer)
 
+        # start the product ui server
         try:
             from magent_ui import launch
             launch()
@@ -67,6 +69,7 @@ class AgentUniverseProduct(object):
             )
 
     def __init_product_tables(self):
+        """Initialize the product tables including session and message tables."""
         system_sqldb_wrapper = SQLDBWrapperManager().get_instance_obj('__system_db__')
         if system_sqldb_wrapper is None:
             raise Exception('system db has not been initialized.')

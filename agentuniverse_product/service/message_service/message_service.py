@@ -12,9 +12,11 @@ from agentuniverse_product.dal.model.message_do import MessageDO
 
 
 class MessageService:
+    """Message Service for aU-product."""
 
     @staticmethod
     def add_message(session_id: str, content: str, add_time: datetime) -> int:
+        """Add a message to the message db table."""
         if content is None:
             raise ValueError("message content is required parameter.")
         return MessageLibrary().add_message(

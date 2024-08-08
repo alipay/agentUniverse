@@ -240,6 +240,15 @@ def _get_input(func, *args, **kwargs) -> dict:
 
 
 def _get_llm_token_usage(llm_obj: object, llm_input: dict, output_str: str) -> dict:
+    """ Calculate the token usage of the given LLM object.
+    Args:
+        llm_obj(object): LLM object.
+        llm_input(dict): Dictionary of LLM input.
+        output_str(str): LLM output.
+
+    Returns:
+        dict: Dictionary of token usage including the completion_tokens, prompt_tokens, and total_tokens.
+    """
     if llm_obj is None or llm_input is None:
         return {}
 
@@ -266,6 +275,7 @@ def _get_llm_token_usage(llm_obj: object, llm_input: dict, output_str: str) -> d
         return {}
 
     usage = {}
+    # the number of input and output tokens is calculated by the llm `get_num_tokens` method.
     if hasattr(llm_obj, 'get_num_tokens'):
         completion_tokens = llm_obj.get_num_tokens(output_str)
         prompt_tokens = llm_obj.get_num_tokens(input_str)
@@ -275,7 +285,13 @@ def _get_llm_token_usage(llm_obj: object, llm_input: dict, output_str: str) -> d
     return usage
 
 
-def trace_llm_token_usage(llm_obj: object, llm_input: dict, output_str: str):
+def trace_llm_token_usage(llm_obj: object, llm_input: dict, output_str: str) -> None:
+    """ Trace the token usage of the given LLM object.
+    Args:
+        llm_obj(object): LLM object.
+        llm_input(dict): Dictionary of LLM input.
+        output_str(str): LLM output.
+    """
     trace_id = FrameworkContextManager().get_context('trace_id')
     # trace token usage for a complete request chain based on trace id
     if trace_id:

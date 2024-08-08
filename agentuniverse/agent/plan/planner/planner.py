@@ -76,6 +76,10 @@ class Planner(ComponentBase):
         """
         chat_history: list = planner_input.get('chat_history')
         memory_name = agent_model.memory.get('name')
+        memory: ChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
+        if memory is None:
+            return None
+
         llm_model = agent_model.memory.get('llm_model') or dict()
         llm_name = llm_model.get('name') or agent_model.profile.get('llm_model').get('name')
 
@@ -86,10 +90,6 @@ class Planner(ComponentBase):
         params['llm'] = llm
         params['input_key'] = self.input_key
         params['output_key'] = self.output_key
-
-        memory: ChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
-        if memory is None:
-            return None
         return memory.set_by_agent_model(**params)
 
     def run_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):

@@ -54,6 +54,7 @@ class Product(ComponentBase):
         return self
 
     def init_instance(self):
+        """Initialize the specific component instance corresponding to the product."""
         component_manager_clz = ComponentConfigerUtil.get_component_manager_clz_by_type(
             ComponentEnum.from_value(self.type))
         self._instance = component_manager_clz().get_instance_obj(self.id)

@@ -90,11 +90,13 @@ class Monitor(BaseModel):
 
     @staticmethod
     def init_trace_id():
+        """Initialize the trace id in the framework context."""
         if FrameworkContextManager().get_context('trace_id') is None:
             FrameworkContextManager().set_context('trace_id', str(uuid.uuid4()))
 
     @staticmethod
     def init_invocation_chain():
+        """Initialize the invocation chain in the framework context."""
         Monitor.init_trace_id()
         trace_id = FrameworkContextManager().get_context('trace_id')
         if FrameworkContextManager().get_context(trace_id) is None:
@@ -102,6 +104,7 @@ class Monitor(BaseModel):
 
     @staticmethod
     def clear_invocation_chain():
+        """Clear the invocation chain in the framework context."""
         trace_id = FrameworkContextManager().get_context('trace_id')
         if trace_id is not None:
             FrameworkContextManager().del_context(trace_id + '_invocation_chain')
@@ -109,6 +112,7 @@ class Monitor(BaseModel):
 
     @staticmethod
     def add_invocation_chain(source: dict):
+        """Add the source to the invocation chain"""
         trace_id = FrameworkContextManager().get_context('trace_id')
         if trace_id is not None:
             invocation_chain = FrameworkContextManager().get_context(trace_id + '_invocation_chain')
@@ -118,15 +122,18 @@ class Monitor(BaseModel):
 
     @staticmethod
     def get_trace_id():
+        """Get the trace id in the framework context."""
         return FrameworkContextManager().get_context('trace_id')
 
     @staticmethod
     def get_invocation_chain():
+        """Get the invocation chain in the framework context."""
         trace_id = FrameworkContextManager().get_context('trace_id')
         return FrameworkContextManager().get_context(trace_id + '_invocation_chain', []) if trace_id is not None else []
 
     @staticmethod
     def init_token_usage():
+        """Initialize the token usage in the framework context."""
         Monitor.init_trace_id()
         trace_id = FrameworkContextManager().get_context('trace_id')
         if FrameworkContextManager().get_context(trace_id) is None:
@@ -134,6 +141,7 @@ class Monitor(BaseModel):
 
     @staticmethod
     def add_token_usage(cur_token_usage: dict):
+        """Add the token usage to the framework context."""
         if cur_token_usage is None:
             return
         trace_id = FrameworkContextManager().get_context('trace_id')
@@ -145,6 +153,7 @@ class Monitor(BaseModel):
 
     @staticmethod
     def clear_token_usage():
+        """Clear the token usage in the framework context."""
         trace_id = FrameworkContextManager().get_context('trace_id')
         if trace_id is not None:
             FrameworkContextManager().del_context(trace_id + '_token_usage')
@@ -152,6 +161,7 @@ class Monitor(BaseModel):
 
     @staticmethod
     def get_token_usage():
+        """Get the token usage in the framework context."""
         trace_id = FrameworkContextManager().get_context('trace_id')
         return FrameworkContextManager().get_context(trace_id + '_token_usage', {}) if trace_id is not None else {}
 

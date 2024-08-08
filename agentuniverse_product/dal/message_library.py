@@ -35,13 +35,14 @@ class MessageORM(Base):
 
 @singleton
 class MessageLibrary:
-
     @staticmethod
     def get_db_session():
+        """Get the database session."""
         system_sqldb_wrapper = SQLDBWrapperManager().get_instance_obj('__system_db__')
         return system_sqldb_wrapper.get_session()()
 
     def add_message(self, message_do: MessageDO) -> int:
+        """Add a message to the database."""
         with self.get_db_session() as db_session:
             message_orm = MessageORM(**message_do.model_dump())
             db_session.add(message_orm)
@@ -49,6 +50,7 @@ class MessageLibrary:
             return message_orm.id
 
     def delete_messages(self, session_id: str):
+        """Delete messages from the database using the provided `session_id`."""
         with self.get_db_session() as db_session:
             message_orm_list = db_session.query(MessageORM).filter(
                 MessageORM.session_id == session_id)
@@ -58,6 +60,7 @@ class MessageLibrary:
                 db_session.commit()
 
     def get_messages(self, session_id: str) -> list[MessageDO]:
+        """Get messages from the database using the provided `session_id`."""
         with self.get_db_session() as db_session:
             message_orm_list = db_session.query(MessageORM).filter(
                 MessageORM.session_id == session_id).order_by(asc(MessageORM.gmt_modified)).all()
@@ -69,6 +72,7 @@ class MessageLibrary:
 
     @staticmethod
     def __message_orm_to_do(message_orm: MessageORM) -> MessageDO:
+        """Convert a MessageORM object to a MessageDO object."""
         message_do = MessageDO(
             session_id="",
             content='',

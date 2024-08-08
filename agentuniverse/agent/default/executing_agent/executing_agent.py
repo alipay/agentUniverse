@@ -56,12 +56,16 @@ class ExecutingAgent(Agent):
         llm_result = []
         executing_result = []
         futures = planner_result.get('futures')
+        index = 1
+        # assemble results of the execution process.
         for future in futures:
             task_result = future.result()
             llm_result.append(task_result)
             executing_result.append({
-                'input': task_result['input'], 'output': task_result['output']
+                'input': f"Question {index}: " + task_result.get('input', ''),
+                'output': f"Answer {index}: " + task_result.get('output', '')
             })
+            index += 1
 
         return {'executing_result': executing_result, 'llm_result': llm_result}
 
@@ -91,14 +95,27 @@ class ExecutingAgent(Agent):
 
     def run_in_executor(self, planner: Planner, agent_model: AgentModel, planner_input: dict,
                         input_object: InputObject) -> dict:
+        """The execution function of the thread pool.
+
+        Args:
+            planner(Planner): The planner object.
+            agent_model (AgentModel): The agent model object.
+            planner_input (dict): The planner input dict.
+            input_object (InputObject): The input parameters passed by the user.
+        Returns:
+            dict: The planner execution result.
+        """
         context_tokens = {}
         try:
+            # pass the framework context into the thread.
             for var_name, var_value in self._context_values.items():
                 token = FrameworkContextManager().set_context(var_name, var_value)
                 context_tokens[var_name] = token
+            # invoke planner
             res = planner.invoke(agent_model, planner_input, input_object)
             return res
         finally:
+            # clear the framework context.
             for var_name, token in context_tokens.items():
                 FrameworkContextManager().reset_context(var_name, token)
 

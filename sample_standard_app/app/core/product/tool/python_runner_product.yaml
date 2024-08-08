@@ -1,5 +1,5 @@
 id: python_runner
-nickname: 执行python代码工具，输入为一段有效的python代码，输出结果为python print打印出的response内容
+nickname: 执行python代码工具
 type: TOOL
 avatar: ../../../resources/python_tool.png
 metadata:

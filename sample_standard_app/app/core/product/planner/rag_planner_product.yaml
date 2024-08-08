@@ -3,5 +3,5 @@ nickname: 单智能体RAG范式
 type: PLANNER
 metadata:
   type: 'PRODUCT'
-  module: 'agentuniverse_product.base.product'
-  class: 'Product'
+  module: 'agentuniverse_product.base.planner_product'
+  class: 'PlannerProduct'

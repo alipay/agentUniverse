@@ -18,9 +18,11 @@ from agentuniverse_product.service.model.session_dto import SessionDTO
 
 
 class SessionService:
+    """Session Service for aU-product."""
 
     @staticmethod
     def create_session(agent_id: str) -> str:
+        """Create a new session for a given agent id."""
         if agent_id is None:
             raise ValueError("agent_id is required parameter.")
         session_id = str(uuid.uuid4())
@@ -33,11 +35,13 @@ class SessionService:
 
     @staticmethod
     def update_session(session_id: str, agent_id: str, update_time: datetime) -> str:
+        """Update a session."""
         return SessionLibrary().update_session(
             SessionDO(session_id=session_id, agent_id=agent_id, gmt_modified=update_time))
 
     @staticmethod
     def delete_session(session_id: str) -> str:
+        """Delete the session with the specified session id."""
         if session_id is None:
             raise ValueError("session_id is required parameter.")
         session_id = SessionLibrary().delete_session(session_id)
@@ -47,6 +51,7 @@ class SessionService:
 
     @staticmethod
     def get_session_list(agent_id: str) -> List[SessionDTO]:
+        """Get a list of sessions for a given agent id."""
         if agent_id is None:
             raise ValueError("agent_id is required parameter.")
         session_do_list: List[SessionDO] = SessionLibrary().get_session_list(agent_id)
@@ -62,11 +67,13 @@ class SessionService:
 
     @staticmethod
     def get_session_detail(id: str, top_k: int = None) -> SessionDTO | None:
+        """Get the session detail for a given session id."""
         if id is None:
             raise ValueError("Session id is required parameter.")
         session_do: SessionDO = SessionLibrary().get_session_detail(id)
         if session_do is None:
             return session_do
+        # newest top k messages
         message_do_list: List[MessageDO] = MessageLibrary().get_messages(session_do.session_id)
         if top_k:
             message_do_list = message_do_list[-top_k:]
@@ -75,6 +82,7 @@ class SessionService:
     @staticmethod
     def convert_to_session_dto(session_do_list: List[SessionDO], session_messages_map: dict[str, List[MessageDO]]) -> \
             List[SessionDTO]:
+        """Convert the given session do list to session dto list."""
         res = []
         if len(session_do_list) == 0:
             return res

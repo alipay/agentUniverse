@@ -14,9 +14,11 @@ from agentuniverse_product.service.model.knowledge_dto import KnowledgeDTO
 
 
 class KnowledgeService:
+    """Knowledge Service for aU-product."""
 
     @staticmethod
     def get_knowledge_list() -> List[KnowledgeDTO]:
+        """Get all knowledge."""
         res = []
         product_list: List[Product] = ProductManager().get_instance_obj_list()
         if len(product_list) < 1:

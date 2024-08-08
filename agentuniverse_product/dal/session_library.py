@@ -40,10 +40,12 @@ class SessionLibrary:
 
     @staticmethod
     def get_db_session():
+        """Get the database session."""
         system_sqldb_wrapper = SQLDBWrapperManager().get_instance_obj('__system_db__')
         return system_sqldb_wrapper.get_session()()
 
     def add_session(self, session_do: SessionDO) -> str:
+        """Add a new session to the database."""
         with self.get_db_session() as db_session:
             session_orm = SessionORM(**session_do.model_dump())
             db_session.add(session_orm)
@@ -51,6 +53,7 @@ class SessionLibrary:
             return session_orm.session_id
 
     def update_session(self, session_do: SessionDO) -> str:
+        """Update an existing session to the database."""
         try:
             with self.get_db_session() as db_session:
                 session_orm = db_session.query(SessionORM).filter(
@@ -66,6 +69,7 @@ class SessionLibrary:
             db_session.rollback()
 
     def delete_session(self, session_id: str) -> str | None:
+        """Delete a session from the database  using the provided `session_id`."""
         with self.get_db_session() as db_session:
             session_orm = db_session.query(SessionORM).filter(
                 SessionORM.session_id == session_id).one_or_none()
@@ -77,6 +81,7 @@ class SessionLibrary:
                 return None
 
     def get_session_list(self, agent_id: str) -> list[SessionDO]:
+        """Get a list of sessions from the database using the provided `agent_id`."""
         with self.get_db_session() as db_session:
             session_orm_list = db_session.query(SessionORM).filter(
                 SessionORM.agent_id == agent_id).order_by(desc(SessionORM.gmt_modified)).all()
@@ -87,6 +92,7 @@ class SessionLibrary:
             return res
 
     def get_session_detail(self, session_id: str) -> SessionDO | None:
+        """Get a session from the database using the provided `session_id`"""
         with self.get_db_session() as db_session:
             session_orm = db_session.query(SessionORM).filter(
                 SessionORM.session_id == session_id).first()
@@ -97,6 +103,7 @@ class SessionLibrary:
 
     @staticmethod
     def __session_orm_to_do(session_orm: SessionORM) -> SessionDO:
+        """Convert a SessionORM object to a SessionDO object."""
         session_do = SessionDO(
             session_id="",
             agent_id='',

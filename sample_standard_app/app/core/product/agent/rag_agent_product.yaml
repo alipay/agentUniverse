@@ -6,7 +6,7 @@ opening_speech: |
   你可以这样问我：
   问题1: 巴黎奥运会美国男篮队员都有谁
   问题2: 巴菲特为什么减持苹果股票
-avatar: /Users/edwinwang/Work/agentUniverse/sample_standard_app/app/resources/rag_agent_logo.png
+avatar: ../../../resources/rag_agent_logo.png
 metadata:
   class: AgentProduct
   module: agentuniverse_product.base.agent_product

@@ -15,9 +15,11 @@ from agentuniverse_product.service.model.llm_dto import LlmDTO
 
 
 class LLMService:
+    """LLM Service for aU-product."""
 
     @staticmethod
     def get_llm_list() -> List[LlmDTO]:
+        """Get LLM list."""
         res = []
         product_list: List[Product] = ProductManager().get_instance_obj_list()
         if len(product_list) < 1:

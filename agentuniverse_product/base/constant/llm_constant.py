@@ -5,6 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: llm.py
+# llm model name list
 LLM_MODEL_NAME = {
     'demo_llm': ['gpt-3.5-turbo', 'gpt-4o', 'gpt-4-turbo', 'gpt-4o-mini', 'gpt-4'],
     'default_openai_llm': ['gpt-3.5-turbo', 'gpt-4o', 'gpt-4-turbo', 'gpt-4o-mini', 'gpt-4'],

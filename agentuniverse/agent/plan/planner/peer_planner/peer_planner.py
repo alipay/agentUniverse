@@ -128,6 +128,7 @@ class PeerPlanner(Planner):
                     logger_info += f"[{index + 1}] {one_framework} \n"
                 LOGGER.info(logger_info)
 
+                # add planning agent intermediate steps
                 if planningAgent:
                     self.stream_output(input_object, {"data": {
                         'output': planning_result.get_data('framework'),
@@ -152,6 +153,7 @@ class PeerPlanner(Planner):
                         logger_info += one_exec_log_info
                 LOGGER.info(logger_info)
 
+                # add executing agent intermediate steps
                 if executingAgent:
                     self.stream_output(input_object, {"data": {
                         'output': executing_result.get_data('executing_result'),
@@ -172,6 +174,7 @@ class PeerPlanner(Planner):
                 logger_info += f"{expressing_result.get_data('output')}"
                 LOGGER.info(logger_info)
 
+                # add expressing agent intermediate steps
                 if expressingAgent:
                     self.stream_output(input_object, {"data": {
                         'output': expressing_result.get_data('output'),
@@ -201,6 +204,7 @@ class PeerPlanner(Planner):
                     reviewing_info_str += f"review score: {reviewing_result.get_data('score')} \n"
                     LOGGER.info(logger_info + reviewing_info_str)
 
+                    # add reviewing agent intermediate steps
                     self.stream_output(input_object,
                                        {"data": {
                                            'output': reviewing_result.get_data('suggestion'),

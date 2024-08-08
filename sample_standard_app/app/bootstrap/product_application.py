@@ -11,7 +11,9 @@ from agentuniverse_product.agentuniverse_product import AgentUniverseProduct
 
 class ProductApplication:
     """
-    Product application.
+    Product application: agentUniverse-product portal.
+
+    After startup, the system redirects to the aU-product homepage by default.
     """
 
     @classmethod

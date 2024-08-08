@@ -14,9 +14,11 @@ from agentuniverse_product.service.model.tool_dto import ToolDTO
 
 
 class ToolService:
+    """Tool Service for aU-product."""
 
     @staticmethod
     def get_tool_list() -> List[ToolDTO]:
+        """Get list of tools."""
         res = []
         product_list: List[Product] = ProductManager().get_instance_obj_list()
         if len(product_list) < 1:

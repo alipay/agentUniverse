@@ -8,7 +8,16 @@
 from ruamel.yaml import YAML
 
 
-def update_nested_yaml_value(config_path, updates):
+def update_nested_yaml_value(config_path, updates) -> None:
+    """Update nested values in YAML
+
+    Args:
+        config_path(str): The path to the YAML file.
+
+        updates(dict): A dictionary of key-value pairs to update in the YAML file.
+        The keys should be dot-separated paths to the target values,
+        and the values should be the new values to set.
+    """
     yaml = YAML()
     # read an existing YAML file
     with open(config_path, 'r', encoding='utf-8') as file:

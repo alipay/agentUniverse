@@ -54,6 +54,7 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
             parent_run_id: Optional[UUID] = None,
             **kwargs: Any,
     ) -> Any:
+        # add token chunk to the queue.
         self.queueStream.put_nowait({
             "type": "token",
             "data": {
