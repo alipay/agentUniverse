@@ -1,7 +1,12 @@
 id: host_agent
 nickname: 多智能体讨论组
-opening_speech: 您好，欢迎使用多智能体讨论组，讨论组包含一名主持人和若干讨论组成员，根据您提出的问题，进行多轮组内讨论，最终由主持人总结讨论组的讨论结果，提供给您最终答案。
+opening_speech: |
+  您好，欢迎使用多智能体讨论组，讨论组包含一名主持人和若干讨论组成员，根据您提出的问题，进行多轮组内讨论，最终由主持人总结讨论组的讨论结果，提供给您最终答案。
+  你可以这样问我：
+  问题1: 甜粽子好吃还是咸粽子好吃
+  问题2: 可口可乐好喝还是百事可乐好喝
 type: AGENT
+avatar: ../../../resources/discussion_group_logo.png
 metadata:
   class: AgentProduct
   module: agentuniverse_product.base.agent_product
