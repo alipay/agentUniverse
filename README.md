@@ -74,7 +74,17 @@ agentUniverse has launched DataAgent (Minimum Viable Product Version). DataAgent
 [agentUniverse Example Projects](sample_standard_app)
 
 ### 🌟 Product Cases Built with agentUniverse
-['Zhi Xiao Zhu' AI Assistant for Financial Professionals](https://zhu.alipay.com/)
+['Zhi Xiao Zhu' AI Assistant for Financial Professionals](https://zhu.alipay.com/?from=au)
+
+****************************************
+
+**'Zhi Xiao Zhu' AI Assistant: Facilitate the implementation of large models in rigorous industries to enhance the efficiency of investment research experts**
+
+'Zhi Xiao Zhu' AI Assistant is an efficient solution for the practical application of large models in rigorous industries. It is based on the Finix model, which focuses on precise applications, and the agentUniverse intelligent agent framework, which excels in professional customization. This solution targets a range of professional AI business assistants related to investment research, ESG (Environmental, Social, and Governance), finance, earnings reports, and other specialized areas. It has been extensively validated in large-scale scenarios at Ant Group, enhancing expert efficiency.
+
+
+https://private-user-images.githubusercontent.com/39180831/355437700-192f712d-1b03-46a6-8422-1ca10aa94331.mp4?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjI5NDk4NTAsIm5iZiI6MTcyMjk0OTU1MCwicGF0aCI6Ii8zOTE4MDgzMS8zNTU0Mzc3MDAtMTkyZjcxMmQtMWIwMy00NmE2LTg0MjItMWNhMTBhYTk0MzMxLm1wND9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA4MDYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwODA2VDEzMDU1MFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTU4NWMzNzVjOGZjZDNjMDMzMTE4YjQzOTk0ZWQwZGZkNWNmNWQxNWMzYWIzMTk4MzY1MjA5NWRhMjU2NGNiNzUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.q1vdSg_Ghxr-DHLXfmQ_fVVRVSFn7H8VMHMi-_2QrjA
+
 ****************************************
 ## More
 ### Why Use agentUniverse
