@@ -99,7 +99,7 @@ class Monitor(BaseModel):
         """Initialize the invocation chain in the framework context."""
         Monitor.init_trace_id()
         trace_id = FrameworkContextManager().get_context('trace_id')
-        if FrameworkContextManager().get_context(trace_id) is None:
+        if FrameworkContextManager().get_context(trace_id + '_invocation_chain') is None:
             FrameworkContextManager().set_context(trace_id + '_invocation_chain', [])
 
     @staticmethod
@@ -108,7 +108,6 @@ class Monitor(BaseModel):
         trace_id = FrameworkContextManager().get_context('trace_id')
         if trace_id is not None:
             FrameworkContextManager().del_context(trace_id + '_invocation_chain')
-        FrameworkContextManager().del_context('trace_id')
 
     @staticmethod
     def add_invocation_chain(source: dict):
@@ -136,7 +135,7 @@ class Monitor(BaseModel):
         """Initialize the token usage in the framework context."""
         Monitor.init_trace_id()
         trace_id = FrameworkContextManager().get_context('trace_id')
-        if FrameworkContextManager().get_context(trace_id) is None:
+        if FrameworkContextManager().get_context(trace_id + '_token_usage') is None:
             FrameworkContextManager().set_context(trace_id + '_token_usage', {})
 
     @staticmethod
@@ -147,9 +146,10 @@ class Monitor(BaseModel):
         trace_id = FrameworkContextManager().get_context('trace_id')
         if trace_id is not None:
             old_token_usage: dict = FrameworkContextManager().get_context(trace_id + '_token_usage')
-            for key, value in cur_token_usage.items():
-                old_token_usage[key] = old_token_usage[key] + value if key in old_token_usage else value
-            FrameworkContextManager().set_context(trace_id + '_token_usage', old_token_usage)
+            if old_token_usage is not None:
+                for key, value in cur_token_usage.items():
+                    old_token_usage[key] = old_token_usage[key] + value if key in old_token_usage else value
+                FrameworkContextManager().set_context(trace_id + '_token_usage', old_token_usage)
 
     @staticmethod
     def clear_token_usage():

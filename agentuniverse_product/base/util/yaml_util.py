@@ -27,10 +27,16 @@ def update_nested_yaml_value(config_path, updates) -> None:
     for path, new_value in updates.items():
         keys = path.split('.')
         d = config_data
-        for key in keys[:-1]:
-            d = d[key]
-        # modify the value of the target key
-        d[keys[-1]] = new_value
+        try:
+            for key in keys[:-1]:
+                if key not in d:
+                    raise KeyError(f"Key '{key}' not found in the configuration")
+                d = d[key]
+            if keys[-1] in d:
+                # modify the value of the target key
+                d[keys[-1]] = new_value
+        except Exception as e:
+            print(f"Skipping update for '{path}': {e}")
 
     # write the modified content back to the YAML file
     with open(config_path, 'w', encoding='utf-8') as file:
