@@ -65,7 +65,7 @@ class AgentUniverseProduct(object):
         except ImportError as e:
             raise ImportError(
                 "Could not start product server provided by magent-ui."
-                "Please install it with `pip install magent-ui."
+                " Please install it with `pip install magent-ui ruamel.yaml`."
             )
 
     def __init_product_tables(self):
