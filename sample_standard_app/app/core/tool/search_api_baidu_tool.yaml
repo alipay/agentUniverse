@@ -3,7 +3,7 @@ description: '百度(必应)搜索工具，输入为一个要搜索内容的字�
 tool_type: 'api'
 input_keys: ['input']
 engine: 'baidu'
-search_type: 'json'
+search_type: 'common'
 search_params:
   num: 10
 metadata:

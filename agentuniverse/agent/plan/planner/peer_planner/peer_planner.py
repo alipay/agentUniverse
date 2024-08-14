@@ -6,6 +6,7 @@
 # @FileName: peer_planner.py
 """Peer planner module."""
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
+from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
@@ -42,7 +43,7 @@ class PeerPlanner(Planner):
         """
         planner_config = agent_model.plan.get('planner')
         sub_agents = self.generate_sub_agents(planner_config)
-        return self.agents_run(agent_model, sub_agents, planner_config, planner_input, input_object)
+        return self.agents_run(sub_agents, planner_config, planner_input, input_object)
 
     @staticmethod
     def generate_sub_agents(planner_config: dict) -> dict:
@@ -79,7 +80,7 @@ class PeerPlanner(Planner):
             elif context:
                 input_object.add_data('expert_framework', context)
 
-    def agents_run(self, agent_mode: AgentModel, agents: dict, planner_config: dict, agent_input: dict,
+    def agents_run(self, agents: dict, planner_config: dict, agent_input: dict,
                    input_object: InputObject) -> dict:
         """Planner agents run.
 
@@ -105,10 +106,10 @@ class PeerPlanner(Planner):
 
         self.build_expert_framework(planner_config, input_object)
 
-        planningAgent = agents.get('planning')
-        executingAgent = agents.get('executing')
-        expressingAgent = agents.get('expressing')
-        reviewingAgent = agents.get('reviewing')
+        planningAgent: Agent = agents.get('planning')
+        executingAgent: Agent = agents.get('executing')
+        expressingAgent: Agent = agents.get('expressing')
+        reviewingAgent: Agent = agents.get('reviewing')
 
         for _ in range(retry_count):
             LOGGER.info(f"Starting peer agents, retry_count is {_ + 1}.")
@@ -126,10 +127,13 @@ class PeerPlanner(Planner):
                 for index, one_framework in enumerate(planning_result.get_data('framework')):
                     logger_info += f"[{index + 1}] {one_framework} \n"
                 LOGGER.info(logger_info)
-                self.stream_output(input_object, {"data": {
-                    'output': planning_result.to_dict(),
-                    "agent_info": agent_mode.info
-                }, "type": "planning"})
+
+                # add planning agent intermediate steps
+                if planningAgent:
+                    self.stream_output(input_object, {"data": {
+                        'output': planning_result.get_data('framework'),
+                        "agent_info": planningAgent.agent_model.info
+                    }, "type": "planning"})
 
             if not executing_result or jump_step in ["planning", "executing"]:
                 if not executingAgent:
@@ -148,10 +152,13 @@ class PeerPlanner(Planner):
                         one_exec_log_info += f"[{index + 1}] output: {one_exec_res['output']}\n"
                         logger_info += one_exec_log_info
                 LOGGER.info(logger_info)
-                self.stream_output(input_object, {"data": {
-                    'output': executing_result.to_dict(),
-                    "agent_info": agent_mode.info
-                }, "type": "executing"})
+
+                # add executing agent intermediate steps
+                if executingAgent:
+                    self.stream_output(input_object, {"data": {
+                        'output': executing_result.get_data('executing_result'),
+                        "agent_info": executingAgent.agent_model.info
+                    }, "type": "executing"})
 
             if not expressing_result or jump_step in ["planning", "executing", "expressing"]:
                 if not expressingAgent:
@@ -166,10 +173,13 @@ class PeerPlanner(Planner):
                 logger_info = f"\nExpressing agent execution result is :\n"
                 logger_info += f"{expressing_result.get_data('output')}"
                 LOGGER.info(logger_info)
-                self.stream_output(input_object, {"data": {
-                    'output': expressing_result.get_data('output'),
-                    "agent_info": agent_mode.info
-                }, "type": "expressing"})
+
+                # add expressing agent intermediate steps
+                if expressingAgent:
+                    self.stream_output(input_object, {"data": {
+                        'output': expressing_result.get_data('output'),
+                        "agent_info": expressingAgent.agent_model.info
+                    }, "type": "expressing"})
 
             if not reviewing_result or jump_step in ["planning", "executing", "expressing", "reviewing"]:
                 if not reviewingAgent:
@@ -193,7 +203,14 @@ class PeerPlanner(Planner):
                     reviewing_info_str = f"review suggestion: {reviewing_result.get_data('suggestion')} \n"
                     reviewing_info_str += f"review score: {reviewing_result.get_data('score')} \n"
                     LOGGER.info(logger_info + reviewing_info_str)
-                    self.stream_output(input_object, {"data": reviewing_result.to_dict(), "type": "reviewing"})
+
+                    # add reviewing agent intermediate steps
+                    self.stream_output(input_object,
+                                       {"data": {
+                                           'output': reviewing_result.get_data('suggestion'),
+                                           "agent_info": reviewingAgent.agent_model.info
+                                       }, "type": "reviewing"})
+
                     if reviewing_result.get_data('score') and reviewing_result.get_data('score') >= eval_threshold:
                         loopResults.append({
                             "planning_result": planning_result,
