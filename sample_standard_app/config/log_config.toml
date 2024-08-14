@@ -12,7 +12,7 @@ log_rotation = "100 MB"
 log_retention = "7 days"
 
 [LOG_CONFIG.EXTEND_MODULE]
-# Whether use aliyun simple log server. If value is True, you should fill the ALIYUN_SLS_CONFIG below.
+# Whether you use Aliyun Simple Log Service (SLS), if the value is "True", you should fill in the ALIYUN_SLS_CONFIG below.
 sls_log = "False"
 
 [LOG_CONFIG.ALIYUN_SLS_CONFIG]
