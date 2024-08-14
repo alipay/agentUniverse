@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.11-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.12-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -51,6 +51,23 @@ pip install agentUniverse
 * 对agent进行快速服务化
 
 详情请阅读[快速开始](docs/guidebook/zh/1_3_%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.md) 。
+****************************************
+## 产品化平台使用
+agentUniverse提供基于本地的产品化平台能力，请按照如下步骤快速启动
+
+**通过pip安装**
+```shell
+pip install magent-ui ruamel.yaml
+```
+
+**一键运行**
+
+运行sample_standard_app/app/boostrap下的[product_application.py](sample_standard_app/app/bootstrap/product_application.py)文件，一键启动。
+
+更多详情参考 [产品化平台快速开始](./docs/guidebook/zh/10_1_1_产品化平台快速开始.md)
+
+本功能由 [difizen](https://github.com/difizen/magent) X agentUniverse联合推出。
+
 ****************************************
 ## 案例与样例工程
 ### 🌟 使用案例

@@ -5,7 +5,7 @@ Language version: [English](./README.md) | [中文](./README_zh.md) | [日本語
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.11-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.12-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -55,6 +55,24 @@ We will show you how to:
 For more details, please read the [Quick Start](./docs/guidebook/en/1_3_Quick_Start.md).
 
 ****************************************
+## Using the Product Platform
+agentUniverse provides a local product platform capability. Please follow the steps below for a quick start:
+
+**Install via pip**
+```shell
+pip install magent-ui ruamel.yaml
+```
+
+**One-click Run**
+
+Run the [product_application.py](sample_standard_app/app/bootstrap/product_application.py) file located in sample_standard_app/app/bootstrap for a one-click start.
+
+For more details, refer to [Quick Start for Product Platform](./docs/guidebook/en/10_1_1_Product%20Platform%20Quick%20Start.md).
+
+This feature is jointly launched by [difizen](https://github.com/difizen/magent) and agentUniverse.
+
+****************************************
+
 ## Cases and Example Projects
 ### 🌟 Use Cases
 [Legal Consultation Agent](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
