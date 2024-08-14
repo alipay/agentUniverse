@@ -76,6 +76,10 @@ class Planner(ComponentBase):
         """
         chat_history: list = planner_input.get('chat_history')
         memory_name = agent_model.memory.get('name')
+        memory: ChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
+        if memory is None:
+            return None
+
         llm_model = agent_model.memory.get('llm_model') or dict()
         llm_name = llm_model.get('name') or agent_model.profile.get('llm_model').get('name')
 
@@ -86,10 +90,6 @@ class Planner(ComponentBase):
         params['llm'] = llm
         params['input_key'] = self.input_key
         params['output_key'] = self.output_key
-
-        memory: ChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
-        if memory is None:
-            return None
         return memory.set_by_agent_model(**params)
 
     def run_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
@@ -118,8 +118,8 @@ class Planner(ComponentBase):
             knowledge: Knowledge = KnowledgeManager().get_instance_obj(knowledge_name)
             if knowledge is None:
                 continue
-            knowledge_res: List[Document] = knowledge.store.query(
-                Query(query_str=input_object.get_data(self.input_key), similarity_top_k=2), **input_object.to_dict())
+            knowledge_res: List[Document] = knowledge.query_knowledge(query_str=input_object.get_data(self.input_key),
+                                                                      **input_object.to_dict())
             for document in knowledge_res:
                 action_result.append(document.text)
 
@@ -185,8 +185,9 @@ class Planner(ComponentBase):
             return
         output_stream.put_nowait(data)
 
-    def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict, chat_history,
-               input_object: InputObject):
+    def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict,
+                     chat_history,
+                     input_object: InputObject):
 
         if not input_object.get_data('output_stream'):
             res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
@@ -202,4 +203,3 @@ class Planner(ComponentBase):
             })
             result.append(token)
         return "".join(result)
-

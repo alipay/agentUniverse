@@ -93,10 +93,13 @@
   * 6.4.1 [Financial Event Analysis Case](./6_4_1_Financial_Event_Analysis_Case.md)
 * 6.5 [Andrew Ng's Reflexive Workflow Translation Agent Replication](./7_1_1_Translation_Case.md)
 
-**7. Series of Articles**
+**7.Product Platform**
+* 7.1 [Quick Use](./10_1_1_Product Platform Quick Start.md)
 
-**8. Frequently Asked Questions (FAQ)**
+**8. Series of Articles**
 
-**[9.Citation](9_1_Citation.md)**
+**9. Frequently Asked Questions (FAQ)**
 
-**[10. Contact Us](6_1_Contact_Us.md)**
+**[10.Citation](9_1_Citation.md)**
+
+**[11. Contact Us](6_1_Contact_Us.md)**
