@@ -7,10 +7,12 @@
 # @FileName: stream_callback.py
 
 import asyncio
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union
+from uuid import UUID
 
 from langchain_core.agents import AgentAction, AgentFinish
 from langchain_core.callbacks import BaseCallbackHandler
+from langchain_core.outputs import GenerationChunk, ChatGenerationChunk
 
 
 class StreamOutPutCallbackHandler(BaseCallbackHandler):
@@ -39,6 +41,24 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
             "type": "ReAct",
             "data": {
                 "output": "\nThought:" + action.log,
+                "agent_info": self.agent_info
+            }
+        })
+
+    def on_llm_new_token(
+            self,
+            token: str,
+            *,
+            chunk: Optional[Union[GenerationChunk, ChatGenerationChunk]] = None,
+            run_id: UUID,
+            parent_run_id: Optional[UUID] = None,
+            **kwargs: Any,
+    ) -> Any:
+        # add token chunk to the queue.
+        self.queueStream.put_nowait({
+            "type": "token",
+            "data": {
+                "chunk": chunk.text,
                 "agent_info": self.agent_info
             }
         })

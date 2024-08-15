@@ -5,15 +5,16 @@ profile:
   prompt_version: demo_rag_agent.cn
   llm_model:
     name: 'qwen_llm'
-#    model_name: 'gpt-4o'
 plan:
   planner:
     name: 'rag_planner'
 action:
   tool:
     - 'google_search_tool'
+  knowledge:
+    -
 memory:
-  name: ''
+  name: 'demo_memory'
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'

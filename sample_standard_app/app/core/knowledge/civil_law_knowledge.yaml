@@ -1,5 +1,5 @@
 name: 'civil_law_knowledge'
-description: 民法知识库，可以查询民法典法律相关内容'
+description: 民法知识库，可以查询民法典法律相关内容
 metadata:
   type: 'KNOWLEDGE'
   module: 'sample_standard_app.app.core.knowledge.civil_law_knowledge'

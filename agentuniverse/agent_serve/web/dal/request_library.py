@@ -5,7 +5,6 @@
 # @Author  : fanen.lhy
 # @Email   : fanen.lhy@antgroup.com
 # @FileName: request_library.py
-
 import datetime
 
 from sqlalchemy import JSON, Integer, String, DateTime, Text, Column
@@ -65,7 +64,8 @@ class RequestLibrary:
             name="__system_db__",
             db_wrapper_configer=_configer
         )
-        SQLDBWrapperManager().register("__system_db__", self.sqldb_wrapper)
+        SQLDBWrapperManager().register(self.sqldb_wrapper.get_instance_code(),
+                                       self.sqldb_wrapper)
 
     def __init_request_table(self):
         with self.sqldb_wrapper.sql_database._engine.connect() as conn:
@@ -76,8 +76,7 @@ class RequestLibrary:
         if not self.session:
             self.__init_request_table()
             self.session = self.sqldb_wrapper.get_session()
-        return self.session
-
+        return self.session()
 
     def query_request_by_request_id(self, request_id: str) -> RequestDO | None:
         """Get a RequestDO with given request_id.

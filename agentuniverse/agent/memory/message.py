@@ -24,7 +24,7 @@ class Message(BaseModel):
     """
 
     type: Optional[str] = None
-    content: Union[str, List[Union[str, Dict]]] = None
+    content: Optional[Union[str, List[Union[str, Dict]]]] = None
 
     def as_langchain(self):
         """Convert the agentUniverse(aU) message class to the langchain message class."""
