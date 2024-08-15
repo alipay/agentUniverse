@@ -23,6 +23,8 @@ service = ['sample_standard_app.app.core.service']
 prompt = ['sample_standard_app.app.core.prompt']
 # Scan and register prompt components for all paths under this list, with priority over the default.
 sqldb_wrapper = ['sample_standard_app.app.core.sqldb_wrapper']
+# Scan and register product components for all paths under this list, with priority over the default.
+product = ['sample_standard_app.app.core.product']
 
 [SUB_CONFIG_PATH]
 # Log config file path, an absolute path or a relative path based on the dir where the current config file is located.

@@ -5,7 +5,7 @@
 # @Author  : jerry.zzw 
 # @Email   : jerry.zzw@antgroup.com
 # @FileName: component_base.py
-from abc import ABC
+from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
 
@@ -18,6 +18,8 @@ class ComponentBase(BaseModel):
     """The ComponentBase class, which is used to define the base class of the component."""
 
     component_type: ComponentEnum
+    # component yaml path
+    component_config_path: Optional[str] = None
     # pydantic protected_namespaces config
     model_config = ConfigDict(protected_namespaces=())
 

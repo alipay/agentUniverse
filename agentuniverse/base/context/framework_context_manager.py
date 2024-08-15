@@ -5,7 +5,6 @@
 # @Author  : fanen.lhy
 # @Email   : fanen.lhy@antgroup.com
 # @FileName: framework_context_manager.py
-
 from contextvars import ContextVar, Token
 import threading
 from typing import Dict, Any
@@ -84,3 +83,15 @@ class FrameworkContextManager:
                 Token used to reset a context variable.
         """
         self.__context_dict[var_name].reset(token)
+
+    def get_all_contexts(self) -> Dict[str, Any]:
+        """Get all context variables and their values."""
+        context_values = {}
+        for var_name in self.__context_dict.keys():
+            context_values[var_name] = self.get_context(var_name)
+        return context_values
+
+    def set_all_contexts(self, context_values: Dict[str, Any]):
+        """Set all context variables using the provided dictionary."""
+        for var_name, var_value in context_values.items():
+            self.set_context(var_name, var_value)

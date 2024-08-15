@@ -7,5 +7,5 @@ api_key_env: 'DEEPSEEK_API_KEY'
 api_base_env: 'DEEPSEEK_API_BASE'
 metadata:
   type: 'LLM'
-  module: 'agentuniverse.llm.openai_style_llm'
-  class: 'OpenAIStyleLLM'
+  module: 'agentuniverse.llm.default.deep_seek_openai_style_llm'
+  class: 'DefaultDeepSeekLLM'

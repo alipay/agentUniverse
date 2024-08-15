@@ -14,6 +14,7 @@ from agentuniverse.agent.action.knowledge.reader.reader import Reader
 from agentuniverse.agent.action.knowledge.store.document import Document
 from agentuniverse.agent.action.knowledge.store.query import Query
 from agentuniverse.agent.action.knowledge.store.store import Store
+from agentuniverse.base.annotation.trace import trace_knowledge
 from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
@@ -53,6 +54,7 @@ class Knowledge(ComponentBase):
         document_list: List[Document] = self.reader.load_data()
         self.store.insert_documents(document_list, **kwargs)
 
+    @trace_knowledge
     def query_knowledge(self, **kwargs) -> List[Document]:
         """Query the knowledge.
 

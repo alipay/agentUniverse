@@ -46,7 +46,7 @@ class DiscussionPlanner(Planner):
         # generate participant agents
         participant_agents = self.generate_participant_agents(planner_config)
         # invoke agents
-        return self.agents_run(participant_agents, planner_config, agent_model, planner_input)
+        return self.agents_run(participant_agents, planner_config, agent_model, planner_input, input_object)
 
     @staticmethod
     def generate_participant_agents(planner_config: dict) -> dict:
@@ -61,7 +61,7 @@ class DiscussionPlanner(Planner):
         return agents
 
     def agents_run(self, participant_agents: dict, planner_config: dict, agent_model: AgentModel,
-                   agent_input: dict) -> dict:
+                   agent_input: dict, input_object: InputObject) -> dict:
         """ Invoke the participant agents and host agent.
 
         Args:
@@ -69,6 +69,7 @@ class DiscussionPlanner(Planner):
             planner_config (dict): Planner config.
             agent_model (AgentModel): Agent model object.
             agent_input (dict): Agent input object.
+            input_object (InputObject): The input parameters passed by the user.
         Returns:
             dict: The planner result.
         """
@@ -76,8 +77,11 @@ class DiscussionPlanner(Planner):
         chat_history = []
         LOGGER.info(f"The topic of discussion is {agent_input.get(self.input_key)}")
         LOGGER.info(f"The participant agents are {'|'.join(participant_agents.keys())}")
-        agent_input['total_round'] = total_round
-        agent_input['participants'] = ' and '.join(participant_agents.keys())
+
+        input_object.add_data('chat_history', chat_history)
+        input_object.add_data('total_round', total_round)
+        input_object.add_data('participants', ' and '.join(participant_agents.keys()))
+
         for i in range(total_round):
             LOGGER.info("------------------------------------------------------------------")
             LOGGER.info(f"Start a discussion, round is {i + 1}.")
@@ -86,29 +90,39 @@ class DiscussionPlanner(Planner):
                 LOGGER.info(f"Start speaking: agent is {agent_name}.")
                 LOGGER.info("------------------------------------------------------------------")
                 # invoke participant agent
-                agent_input['agent_name'] = agent_name
-                agent_input['cur_round'] = i + 1
-                output_object: OutputObject = agent.run(**agent_input)
+                input_object.add_data('agent_name', agent_name)
+                input_object.add_data('cur_round', i + 1)
+                output_object: OutputObject = agent.run(**input_object.to_dict())
                 current_output = output_object.get_data('output', '')
 
                 # process chat history
                 chat_history.append({'content': agent_input.get('input'), 'type': 'human'})
                 chat_history.append(
                     {'content': f'the round {i + 1} agent {agent_name} thought: {current_output}', 'type': 'ai'})
-                agent_input['chat_history'] = chat_history
+                input_object.add_data('chat_history', chat_history)
 
+                # add to the stream queue.
+                self.stream_output(input_object, {"data": {
+                    'output': current_output,
+                    "agent_info": agent_model.info
+                }, "type": "participant_agent"})
                 LOGGER.info(f"the round {i + 1} agent {agent_name} thought: {output_object.get_data('output', '')}")
 
+        # concatenate the agent input parameters of the host agent.
         agent_input['chat_history'] = chat_history
-        # finally invoke host agent
-        return self.invoke_host_agent(agent_model, agent_input)
+        agent_input['total_round'] = total_round
+        agent_input['participants'] = ' and '.join(participant_agents.keys())
 
-    def invoke_host_agent(self, agent_model: AgentModel, planner_input: dict) -> dict:
+        # finally invoke host agent
+        return self.invoke_host_agent(agent_model, agent_input, input_object)
+
+    def invoke_host_agent(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject) -> dict:
         """ Invoke the host agent.
 
         Args:
             agent_model (AgentModel): Agent model object.
             planner_input (dict): Planner input object.
+            input_object (InputObject): The input parameters passed by the user.
         Returns:
             dict: The planner result.
         """
@@ -131,8 +145,7 @@ class DiscussionPlanner(Planner):
             history_messages_key="chat_history",
             input_messages_key=self.input_key,
         ) | StrOutputParser()
-        res = asyncio.run(
-            chain_with_history.ainvoke(input=planner_input, config={"configurable": {"session_id": "unused"}}))
+        res = self.invoke_chain(agent_model, chain_with_history, planner_input, chat_history, input_object)
         LOGGER.info(f"Discussion summary is: {res}")
         return {**planner_input, self.output_key: res, 'chat_history': generate_memories(chat_history)}
 

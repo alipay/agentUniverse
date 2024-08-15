@@ -21,5 +21,7 @@ def generate_messages(memories: list) -> List[Message]:
 
 
 def generate_memories(chat_messages: BaseChatMessageHistory) -> list:
-    return [{"content": message.content, "type": message.type}
-            for message in chat_messages.messages] if chat_messages.messages else []
+    return [
+        {"content": message.content, "type": 'ai' if message.type == 'AIMessageChunk' else message.type}
+        for message in chat_messages.messages
+    ] if chat_messages.messages else []

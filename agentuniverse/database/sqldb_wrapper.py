@@ -100,7 +100,7 @@ class SQLDBWrapper(ComponentBase):
            Get a sqlalchemy session, used for operating with orm.
         """
         if self.db_session:
-            return self.db_session()
+            return self.db_session
         # Create database engine
         self.db_session = sessionmaker(bind=self.sql_database._engine)
-        return self.db_session()
+        return self.db_session

@@ -4,7 +4,7 @@ info:
 profile:
   prompt_version: qwen_react_agent.cn
   llm_model:
-    name: 'default_qwen_llm'
+    name: 'qwen_llm'
     model_name: 'qwen-max'
     temperature: 0
 action:

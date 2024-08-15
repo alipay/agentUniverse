@@ -24,6 +24,18 @@ Note - Additional remarks regarding the version.
 ***************************************************
 
 # Version Update History
+## [0.0.12] - 2024-08-14
+### Added
+- agentUniverse Product Version Offering
+  - The current version provides basic capabilities for agent construction, modification, and debugging, jointly launched by the difizen project. For more details, please refer to the documentation in the product platform section.
+- Monitor Component: Added knowledge and tool instance collection, supporting full-link trace sequence concatenation and providing token consumption monitoring.
+- New Web Session Module: Provides session and message persistence management capabilities.
+
+### Note
+- Optimized Knowledge Component: Users can configure and specify any number of recall results (similarity_top_k).
+- Fixed Chroma Component: Resolved issues where the embedding module was not specified.
+- Various code optimizations and documentation updates.
+
 ## [0.0.11] - 2024-07-11
 ### Added
 - DataAgent Autonomous Data Agent MVP Version Released
