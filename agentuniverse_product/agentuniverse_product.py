@@ -6,6 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: agentuniverse_product.py
 import sys
+from typing import List
 
 from agentuniverse.base.agentuniverse import AgentUniverse
 from agentuniverse.base.component.application_component_manager import ApplicationComponentManager
@@ -24,6 +25,8 @@ from agentuniverse_product.base.product_configer import ProductConfiger
 from agentuniverse_product.base.product_manager import ProductManager
 from agentuniverse_product.dal.message_library import MESSAGE_TABLE_NAME, MessageORM
 from agentuniverse_product.dal.session_library import SESSION_TABLE_NAME, SessionORM
+
+sys.path.append("/Users/brokun/github/magent/packages/magent-ui/src")
 
 
 @singleton
@@ -59,9 +62,11 @@ class AgentUniverseProduct(object):
         self.__scan_and_register_product(self.__config_container.app_configer)
 
         # start the product ui server
+
+        config = configer.value.get('MAGENT_UI', {})
         try:
             from magent_ui import launch
-            launch()
+            launch(**config)
         except ImportError as e:
             raise ImportError(
                 "Could not start product server provided by magent-ui."
