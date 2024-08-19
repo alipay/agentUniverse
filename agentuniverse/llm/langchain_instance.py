@@ -59,7 +59,7 @@ class LangchainOpenAI(ChatOpenAI):
         should_stream = stream if stream is not None else self.streaming
         message_dicts, params = self._create_message_dicts(messages, stop)
         params = {**params, **kwargs}
-        llm_output = self.llm._call(messages=message_dicts, **params)
+        llm_output = self.llm.call(messages=message_dicts, **params)
         if not should_stream:
             return self._create_chat_result(llm_output.raw)
         stream_iter = self.as_langchain_chunk(llm_output)
@@ -77,7 +77,7 @@ class LangchainOpenAI(ChatOpenAI):
         should_stream = stream if stream is not None else self.streaming
         message_dicts, params = self._create_message_dicts(messages, stop)
         params = {**params, **kwargs}
-        llm_output = await self.llm._acall(messages=message_dicts, **params)
+        llm_output = await self.llm.acall(messages=message_dicts, **params)
         if not should_stream:
             return self._create_chat_result(llm_output.raw)
         stream_iter = self.as_langchain_achunk(llm_output)

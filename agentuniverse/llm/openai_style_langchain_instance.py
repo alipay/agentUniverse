@@ -27,14 +27,14 @@ async def acompletion_with_retry(
 ) -> Any:
     """Use tenacity to retry the async completion call."""
     if is_openai_v1():
-        return await llm.llm.execute(**kwargs)
+        return await llm.llm.acall(**kwargs)
 
     retry_decorator = _create_retry_decorator(llm, run_manager=run_manager)
 
     @retry_decorator
     async def _completion_with_retry(**kwargs: Any) -> Any:
         # Use OpenAI's async api https://github.com/openai/openai-python#async-api
-        return await llm.llm.aexecute(**kwargs)
+        return await llm.llm.acall(**kwargs)
 
     return await _completion_with_retry(**kwargs)
 
@@ -166,7 +166,7 @@ class LangchainOpenAIStyleInstance(ChatOpenAI):
 
         @retry_decorator
         def _completion_with_retry(**kwargs: Any) -> Any:
-            return self.llm.acall(**kwargs)
+            return self.llm.call(**kwargs)
 
         return _completion_with_retry(**kwargs)
 
