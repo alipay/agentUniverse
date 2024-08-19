@@ -6,55 +6,59 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: store.py
 from typing import Any, List, Optional
-from pydantic import BaseModel
 
-from agentuniverse.agent.action.knowledge.embedding.embedding import Embedding
+from agentuniverse.base.component.component_base import ComponentEnum
+from agentuniverse.base.component.component_base import ComponentBase
+from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.agent.action.knowledge.store.document import Document
 from agentuniverse.agent.action.knowledge.store.query import Query
+from agentuniverse.agent_serve.web.post_fork_queue import add_post_fork
 
 
-class Store(BaseModel):
+class Store(ComponentBase):
     """The basic class for the knowledge store.
 
     Store of the knowledge, store class is used to store knowledge
     and provide retrieval capabilities,
     vector storage, such as ChromaDB store, or non-vector storage, such as Redis Store.
-
-    Attributes:
-        client (Any): The client of the store,
-        client is usually used to connect to the storage and provides knowledge insertion,
-        update, deletion, and query operations
-
-        async_client (Any): The async client of the store,
-        the function is the same as that of the `client` parameter  in asynchronous mode.
-
-        embedding_model (Embedding): The embedding model of the store,
-        used to provided embedding operations on texts to generate a list of floats.
     """
-
+    component_type: ComponentEnum = ComponentEnum.STORE
+    name: Optional[str] = None
+    description: Optional[str] = None
     client: Any = None
     async_client: Any = None
-    embedding_model: Optional[Embedding] = None
 
     class Config:
         """Configuration for this pydantic object."""
         arbitrary_types_allowed = True
 
-    def __init__(self, **kwargs):
-        """Initialize the store class."""
-        super().__init__(**kwargs)
-        if self.client is None:
-            self.client = self._new_client()
-        if self.async_client is None:
-            self.async_client = self._new_async_client()
-
     def _new_client(self) -> Any:
-        """Initialize the client."""
+        """Initialize the client，like database connection or local file create."""
         pass
 
     def _new_async_client(self) -> Any:
         """Initialize the async client."""
         pass
+
+    def _initialize_by_component_configer(self,
+                                         store_configer: ComponentConfiger) \
+            -> 'Store':
+        """Initialize the store by the ComponentConfiger object.
+
+        Args:
+            store_configer(ComponentConfiger): A configer contains store
+            basic info. The client will be created in post fork due to
+            conflicts that may occur in a multithreaded scenario.
+        Returns:
+            Store: A store instance.
+        """
+        if store_configer.name:
+            self.name = store_configer.name
+        if store_configer.description:
+            self.description = store_configer.description
+        add_post_fork(self._new_client)
+        add_post_fork(self._new_async_client)
+        return self
 
     def query(self, query: Query, **kwargs) -> List[Document]:
         """Query documents."""
@@ -64,20 +68,12 @@ class Store(BaseModel):
         """Asynchronously query documents."""
         raise NotImplementedError
 
-    def insert_documents(self, documents: List[Document], **kwargs):
+    def insert_document(self, documents: List[Document], **kwargs):
         """Insert documents into the store."""
         raise NotImplementedError
 
-    async def async_insert_documents(self, documents: List[Document], **kwargs):
+    async def async_insert_document(self, documents: List[Document], **kwargs):
         """Asynchronously insert documents into the store."""
-        raise NotImplementedError
-
-    def insert_document(self, document: Document, **kwargs):
-        """Insert document into the store."""
-        raise NotImplementedError
-
-    async def async_insert_document(self, document: Document, **kwargs):
-        """Asynchronously insert document into the store."""
         raise NotImplementedError
 
     def delete_document(self, document_id: str, **kwargs):

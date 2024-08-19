@@ -55,9 +55,12 @@ langchain-anthropic = '^0.1.13'
 numpy = '^1.26.0'
 pandas = "^2.2.2"
 pyarrow = "^16.1.0"
-duckduckgo-search = "^6.1.7"
+duckduckgo-search = "6.2.7"
 wikipedia= "^1.4.0"
 openpyxl = "^3.1.5"
+primp = "0.5.5"
+pillow = "^10.4.0"
+jieba = "^0.42.1"
 
 [tool.poetry.extras]
 log_ext = ["aliyun-log-python-sdk"]

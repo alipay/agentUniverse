@@ -21,6 +21,12 @@ class ComponentEnum(Enum):
     PROMPT = "PROMPT"
     SQLDB_WRAPPER = "SQLDB_WRAPPER"
     PRODUCT = "PRODUCT"
+    EMBEDDING = "EMBEDDING"
+    DOC_PROCESSOR = "DOC_PROCESSOR"
+    READER = "READER"
+    STORE = "STORE"
+    RAG_ROUTER = "RAG_ROUTER"
+    QUERY_PARAPHRASER = "QUERY_PARAPHRASER"
 
     @staticmethod
     def to_value_list():

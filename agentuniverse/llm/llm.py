@@ -84,6 +84,7 @@ class LLM(ComponentBase):
         Returns:
             LLM: the LLM object
         """
+        super().initialize_by_component_configer(component_configer)
         if component_configer.name:
             self.name = component_configer.name
         if component_configer.description:

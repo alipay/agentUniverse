@@ -1,0 +1,6 @@
+name: 'default_pptx_reader'
+description: 'default pptx reader'
+metadata:
+  type: 'READER'
+  module: 'agentuniverse.agent.action.knowledge.reader.file.pptx_reader'
+  class: 'PptxReader'

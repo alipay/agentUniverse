@@ -1,0 +1,7 @@
+name: 'openai_embedding'
+description: 'embedding use openai api'
+embedding_model_name: 'text-embedding-v2'
+metadata:
+  type: 'EMBEDDING'
+  module: 'agentuniverse.agent.action.knowledge.embedding.openai_embedding'
+  class: 'OpenAIEmbedding'
