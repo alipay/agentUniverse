@@ -54,7 +54,7 @@ class RequestLibrary:
         else:
             db_path = get_project_root_path() / 'DB' / 'agent_universe.db'
             db_path.parent.mkdir(parents=True, exist_ok=True)
-            system_db_uri = f'sqlite:////{db_path}'
+            system_db_uri = f'sqlite:///{db_path}'
 
         self.session = None
         # create a sqldb_wrapper_instance
