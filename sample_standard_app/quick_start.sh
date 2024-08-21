@@ -14,20 +14,17 @@ if ! command -v python &> /dev/null; then
         # 根据cpu类型与系统类型mac,linux，x86_64,arm，下载
         if [[ "$(uname)" == "Darwin" ]]; then
             if [[ "$(uname -m)" == "x86_64" ]]; then
-                curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+                curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py39_24.3.0-0-MacOSX-x86_64.sh
             elif [[ "$(uname -m)" == "arm64" ]];then
-                curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-MacOSX-arm64.sh
+                curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py39_24.3.0-0-MacOSX-arm64.sh
             fi
         # If on Linux
         elif [[ "$(uname)" == "Linux" ]]; then
             if [[ "$(uname -m)" == "x86_64" ]]; then
-                curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-x86_64.sh
-              fi
-            if [[ "$(uname -m)" == "arm64" ]];then
-                    curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-aarch64.sh
+                curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py39_24.3.0-0-Linux-x86_64.sh
               fi
             if [[ "$(uname -m)" == "aarch64" ]];then
-                    curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-latest-Linux-aarch64.sh
+                    curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py39_24.3.0-0-Linux-aarch64.sh
               fi
         fi
         bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
