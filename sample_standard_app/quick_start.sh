@@ -43,6 +43,8 @@ if ! command -v python &> /dev/null; then
     fi
     # Create and activate Python 3.10 environment
     conda create -n python_au3.10 python=3.10 -y
+    conda config --set default_env python_au3.10
+    python --version
     conda init bash
     conda init sh
     conda activate python_au3.10 && python --version
