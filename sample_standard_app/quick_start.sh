@@ -33,14 +33,14 @@ if ! command -v python &> /dev/null; then
         source ~/.bashrc
         rm -rf ~/miniconda3/miniconda.sh
         # Configure Tsinghua mirrors
-        conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-        conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-        conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
-        conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+        $HOME/miniconda3/bin/conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+        $HOME/miniconda3/bin/conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+        $HOME/miniconda3/bin/conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+        $HOME/miniconda3/bin/conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
     fi
     # Create and activate Python 3.10 environment
-    conda create -n python_au3.10 python=3.10 -y
-    conda activate python_au3.10
+    $HOME/miniconda3/bin/conda create -n python_au3.10 python=3.10 -y
+    $HOME/miniconda3/bin/conda activate python_au3.10
 fi
 
 # Install missing packages
