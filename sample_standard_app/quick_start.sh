@@ -28,6 +28,8 @@ if ! command -v python &> /dev/null; then
                 if [[ "$(uname -m)" == "aarch64" ]];then
                     curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Miniconda3-py310_23.3.1-0-Linux-aarch64.sh -o ~/miniconda3/miniconda.sh
                 fi
+            fi
+        fi
         bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
         # 配置conda环境变量
         echo 'export PATH="$HOME/miniconda3/bin:$PATH"' >> ~/.bashrc
@@ -60,4 +62,4 @@ export PYTHONPATH=$PWD/../..
 
 # Start the service
 cd app/bootstrap
-python server_application.py
+python -u server_application.py
