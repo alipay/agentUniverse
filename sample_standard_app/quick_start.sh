@@ -31,8 +31,8 @@ if ! command -v python &> /dev/null; then
         $HOME/miniconda3/bin/conda init bash
         $HOME/miniconda3/bin/conda init sh
         # 配置conda环境变量
-#        echo 'export PATH="$HOME/miniconda3/bin:$PATH"' >> ~/.bashrc
-#        source ~/.bashrc
+        echo 'export PATH="$HOME/miniconda3/bin:$PATH"' >> ~/.bashrc
+        source ~/.bashrc
         export PATH="$HOME/miniconda3/bin:$PATH"
         rm -rf ~/miniconda3/miniconda.sh
         # Configure Tsinghua mirrors
@@ -43,12 +43,16 @@ if ! command -v python &> /dev/null; then
     fi
     # Create and activate Python 3.10 environment
     conda create -n python_au3.10 python=3.10 -y
+    conda activate python_au3.10
+    conda init bash
+    conda init sh
+    python --version
 fi
 
 # Install missing packages
 if ! pip list | grep -q "agentUniverse"; then
     echo "agentUniverse is not installed. Installing agentUniverse..."
-    conda activate python_au3.10 && pip install agentUniverse
+    pip install agentUniverse
 fi
 
 # Check if custom_key file exists, if not, copy from sample
