@@ -22,12 +22,12 @@ if ! command -v python &> /dev/null; then
         elif [[ "$(uname)" == "Linux" ]]; then
             if [[ "$(uname -m)" == "x86_64" ]]; then
                 curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Miniconda3-py310_23.3.1-0-Linux-x86_64.sh
-                if [[ "$(uname -m)" == "arm64" ]];then
+                fi
+            if [[ "$(uname -m)" == "arm64" ]];then
                     curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Miniconda3-py310_23.3.1-0-Linux-arm64.sh
-                fi
-                if [[ "$(uname -m)" == "aarch64" ]];then
-                    curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Miniconda3-py310_23.3.1-0-Linux-aarch64.sh 
-                fi
+            fi
+            if [[ "$(uname -m)" == "aarch64" ]];then
+                    curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Miniconda3-py310_23.3.1-0-Linux-aarch64.sh
             fi
         fi
         bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
