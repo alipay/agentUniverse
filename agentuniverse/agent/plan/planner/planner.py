@@ -156,7 +156,7 @@ class Planner(ComponentBase):
         """
         llm_name = agent_model.profile.get('llm_model').get('name')
         llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name)
-        return llm.set_by_agent_model(**agent_model.profile.get('llm_model'))
+        return llm
 
     def initialize_by_component_configer(self, component_configer: PlannerConfiger) -> 'Planner':
         """Initialize the planner by the PlannerConfiger object.

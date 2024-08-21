@@ -46,7 +46,7 @@ class ReviewingPlanner(Planner):
         chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
 
         chain_with_history = RunnableWithMessageHistory(
-            prompt.as_langchain() | llm.as_langchain(),
+            prompt.as_langchain() | llm.as_langchain_runnable(agent_model.llm_params()),
             lambda session_id: chat_history,
             history_messages_key="chat_history",
             input_messages_key=self.input_key,
