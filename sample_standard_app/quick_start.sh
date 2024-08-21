@@ -3,7 +3,7 @@
 # Ignore broken pipe errors
 trap '' PIPE
 
-# Check if Python is installed, if not, install it
+# Check if Python is installed, if not, install it ，或者python的版本小于3.10
 if ! command -v python &> /dev/null; then
     echo "Python is not installed. Installing Python..."
     # Check if conda is installed
@@ -28,25 +28,26 @@ if ! command -v python &> /dev/null; then
               fi
         fi
         bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+        $HOME/miniconda3/bin/conda init bash
+        $HOME/miniconda3/bin/conda init sh
         # 配置conda环境变量
         echo 'export PATH="$HOME/miniconda3/bin:$PATH"' >> ~/.bashrc
         source ~/.bashrc
         rm -rf ~/miniconda3/miniconda.sh
         # Configure Tsinghua mirrors
-        $HOME/miniconda3/bin/conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
-        $HOME/miniconda3/bin/conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
-        $HOME/miniconda3/bin/conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
-        $HOME/miniconda3/bin/conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+        conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+        conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+        conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+        conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
     fi
     # Create and activate Python 3.10 environment
-    $HOME/miniconda3/bin/conda create -n python_au3.10 python=3.10 -y
-    $HOME/miniconda3/bin/conda activate python_au3.10
+    conda create -n python_au3.10 python=3.10 -y
 fi
 
 # Install missing packages
 if ! pip list | grep -q "agentUniverse"; then
     echo "agentUniverse is not installed. Installing agentUniverse..."
-    pip install agentUniverse
+    conda activate python_au3.10 && pip install agentUniverse
 fi
 
 # Check if custom_key file exists, if not, copy from sample
