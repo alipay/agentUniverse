@@ -43,16 +43,13 @@ if ! command -v python &> /dev/null; then
     fi
     # Create and activate Python 3.10 environment
     conda create -n python_au3.10 python=3.10 -y
-    conda activate python_au3.10
-    conda init bash
-    conda init sh
-    python --version
+    conda activate python_au3.10 && python --version
 fi
 
 # Install missing packages
-if ! pip list | grep -q "agentUniverse"; then
+if ! conda activate python_au3.10 && pip list | grep -q "agentUniverse"; then
     echo "agentUniverse is not installed. Installing agentUniverse..."
-    pip install agentUniverse
+    conda activate python_au3.10 && pip install agentUniverse
 fi
 
 # Check if custom_key file exists, if not, copy from sample
@@ -65,4 +62,4 @@ export PYTHONPATH=$PWD/../..
 
 # Start the service
 cd app/bootstrap
-python -u server_application.py
+conda activate python_au3.10 && python -u server_application.py
