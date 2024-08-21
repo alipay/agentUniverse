@@ -31,8 +31,9 @@ if ! command -v python &> /dev/null; then
         $HOME/miniconda3/bin/conda init bash
         $HOME/miniconda3/bin/conda init sh
         # 配置conda环境变量
-        echo 'export PATH="$HOME/miniconda3/bin:$PATH"' >> ~/.bashrc
-        source ~/.bashrc
+#        echo 'export PATH="$HOME/miniconda3/bin:$PATH"' >> ~/.bashrc
+#        source ~/.bashrc
+        export PATH="$HOME/miniconda3/bin:$PATH"
         rm -rf ~/miniconda3/miniconda.sh
         # Configure Tsinghua mirrors
         conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
