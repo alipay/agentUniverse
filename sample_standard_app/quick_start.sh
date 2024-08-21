@@ -19,6 +19,7 @@ if ! command -v python &> /dev/null; then
         bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
         # 配置conda环境变量
         echo 'export PATH="$HOME/miniconda3/bin:$PATH"' >> ~/.bashrc
+        source ~/.bashrc
         rm -rf ~/miniconda3/miniconda.sh
         # Configure Tsinghua mirrors
         conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
