@@ -17,6 +17,8 @@ if ! command -v python &> /dev/null; then
             curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/miniconda3/miniconda.sh
         fi
         bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+        # 配置conda环境变量
+        echo 'export PATH="$HOME/miniconda3/bin:$PATH"' >> ~/.bashrc
         rm -rf ~/miniconda3/miniconda.sh
         # Configure Tsinghua mirrors
         conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
