@@ -46,6 +46,7 @@ if ! command -v python &> /dev/null; then
     conda config --set default_env python_au3.10
     export PATH="$HOME/miniconda3/envs/python_au3.10/bin:$PATH"
     echo "Python 3.10 environment created and activated."
+    python --version
 fi
 
 if ! python --version | grep -q "3.10"; then
@@ -55,7 +56,7 @@ fi
 
 # 判断 pip list 是否已安装 agentUniverse
 if ! pip list | grep -q "agentUniverse"; then
-   pip install agentUniverse
+   pip install agentUniverse -i https://pypi.tuna.tsinghua.edu.cn/simple
 fi
 
 # Check if custom_key file exists, if not, copy from sample
