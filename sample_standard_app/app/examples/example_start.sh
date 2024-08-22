@@ -84,17 +84,15 @@ if ! pip list | grep -q "agentUniverse"; then
 fi
 
 # Check if custom_key file exists, if not, copy from sample
-if [ ! -f "config/custom_key.toml" ]; then
-    cp config/custom_key.toml.sample config/custom_key.toml
+if [ ! -f "../../config/custom_key.toml" ]; then
+    cp ../../config/custom_key.toml.sample ../../config/custom_key.toml
 fi
 
-#把config目录下的config.toml文件中的#custom_key_path = './custom_key.toml' 替换为 custom_key_path = './custom_key.toml'
-sed -i '' 's/^#custom_key_path = '\''\.\/custom_key\.toml'\''/custom_key_path = '\''\.\/custom_key\.toml'\''/' ./config/config.toml
-
+sed -i '' 's/^#custom_key_path = '\''\.\/custom_key\.toml'\''/custom_key_path = '\''\.\/custom_key\.toml'\''/' ../../config/config.toml
 # Set PYTHONPATH to the parent directory of the current working directory
-export PYTHONPATH=$PWD/../..
+export PYTHONPATH=$PWD/../../../..
 
 # Start the service
 cd app/bootstrap
-python -u server_application.py
+python -u react_chat_bot.py
 
