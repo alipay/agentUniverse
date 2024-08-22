@@ -33,10 +33,10 @@ function install_conda() {
         elif [[ "$(uname)" == "Linux" ]]; then
             if [[ "$(uname -m)" == "x86_64" ]]; then
                 curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py39_24.3.0-0-Linux-x86_64.sh
-              fi
+            fi
             if [[ "$(uname -m)" == "aarch64" ]];then
                     curl -o ~/miniconda3/miniconda.sh https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-py39_24.3.0-0-Linux-aarch64.sh
-              fi
+            fi
         fi
         bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
         $HOME/miniconda3/bin/conda init bash
@@ -59,14 +59,14 @@ function install_conda() {
 if ! command -v python &> /dev/null; then
     echo "Python is not installed. Installing Python..."
     # Check if conda is installed
-    install_conda()
+    install_conda
 fi
 
 if ! python --version | grep -q "3.10"; then
     # 判断是否存在conda 命令
     if ! command -v conda &> /dev/null; then
         echo "conda is not installed. Please install conda and try again."
-        install_conda()
+        install_conda
     fi
     # 判断conda中是否存在python_au3.10 环境
     if ! conda env list | grep -q "python_au3.10"; then
