@@ -17,7 +17,10 @@ from agentuniverse.agent.action.knowledge.reader.reader import Reader
 class ReaderManager(ComponentManagerBase[Reader]):
     """A singleton manager class of the reader."""
     DEFAULT_READER = {
-        "pdf": "default_pdf_reader"
+        "pdf": "default_pdf_reader",
+        "pptx": "default_pptx_reader",
+        "docx": "default_docx_reader",
+        "txt": "default_txt_reader"
     }
 
     def __init__(self):

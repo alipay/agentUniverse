@@ -158,9 +158,13 @@ class MilvusStore(Store):
             return self.to_documents([])
         embedding = query.embeddings
         if self.embedding_model is not None and len(embedding) == 0:
+            if not self.embedding_model:
+                raise Exception("Milvus store can only save vector, "
+                                "you should provide embedding in your document or specify an embedding model.")
             embedding = EmbeddingManager().get_instance_obj(
                     self.embedding_model
                 ).get_embeddings([query.query_str], text_type="query")[0]
+
         if not search_args:
             search_args = self.search_args
         if len(embedding) > 0:
@@ -197,10 +201,15 @@ class MilvusStore(Store):
         """
         for document in documents:
             embedding = document.embedding
-            if self.embedding_model is not None and len(embedding) == 0:
-                embedding = EmbeddingManager().get_instance_obj(
-                    self.embedding_model
-                ).get_embeddings([document.text])[0]
+            if len(embedding) == 0:
+                if not self.embedding_model:
+                    raise Exception("Milvus store can only save vector, "
+                                    "you should provide embedding in your document or specify an embedding model.")
+                else:
+                    embedding = EmbeddingManager().get_instance_obj(
+                        self.embedding_model
+                    ).get_embeddings([document.text])[0]
+
             if not self.collection:
                 self._create_or_load_collection(
                     dim=len(embedding),
