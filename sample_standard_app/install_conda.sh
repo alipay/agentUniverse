@@ -2,6 +2,13 @@
 
 # Ignore broken pipe errors
 trap '' PIPE
+# 判断conda 命令是否存在,如果不存在，则判断$HOME/miniconda3/bin是否存在，如果存在则export 一下conda
+if ! command -v conda &> /dev/null; then
+    # Check if $HOME/miniconda3/bin exists
+    if [ -d "$HOME/miniconda3/bin" ]; then
+        # Add $HOME/miniconda3/bin to PATH
+        export PATH="$HOME/miniconda3/bin:$PATH"
+fi
 
 # Check if Python is installed, if not, install it ，或者python的版本小于3.10
 if ! command -v python &> /dev/null; then
@@ -50,8 +57,20 @@ if ! command -v python &> /dev/null; then
 fi
 
 if ! python --version | grep -q "3.10"; then
-    echo "Error: Python version is not 3.10. Please install Python 3.10 and try again."
-    exit 1
+
+    # 判断是否存在conda 命令
+    if ! command -v conda &> /dev/null; then
+        echo "conda is not installed. Please install conda and try again."
+        exit 1
+    fi
+    # 判断conda中是否存在python_au3.10 环境
+    if ! conda env list | grep -q "python_au3.10"; then
+        echo "Python 3.10 environment is not installed. Installing Python 3.10 environment..."
+        conda create -n python_au3.10 python=3.10 -y
+        conda config --set default_env python_au3.10
+        # 根据which conda的所在的目录，获取python_au3.10所在的目录，并设置环境变量
+      fi
+    export PATH="$HOME/miniconda3/envs/python_au3.10/bin:$PATH"
 fi
 
 # 判断 pip list 是否已安装 agentUniverse
