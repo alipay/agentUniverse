@@ -131,7 +131,7 @@ python react_chat_bot.py
 
 ## 4.为agent添加工具
 当前bot当中已经配置了一个google工具，可以通过修改agent配置来修改或添加工具。针对当前的ragchatbot所绑定的agent，修改agent配置文件config/agent_config.yaml,  
-将agent_id修改为`react_chat_bot`，其配置文件为：agentUniverse/sample_standard_app/app/core/agent/react_agent_case/demo_react_agent.yaml，新增一个human_input_run工具,可以让模型询问用户问题。
+其配置文件为：agentUniverse/sample_standard_app/app/core/agent/react_agent_case/demo_react_agent.yaml，新增一个human_input_run工具,可以让模型询问用户问题。
 ```yaml
 info:
   name: 'demo_react_agent'
@@ -161,7 +161,7 @@ metadata:
   module: 'agentuniverse.agent.default.react_agent.react_agent'
   class: 'ReActAgent'
 ```
-重新测试，修改问题为： 我想知道我的公历生日对应的阳历生日是哪一天？
+重新测试，修改问题为： 我想知道我的公历生日对应的农历生日是哪一天？
 ```shell
 cd app/examples
 export PYTHONPATH=$PWD/../../../..
