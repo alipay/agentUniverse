@@ -1,5 +1,5 @@
-# rag chat bot 快速开始
-为了帮助大家快速体验aU,我们提供了一个rag chat bot的快速开始的教程。
+# react chat bot 快速开始
+为了帮助大家快速体验aU,我们提供了一个react chat bot的快速开始的教程。
 
 ## 1. 环境准备
 使用 git clone aU 项目,并进入到样例工程目录
@@ -104,7 +104,7 @@ key的获取方式请参考：[千问](https://dashscope.console.aliyun.com/apiK
 ```shell
 source ~/.bashrc
 cd app/examples
-bash run_rag_chat_bot.sh
+bash example_start.sh
 ```
 或者
 
@@ -118,7 +118,13 @@ python react_chat_bot.py
 ```shell
 cd app/examples
 set PYTHONPATH=%CD%\..\..\..\..\
-run_rag_chat_bot.bat
+example_start.bat
+```
+或者
+```shell
+cd app/examples
+set PYTHONPATH=%CD%\..\..\..\..\
+python react_chat_bot.py
 ```
 
 在 vscode或者pycharm中可以直接通过打开想要运行的文件，点击右上角中的调试或者运行按钮，即可进行启动进行调试。
