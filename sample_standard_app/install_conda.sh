@@ -9,6 +9,8 @@ if ! command -v conda &> /dev/null; then
         # Add $HOME/miniconda3/bin to PATH
         echo "conda already installed Adding $HOME/miniconda3/bin to PATH..."
         export PATH="$HOME/miniconda3/bin:$PATH"
+    else
+        echo "conda is not installed...."
     fi
 #否则echo conda已在环境变量当中
 else
@@ -49,6 +51,7 @@ function install_conda() {
         conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
         conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
         conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+        echo "conda is installed."
     fi
 }
 
