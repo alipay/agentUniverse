@@ -7,15 +7,16 @@ if ! command -v conda &> /dev/null; then
     # Check if $HOME/miniconda3/bin exists
     if [ -d "$HOME/miniconda3/bin" ]; then
         # Add $HOME/miniconda3/bin to PATH
+        echo "conda already installed Adding $HOME/miniconda3/bin to PATH..."
         export PATH="$HOME/miniconda3/bin:$PATH"
-      fi
+    fi
+#否则echo conda已在环境变量当中
+else
+    echo "conda is already installed."
 fi
 
-# Check if Python is installed, if not, install it ，或者python的版本小于3.10
-if ! command -v python &> /dev/null; then
-    echo "Python is not installed. Installing Python..."
-    # Check if conda is installed
-    if ! command -v conda &> /dev/null; then
+function install_conda() {
+     if ! command -v conda &> /dev/null; then
         echo "conda is not installed. Installing conda..."
         mkdir -p ~/miniconda3
         # If on macOS
@@ -49,26 +50,25 @@ if ! command -v python &> /dev/null; then
         conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
         conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
     fi
-    # Create and activate Python 3.10 environment
-    conda create -n python_au3.10 python=3.10 -y
-    conda config --set default_env python_au3.10
-    export PATH="$HOME/miniconda3/envs/python_au3.10/bin:$PATH"
-    echo "Python 3.10 environment created and activated."
-    python --version
+}
+
+# Check if Python is installed, if not, install it ，或者python的版本小于3.10
+if ! command -v python &> /dev/null; then
+    echo "Python is not installed. Installing Python..."
+    # Check if conda is installed
+    install_conda()
 fi
 
 if ! python --version | grep -q "3.10"; then
     # 判断是否存在conda 命令
     if ! command -v conda &> /dev/null; then
         echo "conda is not installed. Please install conda and try again."
-        exit 1
+        install_conda()
     fi
     # 判断conda中是否存在python_au3.10 环境
     if ! conda env list | grep -q "python_au3.10"; then
         echo "Python 3.10 environment is not installed. Installing Python 3.10 environment..."
         conda create -n python_au3.10 python=3.10 -y
-        conda config --set default_env python_au3.10
-        # 根据which conda的所在的目录，获取python_au3.10所在的目录，并设置环境变量
     fi
     export PATH="$HOME/miniconda3/envs/python_au3.10/bin:$PATH"
 fi
