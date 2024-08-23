@@ -73,11 +73,13 @@ if ! python --version | grep -q "3.10"; then
         echo "Python 3.10 environment is not installed. Installing Python 3.10 environment..."
         conda create -n python_au3.10 python=3.10 -y
     fi
+	  conda activate python_au3.10
     # conda info --base
     #    使用conda info --base 获取conda的安装路径,并拼接envs/python_au3.10/bin到环境变量
-    export PATH ="$(conda info --base)/envs/python_au3.10/bin:$PATH"
+    export PATH="$(conda info --base)/envs/python_au3.10/bin:$PATH"
 fi
-
+python --version
+# <<< conda initialize <<<
 # 判断 pip list 是否已安装 agentUniverse
 if ! pip list | grep -q "agentUniverse"; then
    pip install agentUniverse -i https://pypi.tuna.tsinghua.edu.cn/simple

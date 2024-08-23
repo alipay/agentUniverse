@@ -75,7 +75,7 @@ if ! python --version | grep -q "3.10"; then
     fi
     # conda info --base
     #    使用conda info --base 获取conda的安装路径,并拼接envs/python_au3.10/bin到环境变量
-    export PATH ="$(conda info --base)/envs/python_au3.10/bin:$PATH"
+    export PATH="$(conda info --base)/envs/python_au3.10/bin:$PATH"
 fi
 
 # 判断 pip list 是否已安装 agentUniverse
