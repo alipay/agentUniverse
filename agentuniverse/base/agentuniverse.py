@@ -125,6 +125,7 @@ class AgentUniverse(object):
                                     + self.__system_default_memory_package)
         core_prompt_package_list = ((app_configer.core_prompt_package_list or app_configer.core_default_package_list)
                                     + self.__system_default_prompt_package)
+        core_workflow_package_list = app_configer.core_workflow_package_list or app_configer.core_default_package_list
 
         component_package_map = {
             ComponentEnum.AGENT: core_agent_package_list,
@@ -135,7 +136,8 @@ class AgentUniverse(object):
             ComponentEnum.SERVICE: core_service_package_list,
             ComponentEnum.SQLDB_WRAPPER: core_sqldb_wrapper_package_list,
             ComponentEnum.MEMORY: core_memory_package_list,
-            ComponentEnum.PROMPT: core_prompt_package_list
+            ComponentEnum.PROMPT: core_prompt_package_list,
+            ComponentEnum.WORKFLOW: core_workflow_package_list
         }
 
         component_configer_list_map = {}

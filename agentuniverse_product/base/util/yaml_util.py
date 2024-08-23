@@ -5,6 +5,8 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: yaml_util.py
+import os
+
 from ruamel.yaml import YAML
 
 
@@ -41,3 +43,18 @@ def update_nested_yaml_value(config_path, updates) -> None:
     # write the modified content back to the YAML file
     with open(config_path, 'w', encoding='utf-8') as file:
         yaml.dump(config_data, file)
+
+
+def write_yaml_file(file_path, config_data) -> None:
+    """Writes the dictionary to a YAML file with the specified file path.
+    
+    Args:
+        file_path (str): The path to the YAML file.
+        config_data (dict): The dictionary to write to the YAML file.
+    """
+    yaml = YAML()
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+    # Write the dictionary to the YAML file
+    with open(file_path, 'w') as yaml_file:
+        yaml.dump(config_data, yaml_file)

@@ -27,6 +27,7 @@ class AppConfiger(object):
         self.__core_sqldb_wrapper_package_list: Optional[list[str]] = None
         self.__core_prompt_package_list: Optional[list[str]] = None
         self.__core_product_package_list: Optional[list[str]] = None
+        self.__core_workflow_package_list: Optional[list[str]] = None
 
     @property
     def base_info_appname(self) -> Optional[str]:
@@ -86,6 +87,10 @@ class AppConfiger(object):
     def core_product_package_list(self) -> Optional[list[str]]:
         return self.__core_product_package_list
 
+    @property
+    def core_workflow_package_list(self) -> Optional[list[str]]:
+        return self.__core_workflow_package_list
+
     def load_by_configer(self, configer: Configer) -> 'AppConfiger':
         """Load the AppConfiger by the given Configer.
 
@@ -107,4 +112,5 @@ class AppConfiger(object):
         self.__core_sqldb_wrapper_package_list = configer.value.get('CORE_PACKAGE', {}).get('sqldb_wrapper')
         self.__core_prompt_package_list = configer.value.get('CORE_PACKAGE', {}).get('prompt')
         self.__core_product_package_list = configer.value.get('CORE_PACKAGE', {}).get('product')
+        self.__core_workflow_package_list = configer.value.get('CORE_PACKAGE', {}).get('workflow')
         return self

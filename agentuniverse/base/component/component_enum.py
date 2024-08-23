@@ -21,6 +21,7 @@ class ComponentEnum(Enum):
     PROMPT = "PROMPT"
     SQLDB_WRAPPER = "SQLDB_WRAPPER"
     PRODUCT = "PRODUCT"
+    WORKFLOW = "WORKFLOW"
 
     @staticmethod
     def to_value_list():
