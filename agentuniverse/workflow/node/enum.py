@@ -14,10 +14,10 @@ class NodeEnum(Enum):
     START = 'start'
     END = 'end'
     LLM = 'llm'
-    CONDITION = 'condition'
     TOOL = 'tool'
     KNOWLEDGE = 'knowledge'
     AGENT = 'agent'
+    CONDITION = 'if-else'
 
     @staticmethod
     def to_value_list():
@@ -37,3 +37,9 @@ class NodeStatusEnum(Enum):
     RUNNING = 'running'
     SUCCEEDED = 'succeeded'
     FAILED = 'failed'
+
+
+class ConditionComparisonEnum(Enum):
+    EQUAL = 'equal'
+    NOT_EQUAL = 'not_equal'
+    BLANK = 'blank'

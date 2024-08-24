@@ -7,7 +7,8 @@
 # @FileName: tool_service.py
 from typing import List
 
-from agentuniverse.base.component.component_enum import ComponentEnum
+from agentuniverse.agent.action.tool.tool import Tool
+from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse_product.base.product import Product
 from agentuniverse_product.base.product_manager import ProductManager
 from agentuniverse_product.service.model.tool_dto import ToolDTO
@@ -20,14 +21,14 @@ class ToolService:
     def get_tool_list() -> List[ToolDTO]:
         """Get list of tools."""
         res = []
-        product_list: List[Product] = ProductManager().get_instance_obj_list()
-        if len(product_list) < 1:
+        tool_list: List[Tool] = ToolManager().get_instance_obj_list()
+        if len(tool_list) < 1:
             return res
-        for product in product_list:
-            if product.type == ComponentEnum.TOOL.value:
-                tool_dto = ToolDTO(nickname=product.nickname, avatar=product.avatar, id=product.id)
-                tool = product.instance
-                tool_dto.description = tool.description
-                tool_dto.parameters = tool.input_keys
-                res.append(tool_dto)
+        for tool in tool_list:
+            product: Product = ProductManager().get_instance_obj(tool.name)
+            tool_dto = ToolDTO(nickname=product.nickname if product else '', avatar=product.avatar if product else '',
+                               id=tool.name)
+            tool_dto.description = tool.description
+            tool_dto.parameters = tool.input_keys
+            res.append(tool_dto)
         return res

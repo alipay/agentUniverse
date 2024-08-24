@@ -59,9 +59,10 @@ class AgentUniverseProduct(object):
         self.__scan_and_register_product(self.__config_container.app_configer)
 
         # start the product ui server
+        config = configer.value.get('MAGENT_UI', {})
         try:
             from magent_ui import launch
-            launch()
+            launch(**config)
         except ImportError as e:
             raise ImportError(
                 "Could not start product server provided by magent-ui."

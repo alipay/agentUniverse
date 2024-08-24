@@ -37,16 +37,17 @@ class Workflow(ComponentBase):
         return f'{appname}.{self.component_type.value.lower()}.{self.id}'
 
     def build(self) -> 'Workflow':
-        if self.graph_config is None or self.graph_config.get('graph') is None:
+        if self.graph_config is None:
             raise ValueError('The graph config is None.')
-        self.graph = Graph().build(self.id, self.graph_config.get('graph'))
+        self.graph = Graph().build(self.id, self.graph_config)
         return self
 
-    def run(self):
+    def run(self, input_params: dict) -> WorkflowOutput:
         if self.graph is None:
             raise ValueError('The graph of the workflow is None.')
-        workflow_output = WorkflowOutput(workflow_id=self.id)
+        workflow_output = WorkflowOutput(workflow_id=self.id, workflow_start_params=input_params)
         self.graph.run(workflow_output)
+        return workflow_output
 
     def initialize_by_component_configer(self, component_configer: WorkflowConfiger) -> 'Workflow':
         """Initialize the Workflow by the ComponentConfiger object.

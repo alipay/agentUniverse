@@ -19,4 +19,6 @@ NODE_CLS_MAPPING = {
     "knowledge": KnowledgeNode,
     "agent": AgentNode,
     "llm": LLMNode,
+    "if-else": LLMNode,
 }
+

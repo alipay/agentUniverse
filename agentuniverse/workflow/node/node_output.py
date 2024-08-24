@@ -15,7 +15,9 @@ from agentuniverse.workflow.node.enum import NodeStatusEnum
 class NodeOutput(BaseModel):
     """The basic class of the node output."""
 
-    result: Any = None
+    node_id: Optional[int] = None
+    result: Optional[Any] = None
     error: Optional[str] = None
     status: NodeStatusEnum = NodeStatusEnum.RUNNING
     metadata: Optional[Dict[str, Any]] = None
+    edge_source_handler: Optional[str] = None
