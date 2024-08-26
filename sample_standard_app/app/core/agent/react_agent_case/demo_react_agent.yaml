@@ -6,7 +6,8 @@ profile:
   llm_model:
     name: 'qwen_llm'
     model_name: 'qwen-max'
-    temperature: 0
+    stop: 'Observation'
+    temperature: 0.1
 action:
   tool:
     - 'google_search_tool'

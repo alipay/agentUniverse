@@ -13,7 +13,7 @@ cd agentUniverse/sample_standard_app
 bash quick_start.sh
 ```
 
-对于 Windows 系统, 可以使用 quick_start.bat 安装一个python环境。
+对于 Windows 系统, 可以使用 quick_start.ps1 安装一个python环境。
 ```shell
 quick_start.bat
 ```
@@ -118,7 +118,7 @@ python react_chat_bot.py
 ```shell
 cd app/examples
 set PYTHONPATH=%CD%\..\..\..\..\
-example_start.bat
+example_start.ps1
 ```
 或者
 ```shell
