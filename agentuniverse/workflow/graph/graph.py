@@ -57,7 +57,7 @@ class Graph(nx.DiGraph):
         sorted_nodes = list(nx.topological_sort(self))
         predecessor_node: Node | None = None
         while True:
-            next_node = self._get_next_node(sorted_nodes, predecessor_node)
+            next_node = self._get_next_node(workflow_output, sorted_nodes, predecessor_node)
             if not next_node:
                 break
             if self._has_node_been_executed(workflow_output, next_node.id):
@@ -68,14 +68,14 @@ class Graph(nx.DiGraph):
                 break
             predecessor_node = next_node
 
-    def _get_next_node(self, nodes: Any, predecessor_node: Optional[Node] = None) -> Optional[Node]:
+    def _get_next_node(self, workflow_output: WorkflowOutput, nodes: Any, predecessor_node: Optional[Node] = None) -> Optional[Node]:
         if not predecessor_node:
             for node_id in nodes:
                 if self.nodes[node_id]['type'] == NodeEnum.START.value:
                     return self.nodes[node_id]['instance']
         else:
-            source_handler = predecessor_node.node_output.edge_source_handler \
-                if predecessor_node.node_output else None
+            predecessor_node_output: NodeOutput = workflow_output.workflow_node_results.get(int(predecessor_node.id), None)
+            source_handler = predecessor_node_output.edge_source_handler if predecessor_node_output else None
             successors = self.successors(predecessor_node.id)
             if not successors:
                 return None

@@ -5,7 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: condition_node.py
-from typing import List
+from typing import List, Optional
 
 from agentuniverse.workflow.node.enum import NodeEnum, ConditionComparisonEnum, NodeStatusEnum
 from agentuniverse.workflow.node.node import Node, NodeData
@@ -16,7 +16,7 @@ from agentuniverse.workflow.workflow_output import WorkflowOutput
 
 
 class ConditionNodeData(NodeData):
-    inputs: ConditionNodeInputParams
+    inputs: Optional[ConditionNodeInputParams] = None
 
 
 class ConditionNode(Node):
@@ -30,8 +30,8 @@ class ConditionNode(Node):
     def _run(self, workflow_output: WorkflowOutput) -> NodeOutput:
         inputs: ConditionNodeInputParams = self._data.inputs
         condition_branches: List[ConditionBranchParams] = inputs.branches
-        condition_branch = condition_branches[0]
-        condition: ConditionParams = condition_branch[0]
+        condition_branch: ConditionBranchParams = condition_branches[0]
+        condition: ConditionParams = condition_branch.conditions[0]
 
         def resolve_value(node_input: NodeInputParams):
             if node_input.value.type == 'reference':

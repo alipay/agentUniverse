@@ -5,7 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: knowledge_node.py
-from typing import List
+from typing import List, Optional
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
@@ -17,7 +17,7 @@ from agentuniverse.workflow.workflow_output import WorkflowOutput
 
 
 class KnowledgeNodeData(NodeData):
-    inputs: KnowledgeNodeInputParams
+    inputs: Optional[KnowledgeNodeInputParams] = None
 
 
 class KnowledgeNode(Node):

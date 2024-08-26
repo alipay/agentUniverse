@@ -5,7 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: tool_node.py
-from typing import List
+from typing import List, Optional
 
 from agentuniverse.agent.action.tool.tool import Tool
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
@@ -18,7 +18,7 @@ from agentuniverse.workflow.workflow_output import WorkflowOutput
 
 
 class ToolNodeData(NodeData):
-    inputs: ToolNodeInputParams
+    inputs: Optional[ToolNodeInputParams] = None
 
 
 class ToolNode(Node):

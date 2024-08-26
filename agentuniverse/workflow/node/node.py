@@ -17,7 +17,7 @@ from agentuniverse.workflow.workflow_output import WorkflowOutput
 
 
 class NodeData(BaseModel):
-    outputs: List[NodeOutputParams]
+    outputs: Optional[List[NodeOutputParams]] = None
 
 
 class Node(BaseModel):

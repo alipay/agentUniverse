@@ -6,6 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: node_constant.py
 from agentuniverse.workflow.node.agent_node import AgentNode
+from agentuniverse.workflow.node.condition_node import ConditionNode
 from agentuniverse.workflow.node.end_node import EndNode
 from agentuniverse.workflow.node.knowledge_node import KnowledgeNode
 from agentuniverse.workflow.node.llm_node import LLMNode
@@ -19,6 +20,6 @@ NODE_CLS_MAPPING = {
     "knowledge": KnowledgeNode,
     "agent": AgentNode,
     "llm": LLMNode,
-    "if-else": LLMNode,
+    "if-else": ConditionNode,
 }
 

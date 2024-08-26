@@ -55,6 +55,7 @@ class LLMNodeInputParams(BaseModel):
 
 class EndNodeInputParams(BaseModel):
     input_param: Optional[List[NodeInputParams]] = list()
+    prompt: Optional[List[NodeInfoParams]] = list()
 
 
 class ConditionParams(BaseModel):

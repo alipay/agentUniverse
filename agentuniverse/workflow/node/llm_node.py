@@ -6,7 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: llm_node.py
 import re
-from typing import List
+from typing import List, Optional
 
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
@@ -19,7 +19,7 @@ from agentuniverse.workflow.workflow_output import WorkflowOutput
 
 
 class LLMNodeData(NodeData):
-    inputs: LLMNodeInputParams
+    inputs: Optional[LLMNodeInputParams] = None
 
 
 class LLMNode(Node):

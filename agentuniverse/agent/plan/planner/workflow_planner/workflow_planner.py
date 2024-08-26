@@ -10,6 +10,7 @@ from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.workflow.workflow import Workflow
 from agentuniverse.workflow.workflow_manager import WorkflowManager
+from agentuniverse.workflow.workflow_output import WorkflowOutput
 
 
 class WorkflowPlanner(Planner):
@@ -28,5 +29,6 @@ class WorkflowPlanner(Planner):
         planner = agent_model.plan.get('planner', {})
         workflow_id = planner.get('workflow_id')
         workflow: Workflow = WorkflowManager().get_instance_obj(component_instance_name=workflow_id)
-        workflow.run()
-        return {}
+        workflow = workflow.build()
+        workflow_output: WorkflowOutput = workflow.run(input_object.to_dict())
+        return workflow_output.workflow_end_params

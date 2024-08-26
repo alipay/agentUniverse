@@ -5,17 +5,18 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: end_node.py
-from typing import List
+import re
+from typing import List, Optional
 
 from agentuniverse.workflow.node.enum import NodeEnum, NodeStatusEnum
 from agentuniverse.workflow.node.node import Node, NodeData
-from agentuniverse.workflow.node.node_config import EndNodeInputParams, NodeInputParams, NodeOutputParams
+from agentuniverse.workflow.node.node_config import EndNodeInputParams, NodeOutputParams, NodeInfoParams
 from agentuniverse.workflow.node.node_output import NodeOutput
 from agentuniverse.workflow.workflow_output import WorkflowOutput
 
 
 class EndNodeData(NodeData):
-    inputs: EndNodeInputParams
+    inputs: Optional[EndNodeInputParams] = None
 
 
 class EndNode(Node):
@@ -28,23 +29,28 @@ class EndNode(Node):
 
     def _run(self, workflow_output: WorkflowOutput) -> NodeOutput:
         inputs: EndNodeInputParams = self._data.inputs
-        input_params: List[NodeInputParams] = inputs.input_param
+        prompt_template: NodeInfoParams = inputs.prompt[0]
+
+        # Extract variables from the prompt template
+        template_variables = re.findall(r'\{\{(.*?)\}\}', prompt_template.value)
+        # Resolve the input parameters
+        end_node_input_params = self._resolve_input_params(inputs.input_param, workflow_output)
+
+        # Replace variables in the prompt
+        try:
+            prompt = prompt_template.value
+            for var in template_variables:
+                if var not in end_node_input_params:
+                    raise KeyError(f"The variable '{var}' is not found in the input params.")
+                prompt = prompt.replace(f'{{{{{var}}}}}',
+                                        str(end_node_input_params[var]) if end_node_input_params[var] else '')
+        except KeyError as e:
+            raise ValueError(f"Error processing template variables: {e}")
+
         output_params: List[NodeOutputParams] = self._data.outputs
+        output_param: NodeOutputParams = output_params[0]
+        output_param.value = prompt
 
-        input_param = input_params[0]
-        input_value = input_param.value
-
-        if input_value.type == 'reference':
-            reference_node_id = input_value.content[0]
-            reference_output_params: List[NodeOutputParams] = workflow_output.workflow_parameters.get(
-                int(reference_node_id), [])
-            referenced_value = next(
-                (param.value for param in reference_output_params if param.name == input_value.content[1]),
-                None
-            )
-            output_params[0].value = referenced_value
-        else:
-            output_params[0].value = input_value.content
         workflow_output.workflow_parameters[self.id] = output_params
-        workflow_output.workflow_end_params = output_params
+        workflow_output.workflow_end_params = {output_param.name: output_param.value}
         return NodeOutput(node_id=self.id, status=NodeStatusEnum.SUCCEEDED, result=output_params)
