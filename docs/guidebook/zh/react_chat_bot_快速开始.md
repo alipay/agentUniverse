@@ -1,5 +1,5 @@
 # react chat bot 快速开始
-为了帮助大家快速体验aU,我们提供了一个react chat bot的快速开始的教程。
+为了帮助大家快速体验aU,我们提供了一个react chat bot的快速开始教程。
 
 ## 1. 环境准备
 使用 git clone aU 项目,并进入到样例工程目录
@@ -13,15 +13,15 @@ cd agentUniverse/sample_standard_app
 bash quick_start.sh
 ```
 
-对于 Windows 系统, 可以使用 quick_start.bat 安装一个python环境。
+对于 Windows 系统, 可以使用 quick_start.ps1 安装一个python环境。使用之前请先安装conda。
 ```shell
-quick_start.bat
+quick_start.ps1
 ```
-运行成功后，会启动一个服务，服务地址为：http://127.0.0.1:8080/
+运行成功后，会启动一个服务，服务地址为：http://127.0.0.1:8888/  
 
 ### 1.2 已有python环境
-注意：如果你已经有了一个有效的python环境，且python 版本大于3.10，可以直接安装agentuniverse依赖。
-#### 1.2.1 针对Mac & Linux 系统
+注意：如果你已经有了一个有效的python环境，且python版本为3.10，可以直接安装agentuniverse依赖。
+#### 1.2.1 针对 Mac & Linux 系统
 运行命令
 ```shell
 pip install agentuniverse==0.0.12
@@ -30,7 +30,7 @@ cd app/bootstrap
 python -u bootstrap.py
 ```
 
-#### 1.2.2对于 Windows 系统
+#### 1.2.2 针对 Windows 系统
 运行命令
 ```shell
 pip install agentuniverse==0.0.12
@@ -80,18 +80,20 @@ pip install agentuniverse==0.0.12
 复制一份config目录custom_key.toml.sample下的配置模板，重命名为custom_key.yaml
 
 ```shell
-cp config/config.yaml config/custom_key.yaml
+cp config/custom_key.yaml.sample config/custom_key.yaml
 ```
 
-配置文件在config.yaml中，将`#custom_key_path = './custom_key.toml'` 的注释删除,配置结果如下:   
+配置文件在config.yaml中，将`#custom_key_path = './custom_key.toml'` 的注释删除,配置结果如下:     
+  
 ```toml
 [SUB_CONFIG_PATH]
 # Log config file path, an absolute path or a relative path based on the dir where the current config file is located.
 log_config_path = './log_config.toml'
 # Custom key file path, use to save your own secret key like open ai or sth else. REMEMBER TO ADD IT TO .gitignore.
 custom_key_path = './custom_key.toml'
-```
-注意: 你已经使用过 quick_start.sh 脚本安装python环境,这里可以直接跳过
+```  
+  
+注意: 你已经使用过 quick_start.sh 脚本安装python环境,这里可以直接跳过。
 
 ## 3. 运行案例
 当前运行案例是基于千问大模型，在使用案例之前，必须在config/custom_key.toml中配置好DASHSCOPE_API_KEY：
@@ -118,9 +120,11 @@ python react_chat_bot.py
 ```shell
 cd app/examples
 set PYTHONPATH=%CD%\..\..\..\..\
-example_start.bat
+example_start.ps1
 ```
+  
 或者
+  
 ```shell
 cd app/examples
 set PYTHONPATH=%CD%\..\..\..\..\
@@ -132,35 +136,7 @@ python react_chat_bot.py
 ## 4.为agent添加工具
 当前bot当中已经配置了一个google工具，可以通过修改agent配置来修改或添加工具。针对当前的ragchatbot所绑定的agent，修改agent配置文件config/agent_config.yaml,  
 其配置文件为：agentUniverse/sample_standard_app/app/core/agent/react_agent_case/demo_react_agent.yaml，新增一个human_input_run工具,可以让模型询问用户问题。
-```yaml
-info:
-  name: 'demo_react_agent'
-  description: 'react agent'
-profile:
-  prompt_version: qwen_react_agent.cn
-  llm_model:
-    name: 'qwen_llm'
-    model_name: 'qwen-max'
-    stop: 'Observation'
-    temperature: 0.1
-action:
-  tool:
-    - 'google_search_tool'
-    - 'python_runner'
-    - 'human_input_run'
-  knowledge:
-    - 'civil_law_knowledge'
-    - 'criminal_law_knowledge'
-  agent:
-    - 'law_rag_agent'
-plan:
-  planner:
-    name: 'react_planner'
-metadata:
-  type: 'AGENT'
-  module: 'agentuniverse.agent.default.react_agent.react_agent'
-  class: 'ReActAgent'
-```
+![新增工具](../_picture/react_chat_bot_tool.png)
 重新测试，修改问题为： 我想知道我的公历生日对应的农历生日是哪一天？
 ```shell
 cd app/examples
