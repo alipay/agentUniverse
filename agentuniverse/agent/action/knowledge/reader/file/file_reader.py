@@ -33,7 +33,7 @@ class FileReader(Reader):
 
     file_readers: Dict[str, Type[Reader]] = DEFAULT_FILE_READERS
 
-    def load_data(self, file_paths: List[Path], ext_info: Optional[Dict] = None) -> List[Document]:
+    def _load_data(self, file_paths: List[Path], ext_info: Optional[Dict] = None) -> List[Document]:
         document_list = []
         for file_path in file_paths:
             file_suffix = file_path.suffix.lower()

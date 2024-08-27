@@ -6,16 +6,39 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: reader.py
 from abc import abstractmethod
-from typing import List, Any
-
-from pydantic import BaseModel
+from typing import List, Any, Optional
 
 from agentuniverse.agent.action.knowledge.store.document import Document
+from agentuniverse.base.component.component_base import ComponentEnum
+from agentuniverse.base.component.component_base import ComponentBase
+from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 
 
-class Reader(BaseModel):
+class Reader(ComponentBase):
     """The basic class for the knowledge reader."""
+    component_type: ComponentEnum = ComponentEnum.READER
+    name: Optional[str] = None
+    description: Optional[str] = None
 
-    @abstractmethod
     def load_data(self, *args: Any, **kwargs: Any) -> List[Document]:
         """Load data from the input params."""
+        return self._load_data(*args, **kwargs)
+
+    @abstractmethod
+    def _load_data(self, *args: Any, **kwargs: Any) -> List[Document]:
+        """Load data from the input params."""
+
+    def _initialize_by_component_configer(self,
+                                         reader_configer: ComponentConfiger) \
+            -> 'Reader':
+        """Initialize the reader by the ComponentConfiger object.
+
+        Args:
+            reader_configer(ComponentConfiger): A configer contains reader
+            basic info.
+        Returns:
+            Reader: A reader instance.
+        """
+        self.name = reader_configer.name
+        self.description = reader_configer.description
+        return self

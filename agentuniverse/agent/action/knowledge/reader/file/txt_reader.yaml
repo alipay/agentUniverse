@@ -1,0 +1,6 @@
+name: 'default_txt_reader'
+description: 'default txt reader'
+metadata:
+  type: 'READER'
+  module: 'agentuniverse.agent.action.knowledge.reader.file.txt_reader'
+  class: 'TxtReader'

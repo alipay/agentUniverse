@@ -18,25 +18,36 @@ $ bash standalone_embed.sh start
 pip install pymilvus
 ````
 
-### 我可以用Milvus做些什么
-
-您可以在[知识组件](2_2_4_知识.md)中使用Milvus来存储和查询知识，你可以使用以下方式来创建一个使用Milvus的存储组件:
-```python
-from agentuniverse.agent.action.knowledge.store.milvus_store import MilvusStore
-from agentuniverse.agent.action.knowledge.embedding.openai_embedding import OpenAIEmbedding
-from agentuniverse.agent.action.knowledge.knowledge import Knowledge
-
-init_params = {}
-init_params['name'] = 'test_knowledge'
-init_params['description'] = 'test_knowledge_description'
-init_params['store'] = MilvusStore(
-    connection_args={"host": "localhost", "port": "19530"},
-    collection_name="test_knowledge", 
-    embedding_model=OpenAIEmbedding(
-            embedding_model_name='text-embedding-ada-002'
-    )
-)
-knowledge = Knowledge(**init_params)
+### 如何配置Milvus组件
+```yaml
+name: 'milvus_store'
+description: 'a store based on milvus'
+connection_args:
+  host: '127.0.0.1'
+  port: '19530'
+search_args:
+  metric_type: "L2"
+  params:
+    nprobe: 10
+index_params:
+  metric_type: "L2"
+  index_type: "HNSW"
+  params:
+    M: 8
+    efConstruction: 32
+embedding_model: 'dashscope_embedding'
+similarity_top_k: 100
+metadata:
+  type: 'STORE'
+  module: 'agentuniverse.agent.action.knowledge.store.milvus_store'
+  class: 'MilvusStore'
 ```
+- connection_args: 连接 Milvus 数据库的参数，包括主机地址 (host) 和端口号 (port)。
+- search_args: 搜索参数，定义了搜索时使用的距离度量类型 (metric_type) 和相关参数（如 nprobe）。
+- index_params: 索引参数，定义了使用的索引类型 (index_type)、距离度量类型 (metric_type) 以及构建索引时的具体参数（如 M 和 efConstruction）。
+- embedding_model: 用于生成嵌入向量的模型名称，这里指定为 dashscope_embedding。
+- similarity_top_k: 在相似度搜索中返回最相似结果的数量。
 
-上面的代码会创建一个基于Milvus的Knowledge，关于Knowledge的具体用法您可以参考[知识组件](2_2_4_知识.md)，或是参考代码`tests/test_agentuniverse/unit/agent/action/knowledge/test_knowledge_with_milvus.py`。
+### 使用方式
+[知识定义与使用](2_2_4_知识定义与使用.md)
+

@@ -5,13 +5,14 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: knowledge_manager.py
+from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.base.annotation.singleton import singleton
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.component.component_manager_base import ComponentManagerBase
 
 
 @singleton
-class KnowledgeManager(ComponentManagerBase):
+class KnowledgeManager(ComponentManagerBase[Knowledge]):
     """The KnowledgeManager class, which is used to manage the knowledge."""
 
     def __init__(self):

@@ -1,0 +1,14 @@
+info:
+  name: 'nlu_rag_route_agent'
+  description: 'agent used to route query to different store'
+profile:
+  llm_model:
+    name: 'default_openai_llm'
+    model_name: 'gpt-4o'
+plan:
+  planner:
+    name: 'rag_planner'
+metadata:
+  type: 'AGENT'
+  module: 'agentuniverse.agent.default.rag_route_agent.nlu_rag_route_agent'
+  class: 'NluRagRouteAgent'

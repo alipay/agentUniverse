@@ -27,6 +27,7 @@ from agentuniverse.base.util.logging.logging_util import init_loggers
 from agentuniverse.agent_serve.web.request_task import RequestLibrary
 from agentuniverse.agent_serve.web.rpc.grpc.grpc_server_booster import set_grpc_config
 from agentuniverse.agent_serve.web.web_booster import ACTIVATE_OPTIONS
+from agentuniverse.agent_serve.web.post_fork_queue import POST_FORK_QUEUE
 
 
 @singleton
@@ -42,9 +43,16 @@ class AgentUniverse(object):
         self.__system_default_planner_package = ['agentuniverse.agent.plan.planner']
         self.__system_default_memory_package = ['agentuniverse.agent.memory.default']
         self.__system_default_prompt_package = ['agentuniverse.agent', 'agentuniverse.base.util']
+        self.__system_default_embedding_package = ['agentuniverse.agent.action.knowledge.embedding']
+        self.__system_default_doc_processor_package = ['agentuniverse.agent.action.knowledge.doc_processor']
+        self.__system_default_reader_package = ['agentuniverse.agent.action.knowledge.reader.file']
+        self.__system_default_rag_router_package = ['agentuniverse.agent.action.knowledge.rag_router']
+        self.__system_default_query_paraphraser_package = ['agentuniverse.agent.action.knowledge.query_paraphraser']
 
-    def start(self, config_path: str = None):
-        """Start the agentUniverse framework."""
+    def start(self, config_path: str = None, core_mode: bool = False):
+        """Start the agentUniverse framework.
+
+        """
         # get default config path
         project_root_path = get_project_root_path()
         sys.path.append(str(project_root_path.parent))
@@ -104,6 +112,10 @@ class AgentUniverse(object):
 
         # scan and register the components
         self.__scan_and_register(self.__config_container.app_configer)
+        if core_mode:
+
+            for _func, args, kwargs in POST_FORK_QUEUE:
+                _func(*args, **kwargs)
 
     def __scan_and_register(self, app_configer: AppConfiger):
         """Scan the component directory and register the components.
@@ -126,6 +138,18 @@ class AgentUniverse(object):
         core_prompt_package_list = ((app_configer.core_prompt_package_list or app_configer.core_default_package_list)
                                     + self.__system_default_prompt_package)
         core_workflow_package_list = app_configer.core_workflow_package_list or app_configer.core_default_package_list
+        core_embedding_package_list = ((app_configer.core_embedding_package_list or app_configer.core_default_package_list)
+                                       + self.__system_default_embedding_package)
+        core_doc_processor_package_list = ((app_configer.core_doc_processor_package_list or app_configer.core_default_package_list)
+                                           + self.__system_default_doc_processor_package)
+        core_reader_package_list = ((app_configer.core_reader_package_list or app_configer.core_default_package_list)
+                                    + self.__system_default_reader_package)
+        core_store_package_list = app_configer.core_store_package_list or app_configer.core_default_package_list
+        core_rag_router_package_list = ((app_configer.core_rag_router_package_list or app_configer.core_default_package_list)
+                                        + self.__system_default_rag_router_package)
+        core_query_paraphraser_package_list = ((app_configer.core_query_paraphraser_package_list or app_configer.core_default_package_list)
+                                               + self.__system_default_query_paraphraser_package)
+
 
         component_package_map = {
             ComponentEnum.AGENT: core_agent_package_list,
@@ -137,7 +161,13 @@ class AgentUniverse(object):
             ComponentEnum.SQLDB_WRAPPER: core_sqldb_wrapper_package_list,
             ComponentEnum.MEMORY: core_memory_package_list,
             ComponentEnum.PROMPT: core_prompt_package_list,
-            ComponentEnum.WORKFLOW: core_workflow_package_list
+            ComponentEnum.WORKFLOW: core_workflow_package_list,
+            ComponentEnum.EMBEDDING: core_embedding_package_list,
+            ComponentEnum.DOC_PROCESSOR: core_doc_processor_package_list,
+            ComponentEnum.READER: core_reader_package_list,
+            ComponentEnum.STORE: core_store_package_list,
+            ComponentEnum.RAG_ROUTER: core_rag_router_package_list,
+            ComponentEnum.QUERY_PARAPHRASER: core_query_paraphraser_package_list
         }
 
         component_configer_list_map = {}
