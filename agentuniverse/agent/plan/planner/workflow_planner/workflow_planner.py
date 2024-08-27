@@ -29,6 +29,7 @@ class WorkflowPlanner(Planner):
         planner = agent_model.plan.get('planner', {})
         workflow_id = planner.get('workflow_id')
         workflow: Workflow = WorkflowManager().get_instance_obj(component_instance_name=workflow_id)
+        # build and run workflow
         workflow = workflow.build()
         workflow_output: WorkflowOutput = workflow.run(input_object.to_dict())
         return workflow_output.workflow_end_params

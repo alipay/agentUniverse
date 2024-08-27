@@ -10,7 +10,7 @@ import os
 from ruamel.yaml import YAML
 
 
-def update_nested_yaml_value(config_path, updates) -> None:
+def update_nested_yaml_value(config_path: str, updates: dict) -> None:
     """Update nested values in YAML
 
     Args:
@@ -19,6 +19,16 @@ def update_nested_yaml_value(config_path, updates) -> None:
         updates(dict): A dictionary of key-value pairs to update in the YAML file.
         The keys should be dot-separated paths to the target values,
         and the values should be the new values to set.
+
+    Examples:
+        update_nested_yaml_value(
+        config_path='/xxx/agentUniverse/sample_standard_app/app/core/agent/rag_agent_case/demo_rag_agent.yaml',
+        updates={'info.description': 'demo rag agent',
+          'profile.llm_model.name': 'qwen_llm',
+          'profile.llm_model.temperature': 0.5,
+           'profile.llm_model.model_name': 'qwen2-72b-instruct',
+           'action.tool': ['google_search_tool']
+           })
     """
     yaml = YAML()
     # read an existing YAML file
@@ -34,9 +44,8 @@ def update_nested_yaml_value(config_path, updates) -> None:
                 if key not in d:
                     raise KeyError(f"Key '{key}' not found in the configuration")
                 d = d[key]
-            if keys[-1] in d:
-                # modify the value of the target key
-                d[keys[-1]] = new_value
+            # modify the value of the target key
+            d[keys[-1]] = new_value
         except Exception as e:
             print(f"Skipping update for '{path}': {e}")
 

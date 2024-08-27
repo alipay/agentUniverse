@@ -54,7 +54,7 @@ class RequestTask:
         self.func: callable = func
         self.kwargs = kwargs
         self.request_id = uuid.uuid4().hex
-        self.queue = queue.Queue(maxsize=100)
+        self.queue = queue.Queue(maxsize=300)
         self.thread: Optional[ThreadWithReturnValue] = None
         self.state = TaskStateEnum.INIT.value
         # Whether save to Database.
