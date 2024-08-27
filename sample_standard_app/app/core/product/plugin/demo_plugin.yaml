@@ -1,0 +1,9 @@
+id: demo_plugin_1
+nickname: 插件示例1
+type: PLUGIN
+avatar: xxxx
+toolset: ['google_search_tool']
+metadata:
+  type: 'PRODUCT'
+  module: 'agentuniverse_product.base.plugin_product'
+  class: 'PluginProduct'

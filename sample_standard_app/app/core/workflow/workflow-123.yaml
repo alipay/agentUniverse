@@ -1,0 +1,210 @@
+id: workflow-123
+name: workflow示例
+description:
+graph:
+  nodes:
+    - id: 1
+      name: 开始节点
+      description:
+      type: start # 开始节点
+      position:
+        x: 1
+        y: 2
+      data:
+        outputs:
+          - name: input
+            type: string
+    - id: 2
+      name: 条件判断
+      description:
+      type: if-else
+      position:
+        x: 1
+        y: 2
+      data:
+        inputs:
+          branches:
+            - name: branch-1
+              conditions:
+                - compare: blank
+                  left:
+                    type: string
+                    value:
+                      type: reference
+                      content: [ "1","input" ]
+    - id: 3
+      name: 谷歌搜索工具
+      description:
+      type: tool
+      position:
+        x: 1
+        y: 2
+      data:
+        inputs:
+          tool_param:
+            - type: string
+              name: id
+              value: google_search_tool
+          input_param:
+            - type: string
+              name: input
+              value:
+                type: reference
+                content: [ '1','input' ]
+        outputs:
+          - name: output
+            type: string
+    - id: 4
+      name: 千问模型
+      description:
+      type: llm
+      position:
+        x: 1
+        y: 2
+      data:
+        inputs:
+          llm_param:
+            - type: string
+              name: id
+              value: qwen_llm
+            - type: string
+              name: model_name
+              value: qwen-max
+            - type: string
+              name: temperature
+              value: '0.7'
+            - type: string
+              name: prompt
+              value: |
+                你是一位精通信息分析的ai助手。你的目标是使用中文结合查询的背景信息及你所拥有的知识回答用户提出的问题。
+                你需要遵守的规则是:
+                 1. 必须使用中文结合查询的背景信息结合你所拥有的知识回答用户提出的问题。
+                 2. 结构化答案生成，必要时通过空行提升阅读体验。
+                 3. 不采用背景信息中的错误信息。
+                 4. 要考虑答案和问题的相关性，不做对问题没有帮助的回答。
+                 5. 详尽回答问题，重点突出，不过多花哨词藻。
+                 6. 不说模糊的推测。
+                 7. 尽量多的使用数值类信息。
+                
+                 背景信息是:
+                 {{background}}
+                
+                 开始!
+                 需要回答的问题是: {{input}}
+          input_param:
+            - type: string # {background} {input} 需要加prompt占位符强校验
+              # 双括号代表入参
+              name: input
+              value:
+                type: reference
+                content: [ "1","input" ]
+            - type: string
+              name: background
+              value:
+                type: reference
+                content: [ "3","output" ] # 这块有疑问，可以tool和knowledge都对应到background吗？
+        outputs:
+          - type: string
+            name: output
+    - id: 5
+      name: 知识库示例
+      description:
+      type: knowledge
+      position:
+        x: 1
+        y: 2
+      data:
+        inputs:
+          knowledge_param:
+            - type: string
+              name: id
+              value: civil_law_knowledge
+            - type: string
+              name: top_k
+              value: '2'
+          input_param:
+            - type: string
+              name: query_str # 自然语言的知识库query
+              value:
+                type: reference
+                content: [ "1","input" ] # 通过nodeId + paramKey 定位引用变量
+        outputs:
+          - name: output
+            type: string
+    - id: 6
+      name: rag智能体
+      description:
+      type: agent
+      position:
+         x: 1
+         y: 2
+      data:
+        inputs:
+          agent_param:
+            - type: string
+              name: id
+              value: demo_rag_agent
+          input_param:
+            - type: string
+              name: input
+              value:
+                type: reference
+                content: ["1","input"] # 通过nodeId + paramKey 定位引用变量
+        outputs:
+          - name: output
+            type: string
+    - id: 7
+      name: 结束节点
+      description:
+      type: end
+      position:
+        x: 1
+        y: 2
+      data:
+        inputs:
+          input_param:
+            - type: string
+              name: input1
+              value:
+                type: reference
+                content: [ "4","output" ]
+            - type: string
+              name: input2
+              value:
+                type: reference
+                content: [ "6","output" ]
+          prompt:
+            - type: string
+              name: input
+              value: 答案是 {{input1}} and {{input2}}
+        outputs:
+          - name: output
+            type: string
+  edges:
+    - id: 1-2
+      source_node_id: 1
+      target_node_id: 2
+    - id: 2-3
+      source_handler: branch-1
+      source_node_id: 2
+      target_node_id: 3
+    - id: 3-4
+      source_node_id: 3
+      target_node_id: 4
+    - id: 4-7
+      source_node_id: 4
+      target_node_id: 7
+    - id: 2-5
+      source_handler: branch-default
+      source_node_id: 2
+      target_node_id: 5
+    - id: 5-6
+      source_node_id: 5
+      target_node_id: 6
+    - id: 6-7
+      source_node_id: 6
+      target_node_id: 7
+metadata:
+  class: Workflow
+  module: agentuniverse.workflow.workflow
+  type: WORKFLOW
