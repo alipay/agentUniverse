@@ -1,0 +1,6 @@
+name: 'default_pdf_reader'
+description: 'default pdf reader'
+metadata:
+  type: 'READER'
+  module: 'agentuniverse.agent.action.knowledge.reader.file.pdf_reader'
+  class: 'PdfReader'

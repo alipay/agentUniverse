@@ -1,0 +1,6 @@
+name: 'default_docx_reader'
+description: 'default docx reader'
+metadata:
+  type: 'READER'
+  module: 'agentuniverse.agent.action.knowledge.reader.file.docx_reader'
+  class: 'DocxReader'

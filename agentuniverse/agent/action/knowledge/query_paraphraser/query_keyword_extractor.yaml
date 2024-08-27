@@ -1,0 +1,6 @@
+name: 'query_keyword_extractor'
+description: 'extract keywords from query origin str'
+metadata:
+  type: 'QUERY_PARAPHRASER'
+  module: 'agentuniverse.agent.action.knowledge.query_paraphraser.query_keyword_extractor'
+  class: 'QueryKeywordExtractor'

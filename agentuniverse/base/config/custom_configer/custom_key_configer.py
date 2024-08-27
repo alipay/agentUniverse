@@ -19,7 +19,11 @@ class CustomKeyConfiger(Configer):
         self._Configer__value = {}
         super().__init__(config_path)
         if config_path:
-            self.load()
+            try:
+                self.load()
+            except FileNotFoundError as e:
+                print(f"Custom key file {config_path} read error, "
+                      f"skip load custom key.")
         if self._Configer__value.get("KEY_LIST"):
             for key, value in self._Configer__value.get("KEY_LIST").items():
                 os.environ[key] = str(value)

@@ -5,7 +5,7 @@
 # @Author  : jerry.zzw 
 # @Email   : jerry.zzw@antgroup.com
 # @FileName: knowledge_configer.py
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.base.config.configer import Configer
 
@@ -19,6 +19,12 @@ class KnowledgeConfiger(ComponentConfiger):
         self.__name: Optional[str] = None
         self.__description: Optional[str] = None
         self.__ext_info: Optional[Dict] = None
+        self.stores: List[str] = []
+        self.query_paraphrasers: Optional[List[str]] = []
+        self.insert_processors: Optional[List[str]] = []
+        self.rag_router: str = "base_router"
+        self.post_processors: List[str] = []
+        self.readers: Dict[str, str] = dict()
 
     @property
     def name(self) -> Optional[str]:

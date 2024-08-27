@@ -29,6 +29,13 @@ from agentuniverse.base.config.component_configer.configers.llm_configer import 
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt_manager import PromptManager
+from agentuniverse.agent.action.knowledge.embedding.embedding_manager import EmbeddingManager
+from agentuniverse.agent.action.knowledge.doc_processor.doc_processor_manager import DocProcessorManager
+from agentuniverse.agent.action.knowledge.reader.reader_manager import ReaderManager
+from agentuniverse.agent.action.knowledge.query_paraphraser.query_paraphraser_manager import QueryParaphraserManager
+from agentuniverse.agent.action.knowledge.store.store_manager import StoreManager
+from agentuniverse.agent.action.knowledge.rag_router.rag_router_manager import RagRouterManager
+
 
 
 class ComponentConfigerUtil(object):
@@ -44,6 +51,12 @@ class ComponentConfigerUtil(object):
         ComponentEnum.SERVICE: ServiceConfiger,
         ComponentEnum.PROMPT: PromptConfiger,
         ComponentEnum.SQLDB_WRAPPER: SQLDBWrapperConfiger,
+        ComponentEnum.EMBEDDING: ComponentConfiger,
+        ComponentEnum.DOC_PROCESSOR: ComponentConfiger,
+        ComponentEnum.READER: ComponentConfiger,
+        ComponentEnum.STORE: ComponentConfiger,
+        ComponentEnum.RAG_ROUTER: ComponentConfiger,
+        ComponentEnum.QUERY_PARAPHRASER: ComponentConfiger,
         ComponentEnum.DEFAULT: ComponentConfiger
     }
 
@@ -56,7 +69,13 @@ class ComponentConfigerUtil(object):
         ComponentEnum.MEMORY: MemoryManager,
         ComponentEnum.SERVICE: ServiceManager,
         ComponentEnum.SQLDB_WRAPPER: SQLDBWrapperManager,
-        ComponentEnum.PROMPT: PromptManager
+        ComponentEnum.PROMPT: PromptManager,
+        ComponentEnum.EMBEDDING: EmbeddingManager,
+        ComponentEnum.DOC_PROCESSOR: DocProcessorManager,
+        ComponentEnum.READER: ReaderManager,
+        ComponentEnum.STORE: StoreManager,
+        ComponentEnum.RAG_ROUTER: RagRouterManager,
+        ComponentEnum.QUERY_PARAPHRASER: QueryParaphraserManager,
     }
 
     @classmethod

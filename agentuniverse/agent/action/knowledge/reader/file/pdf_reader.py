@@ -6,7 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: pdf_parser.py
 from pathlib import Path
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 
 from agentuniverse.agent.action.knowledge.reader.reader import Reader
 from agentuniverse.agent.action.knowledge.store.document import Document
@@ -15,7 +15,7 @@ from agentuniverse.agent.action.knowledge.store.document import Document
 class PdfReader(Reader):
     """PDF reader."""
 
-    def load_data(self, file: Path, ext_info: Optional[Dict] = None) -> List[Document]:
+    def _load_data(self, file: Union[str, Path], ext_info: Optional[Dict] = None) -> List[Document]:
         """Parse the pdf file.
 
         Note:
@@ -27,6 +27,8 @@ class PdfReader(Reader):
             raise ImportError(
                 "pypdf is required to read PDF files: `pip install pypdf`"
             )
+        if isinstance(file, str):
+            file = Path(file)
         with open(file, "rb") as fp:
             # Create a PDF object
             pdf = pypdf.PdfReader(fp)

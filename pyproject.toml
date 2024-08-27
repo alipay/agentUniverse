@@ -59,6 +59,9 @@ duckduckgo-search = "6.1.7"
 primp = "0.5.5"
 wikipedia= "^1.4.0"
 openpyxl = "^3.1.5"
+primp = "0.5.5"
+pillow = "^10.4.0"
+jieba = "^0.42.1"
 
 [tool.poetry.extras]
 log_ext = ["aliyun-log-python-sdk"]

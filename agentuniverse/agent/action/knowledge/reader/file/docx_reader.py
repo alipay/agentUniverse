@@ -5,6 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: doc_parser.py
+from typing import Union
 from pathlib import Path
 from typing import List, Optional, Dict
 
@@ -15,7 +16,7 @@ from agentuniverse.agent.action.knowledge.store.document import Document
 class DocxReader(Reader):
     """Docx reader."""
 
-    def load_data(self, file: Path, ext_info: Optional[Dict] = None) -> List[Document]:
+    def _load_data(self, file: Union[str, Path], ext_info: Optional[Dict] = None) -> List[Document]:
         """Parse the docx file.
 
         Note:
@@ -30,6 +31,8 @@ class DocxReader(Reader):
                 "`pip install docx2txt`"
             )
 
+        if isinstance(file, str):
+            file = Path(file)
         text = docx2txt.process(file)
         metadata = {"file_name": file.name}
         if ext_info is not None:
