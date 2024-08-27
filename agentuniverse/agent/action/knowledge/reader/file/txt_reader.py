@@ -8,7 +8,7 @@ from agentuniverse.agent.action.knowledge.store.document import Document
 
 class LineTxtReader(Reader):
 
-    def load_data(self, fpath: Path, ext_info: Optional[Dict] = None) -> List[Document]:
+    def _load_data(self, fpath: Path, ext_info: Optional[Dict] = None) -> List[Document]:
         dlist = []
 
         with open(fpath, 'r', encoding='utf-8') as file:
@@ -26,7 +26,7 @@ class LineTxtReader(Reader):
 class TxtReader(Reader):
     """Txt reader."""
 
-    def load_data(self, fpath: Path, ext_info: Optional[Dict] = None) -> List[Document]:
+    def _load_data(self, fpath: Path, ext_info: Optional[Dict] = None) -> List[Document]:
 
         with open(fpath, 'r', encoding='utf-8') as file:
 
