@@ -60,7 +60,7 @@ def parse_openapi_yaml_to_tool_bundle(yaml: str) -> list:
                     'path': path,
                     'method': method,
                     'operation': path_item[method],
-                    'url': server_url,
+                    'url': server_url+path,
                 })
 
     for interface in interfaces:
@@ -101,6 +101,7 @@ def parse_openapi_to_tool_input(openapi:dict)->list[str]:
     # convert parameters
     parameters = []
     if 'parameters' in openapi['operation']:
-        for parameter in openapi['operation']['parameters']:
-            parameters.append(parameter['name'])
+        for parameter in openapi['operation'].get('parameters'):
+            if parameter.get('required') == True:
+                parameters.append(parameter['name'])
     return parameters

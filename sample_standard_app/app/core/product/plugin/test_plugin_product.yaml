@@ -1,0 +1,11 @@
+id: test_plugin
+nickname: test_plugin
+avatar: test_avatar
+type: PLUGIN
+metadata:
+  class: PluginProduct
+  module: agentuniverse_product.base.plugin_product
+  type: PRODUCT
+toolset:
+- arxiv
+- test

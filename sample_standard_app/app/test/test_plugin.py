@@ -236,7 +236,7 @@ class UtilsTest(unittest.TestCase):
         AgentUniverse().start(config_path='../../config/config.toml',core_mode=True)
 
     def test_util(self):
-        plugin_dto = OPENAPISPluginDTO(nickname='test_plugin', avatar='test_avatar', id='test_plugin_id',
+        plugin_dto = OPENAPISPluginDTO(nickname='test_plugin', avatar='test_avatar', id='test_plugin',
                                        description='test',openapi_desc = arxiv,toolset=['arxiv','test'])
         PluginService().create_plugin_with_openapi(plugin_dto)
 if __name__ == '__main__':

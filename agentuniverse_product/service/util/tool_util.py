@@ -37,6 +37,7 @@ def assemble_api_tool_config_data(tool_dto: ToolDTO) -> Dict:
         'description': tool_dto.description,
         'tool_type': 'api',
         'input_keys': tool_dto.parameters,
+        'openapi_spec':tool_dto.openapi_schema
     }
     metadata_class = 'APITool'
     metadata_api_tool_path = 'api_tool'
