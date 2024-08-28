@@ -1,5 +1,9 @@
 import unittest
 
+from agentuniverse.base.agentuniverse import AgentUniverse
+from agentuniverse_product.agentuniverse_product import AgentUniverseProduct
+from agentuniverse_product.service.model.plugin_dto import OPENAPISPluginDTO
+from agentuniverse_product.service.plugin_service.plugin_service import PluginService
 from agentuniverse_product.service.util.plugin_util import parse_openapi_yaml_to_tool_bundle
 
 
@@ -228,12 +232,12 @@ class UtilsTest(unittest.TestCase):
     """
     Test cases for the SQLDBWrapper
     """
-
     def setUp(self) -> None:
-        pass
+        AgentUniverse().start(config_path='../../config/config.toml',core_mode=True)
 
     def test_util(self):
-        print('parse_openapi_yaml_to_tool_bundle',parse_openapi_yaml_to_tool_bundle(arxiv))
-
+        plugin_dto = OPENAPISPluginDTO(nickname='test_plugin', avatar='test_avatar', id='test_plugin_id',
+                                       description='test',openapi_desc = arxiv,toolset=['arxiv','test'])
+        PluginService().create_plugin_with_openapi(plugin_dto)
 if __name__ == '__main__':
     unittest.main()

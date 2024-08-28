@@ -24,11 +24,11 @@ def assemble_plugin_product_config_data(plugin_dto: PluginDTO) -> Dict:
         'avatar': plugin_dto.avatar,
         'type': 'PLUGIN',
         'metadata': {
-            'class': 'Product',
-            'module': 'agentuniverse_product.base.product',
+            'class': 'PluginProduct',
+            'module': 'agentuniverse_product.base.plugin_product',
             'type': 'PRODUCT'
         },
-        'toolset': ['google_search_tool']
+        'toolset': plugin_dto.toolset
     }
 
 def parse_openapi_yaml_to_tool_bundle(yaml: str) -> list:
@@ -64,11 +64,6 @@ def parse_openapi_yaml_to_tool_bundle(yaml: str) -> list:
                 })
 
     for interface in interfaces:
-        # convert parameters
-        parameters = []
-        if 'parameters' in interface['operation']:
-            for parameter in interface['operation']['parameters']:
-                parameters.append(parameter)
         # create tool bundle
         # check if there is a request body
         if 'requestBody' in interface['operation']:
@@ -94,7 +89,6 @@ def parse_openapi_yaml_to_tool_bundle(yaml: str) -> list:
             path = interface['path']
             if interface['path'].startswith('/'):
                 path = interface['path'][1:]
-            # remove special characters like / to ensure the operation id is valid ^[a-zA-Z0-9_-]{1,64}$
             path = re.sub(r'[^a-zA-Z0-9_-]', '', path)
             if not path:
                 path = str(uuid.uuid4())
@@ -103,3 +97,10 @@ def parse_openapi_yaml_to_tool_bundle(yaml: str) -> list:
 
     return interfaces
 
+def parse_openapi_to_tool_input(openapi:dict)->list[str]:
+    # convert parameters
+    parameters = []
+    if 'parameters' in openapi['operation']:
+        for parameter in openapi['operation']['parameters']:
+            parameters.append(parameter['name'])
+    return parameters

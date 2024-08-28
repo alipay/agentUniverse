@@ -15,4 +15,7 @@ class PluginDTO(BaseModel):
     nickname: Optional[str] = Field(description="plugin nickname", default="")
     avatar: Optional[str] = Field(description="plugin avatar path", default="")
     description: Optional[str] = Field(description="plugin description", default="")
-    openapi_desc: Optional[str] = Field(description="plugin openapi schema", default="")
+    toolset: Optional[List[str]] = Field(description="plugin toolset", default=[])
+
+class OPENAPISPluginDTO(PluginDTO):
+    openapi_desc: str = Field(description="plugin openapi schema", default="")
