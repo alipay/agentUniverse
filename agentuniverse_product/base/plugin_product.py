@@ -7,8 +7,6 @@
 # @FileName: plugin_product.py
 from typing import Optional, List
 
-from agentuniverse.agent.agent import Agent
-from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
 from agentuniverse_product.base.product import Product
 from agentuniverse_product.base.product_configer import ProductConfiger
 

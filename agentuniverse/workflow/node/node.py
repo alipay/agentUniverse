@@ -29,7 +29,6 @@ class Node(BaseModel):
     type: NodeEnum = None
     workflow_id: Optional[str] = None
     position: Optional[dict] = None
-    node_output: Optional[NodeOutput] = None
     _data: Optional[NodeData] = None
     _data_cls = NodeData
 
@@ -48,7 +47,8 @@ class Node(BaseModel):
         except Exception as e:
             return NodeOutput(node_id=self.id, status=NodeStatusEnum.FAILED, error=str(e))
 
-    def _resolve_input_params(self, input_params: List[NodeInputParams],
+    @staticmethod
+    def _resolve_input_params(input_params: List[NodeInputParams],
                               workflow_output: WorkflowOutput) -> Dict[str, Any]:
         node_input_params = {}
         for input_param in input_params:

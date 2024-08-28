@@ -127,7 +127,6 @@ class AppConfiger(object):
         """Return the query paraphraser package list of the core."""
         return self.__core_query_paraphraser_package_list
 
-
     def load_by_configer(self, configer: Configer) -> 'AppConfiger':
         """Load the AppConfiger by the given Configer.
 

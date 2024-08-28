@@ -10,6 +10,7 @@ from agentuniverse.agent.input_object import InputObject
 
 
 class WorkflowAgent(Agent):
+    """Workflow Agent class."""
 
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""

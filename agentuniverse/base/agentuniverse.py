@@ -150,7 +150,6 @@ class AgentUniverse(object):
         core_query_paraphraser_package_list = ((app_configer.core_query_paraphraser_package_list or app_configer.core_default_package_list)
                                                + self.__system_default_query_paraphraser_package)
 
-
         component_package_map = {
             ComponentEnum.AGENT: core_agent_package_list,
             ComponentEnum.KNOWLEDGE: core_knowledge_package_list,

@@ -63,18 +63,22 @@ class Graph(nx.DiGraph):
             if self._has_node_been_executed(workflow_output, next_node.id):
                 predecessor_node = next_node
                 continue
-            self._run_node(predecessor_node=predecessor_node, cur_node=next_node, workflow_output=workflow_output)
+            self._run_node(cur_node=next_node, workflow_output=workflow_output)
             if next_node.type == NodeEnum.END:
                 break
             predecessor_node = next_node
 
-    def _get_next_node(self, workflow_output: WorkflowOutput, nodes: Any, predecessor_node: Optional[Node] = None) -> Optional[Node]:
+    def _get_next_node(self, workflow_output: WorkflowOutput, nodes: Any,
+                       predecessor_node: Optional[Node] = None) -> Optional[Node]:
         if not predecessor_node:
             for node_id in nodes:
                 if self.nodes[node_id]['type'] == NodeEnum.START.value:
                     return self.nodes[node_id]['instance']
         else:
-            predecessor_node_output: NodeOutput = workflow_output.workflow_node_results.get(int(predecessor_node.id), None)
+            predecessor_node_output: NodeOutput = workflow_output.workflow_node_results.get(
+                int(predecessor_node.id),
+                None
+            )
             source_handler = predecessor_node_output.edge_source_handler if predecessor_node_output else None
             successors = self.successors(predecessor_node.id)
             if not successors:
@@ -91,12 +95,12 @@ class Graph(nx.DiGraph):
     def _has_node_been_executed(workflow_output: WorkflowOutput, node_id: int) -> bool:
         return node_id in workflow_output.workflow_node_results
 
-    def _run_node(self, predecessor_node: Optional[Node] = None, cur_node: Node = None,
+    @staticmethod
+    def _run_node(cur_node: Node = None,
                   workflow_output: WorkflowOutput = None) -> None:
         try:
             node_output = cur_node.run(workflow_output)
         except Exception as e:
-            # TODO 如果报错没法传递 workflow_parameters
             node_output = NodeOutput(
                 node_id=cur_node.id,
                 status=NodeStatusEnum.FAILED,
