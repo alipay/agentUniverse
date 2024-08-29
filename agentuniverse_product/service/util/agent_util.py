@@ -11,14 +11,17 @@ from typing import Dict, List
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
+from agentuniverse.agent.action.knowledge.store.store_manager import StoreManager
 from agentuniverse.agent.action.tool.tool import Tool
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
+from agentuniverse.agent_serve.web.post_fork_queue import POST_FORK_QUEUE
 from agentuniverse.base.component.component_configer_util import ComponentConfigerUtil
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
+from agentuniverse.base.config.component_configer.configers.knowledge_configer import KnowledgeConfiger
 from agentuniverse.base.config.configer import Configer
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
@@ -124,6 +127,38 @@ def assemble_agent_config_data(agent_dto: AgentDTO) -> Dict:
     return agent_config_data
 
 
+def assemble_knowledge_product_config_data(knowledge_dto: KnowledgeDTO) -> Dict:
+    return {
+        'id': knowledge_dto.id,
+        'nickname': knowledge_dto.nickname,
+        'avatar': knowledge_dto.avatar,
+        'type': 'KNOWLEDGE',
+        'metadata': {
+            'class': 'AgentProduct',
+            'module': 'agentuniverse_product.base.agent_product',
+            'type': 'PRODUCT'
+        }
+    }
+
+
+def assemble_knowledge_config(knowledge_dto: KnowledgeDTO) -> Dict:
+    return {
+        'name': knowledge_dto.id,
+        'description': knowledge_dto.description,
+        'stores': [],
+        'readers': {
+            'pdf': "default_'pdf'_reader",
+            'docx': "default_docx_reader",
+            'pptx': "default_pptx_reader",
+            'txt': "default_txt_reader",
+        },
+        'metadata': {
+            'type': 'KNOWLEDGE',
+            'module': 'agentuniverse.agent.action.knowledge.knowledge',
+            'class': 'Knowledge',
+        }
+    }
+
 def register_agent(file_path: str):
     absolute_file_path = os.path.abspath(file_path)
     configer = Configer(path=absolute_file_path).load()
@@ -135,6 +170,38 @@ def register_agent(file_path: str):
     AgentManager().register(component_instance.get_instance_code(), component_instance)
 
 
+def register_knowledge(file_path: str):
+    absolute_file_path = os.path.abspath(file_path)
+    configer = Configer(path=absolute_file_path).load()
+    component_configer = ComponentConfiger().load_by_configer(configer)
+    knowledge_configer: KnowledgeConfiger = KnowledgeConfiger().load_by_configer(component_configer.configer)
+    component_clz = ComponentConfigerUtil.get_component_object_clz_by_component_configer(knowledge_configer)
+    component_instance: Knowledge = component_clz().initialize_by_component_configer(knowledge_configer)
+    component_instance.component_config_path = component_configer.configer.path
+    KnowledgeManager().register(component_instance.get_instance_code(), component_instance)
+
+def unregister_knowledge(file_path: str):
+    absolute_file_path = os.path.abspath(file_path)
+    configer = Configer(path=absolute_file_path).load()
+    component_configer = ComponentConfiger().load_by_configer(configer)
+    knowledge_configer: KnowledgeConfiger = KnowledgeConfiger().load_by_configer(component_configer.configer)
+    component_clz = ComponentConfigerUtil.get_component_object_clz_by_component_configer(knowledge_configer)
+    component_instance: Knowledge = component_clz().initialize_by_component_configer(knowledge_configer)
+    KnowledgeManager().unregister(component_instance.get_instance_code())
+    
+def register_store(file_path: str):
+    absolute_file_path = os.path.abspath(file_path)
+    configer = Configer(path=absolute_file_path).load()
+    component_configer = ComponentConfiger().load_by_configer(configer)
+    component_clz = ComponentConfigerUtil.get_component_object_clz_by_component_configer(component_configer)
+    print('component_configer', component_configer.__dict__)
+    component_instance = component_clz().initialize_by_component_configer(component_configer)
+    component_instance.component_config_path = component_configer.configer.path
+    StoreManager().register(component_instance.get_instance_code(), component_instance)
+    for _func, args, kwargs in POST_FORK_QUEUE[-2:]:
+        _func(*args, **kwargs)
+
+
 def register_product(file_path: str):
     absolute_file_path = os.path.abspath(file_path)
     configer = Configer(path=absolute_file_path).load()
@@ -144,6 +211,16 @@ def register_product(file_path: str):
     component_instance: Product = component_clz().initialize_by_component_configer(product_configer)
     component_instance.component_config_path = component_configer.configer.path
     ProductManager().register(component_instance.get_instance_code(), component_instance)
+    
+    
+def unregister_product(file_path: str):
+    absolute_file_path = os.path.abspath(file_path)
+    configer = Configer(path=absolute_file_path).load()
+    component_configer = ComponentConfiger().load_by_configer(configer)
+    product_configer: ProductConfiger = ProductConfiger().load_by_configer(component_configer.configer)
+    component_clz = ComponentConfigerUtil.get_component_object_clz_by_component_configer(product_configer)
+    component_instance: Product = component_clz().initialize_by_component_configer(product_configer)
+    ProductManager().unregister(component_instance.get_instance_code())   
 
 
 def assemble_agent_dto(agent: Agent, agent_dto: AgentDTO) -> AgentDTO:
