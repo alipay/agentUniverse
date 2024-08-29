@@ -9,10 +9,13 @@ from typing import Optional, List
 
 from pydantic import BaseModel, Field
 
+from agentuniverse_product.service.model.tool_dto import ToolDTO
+
 
 class PluginDTO(BaseModel):
     id: str = Field(description="ID")
     nickname: Optional[str] = Field(description="plugin nickname", default="")
     avatar: Optional[str] = Field(description="plugin avatar path", default="")
-    toolset: Optional[List[str]] = Field(description="plugin toolset", default=[])
+    description: Optional[str] = Field(description="plugi path", default="")
+    toolset: Optional[List[ToolDTO]] = Field(description="plugin toolset", default=[])
     openapi_desc: Optional[str] = Field(description="plugin openapi schema", default="")

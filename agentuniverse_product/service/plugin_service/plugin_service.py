@@ -32,7 +32,7 @@ class PluginService:
         for product in product_list:
             if product.type == 'PLUGIN':
                 plugin_dto = PluginDTO(nickname=product.nickname, avatar=product.avatar, id=product.id,
-                                       toolset=product.toolset, openapi_desc=product.openapi_desc)
+                                       toolset=product.toolset, openapi_desc=product.openapi_desc, description=product.description)
                 res.append(plugin_dto)
         return res
 
@@ -41,6 +41,7 @@ class PluginService:
         # single OpenAPI schema with multiple APIs is parsed into multiple tool bundles.
         validate_create_plugin_parameters(plugin_dto)
         tool_bundles = parse_openapi_yaml_to_tool_bundle(plugin_dto.openapi_desc)
+        toolset = []
         for tool in tool_bundles:
             if tool['path'] == '/':
                 tool_id = plugin_dto.id
@@ -54,6 +55,8 @@ class PluginService:
                                openapi_schema=tool
                                )
             ToolService().create_tool(tool_dto)
+            toolset.append(tool)
+        plugin_dto.toolset = toolset
         # assemble product config data
         product_config_data = assemble_plugin_product_config_data(plugin_dto)
 
