@@ -18,7 +18,7 @@ class WorkflowOutput(BaseModel):
 
     workflow_id: str = None
     metadata: Optional[Dict[str, Any]] = dict()
-    workflow_parameters: Optional[Dict[int, List[NodeOutputParams]]] = dict()
-    workflow_node_results: Optional[Dict[int, NodeOutput]] = dict()
+    workflow_parameters: Optional[Dict[str, List[NodeOutputParams]]] = dict()
+    workflow_node_results: Optional[Dict[str, NodeOutput]] = dict()
     workflow_start_params: Optional[Dict[str, Any]] = dict()
     workflow_end_params: Optional[Dict[str, Any]] = dict()

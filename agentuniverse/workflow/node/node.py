@@ -23,7 +23,7 @@ class NodeData(BaseModel):
 class Node(BaseModel):
     """The basic class of the node."""
 
-    id: Optional[int] = None
+    id: Optional[str] = None
     name: Optional[str] = None
     description: Optional[str] = None
     type: NodeEnum = None
@@ -56,7 +56,7 @@ class Node(BaseModel):
             if val.type == 'reference':
                 reference_node_id = val.content[0]
                 reference_output_params: List[NodeOutputParams] = workflow_output.workflow_parameters.get(
-                    int(reference_node_id), [])
+                    reference_node_id, [])
                 node_input_params[input_param.name] = next(
                     (param.value for param in reference_output_params if param.name == val.content[1]), None)
             else:

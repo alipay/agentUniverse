@@ -37,7 +37,7 @@ class ConditionNode(Node):
             if node_input.value.type == 'reference':
                 reference_node_id = node_input.value.content[0]
                 reference_output_params: List[NodeOutputParams] = workflow_output.workflow_parameters.get(
-                    int(reference_node_id), [])
+                    reference_node_id, [])
                 return next(
                     (param.value for param in reference_output_params if param.name == node_input.value.content[1]),
                     None)

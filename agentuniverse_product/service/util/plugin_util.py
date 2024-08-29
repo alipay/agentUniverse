@@ -6,7 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: plugin_util.py
 import re
-from typing import Dict
+from typing import Dict, List
 import uuid
 
 from yaml import safe_load
@@ -24,14 +24,14 @@ def validate_create_plugin_parameters(plugin_dto: PluginDTO) -> None:
         raise ValueError("The openapi_desc in plugin cannot be None.")
 
 
-def assemble_plugin_product_config_data(plugin_dto: PluginDTO) -> Dict:
+def assemble_plugin_product_config_data(plugin_dto: PluginDTO, tool_id_list: List[str]) -> Dict:
     return {
         'id': plugin_dto.id,
         'nickname': plugin_dto.nickname,
         'avatar': plugin_dto.avatar,
         'description': plugin_dto.description,
         'type': 'PLUGIN',
-        'toolset': plugin_dto.toolset,
+        'toolset': tool_id_list,
         'metadata': {
             'class': 'PluginProduct',
             'module': 'agentuniverse_product.base.plugin_product',

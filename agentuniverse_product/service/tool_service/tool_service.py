@@ -8,6 +8,8 @@
 import os
 from typing import List
 
+from agentuniverse.agent.action.tool.tool import Tool
+from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse_product.base.product import Product
 from agentuniverse_product.base.product_manager import ProductManager
@@ -36,6 +38,21 @@ class ToolService:
                 tool_dto.parameters = tool.input_keys
                 res.append(tool_dto)
         return res
+
+    @staticmethod
+    def get_tool_detail(tool_id: str) -> ToolDTO | None:
+        if tool_id is None:
+            return None
+        tool: Tool = ToolManager().get_instance_obj(tool_id)
+        if tool is None:
+            return None
+        product: Product = ProductManager().get_instance_obj(tool_id)
+        tool_dto = ToolDTO(nickname=product.nickname if product else '',
+                           avatar=product.avatar if product else '',
+                           id=tool_id, description=tool.description, parameters=tool.input_keys)
+        if hasattr(tool, 'openapi_spec'):
+            tool_dto.openapi_schema = tool.openapi_spec
+        return tool_dto
 
     @staticmethod
     def create_tool(tool_dto: ToolDTO) -> str:

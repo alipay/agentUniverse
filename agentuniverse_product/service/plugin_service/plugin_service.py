@@ -6,6 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: plugin_service.py
 import os
+import random
 from typing import List
 
 from agentuniverse_product.base.product import Product
@@ -31,8 +32,17 @@ class PluginService:
             return res
         for product in product_list:
             if product.type == 'PLUGIN':
+                tool_id_list = product.toolset
+                tool_dto_list = []
+                if len(tool_id_list) > 0:
+                    for tool_id in tool_id_list:
+                        tool_dto: ToolDTO = ToolService().get_tool_detail(tool_id)
+                        if tool_dto is None:
+                            continue
+                        tool_dto_list.append(tool_dto)
                 plugin_dto = PluginDTO(nickname=product.nickname, avatar=product.avatar, id=product.id,
-                                       toolset=product.toolset, openapi_desc=product.openapi_desc, description=product.description)
+                                       toolset=tool_dto_list, description=product.description,
+                                       openapi_desc=product.openapi_desc)
                 res.append(plugin_dto)
         return res
 
@@ -41,25 +51,22 @@ class PluginService:
         # single OpenAPI schema with multiple APIs is parsed into multiple tool bundles.
         validate_create_plugin_parameters(plugin_dto)
         tool_bundles = parse_openapi_yaml_to_tool_bundle(plugin_dto.openapi_desc)
-        toolset = []
+        tool_id_list = []
+        index = 1
         for tool in tool_bundles:
-            if tool['path'] == '/':
-                tool_id = plugin_dto.id
-            else:
-                tool_id = plugin_dto.id + '_' + tool['path'][1:]
+            tool_id = 'plugin_tool_' + str(random.randint(100000, 999999))
             parameters = parse_openapi_to_tool_input(tool)
             tool_dto = ToolDTO(id=tool_id,
-                               nickname=plugin_dto.nickname if plugin_dto.nickname else '',
+                               nickname=plugin_dto.nickname + '_tool_' + str(index) if plugin_dto.nickname else '',
                                avatar=plugin_dto.avatar if plugin_dto.avatar else '',
                                parameters=parameters,
                                openapi_schema=tool
                                )
             ToolService().create_tool(tool_dto)
-            toolset.append(tool)
-        plugin_dto.toolset = toolset
+            tool_id_list.append(tool_id)
+            index += 1
         # assemble product config data
-        product_config_data = assemble_plugin_product_config_data(plugin_dto)
-
+        product_config_data = assemble_plugin_product_config_data(plugin_dto, tool_id_list)
         # write product YAML file
         product_file_name = f"{plugin_dto.id}_product"
         product_file_path = os.path.join('..', 'core', 'product', 'plugin', f"{product_file_name}.yaml")

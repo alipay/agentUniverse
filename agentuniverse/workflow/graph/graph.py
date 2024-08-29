@@ -76,7 +76,7 @@ class Graph(nx.DiGraph):
                     return self.nodes[node_id]['instance']
         else:
             predecessor_node_output: NodeOutput = workflow_output.workflow_node_results.get(
-                int(predecessor_node.id),
+                predecessor_node.id,
                 None
             )
             source_handler = predecessor_node_output.edge_source_handler if predecessor_node_output else None
@@ -92,7 +92,7 @@ class Graph(nx.DiGraph):
                 return self.nodes[successors[0]]['instance']
 
     @staticmethod
-    def _has_node_been_executed(workflow_output: WorkflowOutput, node_id: int) -> bool:
+    def _has_node_been_executed(workflow_output: WorkflowOutput, node_id: str) -> bool:
         return node_id in workflow_output.workflow_node_results
 
     @staticmethod

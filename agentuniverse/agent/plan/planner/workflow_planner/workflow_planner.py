@@ -30,6 +30,8 @@ class WorkflowPlanner(Planner):
         workflow_id = planner.get('workflow_id')
         workflow: Workflow = WorkflowManager().get_instance_obj(component_instance_name=workflow_id)
         # build and run workflow
+        if workflow.graph_config is None:
+            raise Exception('Workflow graph is None, please add nodes and edges to the workflow graph.')
         workflow = workflow.build()
         workflow_output: WorkflowOutput = workflow.run(input_object.to_dict())
         return workflow_output.workflow_end_params
