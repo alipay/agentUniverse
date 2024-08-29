@@ -8,6 +8,8 @@
 import os
 
 from ruamel.yaml import YAML
+from typing import Any, Dict
+import os
 
 
 def update_nested_yaml_value(config_path: str, updates: dict) -> None:
@@ -67,3 +69,36 @@ def write_yaml_file(file_path, config_data) -> None:
     # Write the dictionary to the YAML file
     with open(file_path, 'w') as yaml_file:
         yaml.dump(config_data, yaml_file)
+        
+
+def delete_yaml_file(file_path: str) -> None:
+    """Deletes the YAML file with the specified file path.
+
+    Args:
+        file_path (str): The path to the YAML file.
+    """
+    try:
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            print(f"YAML file '{file_path}' has been deleted.")
+        else:
+            print(f"File '{file_path}' does not exist.")
+    except Exception as e:
+        print(f"An error occurred while trying to delete the file: {e}")
+
+
+def read_yaml_file(file_path) -> Dict[str, Any]:
+    """read YAML then return Dict
+
+    Args:
+        file_path (str)
+
+    Returns:
+        Dict[str, Any]
+    """
+    yaml = YAML()
+    
+    with open(file_path, 'r', encoding='utf-8') as file:
+        data = yaml.load(file)
+    
+    return data
