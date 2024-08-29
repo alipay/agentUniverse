@@ -14,7 +14,8 @@ from agentuniverse_product.base.product_manager import ProductManager
 from agentuniverse_product.base.util.yaml_util import write_yaml_file
 from agentuniverse_product.service.model.tool_dto import ToolDTO
 from agentuniverse_product.service.util.agent_util import register_product
-from agentuniverse_product.service.util.tool_util import assemble_api_tool_config_data, assemble_tool_product_config_data, register_tool, validate_create_api_tool_parameters
+from agentuniverse_product.service.util.tool_util import assemble_api_tool_config_data, \
+    assemble_tool_product_config_data, register_tool, validate_create_api_tool_parameters
 
 
 class ToolService:
@@ -35,7 +36,7 @@ class ToolService:
                 tool_dto.parameters = tool.input_keys
                 res.append(tool_dto)
         return res
-    
+
     @staticmethod
     def create_tool(tool_dto: ToolDTO) -> str:
         # validate parameters
@@ -60,5 +61,3 @@ class ToolService:
         register_tool(tool_file_path)
         register_product(product_file_path)
         return tool_dto.id
-    
-

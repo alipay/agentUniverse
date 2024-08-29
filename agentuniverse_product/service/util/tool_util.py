@@ -1,3 +1,10 @@
+# !/usr/bin/env python3
+# -*- coding:utf-8 -*-
+
+# @Time    : 2024/8/27 23:16
+# @Author  : wangchongshi
+# @Email   : wangchongshi.wcs@antgroup.com
+# @FileName: tool_util.py
 import os
 from typing import Dict
 from agentuniverse.agent.action.tool.tool import Tool
@@ -6,8 +13,8 @@ from agentuniverse.base.component.component_configer_util import ComponentConfig
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.base.config.component_configer.configers.tool_configer import ToolConfiger
 from agentuniverse.base.config.configer import Configer
-from agentuniverse_product.service.model.plugin_dto import PluginDTO
 from agentuniverse_product.service.model.tool_dto import ToolDTO
+
 
 def validate_create_api_tool_parameters(tool_dto: ToolDTO) -> None:
     if tool_dto.id is None:
@@ -17,6 +24,7 @@ def validate_create_api_tool_parameters(tool_dto: ToolDTO) -> None:
         raise ValueError("Tool instance corresponding to the tool id already exists.")
     if tool_dto.openapi_schema is None:
         raise ValueError("The openapi_schema in tool cannot be None.")
+
 
 def assemble_tool_product_config_data(tool_dto: ToolDTO) -> Dict:
     return {
@@ -31,13 +39,14 @@ def assemble_tool_product_config_data(tool_dto: ToolDTO) -> Dict:
         },
     }
 
+
 def assemble_api_tool_config_data(tool_dto: ToolDTO) -> Dict:
     tool_config_data = {
         'name': tool_dto.id,
         'description': tool_dto.description,
         'tool_type': 'api',
         'input_keys': tool_dto.parameters,
-        'openapi_spec':tool_dto.openapi_schema
+        'openapi_spec': tool_dto.openapi_schema
     }
     metadata_class = 'APITool'
     metadata_api_tool_path = 'api_tool'
@@ -48,6 +57,7 @@ def assemble_api_tool_config_data(tool_dto: ToolDTO) -> Dict:
         'type': 'TOOL'
     }
     return tool_config_data
+
 
 def register_tool(file_path: str):
     absolute_file_path = os.path.abspath(file_path)

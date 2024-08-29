@@ -15,6 +15,7 @@ class PluginProduct(Product):
     """The basic class of the plugin product."""
 
     toolset: Optional[List[str]] = list()
+    openapi_desc: Optional[str] = None
 
     def initialize_by_component_configer(self,
                                          product_configer: ProductConfiger) -> 'PluginProduct':
@@ -35,4 +36,6 @@ class PluginProduct(Product):
             self.avatar = product_configer.avatar
         if hasattr(product_configer, 'toolset') and product_configer.toolset:
             self.toolset = product_configer.toolset
+        if hasattr(product_configer, 'openapi_desc') and product_configer.openapi_desc:
+            self.openapi_desc = product_configer.openapi_desc
         return self

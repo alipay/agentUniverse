@@ -1,8 +1,0 @@
-id: test_plugin_test
-nickname: test_plugin
-avatar: test_avatar
-type: TOOL
-metadata:
-  class: Product
-  module: agentuniverse_product.base.product
-  type: PRODUCT

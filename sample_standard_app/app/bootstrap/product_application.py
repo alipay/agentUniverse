@@ -18,8 +18,8 @@ class ProductApplication:
 
     @classmethod
     def start(cls):
-        AgentUniverse().start(config_path='../../config/config.toml',core_mode=True)
-        AgentUniverseProduct().start(config_path='../../config/config.toml')
+        AgentUniverse().start(core_mode=True)
+        AgentUniverseProduct().start()
 
 
 if __name__ == "__main__":

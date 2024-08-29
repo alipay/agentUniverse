@@ -17,4 +17,3 @@ class ToolDTO(BaseModel):
     description: Optional[str] = Field(description="tool description", default="")
     parameters: Optional[List[str]] = Field(description="tool parameters", default=[])
     openapi_schema: Optional[dict] = Field(description="openapi schema for tool", default=[])
-

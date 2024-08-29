@@ -16,9 +16,7 @@ from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
-from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_configer_util import ComponentConfigerUtil
-from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
 from agentuniverse.base.config.configer import Configer
@@ -339,12 +337,3 @@ def update_agent_product_config(agent_product: Product, agent_dto: AgentDTO, pro
         return
     agent_product.opening_speech = agent_dto.opening_speech
     update_nested_yaml_value(product_config_path, {'opening_speech': agent_dto.opening_speech})
-
-
-def is_component_id_unique(component_id: str, component_type: str) -> bool:
-    if component_id is None or component_type is None:
-        return True
-    component_enum = ComponentEnum.from_value(component_type.upper())
-    component_manager_clz = ComponentConfigerUtil.get_component_manager_clz_by_type(component_enum)
-    instance: ComponentBase = component_manager_clz().get_instance_obj(component_id)
-    return instance is None

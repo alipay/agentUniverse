@@ -1,8 +1,11 @@
-"""
-Proxy requests to avoid SSRF
-"""
-import os
+# !/usr/bin/env python3
+# -*- coding:utf-8 -*-
 
+# @Time    : 2024/8/28 14:29
+# @Author  : sunshinesmilelk
+# @Email   : ximo.lk@antgroup.com
+# @FileName: ssrf_proxy.py
+import os
 import httpx
 
 SSRF_PROXY_ALL_URL = os.getenv('SSRF_PROXY_ALL_URL', '')
