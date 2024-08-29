@@ -7,6 +7,7 @@
 # @FileName: plugin_product.py
 from typing import Optional, List
 
+from agentuniverse.agent.action.tool.tool import Tool
 from agentuniverse_product.base.product import Product
 from agentuniverse_product.base.product_configer import ProductConfiger
 
@@ -14,7 +15,7 @@ from agentuniverse_product.base.product_configer import ProductConfiger
 class PluginProduct(Product):
     """The basic class of the plugin product."""
 
-    toolset: Optional[List[str]] = list()
+    toolset: Optional[List[Tool]] = list()
     openapi_desc: Optional[str] = None
 
     def initialize_by_component_configer(self,
@@ -34,6 +35,8 @@ class PluginProduct(Product):
             self.type = product_configer.type
         if product_configer.avatar:
             self.avatar = product_configer.avatar
+        if product_configer.description:
+            self.description = product_configer.description
         if hasattr(product_configer, 'toolset') and product_configer.toolset:
             self.toolset = product_configer.toolset
         if hasattr(product_configer, 'openapi_desc') and product_configer.openapi_desc:

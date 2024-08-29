@@ -26,6 +26,7 @@ class ProductConfiger(ComponentConfiger):
         self.__id: Optional[str] = None
         self.__type: Optional[str] = None
         self.__avatar: Optional[str] = None
+        self.__description: Optional[str] = None
         self.__set_default_meta_info()
 
     @property
@@ -47,6 +48,11 @@ class ProductConfiger(ComponentConfiger):
     def avatar(self) -> Optional[str]:
         """Avatar field."""
         return self.__avatar
+    
+    @property
+    def description(self) -> Optional[str]:
+        """Avatar field."""
+        return self.__description
 
     def __set_default_meta_info(self):
         """Set default instantiated class of product."""
@@ -84,6 +90,7 @@ class ProductConfiger(ComponentConfiger):
                 raise ValueError(f"Product id is required parameter.")
             self.__type = configer.value.get('type')
             self.__avatar = configer.value.get('avatar')
+            self.__description = configer.value.get('description')
             if self.__type not in PRODUCT_COMPONENT_TYPE:
                 raise ValueError(f"Invalid product type: {self.__type}")
         except Exception as e:

@@ -21,7 +21,7 @@ def validate_create_api_tool_parameters(tool_dto: ToolDTO) -> None:
         raise ValueError("Tool id cannot be None.")
     tool = ToolManager().get_instance_obj(tool_dto.id)
     if tool:
-        raise ValueError("Tool instance corresponding to the tool id already exists.")
+        raise ValueError(f"Tool instance corresponding to the tool id already exists. {tool_dto.id}")
     if tool_dto.openapi_schema is None:
         raise ValueError("The openapi_schema in tool cannot be None.")
 

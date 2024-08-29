@@ -22,6 +22,7 @@ class Product(ComponentBase):
     nickname: Optional[str] = None
     type: Optional[str] = None
     avatar: Optional[str] = None
+    description: Optional[str] = None
     _instance: Optional[ComponentBase] = None
 
     @property
@@ -50,6 +51,8 @@ class Product(ComponentBase):
             self.type = product_configer.type
         if product_configer.avatar:
             self.avatar = product_configer.avatar
+        if product_configer.description:
+            self.description = product_configer.description
         self.init_instance()
         return self
 

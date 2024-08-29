@@ -29,6 +29,7 @@ def assemble_plugin_product_config_data(plugin_dto: PluginDTO) -> Dict:
         'id': plugin_dto.id,
         'nickname': plugin_dto.nickname,
         'avatar': plugin_dto.avatar,
+        'description': plugin_dto.description,
         'type': 'PLUGIN',
         'toolset': plugin_dto.toolset,
         'metadata': {
