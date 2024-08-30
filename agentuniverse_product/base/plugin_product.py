@@ -15,7 +15,7 @@ from agentuniverse_product.base.product_configer import ProductConfiger
 class PluginProduct(Product):
     """The basic class of the plugin product."""
 
-    toolset: Optional[List[Tool]] = list()
+    toolset: Optional[List[str]] = list()
     openapi_desc: Optional[str] = None
 
     def initialize_by_component_configer(self,

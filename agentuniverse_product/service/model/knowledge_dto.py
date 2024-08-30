@@ -14,4 +14,4 @@ class KnowledgeDTO(BaseModel):
     id: Optional[str] = Field(description="ID", default="")
     nickname: Optional[str] = Field(description="knowledge nickname", default="")
     description: Optional[str] = Field(description="knowledge description", default="")
-    avatar: Optional[str] = Field(description="agent avatar path", default="")
+    avatar: Optional[str] = Field(description="knowledge avatar path", default="")

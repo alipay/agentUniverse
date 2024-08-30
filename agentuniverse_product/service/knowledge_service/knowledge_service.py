@@ -23,14 +23,14 @@ from agentuniverse_product.base.util.yaml_util import (
     update_nested_yaml_value,
     read_yaml_file,
 )
-from agentuniverse_product.service.util.agent_util import (
+from agentuniverse_product.service.util.knowledge_util import (
     register_knowledge,
     unregister_knowledge,
     register_store,
-    register_product,
     assemble_knowledge_product_config_data,
     assemble_knowledge_config,
 )
+from agentuniverse_product.service.util.agent_util import register_product, unregister_product
 
 
 class KnowledgeService:
@@ -154,8 +154,7 @@ class KnowledgeService:
 
         try:
             unregister_knowledge(knowledge_file_path)
-            # todo unregister product
-
+            unregister_product(product_file_path)
             delete_yaml_file(knowledge_file_path)
             delete_yaml_file(product_file_path)
             return True
@@ -192,8 +191,6 @@ class KnowledgeService:
         knowledge_store_name = f"{knowledge_id}_chroma_store"
 
         knowledge = KnowledgeManager().get_instance_obj(component_instance_name=knowledge_id)
-        product = ProductManager().get_instance_obj(component_instance_name=knowledge_id)
-        list = ProductManager().get_instance_obj_list()
 
         try:
             # If the store YAML file does not exist, create and register the store, and update the knowledge YAML.

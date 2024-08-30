@@ -5,7 +5,8 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: agent_node.py
-from typing import List
+import re
+from typing import List, Dict
 
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
@@ -32,16 +33,31 @@ class AgentNode(Node):
 
     def _run(self, workflow_output: WorkflowOutput) -> NodeOutput:
         inputs: AgentNodeInputParams = self._data.inputs
-        agent_params: List[NodeInfoParams] = inputs.agent_param
-        agent_id = next((str(param.value) for param in agent_params if param.name == 'id'), None)
+
+        agent_params: Dict[str, NodeInfoParams] = {param.name: param for param in inputs.agent_param}
+        agent_id = str(agent_params['id'].value) if 'id' in agent_params else None
+        prompt = agent_params.get('prompt', {}).value.get('content', '') if 'prompt' in agent_params else ''
 
         agent: Agent = AgentManager().get_instance_obj(agent_id)
         if agent is None:
             raise ValueError("No agent with id {} was found.".format(agent_id))
 
+        # Extract variables from the prompt template
+        template_variables = re.findall(r'\{\{(.*?)\}\}', prompt)
+
         agent_input_params = self._resolve_input_params(inputs.input_param, workflow_output)
 
-        agent_output: OutputObject = agent.run(**agent_input_params)
+        # Replace variables in the prompt
+        try:
+            for var in template_variables:
+                if var not in agent_input_params:
+                    raise KeyError(f"The variable '{var}' is not found in the input params.")
+                prompt = prompt.replace(f'{{{{{var}}}}}',
+                                        str(agent_input_params[var]) if agent_input_params[var] else '')
+        except KeyError as e:
+            raise ValueError(f"Error processing template variables: {e}")
+
+        agent_output: OutputObject = agent.run(input=prompt)
         agent_output_dict = agent_output.to_dict()
         output_params: List[NodeOutputParams] = self._data.outputs
 

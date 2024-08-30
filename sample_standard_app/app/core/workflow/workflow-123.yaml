@@ -144,6 +144,11 @@ graph:
             - type: string
               name: id
               value: demo_rag_agent
+            - type: string
+              name: prompt
+              value:
+                type: "value"
+                content: "{{input}}"
           input_param:
             - type: string
               name: input
