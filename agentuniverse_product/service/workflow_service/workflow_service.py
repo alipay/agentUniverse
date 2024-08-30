@@ -66,7 +66,7 @@ class WorkflowService:
         workflow_update_config = {
             'name': workflow_dto.name,
             'description': workflow_dto.description,
-            'graph': workflow_dto.graph
+            'graph_config': workflow_dto.graph
         }
         # Update the workflow attributes if they are provided
         updated_fields = {key: value for key, value in workflow_update_config.items() if value is not None}
@@ -76,6 +76,8 @@ class WorkflowService:
             setattr(workflow, key, value)
 
         if updated_fields:
+            graph_config = updated_fields.pop('graph_config', None)
+            updated_fields['graph'] = graph_config
             update_nested_yaml_value(workflow.component_config_path, updated_fields)
         return workflow_dto.id
 
