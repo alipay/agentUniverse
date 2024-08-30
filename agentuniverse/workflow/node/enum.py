@@ -17,7 +17,7 @@ class NodeEnum(Enum):
     TOOL = 'tool'
     KNOWLEDGE = 'knowledge'
     AGENT = 'agent'
-    CONDITION = 'if-else'
+    CONDITION = 'ifelse'
 
     @staticmethod
     def to_value_list():

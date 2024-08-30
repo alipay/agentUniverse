@@ -17,7 +17,7 @@ graph:
     - id: "2"
       name: 条件判断
       description:
-      type: if-else
+      type: ifelse
       position:
         x: 1
         y: 2
