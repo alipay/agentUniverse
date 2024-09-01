@@ -37,7 +37,7 @@ def assemble_plugin_product_config_data(plugin_dto: PluginDTO, tool_id_list: Lis
             'module': 'agentuniverse_product.base.plugin_product',
             'type': 'PRODUCT'
         },
-        'openapi_desc': plugin_dto.openapi_desc
+        'openapi_desc': ''
     }
 
 

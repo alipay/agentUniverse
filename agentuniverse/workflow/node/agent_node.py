@@ -34,9 +34,20 @@ class AgentNode(Node):
     def _run(self, workflow_output: WorkflowOutput) -> NodeOutput:
         inputs: AgentNodeInputParams = self._data.inputs
 
-        agent_params: Dict[str, NodeInfoParams] = {param.name: param for param in inputs.agent_param}
-        agent_id = str(agent_params['id'].value) if 'id' in agent_params else None
-        prompt = agent_params.get('prompt', {}).value.get('content', '') if 'prompt' in agent_params else ''
+        param_map = {
+            'prompt': None,
+            'id': None
+        }
+
+        for agent_param in inputs.agent_param:
+            if agent_param.name in param_map:
+                if isinstance(agent_param.value, str):
+                    param_map[agent_param.name] = agent_param.value
+                else:
+                    param_map[agent_param.name] = agent_param.value.get('content', None)
+
+        agent_id = param_map['id']
+        prompt = param_map['prompt']
 
         agent: Agent = AgentManager().get_instance_obj(agent_id)
         if agent is None:

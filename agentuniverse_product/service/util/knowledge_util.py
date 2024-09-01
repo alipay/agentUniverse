@@ -45,6 +45,7 @@ def assemble_knowledge_config(knowledge_dto: KnowledgeDTO) -> Dict:
             'pptx': "default_pptx_reader",
             'txt': "default_txt_reader",
         },
+        'post_processors': ['dashscope_reranker'],
         'metadata': {
             'type': 'KNOWLEDGE',
             'module': 'agentuniverse.agent.action.knowledge.knowledge',

@@ -43,10 +43,9 @@ class Graph(nx.DiGraph):
             return
         node_cls = NODE_CLS_MAPPING[node_config.get('type')]
         node_type = node_config.pop('type')
-        node_position = node_config.pop('position')
-
-        node_instance = node_cls(type=NodeEnum.from_value(node_type), position=node_position, workflow_id=workflow_id,
+        node_instance = node_cls(type=NodeEnum.from_value(node_type), workflow_id=workflow_id,
                                  **node_config)
+        node_config['type'] = node_type
         self.add_node(node_id, instance=node_instance, type=node_type)
 
     def _add_graph_edge(self, edge_config: dict) -> None:
@@ -98,12 +97,5 @@ class Graph(nx.DiGraph):
     @staticmethod
     def _run_node(cur_node: Node = None,
                   workflow_output: WorkflowOutput = None) -> None:
-        try:
-            node_output = cur_node.run(workflow_output)
-        except Exception as e:
-            node_output = NodeOutput(
-                node_id=cur_node.id,
-                status=NodeStatusEnum.FAILED,
-                error=str(e)
-            )
+        node_output = cur_node.run(workflow_output)
         workflow_output.workflow_node_results[cur_node.id] = node_output

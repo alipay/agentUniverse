@@ -33,16 +33,29 @@ class LLMNode(Node):
 
     def _run(self, workflow_output: WorkflowOutput) -> NodeOutput:
         inputs: LLMNodeInputParams = self._data.inputs
-        param_dict = {param.name: str(param.value) for param in inputs.llm_param}
 
-        llm_id = param_dict.get('id')
+        param_map = {
+            'model_name': None,
+            'temperature': None,
+            'prompt': None,
+            'id': None
+        }
+
+        for llm_param in inputs.llm_param:
+            if llm_param.name in param_map:
+                if isinstance(llm_param.value, str):
+                    param_map[llm_param.name] = llm_param.value
+                else:
+                    param_map[llm_param.name] = llm_param.value.get('content', None)
+
+        model_name = param_map['model_name']
+        temperature = param_map['temperature']
+        prompt = param_map['prompt']
+        llm_id = param_map['id']
+
         llm: LLM = LLMManager().get_instance_obj(llm_id)
         if llm is None:
             raise ValueError("No llm with id {} was found.".format(llm_id))
-
-        model_name = param_dict.get('model_name')
-        temperature = param_dict.get('temperature')
-        prompt = param_dict.get('prompt')
 
         input_variables = re.findall(r'\{\{(.*?)\}\}', prompt)
         llm.set_by_agent_model(model_name=model_name, temperature=temperature)
@@ -62,4 +75,3 @@ class LLMNode(Node):
         workflow_output.workflow_parameters[self.id] = output_params
 
         return NodeOutput(node_id=self.id, status=NodeStatusEnum.SUCCEEDED, result=output_params)
-

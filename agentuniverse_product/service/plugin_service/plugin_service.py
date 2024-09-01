@@ -54,11 +54,11 @@ class PluginService:
         tool_id_list = []
         index = 1
         for tool in tool_bundles:
-            tool_id = 'plugin_tool_' + str(random.randint(100000, 999999))
+            tool_id = 'plugin_tool_' + str(random.randint(1000, 9999))
             parameters = parse_openapi_to_tool_input(tool)
             tool_dto = ToolDTO(id=tool_id,
                                nickname=plugin_dto.nickname + '_tool_' + str(index) if plugin_dto.nickname else '',
-                               avatar=plugin_dto.avatar if plugin_dto.avatar else '',
+                               avatar=plugin_dto.avatar if plugin_dto.avatar else None,
                                parameters=parameters,
                                openapi_schema=tool
                                )

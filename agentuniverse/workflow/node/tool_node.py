@@ -31,8 +31,13 @@ class ToolNode(Node):
     def _run(self, workflow_output: WorkflowOutput) -> NodeOutput:
         inputs: ToolNodeInputParams = self._data.inputs
         tool_params: List[NodeInfoParams] = inputs.tool_param
-        tool_id = next((str(param.value) for param in tool_params if param.name == 'id'), None)
-
+        tool_id = None
+        for tool_param in tool_params:
+            if tool_param.name == 'id':
+                if isinstance(tool_param.value, dict):
+                    tool_id = tool_param.value['content']
+                else:
+                    tool_id = tool_param.value
         tool: Tool = ToolManager().get_instance_obj(tool_id)
         if tool is None:
             raise ValueError("No tool with id {} was found.".format(tool_id))

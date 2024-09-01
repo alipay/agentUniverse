@@ -23,9 +23,8 @@ class StartNode(Node):
 
     def _run(self, workflow_output: WorkflowOutput) -> NodeOutput:
         start_params: dict = workflow_output.workflow_start_params
+        start_val = start_params.get('input', '')
         output_params: List[NodeOutputParams] = self._data.outputs
-        for output_param in output_params:
-            if output_param.name in start_params:
-                output_param.value = start_params[output_param.name]
+        output_params[0].value = start_val
         workflow_output.workflow_parameters[self.id] = output_params
         return NodeOutput(node_id=self.id, status=NodeStatusEnum.SUCCEEDED, result=output_params)

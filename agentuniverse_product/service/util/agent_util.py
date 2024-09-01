@@ -83,22 +83,23 @@ def assemble_agent_config_data(agent_dto: AgentDTO) -> Dict:
         'action': {}
     }
 
+    if agent_dto.llm:
+        llm = LLMManager().get_instance_obj(agent_dto.llm.id)
+        if llm is None:
+            raise ValueError("The llm instance corresponding to the llm id cannot be found.")
+        llm_model_dict = {'name': agent_dto.llm.id}
+        if agent_dto.llm.temperature:
+            llm_model_dict['temperature'] = agent_dto.llm.temperature
+        if agent_dto.llm.model_name:
+            llm_model_dict['model_name'] = agent_dto.llm.model_name[0]
+        agent_config_data['profile']['llm_model'] = llm_model_dict
+
     if agent_dto.prompt:
         agent_config_data['profile'].update({
             'target': agent_dto.prompt.target,
             'introduction': agent_dto.prompt.introduction,
             'instruction': agent_dto.prompt.instruction
         })
-
-    if agent_dto.llm:
-        llm = LLMManager().get_instance_obj(agent_dto.llm.id)
-        if llm is None:
-            raise ValueError("The llm instance corresponding to the llm id cannot be found.")
-        agent_config_data['profile']['llm_model'] = {
-            'name': agent_dto.llm.id,
-            'temperature': agent_dto.llm.temperature,
-            'model_name': agent_dto.llm.model_name[0] if agent_dto.llm.model_name else None
-        }
 
     if agent_dto.tool:
         agent_config_data['action']['tool'] = [tool.id for tool in agent_dto.tool]
@@ -190,7 +191,7 @@ def get_knowledge_dto_list(agent_model: AgentModel) -> List[KnowledgeDTO]:
     """Get knowledge dto list."""
     knowledge_name_list = agent_model.action.get('knowledge', [])
     res = []
-    if len(knowledge_name_list) < 1:
+    if not knowledge_name_list:
         return res
     for knowledge_name in knowledge_name_list:
         product: Product = ProductManager().get_instance_obj(knowledge_name)

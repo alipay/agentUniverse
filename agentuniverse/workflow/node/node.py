@@ -41,11 +41,7 @@ class Node(BaseModel):
         raise NotImplementedError
 
     def run(self, workflow_output: WorkflowOutput) -> NodeOutput:
-        try:
-            result = self._run(workflow_output)
-            return result
-        except Exception as e:
-            return NodeOutput(node_id=self.id, status=NodeStatusEnum.FAILED, error=str(e))
+        return self._run(workflow_output)
 
     @staticmethod
     def _resolve_input_params(input_params: List[NodeInputParams],

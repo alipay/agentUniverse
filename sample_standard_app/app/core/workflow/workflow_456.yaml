@@ -1,7 +1,0 @@
-id: workflow-456
-name: workflow示例
-description:
-metadata:
-  class: Workflow
-  module: agentuniverse.workflow.workflow
-  type: WORKFLOW
