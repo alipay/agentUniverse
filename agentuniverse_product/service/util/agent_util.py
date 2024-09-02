@@ -94,13 +94,6 @@ def assemble_agent_config_data(agent_dto: AgentDTO) -> Dict:
             llm_model_dict['model_name'] = agent_dto.llm.model_name[0]
         agent_config_data['profile']['llm_model'] = llm_model_dict
 
-    if agent_dto.prompt:
-        agent_config_data['profile'].update({
-            'target': agent_dto.prompt.target,
-            'introduction': agent_dto.prompt.introduction,
-            'instruction': agent_dto.prompt.instruction
-        })
-
     if agent_dto.tool:
         agent_config_data['action']['tool'] = [tool.id for tool in agent_dto.tool]
 
@@ -113,9 +106,11 @@ def assemble_agent_config_data(agent_dto: AgentDTO) -> Dict:
     elif agent_dto.planner.id == 'react_planner':
         metadata_class = 'ReactAgent'
         metadata_agent_path = 'react_agent'
+        agent_config_data['profile']['prompt_version'] = 'default_react_agent.cn'
     else:
         metadata_class = 'RagAgent'
         metadata_agent_path = 'rag_agent'
+        agent_config_data['profile']['prompt_version'] = 'default_rag_agent.cn'
 
     agent_config_data['metadata'] = {
         'class': metadata_class,
@@ -348,3 +343,16 @@ def update_agent_product_config(agent_product: Product, agent_dto: AgentDTO, pro
         return
     agent_product.opening_speech = agent_dto.opening_speech
     update_nested_yaml_value(product_config_path, {'opening_speech': agent_dto.opening_speech})
+
+
+def assemble_tool_input(agent: Agent, agent_input: str) -> dict:
+    tool_id_list = agent.agent_model.action.get('tool', [])
+    tool_input_dict = {}
+    for tool_id in tool_id_list:
+        tool: Tool = ToolManager().get_instance_obj(tool_id)
+        if tool is None:
+            continue
+        if len(tool.input_keys) > 0:
+            input_key = tool.input_keys[0]
+            tool_input_dict[input_key] = agent_input
+    return tool_input_dict

@@ -6,7 +6,6 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: knowledge_service.py
 import os
-import random
 import shutil
 
 from typing import List
@@ -63,8 +62,7 @@ class KnowledgeService:
             str: The ID of the created knowledge.
         """
         # write product YAML file
-        knowledge_id = f"knowledge_{random.randint(100000, 999999)}"
-        knowledge_dto.id = knowledge_id
+        knowledge_id = knowledge_dto.id
 
         product_file_name = f"{knowledge_id}_product"
         product_file_path = os.path.join("..", "core", "product", "knowledge", f"{product_file_name}.yaml")
@@ -166,6 +164,7 @@ class KnowledgeService:
         """upload file to target dir
 
         Args:
+            knowledge_id: The knowledge id.
             file (UploadFile)
 
         Returns:

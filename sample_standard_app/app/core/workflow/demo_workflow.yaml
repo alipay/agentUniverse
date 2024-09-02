@@ -165,7 +165,9 @@ graph:
         prompt:
           type: string
           name: input
-          value: 答案是 {{input1}} or {{input2}}
+          value:
+            type: value
+            content: 答案是 {{input1}} 或者 {{input2}}
       outputs:
       - name: output
         type: string

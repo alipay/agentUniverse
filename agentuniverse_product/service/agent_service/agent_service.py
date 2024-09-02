@@ -29,7 +29,7 @@ from agentuniverse_product.service.model.session_dto import SessionDTO
 from agentuniverse_product.service.session_service.session_service import SessionService
 from agentuniverse_product.service.util.agent_util import validate_create_agent_parameters, \
     assemble_product_config_data, assemble_agent_config_data, assemble_agent_dto, update_agent_product_config, \
-    update_agent_config, register_agent, register_product
+    update_agent_config, register_agent, register_product, assemble_tool_input
 
 
 class AgentService:
@@ -151,15 +151,21 @@ class AgentService:
         if agent is None:
             raise ValueError("The agent instance corresponding to the agent id cannot be found.")
 
+        tool_input_dict = assemble_tool_input(agent, input)
+
         # init the invocation chain and token usage of the monitor module
         Monitor.init_invocation_chain()
         Monitor.init_token_usage()
 
+        agent_input_dict = {'input': input, 'chat_history': AgentService().get_agent_chat_history(session_id),
+                            'agent_id': agent_id}
+
+        agent_input_dict.update(tool_input_dict)
+
         # invoke agent
         start_time = time.time()
         task = RequestTask(agent_run_queue, False,
-                           **{'input': input, 'chat_history': AgentService().get_agent_chat_history(session_id),
-                              'agent_id': agent_id})
+                           **agent_input_dict)
         # get output stream
         output_iterator = task.stream_run()
 

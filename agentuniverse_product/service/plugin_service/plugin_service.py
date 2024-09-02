@@ -6,7 +6,6 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: plugin_service.py
 import os
-import random
 from typing import List
 
 from agentuniverse_product.base.product import Product
@@ -54,7 +53,7 @@ class PluginService:
         tool_id_list = []
         index = 1
         for tool in tool_bundles:
-            tool_id = 'plugin_tool_' + str(random.randint(1000, 9999))
+            tool_id = plugin_dto.id + '_tool_' + str(index)
             parameters = parse_openapi_to_tool_input(tool)
             tool_dto = ToolDTO(id=tool_id,
                                nickname=plugin_dto.nickname + '_tool_' + str(index) if plugin_dto.nickname else '',
