@@ -49,7 +49,7 @@ class AgentService:
         for product in product_list:
             if product.type == ComponentEnum.AGENT.value:
                 agent_dto = AgentDTO(nickname=product.nickname, avatar=product.avatar, id=product.id,
-                                     opening_speech=product.opening_speech)
+                                     opening_speech=product.opening_speech, mtime=product.get_mtime())
                 agent = product.instance
                 agent_model: AgentModel = agent.agent_model
                 agent_dto.description = agent_model.info.get('description', '')
@@ -70,7 +70,8 @@ class AgentService:
         agent_dto = AgentDTO(id=id,
                              nickname=product.nickname if product else '',
                              avatar=product.avatar if product else '',
-                             opening_speech=product.opening_speech if product else '')
+                             opening_speech=product.opening_speech if product else '',
+                             mtime=product.get_mtime())
         # assemble agent dto
         return assemble_agent_dto(agent, agent_dto)
 
