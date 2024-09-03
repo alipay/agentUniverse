@@ -28,3 +28,4 @@ class AgentDTO(BaseModel):
     memory: Optional[str] = Field(description="agent memory id", default='')
     planner: Optional[PlannerDTO] = Field(description="agent planner", default=None)
     knowledge: Optional[list[KnowledgeDTO]] = Field(description="agent knowledge list", default=[])
+    mtime: Optional[float] = Field(description="product last modification time.", default=None)
