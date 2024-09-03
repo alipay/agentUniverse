@@ -28,7 +28,7 @@ class WorkflowService:
         Returns:
             str: The ID of the created workflow.
         """
-        workflow_id = f"workflow_{random.randint(100000, 999999)}"
+        workflow_id = f"workflow_{random.randint(100, 999)}"
         workflow_config = {
             'id': workflow_id,
             'name': workflow_dto.name,

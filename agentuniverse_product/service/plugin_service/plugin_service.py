@@ -16,7 +16,8 @@ from agentuniverse_product.service.model.tool_dto import ToolDTO
 from agentuniverse_product.service.tool_service.tool_service import ToolService
 from agentuniverse_product.service.util.agent_util import register_product
 from agentuniverse_product.service.util.plugin_util import assemble_plugin_product_config_data, \
-    parse_openapi_to_tool_input, parse_openapi_yaml_to_tool_bundle, validate_create_plugin_parameters
+    parse_openapi_yaml_to_tool_bundle, validate_create_plugin_parameters
+from agentuniverse_product.service.util.tool_util import parse_tool_input
 
 
 class PluginService:
@@ -47,6 +48,14 @@ class PluginService:
 
     @staticmethod
     def create_plugin_with_openapi(plugin_dto: PluginDTO) -> str:
+        """Create a new plugin with OpenAPI schema.
+
+        Args:
+            plugin_dto (PluginDTO): Plugin DTO.
+
+        Returns:
+            str: Plugin ID.
+        """
         # single OpenAPI schema with multiple APIs is parsed into multiple tool bundles.
         validate_create_plugin_parameters(plugin_dto)
         tool_bundles = parse_openapi_yaml_to_tool_bundle(plugin_dto.openapi_desc)
@@ -54,7 +63,7 @@ class PluginService:
         index = 1
         for tool in tool_bundles:
             tool_id = plugin_dto.id + '_tool_' + str(index)
-            parameters = parse_openapi_to_tool_input(tool)
+            parameters = parse_tool_input(tool)
             tool_dto = ToolDTO(id=tool_id,
                                nickname=plugin_dto.nickname + '_tool_' + str(index) if plugin_dto.nickname else '',
                                avatar=plugin_dto.avatar if plugin_dto.avatar else None,

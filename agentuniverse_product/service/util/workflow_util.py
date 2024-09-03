@@ -16,6 +16,11 @@ from agentuniverse.workflow.workflow_manager import WorkflowManager
 
 
 def register_workflow(file_path: str):
+    """Register a workflow instance to the workflow manager.
+
+    Args:
+        file_path (str): The path to the specific workflow configuration file.
+    """
     absolute_file_path = os.path.abspath(file_path)
     configer = Configer(path=absolute_file_path).load()
     component_configer = ComponentConfiger().load_by_configer(configer)

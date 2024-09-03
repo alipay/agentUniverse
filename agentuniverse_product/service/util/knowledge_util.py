@@ -21,6 +21,14 @@ from agentuniverse_product.service.model.knowledge_dto import KnowledgeDTO
 
 
 def assemble_knowledge_product_config_data(knowledge_dto: KnowledgeDTO) -> Dict:
+    """Asemble the knowledge product configuration data.
+
+    Args:
+        knowledge_dto (KnowledgeDTO): The knowledge DTO.
+
+    Returns:
+        Dict: The assembled knowledge product configuration data.
+    """
     return {
         'id': knowledge_dto.id,
         'nickname': knowledge_dto.nickname,
@@ -35,6 +43,14 @@ def assemble_knowledge_product_config_data(knowledge_dto: KnowledgeDTO) -> Dict:
 
 
 def assemble_knowledge_config(knowledge_dto: KnowledgeDTO) -> Dict:
+    """Asemble the knowledge configuration data.
+
+    Args:
+        knowledge_dto (KnowledgeDTO): The knowledge DTO object containing the knowledge parameters.
+
+    Returns:
+        Dict: The assembled knowledge configuration data.
+    """
     return {
         'name': knowledge_dto.id,
         'description': knowledge_dto.description,
@@ -54,6 +70,11 @@ def assemble_knowledge_config(knowledge_dto: KnowledgeDTO) -> Dict:
 
 
 def register_knowledge(file_path: str):
+    """Register the knowledge instance to the knowledge manager.
+
+    Args:
+        file_path (str): The path to the knowledge configuration file.
+    """
     absolute_file_path = os.path.abspath(file_path)
     configer = Configer(path=absolute_file_path).load()
     component_configer = ComponentConfiger().load_by_configer(configer)
@@ -65,6 +86,11 @@ def register_knowledge(file_path: str):
 
 
 def unregister_knowledge(file_path: str):
+    """Unregister the knowledge instance from the knowledge manager.
+
+    Args:
+        file_path (str): The path to the knowledge configuration file.
+    """
     absolute_file_path = os.path.abspath(file_path)
     configer = Configer(path=absolute_file_path).load()
     component_configer = ComponentConfiger().load_by_configer(configer)
@@ -75,6 +101,11 @@ def unregister_knowledge(file_path: str):
 
 
 def register_store(file_path: str):
+    """Register the store instance to the store manager.
+
+    Args:
+        file_path (str): The path to the store configuration file.
+    """
     absolute_file_path = os.path.abspath(file_path)
     configer = Configer(path=absolute_file_path).load()
     component_configer = ComponentConfiger().load_by_configer(configer)

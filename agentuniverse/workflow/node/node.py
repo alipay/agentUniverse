@@ -46,6 +46,12 @@ class Node(BaseModel):
     @staticmethod
     def _resolve_input_params(input_params: List[NodeInputParams],
                               workflow_output: WorkflowOutput) -> Dict[str, Any]:
+        """Resolve the input parameters of the node.
+
+        Args:
+            input_params (List[NodeInputParams]): The input parameters of the node.
+            workflow_output (WorkflowOutput): The output of the workflow.
+        """
         node_input_params = {}
         for input_param in input_params:
             val = input_param.value

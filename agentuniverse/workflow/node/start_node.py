@@ -15,7 +15,7 @@ from agentuniverse.workflow.workflow_output import WorkflowOutput
 
 
 class StartNode(Node):
-    """The basic class of the tool node."""
+    """The basic class of the start node."""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

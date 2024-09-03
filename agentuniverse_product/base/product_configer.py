@@ -51,7 +51,7 @@ class ProductConfiger(ComponentConfiger):
     
     @property
     def description(self) -> Optional[str]:
-        """Avatar field."""
+        """Description field."""
         return self.__description
 
     def __set_default_meta_info(self):

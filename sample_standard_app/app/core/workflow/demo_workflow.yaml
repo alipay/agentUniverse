@@ -73,15 +73,6 @@ graph:
     data:
       inputs:
         llm_param:
-        - type: string
-          name: id
-          value: qwen_llm
-        - type: string
-          name: model_name
-          value: qwen-max
-        - type: string
-          name: temperature
-          value: '0.7'
         - name: prompt
           type: string
           value:
@@ -91,6 +82,21 @@ graph:
               不采用背景信息中的错误信息。\n4. 要考虑答案和问题的相关性，不做对问题没有帮助的回答。\n5. 详尽回答问题，重点突出，不过多花哨词藻。\n
               6. 不说模糊的推测。\n7. 尽量多的使用数值类信息。\n\n背景信息是:\n{{background}}\n\n开始!\n需要回答的问题是:
               {{input}}\n"
+        - name: id
+          type: string
+          value:
+            type: value
+            content: qwen_llm
+        - name: temperature
+          type: string
+          value:
+            type: value
+            content: 0.5
+        - name: model_name
+          type: string
+          value:
+            type: value
+            content: qwen-max
         input_param:
         - type: string
           name: input

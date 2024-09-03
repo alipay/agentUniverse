@@ -41,6 +41,14 @@ class ToolService:
 
     @staticmethod
     def get_tool_detail(tool_id: str) -> ToolDTO | None:
+        """Get the tool detail.
+
+        Args:
+            tool_id (str): The id of the tool.
+
+        Returns:
+            ToolDTO | None: The tool detail.
+        """
         if tool_id is None:
             return None
         tool: Tool = ToolManager().get_instance_obj(tool_id)
@@ -56,6 +64,14 @@ class ToolService:
 
     @staticmethod
     def create_tool(tool_dto: ToolDTO) -> str:
+        """Create a new tool instance.
+
+        Args:
+            tool_dto (ToolDTO): The tool DTO.
+
+        Returns:
+            str: The id of the tool.
+        """
         # validate parameters
         validate_create_api_tool_parameters(tool_dto)
 

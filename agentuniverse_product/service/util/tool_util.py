@@ -17,6 +17,11 @@ from agentuniverse_product.service.model.tool_dto import ToolDTO
 
 
 def validate_create_api_tool_parameters(tool_dto: ToolDTO) -> None:
+    """Validate the parameters for creating an api tool instance.
+
+    Args :
+        tool_dto (ToolDTO): The tool DTO object containing the tool parameters.
+    """
     if tool_dto.id is None:
         raise ValueError("Tool id cannot be None.")
     tool = ToolManager().get_instance_obj(tool_dto.id)
@@ -27,6 +32,11 @@ def validate_create_api_tool_parameters(tool_dto: ToolDTO) -> None:
 
 
 def assemble_tool_product_config_data(tool_dto: ToolDTO) -> Dict:
+    """Assemble the tool product configuration data.
+
+    Args :
+        tool_dto (ToolDTO): The tool DTO object containing the tool parameters.
+    """
     return {
         'id': tool_dto.id,
         'nickname': tool_dto.nickname,
@@ -41,6 +51,14 @@ def assemble_tool_product_config_data(tool_dto: ToolDTO) -> Dict:
 
 
 def assemble_api_tool_config_data(tool_dto: ToolDTO) -> Dict:
+    """Assemble the api tool configuration data.
+
+    Args :
+        tool_dto (ToolDTO): The tool DTO object containing the tool parameters.
+
+    Returns:
+        Dict: The assembled api tool configuration data.
+    """
     tool_config_data = {
         'name': tool_dto.id,
         'description': tool_dto.description,
@@ -60,6 +78,11 @@ def assemble_api_tool_config_data(tool_dto: ToolDTO) -> Dict:
 
 
 def register_tool(file_path: str):
+    """Register a tool instance to the tool manager.
+
+    Args :
+        file_path (str): The path to the tool configuration file.
+    """
     absolute_file_path = os.path.abspath(file_path)
     configer = Configer(path=absolute_file_path).load()
     component_configer = ComponentConfiger().load_by_configer(configer)
@@ -68,3 +91,21 @@ def register_tool(file_path: str):
     component_instance: Tool = component_clz().initialize_by_component_configer(tool_configer)
     component_instance.component_config_path = component_configer.configer.path
     ToolManager().register(component_instance.get_instance_code(), component_instance)
+
+
+def parse_tool_input(openapi: dict) -> list[str]:
+    """Parse the tool input from the openapi schema.
+
+    Args:
+        openapi (dict): The openapi schema dictionary.
+
+    Returns:
+        list[str]: The list of tool input.
+    """
+    # convert parameters
+    parameters = []
+    if 'parameters' in openapi['operation']:
+        for parameter in openapi['operation'].get('parameters'):
+            if parameter.get('required'):
+                parameters.append(parameter['name'])
+    return parameters

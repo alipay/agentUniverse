@@ -69,7 +69,7 @@ def write_yaml_file(file_path, config_data) -> None:
     # Write the dictionary to the YAML file
     with open(file_path, 'w') as yaml_file:
         yaml.dump(config_data, yaml_file)
-        
+
 
 def delete_yaml_file(file_path: str) -> None:
     """Deletes the YAML file with the specified file path.
@@ -88,17 +88,17 @@ def delete_yaml_file(file_path: str) -> None:
 
 
 def read_yaml_file(file_path) -> Dict[str, Any]:
-    """read YAML then return Dict
+    """Reads the YAML file and returns the data as a dictionary.
 
     Args:
-        file_path (str)
+        file_path (str): The path to the YAML file.
 
     Returns:
-        Dict[str, Any]
+        dict: The data from the YAML file as a dictionary.
     """
     yaml = YAML()
-    
+
     with open(file_path, 'r', encoding='utf-8') as file:
         data = yaml.load(file)
-    
+
     return data

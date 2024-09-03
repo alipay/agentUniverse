@@ -38,6 +38,14 @@ from agentuniverse_product.service.model.tool_dto import ToolDTO
 
 
 def assemble_product_config_data(agent_dto: AgentDTO) -> Dict:
+    """Assemble the agent product configuration data.
+
+    Args:
+        agent_dto (AgentDTO): The agent DTO.
+
+    Returns:
+        Dict: The assembled agent product configuration data.
+    """
     return {
         'id': agent_dto.id,
         'nickname': agent_dto.nickname,
@@ -53,6 +61,11 @@ def assemble_product_config_data(agent_dto: AgentDTO) -> Dict:
 
 
 def validate_create_agent_parameters(agent_dto: AgentDTO) -> None:
+    """Validate the parameters for creating an agent.
+
+    Args:
+        agent_dto (AgentDTO): The agent DTO.
+    """
     if agent_dto.id is None:
         raise ValueError("Agent id cannot be None.")
     agent = AgentManager().get_instance_obj(agent_dto.id)
@@ -68,6 +81,14 @@ def validate_create_agent_parameters(agent_dto: AgentDTO) -> None:
 
 
 def assemble_agent_config_data(agent_dto: AgentDTO) -> Dict:
+    """Assemble the agent configuration data.
+
+    Args:
+        agent_dto (AgentDTO): The agent DTO.
+
+    Returns:
+        Dict: The assembled agent configuration data.
+    """
     agent_config_data = {
         'info': {
             'name': agent_dto.id,
@@ -104,7 +125,7 @@ def assemble_agent_config_data(agent_dto: AgentDTO) -> Dict:
         metadata_class = 'WorkflowAgent'
         metadata_agent_path = 'workflow_agent'
     elif agent_dto.planner.id == 'react_planner':
-        metadata_class = 'ReactAgent'
+        metadata_class = 'ReActAgent'
         metadata_agent_path = 'react_agent'
         agent_config_data['profile']['prompt_version'] = 'default_react_agent.cn'
     else:
@@ -121,6 +142,11 @@ def assemble_agent_config_data(agent_dto: AgentDTO) -> Dict:
 
 
 def register_agent(file_path: str):
+    """Register the agent instance to the agent manager.
+
+    Args:
+        file_path (str): The file path of the agent configuration.
+    """
     absolute_file_path = os.path.abspath(file_path)
     configer = Configer(path=absolute_file_path).load()
     component_configer = ComponentConfiger().load_by_configer(configer)
@@ -132,6 +158,11 @@ def register_agent(file_path: str):
 
 
 def register_product(file_path: str):
+    """Register the product instance to the product manager.
+
+    Args:
+        file_path (str): The file path of the product configuration.
+    """
     absolute_file_path = os.path.abspath(file_path)
     configer = Configer(path=absolute_file_path).load()
     component_configer = ComponentConfiger().load_by_configer(configer)
@@ -143,6 +174,11 @@ def register_product(file_path: str):
 
 
 def unregister_product(file_path: str):
+    """Unregister the product instance from the product manager.
+
+    Args:
+        file_path (str): The file path of the product configuration.
+    """
     absolute_file_path = os.path.abspath(file_path)
     configer = Configer(path=absolute_file_path).load()
     component_configer = ComponentConfiger().load_by_configer(configer)
@@ -346,6 +382,15 @@ def update_agent_product_config(agent_product: Product, agent_dto: AgentDTO, pro
 
 
 def assemble_tool_input(agent: Agent, agent_input: str) -> dict:
+    """Assemble tool input parameters for the agent invocation.
+
+    Args:
+        agent (Agent): The agent instance.
+        agent_input (str): The agent input string.
+
+    Returns:
+        dict: The tool input parameters dictionary.
+    """
     tool_id_list = agent.agent_model.action.get('tool', [])
     tool_input_dict = {}
     for tool_id in tool_id_list:

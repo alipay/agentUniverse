@@ -52,11 +52,10 @@ class KnowledgeService:
 
     @staticmethod
     def create_knowledge(knowledge_dto: KnowledgeDTO) -> str:
-        """
-        Create knowledge with name and desc, then return knowledge ID.
+        """ Create knowledge with name and desc, then return knowledge ID.
 
         Args:
-            knowledge_dto(KnowledgeDTO): The knowledge DTO containing this knowledge attributes.
+            knowledge_dto(KnowledgeDTO): The knowledge DTO containing the knowledge attributes.
 
         Returns:
             str: The ID of the created knowledge.
@@ -129,14 +128,13 @@ class KnowledgeService:
 
     @staticmethod
     def delete_knowledge(knowledge_id: str) -> bool:
-        """
-        Delete knowledge, then return the result.
+        """Delete knowledge, then return the result.
 
         Args:
-            knowledge_id(str)
+            knowledge_id (str): The ID of the knowledge to be deleted.
 
         Returns:
-            bool
+            bool: True if the knowledge is deleted successfully, False otherwise.
         """
 
         knowledge: Knowledge = KnowledgeManager().get_instance_obj(component_instance_name=knowledge_id)
@@ -161,14 +159,14 @@ class KnowledgeService:
 
     @staticmethod
     def upload_knowledge_file(knowledge_id: str, file) -> bool:
-        """upload file to target dir
+        """Upload the knowledge file.
 
         Args:
-            knowledge_id: The knowledge id.
-            file (UploadFile)
+            knowledge_id (str): The ID of the knowledge.
+            file: The file to be uploaded.
 
         Returns:
-            bool
+            bool: True if the file is uploaded successfully, False otherwise.
         """
 
         upload_file_path = os.path.join("..", "resources")

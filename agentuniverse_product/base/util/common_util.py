@@ -11,6 +11,15 @@ from agentuniverse.base.component.component_enum import ComponentEnum
 
 
 def is_component_id_unique(component_id: str, component_type: str) -> bool:
+    """Check if the component ID is unique.
+
+    Args:
+        component_id (str): The component ID to check.
+        component_type (str): The component type.
+
+    Returns:
+        bool: True if the component ID is unique, False otherwise.
+    """
     if component_id is None or component_type is None:
         return True
     component_enum = ComponentEnum.from_value(component_type.upper())

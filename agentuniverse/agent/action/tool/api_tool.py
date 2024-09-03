@@ -8,14 +8,19 @@
 import json
 from typing import Any, Optional
 from urllib.parse import urlencode
-
 import httpx
+
 from agentuniverse.agent.action.tool.tool import Tool, ToolInput
 from agentuniverse.agent.action.tool.utils import ssrf_proxy
 from agentuniverse.base.config.component_configer.configers.tool_configer import ToolConfiger
 
 
 class APITool(Tool):
+    """The basic class for api tool model.
+
+    Attributes:
+        openapi_spec(str): The openapi schema of the api tool.
+    """
     openapi_spec: Optional[dict] = None
 
     def execute(self, tool_input: ToolInput):
@@ -28,15 +33,6 @@ class APITool(Tool):
         if component_configer.__dict__['openapi_spec']:
             self.openapi_spec = component_configer.__dict__['openapi_spec']
         return self
-
-    @staticmethod
-    def get_parameter_value(parameter, parameters):
-        if parameter['name'] in parameters:
-            return parameters[parameter['name']]
-        elif parameter.get('required', False):
-            raise Exception(f"Missing required parameter {parameter['name']}")
-        else:
-            return (parameter.get('schema', {}) or {}).get('default', None)
 
     def convert_body_property_any_of(self, property: dict[str, Any], value: Any, any_of: list[dict[str, Any]],
                                      max_recursive=10) -> Any:
@@ -61,7 +57,8 @@ class APITool(Tool):
                         elif str(value).lower() in ['false', '0']:
                             return False
                         else:
-                            continue  # Not a boolean, try next option
+                            # Not a boolean, try next option
+                            continue
                     elif option['type'] == 'null' and not value:
                         return None
                     else:
@@ -73,11 +70,10 @@ class APITool(Tool):
             except ValueError:
                 # Conversion failed, try next option
                 continue
-                # If no option succeeded, you might want to return the value as is or raise an error
-        # or raise ValueError(f"Cannot convert value '{value}' to any specified type in anyOf")
         return value
 
     def convert_body_property_type(self, property: dict[str, Any], value: Any) -> Any:
+        """Convert a value to the specified type."""
         try:
             if 'type' in property:
                 if property['type'] == 'integer' or property['type'] == 'int':
@@ -115,8 +111,16 @@ class APITool(Tool):
 
     def do_http_request(self, url: str, method: str, headers: dict[str, Any],
                         parameters: dict[str, Any]) -> httpx.Response:
-        """
-            do http request depending on api bundle
+        """Do an HTTP request.
+
+        Args:
+            url (str): The URL to request.
+            method (str): The HTTP method to use.
+            headers (dict[str, Any]): The headers to include in the request.
+            parameters (dict[str, Any]): The parameters to include in the request.
+
+        Returns:
+            httpx.Response: The response from the request.
         """
         method = method.lower()
         params = {}
@@ -183,10 +187,18 @@ class APITool(Tool):
         else:
             raise ValueError(f'Invalid http method')
 
-    def validate_and_parse_response(self, response: httpx.Response) -> str:
-        """
-            validate the response
-        """
+    @staticmethod
+    def get_parameter_value(parameter, parameters):
+        if parameter['name'] in parameters:
+            return parameters[parameter['name']]
+        elif parameter.get('required', False):
+            raise Exception(f"Missing required parameter {parameter['name']}")
+        else:
+            return (parameter.get('schema', {}) or {}).get('default', None)
+
+    @staticmethod
+    def validate_and_parse_response(response: httpx.Response) -> str:
+        """Validate and parse the response from the tool response."""
         if isinstance(response, httpx.Response):
             if response.status_code >= 400:
                 raise Exception(

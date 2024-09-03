@@ -15,6 +15,11 @@ from agentuniverse_product.service.model.plugin_dto import PluginDTO
 
 
 def validate_create_plugin_parameters(plugin_dto: PluginDTO) -> None:
+    """Validate the parameters for creating a plugin instance.
+
+    Args:
+        plugin_dto (PluginDTO): The plugin DTO object containing the plugin parameters.
+    """
     if plugin_dto.id is None:
         raise ValueError("Plugin id cannot be None.")
     plugin = ProductManager().get_instance_obj(plugin_dto.id)
@@ -25,6 +30,15 @@ def validate_create_plugin_parameters(plugin_dto: PluginDTO) -> None:
 
 
 def assemble_plugin_product_config_data(plugin_dto: PluginDTO, tool_id_list: List[str]) -> Dict:
+    """Assemble the plugin product configuration data.
+
+    Args:
+        plugin_dto (PluginDTO): The plugin DTO object containing the plugin parameters.
+        tool_id_list (List[str]): The list of tool IDs associated with the plugin.
+
+    Returns:
+        Dict: The assembled plugin product configuration data.
+    """
     return {
         'id': plugin_dto.id,
         'nickname': plugin_dto.nickname,
@@ -42,11 +56,13 @@ def assemble_plugin_product_config_data(plugin_dto: PluginDTO, tool_id_list: Lis
 
 
 def parse_openapi_yaml_to_tool_bundle(yaml: str) -> list:
-    """
-        parse openapi yaml to tool bundle
+    """Parse the openapi schema yaml to tool bundles.
 
-        :param yaml: the yaml string
-        :return: the tool bundle
+    Args:
+        yaml (str): The openapi schema yaml string.
+
+    Returns:
+        list: The list of tool bundles.
     """
 
     openapi: dict = safe_load(yaml)
@@ -71,9 +87,8 @@ def parse_openapi_yaml_to_tool_bundle(yaml: str) -> list:
                     'operation': path_item[method],
                     'url': server_url + path,
                 })
-
+    # create tool bundle
     for interface in interfaces:
-        # create tool bundle
         # check if there is a request body
         if 'requestBody' in interface['operation']:
             request_body = interface['operation']['requestBody']
@@ -105,13 +120,3 @@ def parse_openapi_yaml_to_tool_bundle(yaml: str) -> list:
             interface['operation']['operationId'] = f'{path}_{interface["method"]}'
 
     return interfaces
-
-
-def parse_openapi_to_tool_input(openapi: dict) -> list[str]:
-    # convert parameters
-    parameters = []
-    if 'parameters' in openapi['operation']:
-        for parameter in openapi['operation'].get('parameters'):
-            if parameter.get('required'):
-                parameters.append(parameter['name'])
-    return parameters

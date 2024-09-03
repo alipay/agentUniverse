@@ -7,7 +7,6 @@
 # @FileName: plugin_product.py
 from typing import Optional, List
 
-from agentuniverse.agent.action.tool.tool import Tool
 from agentuniverse_product.base.product import Product
 from agentuniverse_product.base.product_configer import ProductConfiger
 
@@ -23,7 +22,7 @@ class PluginProduct(Product):
         """Initialize the Product by the ProductConfiger object.
 
         Args:
-            product_configer(ProductConfiger): A configer contains product basic info.
+            product_configer(ProductConfiger): A configer contains the product basic info.
         Returns:
             PluginProduct: A PluginProduct instance.
         """

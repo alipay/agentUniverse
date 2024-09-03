@@ -20,7 +20,7 @@ class EndNodeData(NodeData):
 
 
 class EndNode(Node):
-    """The basic class of the tool node."""
+    """The basic class of the end node."""
     _data_cls = EndNodeData
 
     def __init__(self, **kwargs):

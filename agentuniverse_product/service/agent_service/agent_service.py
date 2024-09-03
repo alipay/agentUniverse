@@ -215,6 +215,13 @@ class AgentService:
 
     @staticmethod
     def create_agent(agent_dto: AgentDTO) -> str:
+        """Create an agent instance.
+
+        Args:
+            agent_dto (AgentDTO): AgentDTO.
+        Returns:
+            str: Agent id.
+        """
         # validate parameters
         validate_create_agent_parameters(agent_dto)
 

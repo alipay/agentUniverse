@@ -36,6 +36,12 @@ class Graph(nx.DiGraph):
         return self
 
     def _add_graph_node(self, workflow_id: str, node_config: dict) -> None:
+        """Add a node to the graph.
+
+        Args:
+            workflow_id: The workflow id.
+            node_config: The node configuration.
+        """
         if node_config.get('type') not in NodeEnum.to_value_list():
             raise ValueError('The node type is not supported')
         node_id = node_config.get('id')
@@ -49,10 +55,20 @@ class Graph(nx.DiGraph):
         self.add_node(node_id, instance=node_instance, type=node_type)
 
     def _add_graph_edge(self, edge_config: dict) -> None:
+        """Add a edge to the graph.
+
+        Args:
+            edge_config: The edge configuration.
+        """
         self.add_edge(edge_config.get('source_node_id'), edge_config.get('target_node_id'),
                       source_handler=edge_config.get('source_handler'))
 
     def run(self, workflow_output: WorkflowOutput) -> None:
+        """Run the graph.
+
+        Args:
+            workflow_output: The workflow output.
+        """
         sorted_nodes = list(nx.topological_sort(self))
         predecessor_node: Node | None = None
         while True:
@@ -69,6 +85,15 @@ class Graph(nx.DiGraph):
 
     def _get_next_node(self, workflow_output: WorkflowOutput, nodes: Any,
                        predecessor_node: Optional[Node] = None) -> Optional[Node]:
+        """Get the next node in the graph.
+
+        Args:
+            workflow_output: The workflow output.
+            nodes: The nodes in the graph.
+            predecessor_node: The predecessor node.
+        Returns:
+            The next node in the graph.
+        """
         if not predecessor_node:
             for node_id in nodes:
                 if self.nodes[node_id]['type'] == NodeEnum.START.value:
@@ -92,10 +117,24 @@ class Graph(nx.DiGraph):
 
     @staticmethod
     def _has_node_been_executed(workflow_output: WorkflowOutput, node_id: str) -> bool:
+        """Check if the node has been executed.
+
+        Args:
+            workflow_output: The workflow output.
+            node_id: The node id.
+        Returns:
+            True if the node has been executed, False otherwise.
+        """
         return node_id in workflow_output.workflow_node_results
 
     @staticmethod
     def _run_node(cur_node: Node = None,
                   workflow_output: WorkflowOutput = None) -> None:
+        """Run the node in the graph.
+
+        Args:
+            cur_node: The current node in the graph.
+            workflow_output: The workflow output.
+        """
         node_output = cur_node.run(workflow_output)
         workflow_output.workflow_node_results[cur_node.id] = node_output
