@@ -5,6 +5,7 @@
 # @Author  : fanen.lhy
 # @Email   : fanen.lhy@antgroup.com
 # @FileName: request_task.py
+import asyncio
 import enum
 from enum import Enum
 import json
@@ -13,7 +14,7 @@ import time
 import uuid
 from datetime import datetime, timedelta
 from threading import Thread
-from typing import Optional
+from typing import Optional, AsyncIterator
 
 from .dal.request_library import RequestLibrary
 from .dal.entity.request_do import RequestDO
@@ -54,12 +55,14 @@ class RequestTask:
         self.func: callable = func
         self.kwargs = kwargs
         self.request_id = uuid.uuid4().hex
-        self.queue = queue.Queue(maxsize=200)
+        self.queue = queue.Queue(maxsize=100)
         self.thread: Optional[ThreadWithReturnValue] = None
         self.state = TaskStateEnum.INIT.value
         # Whether save to Database.
         self.saved = saved
         self.__request_do__ = self.add_request_do()
+        self.async_queue = asyncio.Queue(maxsize=200)
+        self.async_task = None
 
     def receive_steps(self):
         """Yield the stream data by getting data from the queue."""
@@ -82,6 +85,27 @@ class RequestTask:
         except Exception as e:
             LOGGER.error("request task execute Fail: " + str(e))
             yield "data:" + json.dumps({"error": {"error_msg": str(e)}}) + "\n\n "
+
+    async def async_receive_steps(self) -> AsyncIterator[str]:
+        while True:
+            output: str = await self.async_queue.get()
+            if output is None:
+                break
+            if output == EOF_SIGNAL:
+                break
+            yield "data:" + json.dumps({"process": output},
+                                       ensure_ascii=False) + "\n\n"
+        if self.canceled():
+            return
+        try:
+            result = await self.async_task
+            if isinstance(result, OutputObject):
+                result = result.to_dict()
+            yield "data:" + json.dumps({"result": result},
+                                       ensure_ascii=False) + "\n\n"
+        except Exception as e:
+            LOGGER.error("request task execute Fail: " + str(e))
+            yield "data:" + json.dumps({"error": {"error_msg": str(e)}}) + "\n\n"
 
     def append_steps(self):
         """Tracing async service running state and update it to database."""
@@ -129,6 +153,13 @@ class RequestTask:
                                             kwargs=self.kwargs)
         self.thread.start()
         return self.receive_steps()
+
+    async def async_stream_run(self) -> AsyncIterator[str]:
+        self.kwargs['output_stream'] = self.async_queue
+        loop = asyncio.get_event_loop()
+        self.async_task = loop.create_task(self.func(**self.kwargs))
+        async for item in self.async_receive_steps():
+            yield item
 
     def run(self):
         """Run the service synchronous and return the result."""

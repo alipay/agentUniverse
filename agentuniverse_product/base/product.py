@@ -14,6 +14,7 @@ from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.config.application_configer.application_config_manager import ApplicationConfigManager
 from agentuniverse_product.base.product_configer import ProductConfiger
 
+
 class Product(ComponentBase):
     """The basic class of the product."""
 
@@ -29,14 +30,14 @@ class Product(ComponentBase):
     def instance(self) -> ComponentBase:
         return self._instance
 
-    def get_ctime(self)->float:
+    def get_ctime(self) -> float:
         """Return the product creation time."""
         return os.path.getctime(self.component_config_path)
-    
-    def get_mtime(self)->float:
+
+    def get_mtime(self) -> float:
         """Return the product last modification time."""
         return os.path.getmtime(self.component_config_path)
-        
+
     def get_instance_code(self) -> str:
         """Return the full name of the product."""
         appname = ApplicationConfigManager().app_configer.base_info_appname

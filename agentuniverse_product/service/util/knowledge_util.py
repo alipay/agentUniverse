@@ -55,6 +55,7 @@ def assemble_knowledge_config(knowledge_dto: KnowledgeDTO) -> Dict:
         'name': knowledge_dto.id,
         'description': knowledge_dto.description,
         'stores': [],
+        'insert_processors': ["recursive_character_text_splitter"],
         'readers': {
             'pdf': "default_pdf_reader",
             'docx': "default_docx_reader",

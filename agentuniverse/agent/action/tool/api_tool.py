@@ -36,6 +36,7 @@ class APITool(Tool):
 
     def convert_body_property_any_of(self, property: dict[str, Any], value: Any, any_of: list[dict[str, Any]],
                                      max_recursive=10) -> Any:
+        """Convert a property value based on its anyOf type."""
         if max_recursive <= 0:
             raise Exception("Max recursion depth reached")
         for option in any_of or []:
@@ -73,7 +74,7 @@ class APITool(Tool):
         return value
 
     def convert_body_property_type(self, property: dict[str, Any], value: Any) -> Any:
-        """Convert a value to the specified type."""
+        """Convert a property value based on its type."""
         try:
             if 'type' in property:
                 if property['type'] == 'integer' or property['type'] == 'int':
@@ -172,7 +173,7 @@ class APITool(Tool):
         for name, value in path_params.items():
             url = url.replace(f'{{{name}}}', f'{value}')
 
-        # parse http body data if needed, for GET/HEAD/OPTIONS/TRACE, the body is ignored
+        # parse http body data if needed, for GET/HEAD/OPTIONS/TRACE
         if 'Content-Type' in headers:
             if headers['Content-Type'] == 'application/json':
                 body = json.dumps(body)

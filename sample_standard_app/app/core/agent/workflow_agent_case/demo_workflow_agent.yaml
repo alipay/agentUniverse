@@ -1,6 +1,5 @@
 info:
   name: 'demo_workflow_agent'
-  description: ''
 profile:
 plan:
   planner:

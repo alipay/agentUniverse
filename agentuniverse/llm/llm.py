@@ -160,9 +160,7 @@ class LLM(ComponentBase):
         """Get the langchain llm class."""
         if params is None:
             params = {}
-        if self.langchain_instance is None:
-            self.langchain_instance = self.as_langchain()
-        return self.langchain_instance.bind(**params)
+        return self.as_langchain().bind(**params)
 
     @trace_llm
     def call(self, *args: Any, **kwargs: Any):

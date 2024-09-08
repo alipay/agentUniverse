@@ -401,3 +401,33 @@ def assemble_tool_input(agent: Agent, agent_input: str) -> dict:
             input_key = tool.input_keys[0]
             tool_input_dict[input_key] = agent_input
     return tool_input_dict
+
+
+def validate_and_assemble_agent_input(agent_id: str, session_id: str, input: str, chat_history: list) -> dict:
+    """Validate and assemble agent input.
+
+    Args:
+        agent_id (str): The agent id.
+        session_id (str): The session id.
+        input (str): The agent input string.
+        chat_history (list): The chat history list.
+
+    Returns:
+        dict: The agent input dictionary.
+    """
+    if agent_id is None or session_id is None:
+        raise ValueError("Agent id or session id cannot be None.")
+    agent: Agent = AgentManager().get_instance_obj(agent_id)
+    if agent is None:
+        raise ValueError("The agent instance corresponding to the agent id cannot be found.")
+    tool_input_dict = assemble_tool_input(agent, input)
+
+    agent_input_dict = {
+        'input': input,
+        'chat_history': chat_history,
+        'agent_id': agent_id
+    }
+
+    agent_input_dict.update(tool_input_dict)
+
+    return agent_input_dict
