@@ -1,0 +1,7 @@
+name: 'dashscope_embedding'
+description: 'embedding use dashscope api'
+embedding_model_name: 'text-embedding-v2'
+metadata:
+  type: 'EMBEDDING'
+  module: 'agentuniverse.agent.action.knowledge.embedding.dashscope_embedding'
+  class: 'DashscopeEmbedding'

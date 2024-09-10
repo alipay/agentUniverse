@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.11-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.12-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -52,6 +52,23 @@ pip install agentUniverse
 
 详情请阅读[快速开始](docs/guidebook/zh/1_3_%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.md) 。
 ****************************************
+## 产品化平台使用
+agentUniverse提供基于本地的产品化平台能力，请按照如下步骤快速启动
+
+**通过pip安装**
+```shell
+pip install magent-ui ruamel.yaml
+```
+
+**一键运行**
+
+运行sample_standard_app/app/boostrap下的[product_application.py](sample_standard_app/app/bootstrap/product_application.py)文件，一键启动。
+
+更多详情参考 [产品化平台快速开始](./docs/guidebook/zh/10_1_1_产品化平台快速开始.md)
+
+本功能由 [difizen](https://github.com/difizen/magent) X agentUniverse联合推出。
+
+****************************************
 ## 案例与样例工程
 ### 🌟 使用案例
 [法律咨询Agent](./docs/guidebook/zh/7_1_1_法律咨询案例.md)
@@ -72,7 +89,18 @@ agentUniverse推出了DataAgent（Minimum Viable Product版本）, DataAgent旨�
 [agentUniverse 示例项目](sample_standard_app)
 
 ### 🌟 使用aU构建的产品案例
-[支小助 金融从业专家AI助手](https://zhu.alipay.com/)
+[支小助 金融从业专家AI助手](https://zhu.alipay.com/?from=au)
+
+****************************************
+
+**投研支小助：助推大模型落地严谨产业，提升投研专家效率**
+
+投研支小助是大模型落地严谨产业的高效解决方案，基于专注严谨应用的凤凰大模型和善于专业定制的agentUniverse智能体框架，主要面向投研、ESG、财经、财报等投研相关细分领域的一系列专业AI业务助手，已在蚂蚁大规模场景充分验证，提升专家效率。
+
+
+https://private-user-images.githubusercontent.com/39180831/355437700-192f712d-1b03-46a6-8422-1ca10aa94331.mp4?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjI5NDk4NTAsIm5iZiI6MTcyMjk0OTU1MCwicGF0aCI6Ii8zOTE4MDgzMS8zNTU0Mzc3MDAtMTkyZjcxMmQtMWIwMy00NmE2LTg0MjItMWNhMTBhYTk0MzMxLm1wND9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA4MDYlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwODA2VDEzMDU1MFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTU4NWMzNzVjOGZjZDNjMDMzMTE4YjQzOTk0ZWQwZGZkNWNmNWQxNWMzYWIzMTk4MzY1MjA5NWRhMjU2NGNiNzUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.q1vdSg_Ghxr-DHLXfmQ_fVVRVSFn7H8VMHMi-_2QrjA
+
+
 ****************************************
 ## 更多
 ### 为什么使用agentUniverse

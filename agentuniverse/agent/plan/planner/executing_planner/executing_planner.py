@@ -42,7 +42,6 @@ class ExecutingPlanner(Planner):
         self.run_all_actions(agent_model, planner_input, input_object)
 
         llm: LLM = self.handle_llm(agent_model)
-
         prompt: Prompt = self.handle_prompt(agent_model, planner_input)
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
@@ -50,16 +49,12 @@ class ExecutingPlanner(Planner):
             memory.get(**planner_input)) if memory else InMemoryChatMessageHistory()
 
         chain_with_history = RunnableWithMessageHistory(
-            prompt.as_langchain() | llm.as_langchain(),
+            prompt.as_langchain() | llm.as_langchain_runnable(agent_model.llm_params()),
             lambda session_id: lc_chat_history,
             history_messages_key=memory.memory_key if memory else 'chat_history',
             input_messages_key=self.input_key,
         ) | StrOutputParser()
-
-        res = asyncio.run(
-            chain_with_history.ainvoke(input=planner_input, config={"configurable": {"session_id": "unused"}}))
-        if memory:
-            memory.add(message_list=generate_message(lc_chat_history), **planner_input)
+        res = chain_with_history.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
         return {**planner_input, self.output_key: res, 'chat_history': generate_memories(lc_chat_history)}
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> Prompt:

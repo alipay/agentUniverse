@@ -32,6 +32,8 @@ class ComponentManagerBase(Generic[ComponentTypeVar]):
             raise ValueError(f"{self._component_type.value} component object instance with name "
                              f"'{component_instance_name}' already exists.")
         self._instance_obj_map[component_instance_name] = component_instance_obj
+        if component_instance_obj.default_symbol:
+            self._instance_obj_map["__default_instance__"] = component_instance_obj
 
     def unregister(self, component_instance_name: str):
         """Unregister the component instance abstractmethod."""
@@ -40,11 +42,19 @@ class ComponentManagerBase(Generic[ComponentTypeVar]):
     def get_instance_obj(self, component_instance_name: str,
                          appname: str = None, new_instance: bool = False) -> ComponentTypeVar:
         """Return the component instance object."""
+        if component_instance_name == "__default_instance__":
+            return self.get_default_instance(new_instance)
         appname = appname or ApplicationConfigManager().app_configer.base_info_appname
         instance_code = f'{appname}.{self._component_type.value.lower()}.{component_instance_name}'
         if new_instance:
             return copy.deepcopy(self._instance_obj_map.get(instance_code))
         return self._instance_obj_map.get(instance_code)
+
+    def get_default_instance(self, new_instance: bool = False) -> ComponentTypeVar:
+        """Return the default instance of component."""
+        if new_instance:
+            return copy.deepcopy(self._instance_obj_map.get("__default_instance__"))
+        return self._instance_obj_map.get("__default_instance__")
 
     def get_instance_name_list(self) -> list[str]:
         """Return the component instance list."""

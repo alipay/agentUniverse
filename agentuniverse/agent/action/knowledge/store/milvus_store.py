@@ -5,7 +5,7 @@
 # @Author  : fanen.lhy
 # @Email   : fanen.lhy@antgroup.com
 # @FileName: milvus_store.py
-from typing import List, Optional
+from typing import List, Optional, Any
 
 try:
     from pymilvus import connections, Collection, CollectionSchema, \
@@ -17,6 +17,9 @@ except ImportError as e:
 from agentuniverse.agent.action.knowledge.store.document import Document
 from agentuniverse.agent.action.knowledge.store.query import Query
 from agentuniverse.agent.action.knowledge.store.store import Store
+from agentuniverse.agent.action.knowledge.embedding.embedding_manager import EmbeddingManager
+from agentuniverse.base.config.component_configer.component_configer import \
+    ComponentConfiger
 
 DEFAULT_CONNECTION_ARGS = {
     "host": "localhost",
@@ -36,30 +39,14 @@ DEFAULT_INDEX_PARAMS = {
 
 
 class MilvusStore(Store):
+    connection_args: Optional[dict] = None
+    search_args: Optional[dict] = None
+    index_params: Optional[dict] = None
     collection_name: Optional[str] = 'milvus_db'
     collection: Collection = None
     connection_name: str = 'default_connection'
-
-    def __init__(
-            self,
-            connection_args: dict = None,
-            **kwargs
-    ):
-        """Initialize the Milvus store class."""
-        super().__init__(**kwargs)
-        if not connection_args:
-            connection_args = DEFAULT_CONNECTION_ARGS
-        host = connection_args["host"]
-        port = connection_args["port"]
-        db_name = connection_args.get("db_name", "default")
-        self.connection_name = f"{host}_{port}_{db_name}"
-        self._connect_to_milvus(connection_args)
-        if utility.has_collection(self.collection_name,
-                                  using=self.connection_name):
-            self.collection = Collection(
-                self.collection_name, using=self.connection_name
-            )
-            self.collection.load()
+    embedding_model: Optional[str] = None
+    similarity_top_k: Optional[int] = 10
 
 
     def _connect_to_milvus(self, connection_args: dict):
@@ -68,6 +55,42 @@ class MilvusStore(Store):
             connections.connect(
                 alias=self.connection_name, **connection_args
             )
+
+    def _new_client(self) -> Any:
+        host = self.connection_args["host"]
+        port = self.connection_args["port"]
+        db_name = self.connection_args.get("db_name", "default")
+        self.connection_name = f"{host}_{port}_{db_name}"
+        self._connect_to_milvus(self.connection_args)
+        if utility.has_collection(self.collection_name,
+                                  using=self.connection_name):
+            self.collection = Collection(
+                self.collection_name, using=self.connection_name
+            )
+            self.collection.load()
+
+    def _initialize_by_component_configer(self,
+                                          milvus_store_configer: ComponentConfiger) -> 'DocProcessor':
+        super()._initialize_by_component_configer(milvus_store_configer)
+        if hasattr(milvus_store_configer, "connection_args"):
+            self.connection_args = milvus_store_configer.connection_args
+        else:
+            self.connection_args = DEFAULT_CONNECTION_ARGS
+        if hasattr(milvus_store_configer, "search_args"):
+            self.search_args = milvus_store_configer.search_args
+        else:
+            self.search_args = DEFAULT_SEARCH_ARGS
+        if hasattr(milvus_store_configer, "index_params"):
+            self.index_params = milvus_store_configer.index_params
+        else:
+            self.index_params = DEFAULT_INDEX_PARAMS
+        if hasattr(milvus_store_configer, "collection_name"):
+            self.collection_name = milvus_store_configer.collection_name
+        if hasattr(milvus_store_configer, "embedding_model"):
+            self.embedding_model = milvus_store_configer.embedding_model
+        if hasattr(milvus_store_configer, "similarity_top_k"):
+            self.similarity_top_k = milvus_store_configer.similarity_top_k
+        return self
 
     def _create_or_load_collection(self,
                                    dim: int = 128,
@@ -96,7 +119,7 @@ class MilvusStore(Store):
             )
         else:
             if not index_params:
-                index_params = DEFAULT_INDEX_PARAMS
+                index_params = self.index_params
             fields = [
                 FieldSchema(name="id", dtype=DataType.VARCHAR, max_length=100,
                             is_primary=True),
@@ -133,18 +156,23 @@ class MilvusStore(Store):
         """
         if not self.collection:
             return self.to_documents([])
-        embedding = query.embedding
+        embedding = query.embeddings
         if self.embedding_model is not None and len(embedding) == 0:
-            embedding = self.embedding_model.get_embeddings([query.query_str])[
-                0]
+            if not self.embedding_model:
+                raise Exception("Milvus store can only save vector, "
+                                "you should provide embedding in your document or specify an embedding model.")
+            embedding = EmbeddingManager().get_instance_obj(
+                    self.embedding_model
+                ).get_embeddings([query.query_str], text_type="query")[0]
+
         if not search_args:
-            search_args = DEFAULT_SEARCH_ARGS
+            search_args = self.search_args
         if len(embedding) > 0:
             query_result = self.collection.search(
-                data=[embedding],
+                data=embedding,
                 anns_field="embedding",
                 param=search_args,
-                limit=query.similarity_top_k,
+                limit=query.similarity_top_k if query.similarity_top_k else self.similarity_top_k,
                 output_fields=["id", "text", "embedding", "metadata"]
             )
         else:
@@ -173,8 +201,15 @@ class MilvusStore(Store):
         """
         for document in documents:
             embedding = document.embedding
-            if self.embedding_model is not None and len(embedding) == 0:
-                embedding = self.embedding_model.get_embeddings([document.text])[0]
+            if len(embedding) == 0:
+                if not self.embedding_model:
+                    raise Exception("Milvus store can only save vector, "
+                                    "you should provide embedding in your document or specify an embedding model.")
+                else:
+                    embedding = EmbeddingManager().get_instance_obj(
+                        self.embedding_model
+                    ).get_embeddings([document.text])[0]
+
             if not self.collection:
                 self._create_or_load_collection(
                     dim=len(embedding),
@@ -196,7 +231,7 @@ class MilvusStore(Store):
                 self.collection.insert(entities)
             self.collection.load()
 
-    def insert_documents(self,
+    def insert_document(self,
                          documents: List[Document],
                          max_length: int = 65535,
                          index_params: dict = None,

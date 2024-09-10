@@ -25,7 +25,7 @@ class Message(BaseModel):
     """
 
     type: Optional[str] = None
-    content: Union[str, List[Union[str, Dict]]] = None
+    content: Optional[Union[str, List[Union[str, Dict]]]] = None
     metadata: Optional[dict] = None
 
     def as_langchain(self):

@@ -5,13 +5,14 @@ profile:
   prompt_version: demo_rag_agent.cn
   llm_model:
     name: 'qwen_llm'
-#    model_name: 'gpt-4o'
 plan:
   planner:
     name: 'rag_planner'
 action:
   tool:
     - 'google_search_tool'
+  knowledge:
+    -
 memory:
   name: 'demo_sql_memory'
 metadata:

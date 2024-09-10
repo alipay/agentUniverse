@@ -46,8 +46,10 @@ def generate_memories(chat_messages: BaseChatMessageHistory) -> list:
         list: the list of messages, with the message type being dict,
         to be given to the user as chat_history in the planner output.
     """
-    return [{"content": message.content, "type": message.type}
-            for message in chat_messages.messages] if chat_messages.messages else []
+    return [
+        {"content": message.content, "type": 'ai' if message.type == 'AIMessageChunk' else message.type}
+        for message in chat_messages.messages
+    ] if chat_messages.messages else []
 
 
 def generate_langchain_message(message_list: list[Message]) -> BaseChatMessageHistory:

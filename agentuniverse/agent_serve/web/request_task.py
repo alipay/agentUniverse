@@ -5,7 +5,6 @@
 # @Author  : fanen.lhy
 # @Email   : fanen.lhy@antgroup.com
 # @FileName: request_task.py
-
 import enum
 from enum import Enum
 import json
@@ -20,6 +19,7 @@ from .dal.request_library import RequestLibrary
 from .dal.entity.request_do import RequestDO
 from .thread_with_result import ThreadWithReturnValue
 from agentuniverse.base.util.logging.logging_util import LOGGER
+from ...agent.output_object import OutputObject
 
 EOF_SIGNAL = '{"type": "EOF"}'
 
@@ -75,6 +75,8 @@ class RequestTask:
             return
         try:
             result = self.thread.result()
+            if isinstance(result, OutputObject):
+                result = result.to_dict()
             yield "data:" + json.dumps({"result": result},
                                        ensure_ascii=False) + "\n\n "
         except Exception as e:
@@ -122,6 +124,7 @@ class RequestTask:
     def stream_run(self):
         """Run the service in a separate thread and yield result stream."""
         self.kwargs['output_stream'] = self.queue
+
         self.thread = ThreadWithReturnValue(target=self.func,
                                             kwargs=self.kwargs)
         self.thread.start()

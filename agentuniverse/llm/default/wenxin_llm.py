@@ -47,11 +47,12 @@ class WenXinLLM(LLM):
     qianfan_sk: str = Field(default_factory=lambda: get_from_env("QIANFAN_SK"))
 
     def _new_client(self):
+        if self.client is None:
+            self.client = qianfan.ChatCompletion(ak=self.qianfan_ak, sk=self.qianfan_sk)
         """Create a new Qianfan client."""
-        return qianfan.ChatCompletion(ak=self.qianfan_ak, sk=self.qianfan_sk)
+        return self.client
 
-    @trace_llm
-    def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
+    def _call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """Run the OpenAI LLM.
 
         Args:
@@ -73,8 +74,7 @@ class WenXinLLM(LLM):
             return self.parse_result(chat_completion)
         return self.generate_stream_result(chat_completion)
 
-    @trace_llm
-    async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
+    async def _acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """Asynchronously run the OpenAI LLM.
 
         Args:

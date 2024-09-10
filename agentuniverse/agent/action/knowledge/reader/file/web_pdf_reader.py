@@ -19,7 +19,7 @@ class WebPdfReader(Reader):
     The pdf file will be downloaded and then parsed by `pdfminer.six`.
     """
 
-    def load_data(self, web_pdf_url: str) -> List[Document]:
+    def _load_data(self, web_pdf_url: str) -> List[Document]:
         if web_pdf_url is None:
             return []
         response = requests.get(web_pdf_url)

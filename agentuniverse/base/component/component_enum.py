@@ -20,8 +20,23 @@ class ComponentEnum(Enum):
     MEMORY = "MEMORY"
     PROMPT = "PROMPT"
     SQLDB_WRAPPER = "SQLDB_WRAPPER"
+    PRODUCT = "PRODUCT"
+    EMBEDDING = "EMBEDDING"
+    DOC_PROCESSOR = "DOC_PROCESSOR"
+    READER = "READER"
+    STORE = "STORE"
+    RAG_ROUTER = "RAG_ROUTER"
+    QUERY_PARAPHRASER = "QUERY_PARAPHRASER"
 
     @staticmethod
     def to_value_list():
         """Return the value list of the enumeration."""
         return [item.value for item in ComponentEnum]
+
+    @staticmethod
+    def from_value(value):
+        """Return the enum member corresponding to the given value."""
+        for item in ComponentEnum:
+            if item.value == value:
+                return item
+        raise ValueError(f"No enum member with value {value}")

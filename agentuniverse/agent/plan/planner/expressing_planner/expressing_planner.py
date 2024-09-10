@@ -5,7 +5,6 @@
 # @Email   : lc299034@antgroup.com
 # @FileName: expressing_planner.py
 """Expressing planner module."""
-import asyncio
 
 from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
@@ -47,7 +46,7 @@ class ExpressingPlanner(Planner):
             memory.get(**planner_input)) if memory else InMemoryChatMessageHistory()
 
         chain_with_history = RunnableWithMessageHistory(
-            prompt.as_langchain() | llm.as_langchain(),
+            prompt.as_langchain() | llm.as_langchain_runnable(agent_model.llm_params()),
             lambda session_id: lc_chat_history,
             history_messages_key=memory.memory_key if memory else 'chat_history',
             input_messages_key=self.input_key,

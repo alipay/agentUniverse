@@ -86,17 +86,19 @@ class Planner(ComponentBase):
         # generate a list of messages from the given chat history
         messages: list[Message] = generate_messages(chat_history)
 
-        llm_name = agent_model.profile.get('llm_model', {}).get('name')
+        llm_model = agent_model.memory.get('llm_model') or dict()
+        llm_name = llm_model.get('name') or agent_model.profile.get('llm_model').get('name')
         llm: LLM = LLMManager().get_instance_obj(llm_name)
 
         params: dict = dict()
         params['llm_name'] = llm_name
         params['llm'] = llm
+        params['messages'] = messages
 
+        params['input_key'] = self.input_key
+        params['output_key'] = self.output_key
         # init memory and add messages to it
-        copied_memory = memory.set_by_agent_model(**params)
-        copied_memory.add(messages, **planner_input)
-        return copied_memory
+        return memory.set_by_agent_model(**params)
 
     def run_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
         """Tool and knowledge processing.
@@ -124,10 +126,11 @@ class Planner(ComponentBase):
             knowledge: Knowledge = KnowledgeManager().get_instance_obj(knowledge_name)
             if knowledge is None:
                 continue
-            knowledge_res: List[Document] = knowledge.store.query(
-                Query(query_str=input_object.get_data(self.input_key), similarity_top_k=2), **input_object.to_dict())
-            for document in knowledge_res:
-                action_result.append(document.text)
+            knowledge_res: List[Document] = knowledge.query_knowledge(
+                query_str=input_object.get_data(self.input_key),
+                **input_object.to_dict()
+            )
+            action_result.append(knowledge.to_llm(knowledge_res))
 
         for agent_name in agents:
             agent = AgentManager().get_instance_obj(agent_name)
@@ -162,7 +165,7 @@ class Planner(ComponentBase):
         """
         llm_name = agent_model.profile.get('llm_model').get('name')
         llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name)
-        return llm.set_by_agent_model(**agent_model.profile.get('llm_model'))
+        return llm
 
     def initialize_by_component_configer(self, component_configer: PlannerConfiger) -> 'Planner':
         """Initialize the planner by the PlannerConfiger object.
