@@ -88,7 +88,12 @@ class RequestTask:
 
     async def async_receive_steps(self) -> AsyncIterator[str]:
         while True:
-            output: str = await self.async_queue.get()
+            try:
+                output: str = await asyncio.wait_for(self.async_queue.get(), timeout=0.5)
+            except asyncio.TimeoutError:
+                await asyncio.sleep(1)
+                print("Waiting for data timed out. Retrying...")
+                continue
             if output is None:
                 break
             if output == EOF_SIGNAL:

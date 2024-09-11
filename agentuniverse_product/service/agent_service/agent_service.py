@@ -157,51 +157,49 @@ class AgentService:
         start_time = time.time()
         task = RequestTask(agent_run_queue, False,
                            **agent_input_dict)
-        # get output stream
-        output_iterator = task.stream_run()
 
-        final_result: dict = dict()
-        error_result: dict = dict()
         # generate iterator
-        for chunk in output_iterator:
-            chunk = chunk.replace("data:", "", 1)
-            chunk_dict = json.loads(chunk)
+        for chunk in task.stream_run():
+            chunk_dict = json.loads(chunk.replace("data:", "", 1))
             if "process" in chunk_dict:
                 data = chunk_dict['process'].get('data')
-                cur_agent_id = data.get('agent_info', {}).get('name', '')
-                if data and "chunk" in data:
-                    yield {'output': data['chunk'], 'type': 'token', 'agent_id': cur_agent_id}
-                elif data and "output" in data:
-                    yield {'output': data['output'], 'type': 'intermediate_steps', 'agent_id': cur_agent_id}
-            elif "result" in chunk_dict:
-                final_result = chunk_dict['result']
-            elif "error" in chunk_dict:
-                error_result = chunk_dict['error']
-
-        end_time = time.time()
-        # calculate response time
-        response_time = round((end_time - start_time) * 1000, 2)
-
-        if len(final_result) > 0:
-            output = final_result.get('output')
-
-            # add agent chat history
-            session_id, message_id = AgentService().add_agent_chat_history(agent_id, session_id, input, output,
-                                                                           datetime.fromtimestamp(end_time))
-
-            # get and clear invocation chain and invocation chain.
-            invocation_chain = Monitor.get_invocation_chain()
-            token_usage = Monitor.get_token_usage()
-            Monitor.clear_invocation_chain()
-            Monitor.clear_token_usage()
-
-            # return final yield
-            yield {'response_time': response_time, 'message_id': message_id, 'session_id': session_id, 'output': output,
-                   'start_time': datetime.fromtimestamp(start_time).strftime("%Y-%m-%d %H:%M:%S"),
-                   'end_time': datetime.fromtimestamp(end_time).strftime("%Y-%m-%d %H:%M:%S"),
-                   'invocation_chain': invocation_chain, 'token_usage': token_usage, 'type': 'final_result'}
-        else:
-            yield {'error': error_result, 'type': 'error'}
+                if data:
+                    yield_type = 'token' if 'chunk' in data else 'intermediate_steps'
+                    yield {'output': data.get('chunk' if yield_type == 'token' else 'output'),
+                           'type': yield_type,
+                           'agent_id': data.get('agent_info', {}).get('name', '')}
+            elif "result" in chunk_dict or "error" in chunk_dict:
+                end_time = time.time()
+                # calculate response time
+                response_time = round((end_time - start_time) * 1000, 2)
+                if "result" in chunk_dict:
+                    output = chunk_dict['result'].get('output')
+                    # add agent chat history
+                    session_id, message_id = AgentService().add_agent_chat_history(
+                        agent_id, session_id, input, output, datetime.fromtimestamp(end_time)
+                    )
+                    # get and clear contexts
+                    invocation_chain = Monitor.get_invocation_chain()
+                    token_usage = Monitor.get_token_usage()
+                    Monitor.clear_invocation_chain()
+                    Monitor.clear_token_usage()
+                    # return final yield
+                    yield {
+                        'response_time': response_time,
+                        'message_id': message_id,
+                        'session_id': session_id,
+                        'output': output,
+                        'start_time': datetime.fromtimestamp(start_time).strftime("%Y-%m-%d %H:%M:%S"),
+                        'end_time': datetime.fromtimestamp(end_time).strftime("%Y-%m-%d %H:%M:%S"),
+                        'invocation_chain': invocation_chain,
+                        'token_usage': token_usage,
+                        'type': 'final_result'
+                    }
+                else:
+                    # clear contexts
+                    Monitor.clear_invocation_chain()
+                    Monitor.clear_token_usage()
+                    yield {'error': chunk_dict['error'], 'type': 'error'}
 
     @staticmethod
     async def async_stream_chat(agent_id: str, session_id: str, input: str) -> AsyncIterator:
@@ -224,53 +222,49 @@ class AgentService:
         # invoke agent
         start_time = time.time()
         task = RequestTask(async_agent_run_queue, False, **agent_input_dict)
-        output_iterator = task.async_stream_run()
 
-        final_result: dict = dict()
-        error_result: dict = dict()
         # generate async iterator
-        async for chunk in output_iterator:
-            chunk = chunk.replace("data:", "", 1)
-            chunk_dict = json.loads(chunk)
+        async for chunk in task.async_stream_run():
+            chunk_dict = json.loads(chunk.replace("data:", "", 1))
             if "process" in chunk_dict:
                 data = chunk_dict['process'].get('data')
-                cur_agent_id = data.get('agent_info', {}).get('name', '')
-                if data and "chunk" in data:
-                    yield {'output': data['chunk'], 'type': 'token', 'agent_id': cur_agent_id}
-                elif data and "output" in data:
-                    yield {'output': data['output'], 'type': 'intermediate_steps', 'agent_id': cur_agent_id}
-            elif "result" in chunk_dict:
-                final_result = chunk_dict['result']
-            elif "error" in chunk_dict:
-                error_result = chunk_dict['error']
-
-        end_time = time.time()
-        # calculate response time
-        response_time = round((end_time - start_time) * 1000, 2)
-
-        if len(final_result) > 0:
-            output = final_result.get('output')
-
-            # add agent chat history
-            session_id, message_id = AgentService().add_agent_chat_history(
-                agent_id, session_id, input, output, datetime.fromtimestamp(end_time)
-            )
-
-            # get and clear invocation chain and invocation chain.
-            invocation_chain = Monitor.get_invocation_chain()
-            token_usage = Monitor.get_token_usage()
-            Monitor.clear_invocation_chain()
-            Monitor.clear_token_usage()
-
-            # return final yield
-            yield {
-                'response_time': response_time, 'message_id': message_id, 'session_id': session_id, 'output': output,
-                'start_time': datetime.fromtimestamp(start_time).strftime("%Y-%m-%d %H:%M:%S"),
-                'end_time': datetime.fromtimestamp(end_time).strftime("%Y-%m-%d %H:%M:%S"),
-                'invocation_chain': invocation_chain, 'token_usage': token_usage, 'type': 'final_result'
-            }
-        else:
-            yield {'error': error_result, 'type': 'error'}
+                if data:
+                    yield_type = 'token' if 'chunk' in data else 'intermediate_steps'
+                    yield {'output': data.get('chunk' if yield_type == 'token' else 'output'),
+                           'type': yield_type,
+                           'agent_id': data.get('agent_info', {}).get('name', '')}
+            elif "result" in chunk_dict or "error" in chunk_dict:
+                end_time = time.time()
+                # calculate response time
+                response_time = round((end_time - start_time) * 1000, 2)
+                if "result" in chunk_dict:
+                    output = chunk_dict['result'].get('output')
+                    # add agent chat history
+                    session_id, message_id = AgentService().add_agent_chat_history(
+                        agent_id, session_id, input, output, datetime.fromtimestamp(end_time)
+                    )
+                    # get and clear contexts
+                    invocation_chain = Monitor.get_invocation_chain()
+                    token_usage = Monitor.get_token_usage()
+                    Monitor.clear_invocation_chain()
+                    Monitor.clear_token_usage()
+                    # return final yield
+                    yield {
+                        'response_time': response_time,
+                        'message_id': message_id,
+                        'session_id': session_id,
+                        'output': output,
+                        'start_time': datetime.fromtimestamp(start_time).strftime("%Y-%m-%d %H:%M:%S"),
+                        'end_time': datetime.fromtimestamp(end_time).strftime("%Y-%m-%d %H:%M:%S"),
+                        'invocation_chain': invocation_chain,
+                        'token_usage': token_usage,
+                        'type': 'final_result'
+                    }
+                else:
+                    # clear contexts
+                    Monitor.clear_invocation_chain()
+                    Monitor.clear_token_usage()
+                    yield {'error': chunk_dict['error'], 'type': 'error'}
 
     @staticmethod
     def create_agent(agent_dto: AgentDTO) -> str:
