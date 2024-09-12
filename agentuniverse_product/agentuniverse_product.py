@@ -6,6 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: agentuniverse_product.py
 import sys
+from typing import List
 
 from agentuniverse.base.agentuniverse import AgentUniverse
 from agentuniverse.base.component.application_component_manager import ApplicationComponentManager
@@ -59,14 +60,18 @@ class AgentUniverseProduct(object):
         self.__scan_and_register_product(self.__config_container.app_configer)
 
         # start the product ui server
+        config = configer.value.get('MAGENT_UI', {})
         try:
-            from magent_ui import launch
-            launch()
+            from magent_ui import launch 
         except ImportError as e:
+            print(e)
             raise ImportError(
                 "Could not start product server provided by magent-ui."
                 " Please install it with `pip install magent-ui ruamel.yaml`."
             )
+        launch(**config)
+        
+            
 
     def __init_product_tables(self):
         """Initialize the product tables including session and message tables."""

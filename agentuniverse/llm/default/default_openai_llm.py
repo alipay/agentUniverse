@@ -47,8 +47,7 @@ class DefaultOpenAILLM(OpenAIStyleLLM):
     api_base: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_API_BASE"))
     proxy: Optional[str] = Field(default_factory=lambda: get_from_env("OPENAI_PROXY"))
 
-    @trace_llm
-    def call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
+    def _call(self, messages: list, **kwargs: Any) -> Union[LLMOutput, Iterator[LLMOutput]]:
         """ The call method of the LLM.
 
         Users can customize how the model interacts by overriding call method of the LLM class.
@@ -57,10 +56,9 @@ class DefaultOpenAILLM(OpenAIStyleLLM):
             messages (list): The messages to send to the LLM.
             **kwargs: Arbitrary keyword arguments.
         """
-        return super().call(messages, **kwargs)
+        return super()._call(messages, **kwargs)
 
-    @trace_llm
-    async def acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
+    async def _acall(self, messages: list, **kwargs: Any) -> Union[LLMOutput, AsyncIterator[LLMOutput]]:
         """ The async call method of the LLM.
 
         Users can customize how the model interacts by overriding acall method of the LLM class.
@@ -69,7 +67,7 @@ class DefaultOpenAILLM(OpenAIStyleLLM):
             messages (list): The messages to send to the LLM.
             **kwargs: Arbitrary keyword arguments.
         """
-        return await super().acall(messages, **kwargs)
+        return await super()._acall(messages, **kwargs)
 
     def max_context_length(self) -> int:
         """Max context length.

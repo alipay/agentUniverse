@@ -32,8 +32,7 @@ class DashscopeEmbedding(Embedding):
         default_factory=lambda: get_from_env("DASHSCOPE_API_KEY")
     )
 
-
-    def get_embeddings(self, texts: List[str]) -> List[List[float]]:
+    def get_embeddings(self, texts: List[str], **kwargs) -> List[List[float]]:
         """
         Retrieve text embeddings for a list of input texts.
 
@@ -61,7 +60,7 @@ class DashscopeEmbedding(Embedding):
                 },
                 data=json.dumps(post_params, ensure_ascii=False).encode(
                     "utf-8"),
-                timeout=120
+                timeout=300
             )
             resp_json = response.json()
             return resp_json
@@ -72,9 +71,14 @@ class DashscopeEmbedding(Embedding):
             "model": self.embedding_model_name,
             "input": {},
             "parameters": {
-                "text_type": "query"
             }
         }
+        if self.embedding_model_name == "text-embedding-v3":
+            post_params["parameters"][
+                "dimension"] = self.embedding_dims if self.embedding_dims else 1024
+            post_params["parameters"][
+                "output_type"] = kwargs["output_type"] if "output_type" in kwargs else "dense"
+        post_params["parameters"]["text_type"] = kwargs["text_type"] if "text_type" in kwargs else "document"
 
         for batch in batched(texts):
             post_params["input"]["texts"] = batch
@@ -92,7 +96,7 @@ class DashscopeEmbedding(Embedding):
                                 f"error message:{error_message}")
         return result
 
-    async def async_get_embeddings(self, texts: List[str]) -> List[List[float]]:
+    async def async_get_embeddings(self, texts: List[str], **kwargs) -> List[List[float]]:
         """
         Async version of get_embeddings.
 
@@ -121,7 +125,7 @@ class DashscopeEmbedding(Embedding):
                         },
                         data=json.dumps(post_params, ensure_ascii=False).encode(
                             "utf-8"),
-                        timeout=120,
+                        timeout=300,
                 ) as resp:
                     resp_json = await resp.json()
             return resp_json
@@ -135,6 +139,14 @@ class DashscopeEmbedding(Embedding):
                 "text_type": "query"
             }
         }
+        if self.embedding_model_name == "text-embedding-v3":
+            post_params["parameters"][
+                "dimension"] = self.embedding_dims if self.embedding_dims else 1024
+            post_params["parameters"][
+                "output_type"] = kwargs[
+                "output_type"] if "output_type" in kwargs else "dense"
+        post_params["parameters"]["text_type"] = kwargs[
+            "text_type"] if "text_type" in kwargs else "document"
 
         for batch in batched(texts):
             post_params["input"]["texts"] = batch

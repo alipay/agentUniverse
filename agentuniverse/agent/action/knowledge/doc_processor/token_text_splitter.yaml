@@ -1,0 +1,8 @@
+name: 'token_text_splitter'
+description: 'langchain token text splitter'
+chunk_size: 200
+chunk_overlap: 20
+metadata:
+  type: 'DOC_PROCESSOR'
+  module: 'agentuniverse.agent.action.knowledge.doc_processor.token_text_splitter'
+  class: 'TokenTextSplitter'

@@ -25,8 +25,7 @@ plan:
     name: 'rag_planner'
 action:
   knowledge:
-    - 'civil_law_knowledge'
-    - 'criminal_law_knowledge'
+    - 'law_knowledge'
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.rag_agent_case.law_rag_agent'

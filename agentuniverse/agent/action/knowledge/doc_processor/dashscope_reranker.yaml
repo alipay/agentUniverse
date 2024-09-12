@@ -1,0 +1,6 @@
+name: 'dashscope_reranker'
+description: 'reranker use dashscope api'
+metadata:
+  type: 'DOC_PROCESSOR'
+  module: 'agentuniverse.agent.action.knowledge.doc_processor.dashscope_reranker'
+  class: 'DashscopeReranker'

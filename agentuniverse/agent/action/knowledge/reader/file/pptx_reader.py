@@ -6,7 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: pptx_parser.py
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from agentuniverse.agent.action.knowledge.reader.reader import Reader
 from agentuniverse.agent.action.knowledge.store.document import Document
@@ -15,7 +15,7 @@ from agentuniverse.agent.action.knowledge.store.document import Document
 class PptxReader(Reader):
     """Pptx reader."""
 
-    def load_data(self, file: Path, ext_info: Optional[Dict] = None) -> List[Document]:
+    def _load_data(self, file: Union[str, Path], ext_info: Optional[Dict] = None) -> List[Document]:
         """Parse the pptx file.
 
         Note:
@@ -27,6 +27,8 @@ class PptxReader(Reader):
             raise ImportError(
                 "python-pptx is required to read pptx files: `pip install python-pptx`"
             )
+        if isinstance(file, str):
+            file = Path(file)
         presentation = Presentation(file)
         document_list = []
         for slide_number, slide in enumerate(presentation.slides, start=1):

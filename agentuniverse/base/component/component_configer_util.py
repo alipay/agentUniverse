@@ -15,6 +15,7 @@ from agentuniverse.agent.memory.memory_manager import MemoryManager
 from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
 from agentuniverse.agent_serve.service_manager import ServiceManager
 from agentuniverse.agent_serve.service_configer import ServiceConfiger
+from agentuniverse.base.config.component_configer.configers.workflow_configer import WorkflowConfiger
 from agentuniverse.database.sqldb_wrapper_manager import SQLDBWrapperManager
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
@@ -29,6 +30,15 @@ from agentuniverse.base.config.component_configer.configers.llm_configer import 
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt_manager import PromptManager
+from agentuniverse.workflow.workflow_manager import WorkflowManager
+
+from agentuniverse.agent.action.knowledge.embedding.embedding_manager import EmbeddingManager
+from agentuniverse.agent.action.knowledge.doc_processor.doc_processor_manager import DocProcessorManager
+from agentuniverse.agent.action.knowledge.reader.reader_manager import ReaderManager
+from agentuniverse.agent.action.knowledge.query_paraphraser.query_paraphraser_manager import QueryParaphraserManager
+from agentuniverse.agent.action.knowledge.store.store_manager import StoreManager
+from agentuniverse.agent.action.knowledge.rag_router.rag_router_manager import RagRouterManager
+
 
 
 class ComponentConfigerUtil(object):
@@ -44,6 +54,13 @@ class ComponentConfigerUtil(object):
         ComponentEnum.SERVICE: ServiceConfiger,
         ComponentEnum.PROMPT: PromptConfiger,
         ComponentEnum.SQLDB_WRAPPER: SQLDBWrapperConfiger,
+        ComponentEnum.WORKFLOW: WorkflowConfiger,
+        ComponentEnum.EMBEDDING: ComponentConfiger,
+        ComponentEnum.DOC_PROCESSOR: ComponentConfiger,
+        ComponentEnum.READER: ComponentConfiger,
+        ComponentEnum.STORE: ComponentConfiger,
+        ComponentEnum.RAG_ROUTER: ComponentConfiger,
+        ComponentEnum.QUERY_PARAPHRASER: ComponentConfiger,
         ComponentEnum.DEFAULT: ComponentConfiger
     }
 
@@ -56,7 +73,14 @@ class ComponentConfigerUtil(object):
         ComponentEnum.MEMORY: MemoryManager,
         ComponentEnum.SERVICE: ServiceManager,
         ComponentEnum.SQLDB_WRAPPER: SQLDBWrapperManager,
-        ComponentEnum.PROMPT: PromptManager
+        ComponentEnum.PROMPT: PromptManager,
+        ComponentEnum.WORKFLOW: WorkflowManager,
+        ComponentEnum.EMBEDDING: EmbeddingManager,
+        ComponentEnum.DOC_PROCESSOR: DocProcessorManager,
+        ComponentEnum.READER: ReaderManager,
+        ComponentEnum.STORE: StoreManager,
+        ComponentEnum.RAG_ROUTER: RagRouterManager,
+        ComponentEnum.QUERY_PARAPHRASER: QueryParaphraserManager,
     }
 
     @classmethod

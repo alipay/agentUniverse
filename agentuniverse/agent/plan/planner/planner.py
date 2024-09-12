@@ -118,10 +118,11 @@ class Planner(ComponentBase):
             knowledge: Knowledge = KnowledgeManager().get_instance_obj(knowledge_name)
             if knowledge is None:
                 continue
-            knowledge_res: List[Document] = knowledge.query_knowledge(query_str=input_object.get_data(self.input_key),
-                                                                      **input_object.to_dict())
-            for document in knowledge_res:
-                action_result.append(document.text)
+            knowledge_res: List[Document] = knowledge.query_knowledge(
+                query_str=input_object.get_data(self.input_key),
+                **input_object.to_dict()
+            )
+            action_result.append(knowledge.to_llm(knowledge_res))
 
         for agent_name in agents:
             agent = AgentManager().get_instance_obj(agent_name)
@@ -156,7 +157,7 @@ class Planner(ComponentBase):
         """
         llm_name = agent_model.profile.get('llm_model').get('name')
         llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name)
-        return llm.set_by_agent_model(**agent_model.profile.get('llm_model'))
+        return llm
 
     def initialize_by_component_configer(self, component_configer: PlannerConfiger) -> 'Planner':
         """Initialize the planner by the PlannerConfiger object.

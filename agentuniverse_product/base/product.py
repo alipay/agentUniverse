@@ -6,6 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: product.py
 from typing import Optional
+import os
 
 from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_configer_util import ComponentConfigerUtil
@@ -22,11 +23,20 @@ class Product(ComponentBase):
     nickname: Optional[str] = None
     type: Optional[str] = None
     avatar: Optional[str] = None
+    description: Optional[str] = None
     _instance: Optional[ComponentBase] = None
 
     @property
     def instance(self) -> ComponentBase:
         return self._instance
+
+    def get_ctime(self) -> float:
+        """Return the product creation time."""
+        return os.path.getctime(self.component_config_path)
+
+    def get_mtime(self) -> float:
+        """Return the product last modification time."""
+        return os.path.getmtime(self.component_config_path)
 
     def get_instance_code(self) -> str:
         """Return the full name of the product."""
@@ -50,6 +60,8 @@ class Product(ComponentBase):
             self.type = product_configer.type
         if product_configer.avatar:
             self.avatar = product_configer.avatar
+        if product_configer.description:
+            self.description = product_configer.description
         self.init_instance()
         return self
 

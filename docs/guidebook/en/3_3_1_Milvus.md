@@ -17,26 +17,35 @@ These two commands will pull the Milvus image and start a container, providing d
 pip install pymilvus
 ```
 
-### What can I do with Milvus
-
-You can use Milvus in the [Knowledge component](2_2_4_Knowledge.md) to store and query knowledge. You can create a storage component using Milvus as follows:
-
-```python
-from agentuniverse.agent.action.knowledge.store.milvus_store import MilvusStore
-from agentuniverse.agent.action.knowledge.embedding.openai_embedding import OpenAIEmbedding
-from agentuniverse.agent.action.knowledge.knowledge import Knowledge
-
-init_params = {}
-init_params['name'] = 'test_knowledge'
-init_params['description'] = 'test_knowledge_description'
-init_params['store'] = MilvusStore(
-    connection_args={"host": "localhost", "port": "19530"},
-    collection_name="test_knowledge", 
-    embedding_model=OpenAIEmbedding(
-            embedding_model_name='text-embedding-ada-002'
-    )
-)
-knowledge = Knowledge(**init_params)
+### How to Configure Milvus Components
+```yaml
+name: 'milvus_store'
+description: 'a store based on milvus'
+connection_args:
+  host: '127.0.0.1'
+  port: '19530'
+search_args:
+  metric_type: "L2"
+  params:
+    nprobe: 10
+index_params:
+  metric_type: "L2"
+  index_type: "HNSW"
+  params:
+    M: 8
+    efConstruction: 32
+embedding_model: 'dashscope_embedding'
+similarity_top_k: 100
+metadata:
+  type: 'STORE'
+  module: 'agentuniverse.agent.action.knowledge.store.milvus_store'
+  class: 'MilvusStore'
 ```
+- connection_args: Parameters for connecting to the Milvus database, including the host address (host) and port number (port).
+- search_args: Search parameters, defining the distance metric type (metric_type) used during searches and related parameters such as nprobe.
+- index_params: Indexing parameters, specifying the index type (index_type), distance metric type (metric_type), and specific parameters for building the index, such as M and efConstruction.
+- embedding_model: The model used to generate embedding vectors, specified here as dashscope_embedding.
+- similarity_top_k: The number of most similar results returned in similarity search.
+### Usage
+[Knowledge_Define_And_Use](2_2_4_Knowledge_Define_And_Use.md)
 
-The above code will create a Milvus-based Knowledge instance. For detailed usage of Knowledge, you can refer to the [Knowledge component](2_2_4_Knowledge.md) or the code `tests/test_agentuniverse/unit/agent/action/knowledge/test_knowledge_with_milvus.py`.

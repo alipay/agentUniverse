@@ -5,7 +5,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: document.py
 import uuid
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, Set
 
 from langchain_core.documents.base import Document as LCDocument
 from pydantic import BaseModel, Field, model_validator
@@ -20,11 +20,14 @@ class Document(BaseModel):
         metadata (Dict[str, Any]): Metadata associated with the document.
         embedding (List[float]): Embedding data associated with the document
     """
+    class Config:
+        arbitrary_types_allowed = True
 
     id: str = None
     text: Optional[str] = ""
     metadata: Optional[Dict[str, Any]] = None
     embedding: List[float] = Field(default_factory=list)
+    keywords: Set[str] = Field(default_factory=set)
 
     @model_validator(mode='before')
     def create_id(cls, values):

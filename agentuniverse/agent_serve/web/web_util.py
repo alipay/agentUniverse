@@ -5,7 +5,7 @@
 # @Author  : fanen.lhy
 # @Email   : fanen.lhy@antgroup.com
 # @FileName: web_util.py
-
+import asyncio
 import inspect
 import queue
 import json
@@ -69,8 +69,8 @@ def service_run_queue(service_id, **kwargs):
 
 
 def agent_run_queue(agent_id, **kwargs):
-    """
-    The func used in a separate thread to run an agent, and the result will be saved in a queue if provided.
+    """The func used in a separate thread to run an agent, and the result will be saved in a queue if provided.
+
     Args:
         agent_id: The agent id
         **kwargs: Arbitrary keyword arguments.
@@ -83,6 +83,17 @@ def agent_run_queue(agent_id, **kwargs):
     finally:
         if stream:
             stream.put_nowait('{"type": "EOF"}')
+
+
+async def async_agent_run_queue(agent_id, **kwargs):
+    stream: asyncio.Queue = kwargs.get('output_stream')
+    try:
+        agent: Agent = await asyncio.to_thread(AgentManager().get_instance_obj, agent_id)
+        res = await asyncio.to_thread(agent.run, **kwargs)
+        return res
+    finally:
+        if stream:
+            await asyncio.to_thread(stream.put_nowait, '{"type": "EOF"}')
 
 
 def make_standard_response(success: bool,

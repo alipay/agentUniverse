@@ -14,6 +14,8 @@ from pydantic import Field
 
 from agentuniverse.agent.action.knowledge.embedding.embedding import Embedding
 from agentuniverse.base.util.env_util import get_from_env
+from agentuniverse.base.config.component_configer.component_configer import \
+    ComponentConfiger
 
 
 class OpenAIEmbedding(Embedding):
@@ -95,3 +97,21 @@ class OpenAIEmbedding(Embedding):
         """Convert the agentUniverse(aU) openai embedding class to the langchain openai embedding class."""
         return OpenAIEmbeddings(openai_api_key=self.openai_api_key,
                                 client=self.client.embeddings, async_client=self.async_client.embeddings)
+
+    def _initialize_by_component_configer(self,
+                                          embedding_configer: ComponentConfiger) \
+            -> 'Embedding':
+        """Initialize the embedding by the ComponentConfiger object.
+
+        Args:
+            embedding_configer(ComponentConfiger): A configer contains embedding
+            basic info.
+        Returns:
+            Embedding: A embedding instance.
+        """
+        super()._initialize_by_component_configer(embedding_configer)
+        if hasattr(embedding_configer, "embedding_dims"):
+            self.dimensions = embedding_configer.embedding_dims
+        if hasattr(embedding_configer, "openai_client_args"):
+            self.openai_client_args = embedding_configer.openai_client_args
+        return self
