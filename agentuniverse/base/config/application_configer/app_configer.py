@@ -27,6 +27,7 @@ class AppConfiger(object):
         self.__core_sqldb_wrapper_package_list: Optional[list[str]] = None
         self.__core_prompt_package_list: Optional[list[str]] = None
         self.__core_product_package_list: Optional[list[str]] = None
+        self.__core_workflow_package_list: Optional[list[str]] = None
         self.__core_embedding_package_list: Optional[list[str]] = None
         self.__core_doc_processor_package_list: Optional[list[str]] = None
         self.__core_reader_package_list: Optional[list[str]] = None
@@ -93,6 +94,10 @@ class AppConfiger(object):
         return self.__core_product_package_list
 
     @property
+    def core_workflow_package_list(self) -> Optional[list[str]]:
+        return self.__core_workflow_package_list
+
+    @property
     def core_embedding_package_list(self) -> Optional[list[str]]:
         """Return the embedding package list of the core."""
         return self.__core_embedding_package_list
@@ -143,7 +148,8 @@ class AppConfiger(object):
         self.__core_sqldb_wrapper_package_list = configer.value.get('CORE_PACKAGE', {}).get('sqldb_wrapper')
         self.__core_prompt_package_list = configer.value.get('CORE_PACKAGE', {}).get('prompt')
         self.__core_product_package_list = configer.value.get('CORE_PACKAGE', {}).get('product')
-        self.__core_embedding_package_list = configer.value.get('CORE_PACKAGE', {}).get( 'embedding')
+        self.__core_workflow_package_list = configer.value.get('CORE_PACKAGE', {}).get('workflow')
+        self.__core_embedding_package_list = configer.value.get('CORE_PACKAGE', {}).get('embedding')
         self.__core_doc_processor_package_list = configer.value.get('CORE_PACKAGE', {}).get('doc_processor')
         self.__core_reader_package_list = configer.value.get('CORE_PACKAGE', {}).get('reader')
         self.__core_store_package_list = configer.value.get('CORE_PACKAGE', {}).get('store')

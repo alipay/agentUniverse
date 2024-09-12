@@ -18,7 +18,7 @@ class ProductApplication:
 
     @classmethod
     def start(cls):
-        AgentUniverse().start()
+        AgentUniverse().start(core_mode=True)
         AgentUniverseProduct().start()
 
 
