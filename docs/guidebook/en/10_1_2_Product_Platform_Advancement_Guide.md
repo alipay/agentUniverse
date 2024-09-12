@@ -6,7 +6,9 @@ In this section, we will show you how to:
 * Custom Plugin Insertion Feature
 
 ## Workflow Agent Orchestration Feature
-
+``` text
+Note: existing users of the agentUniverse product platform, please upgrade the magent-ui package to version 0.1.17.
+```
 ### Create Workflow Agent
 On the aU-product homepage, click the "Create Agent" button to the right of the agent tab, and select the workflow type agent.
 ![agentuniverse_product_create_workflow_agent](../_picture/create_workflow_agent.png)
