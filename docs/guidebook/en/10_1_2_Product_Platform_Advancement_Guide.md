@@ -7,7 +7,9 @@ In this section, we will show you how to:
 
 ## Workflow Agent Orchestration Feature
 ``` text
-Note: existing users of the agentUniverse product platform, please upgrade the magent-ui package to version 0.1.17.
+Note: For old users of the agentUniverse productization platform orchestration capability, please upgrade the magent-ui package version to 0.1.17, and the corresponding aU version must not be lower than 0.0.13. You can use the following command for version-specific installation:
+
+pip install magent-ui==0.1.17 ruamel.yaml --force-reinstall
 ```
 ### Create Workflow Agent
 On the aU-product homepage, click the "Create Agent" button to the right of the agent tab, and select the workflow type agent.

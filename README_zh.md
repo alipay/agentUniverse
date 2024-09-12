@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.12-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.13-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -65,13 +65,14 @@ pip install magent-ui ruamel.yaml
 运行sample_standard_app/app/boostrap下的[product_application.py](sample_standard_app/app/bootstrap/product_application.py)文件，一键启动。
 
 更多详情参考 [产品化平台快速开始](./docs/guidebook/zh/10_1_1_产品化平台快速开始.md)
+与 [产品化平台进阶指南](./10_1_2_产品化平台进阶指南.md) 。
 
 本功能由 [difizen](https://github.com/difizen/magent) X agentUniverse联合推出。
 
 ****************************************
 ## 案例与样例工程
 ### 🌟 使用案例
-[法律咨询Agent](./docs/guidebook/zh/7_1_1_法律咨询案例.md)
+[法律咨询Agent_v2](./docs/guidebook/zh/7_1_1_法律咨询案例.md)
 
 [Python代码生成与执行Agent](./docs/guidebook/zh/7_1_1_Python自动执行案例.md)
 
@@ -81,6 +82,8 @@ pip install magent-ui ruamel.yaml
 
 [吴恩达反思工作流翻译智能体复刻](./docs/guidebook/zh/7_1_1_翻译案例.md)
 
+#### 🚩 如何快速构建RAG智能体
+RAG组件全面升级，教程提供一个在agentUniverse中快速构建一个RAG智能体，可查看文档[如何构建RAG智能体](./docs/guidebook/zh/2_2_4_如何构建RAG智能体.md)，更多原理性内容可查看文档[RAG介绍](./docs/guidebook/zh/2_2_4_RAG.md)。
 
 #### 🚩 DataAgent - 数据自治智能体
 agentUniverse推出了DataAgent（Minimum Viable Product版本）, DataAgent旨在使用智能体能力让您的Agent拥有自我评价与演进的能力。详情见文档: [DataAgent - 数据自治智能体](./docs/guidebook/zh/8_1_1_数据自治智能体.md)

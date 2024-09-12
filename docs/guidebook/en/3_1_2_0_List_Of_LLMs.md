@@ -10,7 +10,8 @@ The platform has currently integrated the following list of models; please refer
 | [BaiChuan](3_1_2_BaiChuan_LLM_Use.md) |
 | [Claude](3_1_2_Claude_LLM_Use.md)     |
 | [ollama](3_1_2_Ollama_LLM_Use.md)     |
-| [DeepSeek](3_1_2_DeepSeek_LLM_Use.md)      |
+| [DeepSeek](3_1_2_DeepSeek_LLM_Use.md) |
+| [GLM](3_1_2_GLM_LLM_Use.md)      |
 
 To facilitate the integration of models with OpenAI-style protocols, we offer a wrapper object based on the OpenAI general protocol. See [OpenAIStyleLLM](3_1_2_OpenAIStyleLLM_Use.md).
 
