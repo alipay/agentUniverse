@@ -1,0 +1,11 @@
+name: 'demo_chroma_memory'
+description: 'demo chroma memory'
+type: 'long_term'
+memory_key: 'chat_history'
+max_tokens: 2000
+persist_path: '../../DB/memory.db'
+embedding_model: 'dashscope_embedding'
+metadata:
+  type: 'MEMORY'
+  module: 'agentuniverse.agent.memory.chroma_memory'
+  class: 'ChromaMemory'

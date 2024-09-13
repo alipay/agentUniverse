@@ -3,13 +3,13 @@ info:
   description: 'demo reviewing agent'
 profile:
   llm_model:
-    name: 'qwen_llm'
+    name: 'default_deepseek_llm'
     temperature: 0.5
 plan:
   planner:
     name: 'reviewing_planner'
 memory:
-  name: ''
+  name: 'demo_sql_memory'
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.default.reviewing_agent.reviewing_agent'

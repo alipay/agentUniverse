@@ -10,6 +10,8 @@ plan:
     executing: 'demo_executing_agent'
     expressing: 'demo_expressing_agent'
     reviewing: 'demo_reviewing_agent'
+memory:
+  name: 'demo_sql_memory'
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.default.peer_agent.peer_agent'

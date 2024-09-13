@@ -4,13 +4,13 @@ info:
 profile:
   prompt_version: demo_planning_agent.cn
   llm_model:
-    name: 'qwen_llm'
+    name: 'default_deepseek_llm'
     temperature: 0.5
 plan:
   planner:
     name: 'planning_planner'
 memory:
-  name: ''
+  name: 'demo_sql_memory'
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.default.planning_agent.planning_agent'

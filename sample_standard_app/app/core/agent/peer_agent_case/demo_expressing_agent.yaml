@@ -4,7 +4,7 @@ info:
 profile:
   prompt_version: demo_expressing_agent.cn
   llm_model:
-    name: qwen_llm
+    name: default_deepseek_llm
     temperature: 0.2
     prompt_processor:
       type: stuff
@@ -12,7 +12,7 @@ plan:
   planner:
     name: 'expressing_planner'
 memory:
-  name: ''
+  name: 'demo_sql_memory'
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.default.expressing_agent.expressing_agent'

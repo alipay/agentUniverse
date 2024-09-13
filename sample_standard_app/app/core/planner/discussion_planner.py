@@ -5,20 +5,18 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: discussion_planner.py
-import asyncio
+from typing import List
 
-from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables.history import RunnableWithMessageHistory
 
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
-from agentuniverse.agent.memory.chat_memory import ChatMemory
+from agentuniverse.agent.memory.memory import Memory
+from agentuniverse.agent.memory.message import Message
 from agentuniverse.agent.output_object import OutputObject
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.base.util.logging.logging_util import LOGGER
-from agentuniverse.base.util.memory_util import generate_memories
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
 from agentuniverse.prompt.chat_prompt import ChatPrompt
@@ -74,13 +72,14 @@ class DiscussionPlanner(Planner):
             dict: The planner result.
         """
         total_round: int = planner_config.get('round', default_round)
-        chat_history = []
         LOGGER.info(f"The topic of discussion is {agent_input.get(self.input_key)}")
         LOGGER.info(f"The participant agents are {'|'.join(participant_agents.keys())}")
 
-        input_object.add_data('chat_history', chat_history)
+        input_object.add_data('chat_history', [])
         input_object.add_data('total_round', total_round)
         input_object.add_data('participants', ' and '.join(participant_agents.keys()))
+
+        memory: Memory = self.handle_memory(agent_model, agent_input)
 
         for i in range(total_round):
             LOGGER.info("------------------------------------------------------------------")
@@ -96,10 +95,11 @@ class DiscussionPlanner(Planner):
                 current_output = output_object.get_data('output', '')
 
                 # process chat history
-                chat_history.append({'content': agent_input.get('input'), 'type': 'human'})
-                chat_history.append(
-                    {'content': f'the round {i + 1} agent {agent_name} thought: {current_output}', 'type': 'ai'})
-                input_object.add_data('chat_history', chat_history)
+                content = (f"the round {i + 1} participant agent in discussion group is: {agent_name}, "
+                           f"Human: {agent_input.get(self.input_key)}, AI: {current_output}")
+                memory_messages: List[Message] = self.assemble_memory_output(memory, agent_input, content, agent_name)
+
+                input_object.add_data('chat_history', memory_messages)
 
                 # add to the stream queue.
                 self.stream_output(input_object, {"data": {
@@ -109,7 +109,6 @@ class DiscussionPlanner(Planner):
                 LOGGER.info(f"the round {i + 1} agent {agent_name} thought: {output_object.get_data('output', '')}")
 
         # concatenate the agent input parameters of the host agent.
-        agent_input['chat_history'] = chat_history
         agent_input['total_round'] = total_round
         agent_input['participants'] = ' and '.join(participant_agents.keys())
 
@@ -130,25 +129,26 @@ class DiscussionPlanner(Planner):
         LOGGER.info(f"Discussion end.")
         LOGGER.info(f"Host agent starts summarize the discussion.")
         LOGGER.info("------------------------------------------------------------------")
-        # TODO
-        memory: ChatMemory = self.handle_memory(agent_model, planner_input)
+        memory: Memory = self.handle_memory(agent_model, planner_input)
 
         llm: LLM = self.handle_llm(agent_model)
 
         prompt: ChatPrompt = self.handle_prompt(agent_model, planner_input)
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
-        chat_history = memory.as_langchain().chat_memory if memory else InMemoryChatMessageHistory()
+        memory_messages = self.assemble_memory_input(memory, planner_input)
 
-        chain_with_history = RunnableWithMessageHistory(
-            prompt.as_langchain() | llm.as_langchain(),
-            lambda session_id: chat_history,
-            history_messages_key="chat_history",
-            input_messages_key=self.input_key,
-        ) | StrOutputParser()
-        res = self.invoke_chain(agent_model, chain_with_history, planner_input, chat_history, input_object)
+        chain = prompt.as_langchain() | llm.as_langchain_runnable(agent_model.llm_params()) | StrOutputParser()
+        res = self.invoke_chain(agent_model, chain, planner_input, input_object)
+
+        content = (f"human: {planner_input.get(self.input_key)}, "
+                   f"ai: after several rounds of discussions among the participants, "
+                   f"the host in the discussion group came to the conclusion:{res}")
+
+        memory_messages = self.assemble_memory_output(memory, planner_input, content, '', memory_messages)
+
         LOGGER.info(f"Discussion summary is: {res}")
-        return {**planner_input, self.output_key: res, 'chat_history': generate_memories(chat_history)}
+        return {**planner_input, self.output_key: res, 'chat_history': memory_messages}
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> ChatPrompt:
         """Prompt module processing.

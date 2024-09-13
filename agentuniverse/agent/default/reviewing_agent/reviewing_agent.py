@@ -33,7 +33,6 @@ class ReviewingAgent(Agent):
         """
         agent_input['input'] = input_object.get_data('input')
         agent_input['expressing_result'] = input_object.get_data('expressing_result').get_data('output')
-        agent_input['session_id'] += '_reviewing_agent'
         self.agent_model.profile.setdefault('prompt_version', 'default_reviewing_agent.cn')
         return agent_input
 

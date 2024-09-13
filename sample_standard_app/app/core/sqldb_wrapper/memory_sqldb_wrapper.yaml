@@ -1,6 +1,6 @@
 name: 'memory_sqldb_wrapper'
 description: 'memory_sqldb_wrapper'
-db_uri: "sqlite:///memory.db"
+db_uri: "mysql+pymysql://root:root123456@127.0.0.1:3306/hackathon"
 engine_args:
   pool_size: 5
 metadata:

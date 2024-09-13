@@ -4,13 +4,13 @@ info:
 profile:
   prompt_version: demo_executing_agent.cn
   llm_model:
-    name: 'qwen_llm'
+    name: 'default_deepseek_llm'
     temperature: 0.4
 plan:
   planner:
     name: 'executing_planner'
 memory:
-  name: ''
+  name: 'demo_sql_memory'
 action:
   knowledge:
     - ''

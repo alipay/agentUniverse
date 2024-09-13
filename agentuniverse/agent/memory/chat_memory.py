@@ -15,7 +15,7 @@ from agentuniverse.agent.memory.message import Message
 from agentuniverse.agent.memory.langchain_instance import AuConversationSummaryBufferMemory, \
     AuConversationTokenBufferMemory
 from agentuniverse.base.config.component_configer.configers.memory_configer import MemoryConfiger
-from agentuniverse.base.util.memory_util import get_memory_string
+from agentuniverse.base.util.memory_util import get_memory_tokens
 from agentuniverse.llm.llm import LLM
 
 
@@ -54,8 +54,6 @@ class ChatMemory(Memory):
     def set_by_agent_model(self, **kwargs):
         """ Assign values of parameters to the ChatMemory model in the agent configuration."""
         copied_obj = super().set_by_agent_model(**kwargs)
-        if 'messages' in kwargs and kwargs['messages']:
-            copied_obj.messages = kwargs['messages']
         if 'llm' in kwargs and kwargs['llm']:
             copied_obj.llm = kwargs['llm']
         if 'input_key' in kwargs and kwargs['input_key']:
@@ -90,21 +88,17 @@ class ChatMemory(Memory):
         """Get messages from the memory."""
         return self.prune(self.messages, **kwargs)
 
-    def clear(self, **kwargs) -> None:
-        """Clear memory."""
-        self.messages.clear()
-
     def prune(self, message_list: List[Message], **kwargs) -> List[Message]:
         """Prune messages from the memory due to memory max token limitation."""
         if len(message_list) < 1:
             return []
         # truncate the memory if it exceeds the maximum number of tokens
         prune_messages = message_list[:]
-        if self.llm:
-            session_message_str = get_memory_string(message_list)
-            message_tokens = self.llm.get_num_tokens(session_message_str)
-            if message_tokens > self.max_tokens:
-                while message_tokens > self.max_tokens:
-                    prune_messages.pop(0)
-                    message_tokens = self.llm.get_num_tokens(get_memory_string(prune_messages))
+        # get the number of tokens of the session messages.
+        tokens = get_memory_tokens(prune_messages, self.llm.name)
+        # truncate the memory if it exceeds the maximum number of tokens
+        if tokens > self.max_tokens:
+            while tokens > self.max_tokens:
+                prune_messages.pop(0)
+                tokens = get_memory_tokens(prune_messages, self.llm.name)
         return prune_messages

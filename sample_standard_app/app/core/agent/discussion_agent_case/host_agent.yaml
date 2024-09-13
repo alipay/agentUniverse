@@ -4,7 +4,7 @@ info:
 profile:
   prompt_version: host_agent.cn
   llm_model:
-    name: 'demo_llm'
+    name: 'default_deepseek_llm'
     temperature: 0.6
 plan:
   planner:
@@ -15,7 +15,7 @@ plan:
         - 'participant_agent_one'
         - 'participant_agent_two'
 memory:
-  name: 'demo_memory'
+  name: 'demo_sql_memory'
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.discussion_agent_case.host_agent'

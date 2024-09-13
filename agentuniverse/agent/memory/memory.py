@@ -25,7 +25,7 @@ class Memory(ComponentBase):
         description (Optional[str]): The description of the memory class.
         type (MemoryTypeEnum): The type of the memory class including `long-term` and `short-term`.
         memory_key (Optional[str]): The name of the memory key in the prompt.
-        max_tokens (int): The maximum number of tokens allowed in the memory.
+        max_tokens (int): The maximum number of tokens allowed in the prompt.
     """
 
     name: Optional[str] = ""
@@ -36,6 +36,10 @@ class Memory(ComponentBase):
 
     def __init__(self, **kwargs):
         super().__init__(component_type=ComponentEnum.MEMORY, **kwargs)
+
+    def as_langchain(self) -> BaseMemory:
+        """Convert the agentUniverse(aU) memory class to the langchain memory class."""
+        pass
 
     def set_by_agent_model(self, **kwargs):
         """ Assign values of parameters to the Memory model in the agent configuration."""
@@ -71,10 +75,6 @@ class Memory(ComponentBase):
             self.max_tokens = component_configer.max_tokens
         return self
 
-    def clear(self, **kwargs) -> None:
-        """Clear memory."""
-        pass
-
     def add(self, message_list: List[Message], **kwargs) -> None:
         """Add messages to the memory."""
         pass
@@ -89,8 +89,4 @@ class Memory(ComponentBase):
 
     def prune(self, **kwargs) -> None:
         """Prune messages from the memory due to memory max token limitation."""
-        pass
-
-    def as_langchain(self) -> BaseMemory:
-        """Convert the agentUniverse(aU) memory class to the langchain memory class."""
         pass

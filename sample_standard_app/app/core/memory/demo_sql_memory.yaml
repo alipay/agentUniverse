@@ -6,5 +6,5 @@ max_tokens: 2000
 sqldb_wrapper_name: 'memory_sqldb_wrapper'
 metadata:
   type: 'MEMORY'
-  module: 'agentuniverse.agent.memory.sql_memory'
-  class: 'SqlMemory'
+  module: 'agentuniverse.agent.memory.sql_alchemy_memory'
+  class: 'SqlAlchemyMemory'

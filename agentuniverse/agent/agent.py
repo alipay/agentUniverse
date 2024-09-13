@@ -120,6 +120,7 @@ class Agent(ComponentBase):
         agent_input['image_urls'] = input_object.get_data('image_urls') or []
         agent_input['date'] = datetime.now().strftime('%Y-%m-%d')
         agent_input['session_id'] = input_object.get_data('session_id') or ''
+        agent_input['agent_id'] = self.agent_model.info.get('name', '')
 
         self.parse_input(input_object, agent_input)
         return agent_input

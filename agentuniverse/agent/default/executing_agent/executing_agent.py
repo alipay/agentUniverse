@@ -42,7 +42,6 @@ class ExecutingAgent(Agent):
         """
         agent_input['input'] = input_object.get_data('input')
         agent_input['framework'] = input_object.get_data('planning_result').get_data('framework')
-        agent_input['session_id'] += '_executing_agent'
         self.agent_model.profile.setdefault('prompt_version', 'default_executing_agent.cn')
         return agent_input
 

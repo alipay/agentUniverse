@@ -33,7 +33,6 @@ class PlanningAgent(Agent):
         """
         agent_input['input'] = input_object.get_data('input')
         agent_input['expert_framework'] = input_object.get_data('expert_framework')
-        agent_input['session_id'] += '_planning_agent'
         self.agent_model.profile.setdefault('prompt_version', 'default_planning_agent.cn')
         return agent_input
 

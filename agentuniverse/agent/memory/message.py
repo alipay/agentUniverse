@@ -21,11 +21,13 @@ class Message(BaseModel):
     Attributes:
         type (Optional[str]): The type of the message.
         content (Optional[str]): The content of the message.
+        source (Optional[str]): The source of the message.
         metadata (Optional[dict]): The metadata of the message.
     """
 
     type: Optional[str] = None
     content: Optional[Union[str, List[Union[str, Dict]]]] = None
+    source: Optional[str] = None
     metadata: Optional[dict] = None
 
     def as_langchain(self):
@@ -54,9 +56,9 @@ class Message(BaseModel):
 
     def to_dict(self):
         """Convert the agentUniverse(aU) message class to the dict."""
-        return {"type": self.type, "content": self.content, "metadata": self.metadata}
+        return {"type": self.type, "content": self.content, "metadata": self.metadata, "source": self.source}
 
     @staticmethod
     def from_dict(message_dict: dict):
-        return Message(content=message_dict.get('content', ''), type=message_dict.get('type', ''),
-                       metadata=message_dict.get('metadata', {}))
+        return Message(content=message_dict.get('content'), type=message_dict.get('type', ''),
+                       source=message_dict.get('source', ''), metadata=message_dict.get('metadata', {}))
