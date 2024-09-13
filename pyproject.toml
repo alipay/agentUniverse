@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "agentUniverse"
-version = "0.0.12"
+version = "0.0.13"
 description = "agentUniverse is a framework for developing applications powered by multi-agent base on large language model."
 
 authors = ["AntGroup <jerry.zzw@antgroup.com>"]
@@ -59,9 +59,9 @@ duckduckgo-search = "6.1.7"
 primp = "0.5.5"
 wikipedia= "^1.4.0"
 openpyxl = "^3.1.5"
-primp = "0.5.5"
 pillow = "^10.4.0"
 jieba = "^0.42.1"
+networkx = "^3.3"
 
 [tool.poetry.extras]
 log_ext = ["aliyun-log-python-sdk"]

@@ -5,7 +5,7 @@ Language version: [English](./README.md) | [中文](./README_zh.md) | [日本語
 ![](https://img.shields.io/badge/framework-agentUniverse-pink)
 ![](https://img.shields.io/badge/python-3.10%2B-blue?logo=Python)
 [![](https://img.shields.io/badge/%20license-Apache--2.0-yellow)](LICENSE)
-[![Static Badge](https://img.shields.io/badge/pypi-v0.0.12-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
+[![Static Badge](https://img.shields.io/badge/pypi-v0.0.13-blue?logo=pypi)](https://pypi.org/project/agentUniverse/)
 
 ![](docs/guidebook/_picture/logo_bar.jpg)
 ****************************************
@@ -67,7 +67,7 @@ pip install magent-ui ruamel.yaml
 
 Run the [product_application.py](sample_standard_app/app/bootstrap/product_application.py) file located in sample_standard_app/app/bootstrap for a one-click start.
 
-For more details, refer to [Quick Start for Product Platform](./docs/guidebook/en/10_1_1_Product%20Platform%20Quick%20Start.md).
+For more details, refer to [Quick Start for Product Platform](./docs/guidebook/en/10_1_1_Product%20Platform%20Quick%20Start.md) and the [Advanced Guide](./docs/guidebook/en/10_1_2_Product_Platform_Advancement_Guide.md).
 
 This feature is jointly launched by [difizen](https://github.com/difizen/magent) and agentUniverse.
 
@@ -75,7 +75,7 @@ This feature is jointly launched by [difizen](https://github.com/difizen/magent)
 
 ## Cases and Example Projects
 ### 🌟 Use Cases
-[Legal Consultation Agent](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
+[Legal Consultation Agent v2](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
 
 [Python Code Generation and Execution Agent](./docs/guidebook/en/7_1_1_Python_Auto_Runner.md)
 
@@ -84,6 +84,9 @@ This feature is jointly launched by [difizen](https://github.com/difizen/magent)
 [Financial Event Analysis Based on PEER Multi-Agent Mode](./docs/guidebook/en/6_4_1_Financial_Event_Analysis_Case.md)
 
 [Andrew Ng's Reflexive Workflow Translation Agent Replication](./docs/guidebook/en/7_1_1_Translation_Case.md)
+
+#### 🚩 How to Quickly Build an RAG Agent
+The RAG components have been fully upgraded. This tutorial provides a guide on how to quickly build an RAG agent in agentUniverse. You can refer to the documentation on [How to Build a RAG Agent](./docs/guidebook/en/2_2_4_How_To_Build_A_RAG_Agent.md). For more theoretical content, please check the documentation on [Introduction to RAG](./docs/guidebook/en/2_2_4_RAG.md).
 
 #### 🚩 DataAgent - Data Autonomous Agent
 agentUniverse has launched DataAgent (Minimum Viable Product Version). DataAgent aims to empower your agent with the capability of self-assessment and evolution through the use of intelligent agent abilities. For more details, please refer to the documentation. [DataAgent - Data Autonomous Agent](./docs/guidebook/en/8_1_1_data_autonomous_agent.md)

@@ -1,0 +1,8 @@
+name: 'default_zhipu_llm'
+description: 'default default_zhipu_llm llm with spi'
+model_name: 'glm-4-flash'
+max_tokens: 1000
+metadata:
+  type: 'LLM'
+  module: 'agentuniverse.llm.default.zhipu_openai_style_llm'
+  class: 'DefaultZhiPuLLM'

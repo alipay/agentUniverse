@@ -249,40 +249,42 @@ def _get_llm_token_usage(llm_obj: object, llm_input: dict, output_str: str) -> d
     Returns:
         dict: Dictionary of token usage including the completion_tokens, prompt_tokens, and total_tokens.
     """
-    if llm_obj is None or llm_input is None:
+    try:
+        if llm_obj is None or llm_input is None:
+            return {}
+        messages = llm_input.get('kwargs', {}).pop('messages', None)
+
+        input_str = ''
+        if messages is not None and isinstance(messages, list):
+            for m in messages:
+                if isinstance(m, dict):
+                    input_str += str(m.get('role', '')) + '\n'
+                    input_str += str(m.get('content', '')) + '\n'
+
+                elif isinstance(m, object):
+                    if hasattr(m, 'role'):
+                        role = m.role
+                        if role is not None:
+                            input_str += str(m.role) + '\n'
+                    if hasattr(m, 'content'):
+                        content = m.content
+                        if content is not None:
+                            input_str += str(m.content) + '\n'
+
+        if input_str == '' or output_str == '':
+            return {}
+
+        usage = {}
+        # the number of input and output tokens is calculated by the llm `get_num_tokens` method.
+        if hasattr(llm_obj, 'get_num_tokens'):
+            completion_tokens = llm_obj.get_num_tokens(output_str)
+            prompt_tokens = llm_obj.get_num_tokens(input_str)
+            total_tokens = completion_tokens + prompt_tokens
+            usage = {'completion_tokens': completion_tokens, 'prompt_tokens': prompt_tokens,
+                     'total_tokens': total_tokens}
+        return usage
+    except Exception as e:
         return {}
-
-    messages = llm_input.pop('messages', None)
-
-    input_str = ''
-    if messages is not None and isinstance(messages, list):
-        for m in messages:
-            if isinstance(m, dict):
-                input_str += str(m.get('role', '')) + '\n'
-                input_str += str(m.get('content', '')) + '\n'
-
-            elif isinstance(m, object):
-                if hasattr(m, 'role'):
-                    role = m.role
-                    if role is not None:
-                        input_str += str(m.role) + '\n'
-                if hasattr(m, 'content'):
-                    content = m.content
-                    if content is not None:
-                        input_str += str(m.content) + '\n'
-
-    if input_str == '' or output_str == '':
-        return {}
-
-    usage = {}
-    # the number of input and output tokens is calculated by the llm `get_num_tokens` method.
-    if hasattr(llm_obj, 'get_num_tokens'):
-        completion_tokens = llm_obj.get_num_tokens(output_str)
-        prompt_tokens = llm_obj.get_num_tokens(input_str)
-        total_tokens = completion_tokens + prompt_tokens
-        usage = {'completion_tokens': completion_tokens, 'prompt_tokens': prompt_tokens,
-                 'total_tokens': total_tokens}
-    return usage
 
 
 def trace_llm_token_usage(llm_obj: object, llm_input: dict, output_str: str) -> None:

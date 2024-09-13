@@ -137,6 +137,7 @@ class AgentUniverse(object):
                                     + self.__system_default_memory_package)
         core_prompt_package_list = ((app_configer.core_prompt_package_list or app_configer.core_default_package_list)
                                     + self.__system_default_prompt_package)
+        core_workflow_package_list = app_configer.core_workflow_package_list or app_configer.core_default_package_list
         core_embedding_package_list = ((app_configer.core_embedding_package_list or app_configer.core_default_package_list)
                                        + self.__system_default_embedding_package)
         core_doc_processor_package_list = ((app_configer.core_doc_processor_package_list or app_configer.core_default_package_list)
@@ -159,6 +160,7 @@ class AgentUniverse(object):
             ComponentEnum.SQLDB_WRAPPER: core_sqldb_wrapper_package_list,
             ComponentEnum.MEMORY: core_memory_package_list,
             ComponentEnum.PROMPT: core_prompt_package_list,
+            ComponentEnum.WORKFLOW: core_workflow_package_list,
             ComponentEnum.EMBEDDING: core_embedding_package_list,
             ComponentEnum.DOC_PROCESSOR: core_doc_processor_package_list,
             ComponentEnum.READER: core_reader_package_list,

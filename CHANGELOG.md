@@ -24,6 +24,27 @@ Note - Additional remarks regarding the version.
 ***************************************************
 
 # Version Update History
+# [0.0.13] - 2024-09-12
+### Added
+- RAG(Retrieval-Augmented Generation) Component Version Update  
+This version provides a standard operating procedure for knowledge base construction and the RAG retrieval recall stage. The component covers a series of RAG atomic capabilities, including data loading, data processing, index construction, knowledge storage, intent rewriting, and retrieval re-ranking, helping users to quickly build a general RAG intelligent agent solution in open-source scenarios.
+
+- Intelligent Agent Product Platform Update  
+This version introduces new capabilities such as intelligent agent canvas orchestration, private knowledge base construction, and custom plugin support, enabling users to quickly build and orchestrate intelligent agents through a low-code, visual approach.
+
+- Added GLM Default Model Component for Zhipu
+- Added SQLiteStore Storage Component
+- Added Flow Orchestration Execution Engine
+
+### Note 
+- Default path optimization for system_db_uri
+The default path is already compatible with the Windows platform, for more details, please refer to [issue142](https://github.com/alipay/agentUniverse/issues/142)
+- Support for configurable chain stop words in ReactAgent
+The ReactAgent YAML configuration now supports the stop_sequence keyword, allowing users to customize chain stop words. For more details, please refer to [issue127](https://github.com/alipay/agentUniverse/issues/127)
+- Added an introduction to RAG principles and a quick guide for building RAG, please pay attention to the corresponding parts in the README and user guide.
+- Added advanced guidance documents for the intelligent agent productization platform, please pay attention to the corresponding parts in the README and user guide.
+- Various code optimizations and documentation updates.
+
 ## [0.0.12] - 2024-08-14
 ### Added
 - agentUniverse Product Version Offering
