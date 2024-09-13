@@ -31,6 +31,8 @@
     * 2.2.5.1 [Define And Use](2_2_6_Planner_Define_And_Use.md)
     * 2.2.5.2 [Related Domain Objects](2_2_6_Planner_Related_Domain_Objects.md)
 * 2.3 Technical Components
+  * 2.3.1 [RAG](2_2_4_RAG.md)
+    * 2.3.1.1 [How To Build A RAG Agent](2_2_4_How_To_Build_A_RAG_Agent.md)
 * 2.4 Others
   * 2.4.1 Service
     * 2.4.1.1 [Registration and Usage](2_4_1_Service_Registration_and_Usage.md)
@@ -72,6 +74,7 @@
     * 3.2.2.1 [SQLDBWrapper](2_3_1_SQLDB_WRAPPER.md)
     * 3.2.2.2 [Milvus](3_3_1_Milvus.md)
     * 3.2.2.3 [ChromaDB](3_3_2_ChromaDB.md)
+    * 3.2.2.4 [Sqlite](3_3_3_Sqlite.md)
   * 3.2.3 Msg
   * 3.2.4 Logging
     * 3.2.4.1 [Alibaba Cloud SLS](3_2_4_Alibaba_Cloud_SLS.md)
@@ -85,7 +88,7 @@
 
 **6. Use Cases**
 * 6.1 RAG-Type Agent Examples
-  * 6.1.1 [Legal Consultation Agent](7_1_1_Legal_Consultation_Case.md)
+  * 6.1.1 [Legal Consultation Agent v2](7_1_1_Legal_Consultation_Case.md)
 * 6.2 ReAct-Type Agent Examples
   * 6.2.1 [Python Code Generation and Execution Agent](7_1_1_Python_Auto_Runner.md)
 * 6.3 [Discussion Group Based on Multi-Turn Multi-Agent Mode](6_2_1_Discussion_Group.md)
@@ -95,6 +98,7 @@
 
 **7.Product Platform**
 * 7.1 [Quick Use](./10_1_1_Product Platform Quick Start.md)
+* 7.2 [Advancement Guide](./10_1_2_Product_Platform_Advancement_Guide.md)
 
 **8. Series of Articles**
 

@@ -12,8 +12,7 @@ action:
     - 'google_search_tool'
     - 'python_runner'
   knowledge:
-    - 'civil_law_knowledge'
-    - 'criminal_law_knowledge'
+    - 'law_knowledge'
   agent:
     - 'law_rag_agent'
 plan:

@@ -30,7 +30,10 @@ example_key = 'AnExampleKey'
 #
 ##baichuan default name: default_baichuan_llm
 #BAICHUAN_API_KEY='xxxxxx'
-
+#
+##ZHIPU default name: default_zhipu_llm
+#ZHIPU_API_KEY='xxxxxx'
+#ZHIPU_API_BASE='https://open.bigmodel.cn/api/paas/v4/'
 
 # search
 #Google search
