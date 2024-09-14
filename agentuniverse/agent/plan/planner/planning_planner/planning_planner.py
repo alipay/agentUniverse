@@ -88,5 +88,6 @@ class PlanningPlanner(Planner):
                 target=getattr(version_prompt, 'target', ''),
                 instruction=expert_framework + getattr(version_prompt, 'instruction', ''))
             profile_prompt_model = profile_prompt_model + version_prompt_model
+            return version_prompt.build_prompt(profile_prompt_model, self.prompt_assemble_order)
 
         return Prompt().build_prompt(profile_prompt_model, self.prompt_assemble_order)
