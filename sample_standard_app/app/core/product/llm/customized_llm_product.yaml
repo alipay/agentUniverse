@@ -1,0 +1,7 @@
+id: customized_llm
+nickname: 自定义大模型
+type: LLM
+metadata:
+  type: 'PRODUCT'
+  module: 'agentuniverse_product.base.product'
+  class: 'Product'
