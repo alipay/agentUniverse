@@ -9,7 +9,7 @@ plan:
   planner:
     name: 'reviewing_planner'
 memory:
-  name: 'demo_sql_memory'
+  name: 'demo_chroma_memory'
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.default.reviewing_agent.reviewing_agent'

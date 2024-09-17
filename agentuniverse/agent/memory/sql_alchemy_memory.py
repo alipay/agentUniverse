@@ -63,7 +63,7 @@ def create_memory_model(table_name: str, DynamicBase: Any) -> Any:
         agent_id = Column(String(100), default='')
         source = Column(String(500), default='')
         message = Column(Text)
-        gmt_create = Column(DateTime, default=func.now())
+        gmt_created = Column(DateTime, default=func.now())
         gmt_modified = Column(DateTime, default=func.now(), onupdate=func.now())
 
         __table_args__ = (
@@ -106,14 +106,12 @@ class SqlAlchemyMemory(Memory):
         sqldb_table_name (str): The name of the table to store for the memory.
         sqldb_wrapper_name (str): The name of the SQLDBWrapper to use for the memory.
         memory_converter (BaseMemoryConverter): The memory converter to use for the memory.
-        llm_name (str): The name of the LLM used by this memory.
         _sqldb_wrapper (SQLDBWrapper): The SQLDBWrapper instance to use for the memory.
     """
 
     sqldb_table_name: Optional[str] = 'memory'
     sqldb_wrapper_name: Optional[str] = None
     memory_converter: BaseMemoryConverter = None
-    llm_name: Optional[str] = None
     _sqldb_wrapper: SQLDBWrapper = None
 
     def delete(self, session_id: str = '', agent_id: str = '', **kwargs) -> None:
@@ -175,7 +173,7 @@ class SqlAlchemyMemory(Memory):
             query = session.query(self.memory_converter.model_class)
             if conditions:
                 query = query.where(and_(*conditions))
-            query = query.order_by(model_class.gmt_create.asc())
+            query = query.order_by(model_class.gmt_created.asc())
 
             # Execute the query and fetch the results
             records = query.all()
@@ -194,15 +192,19 @@ class SqlAlchemyMemory(Memory):
         """Prune messages from the memory due to memory max token limitation."""
         if len(message_list) < 1:
             return []
-        prune_messages = message_list[:]
+        new_messages = message_list[:]
         # get the number of tokens of the session messages.
-        tokens = get_memory_tokens(prune_messages, llm_name)
+        tokens = get_memory_tokens(new_messages, llm_name)
         # truncate the memory if it exceeds the maximum number of tokens
         if tokens > self.max_tokens:
+            prune_messages = []
             while tokens > self.max_tokens:
-                prune_messages.pop(0)
-                tokens = get_memory_tokens(prune_messages, llm_name)
-        return prune_messages
+                prune_messages.append(new_messages.pop(0))
+                tokens = get_memory_tokens(new_messages, llm_name)
+            summarized_memory = self.summarize_memory(prune_messages, self.max_tokens - tokens)
+            if summarized_memory:
+                new_messages.insert(0, Message(content=summarized_memory))
+        return new_messages
 
     def initialize_by_component_configer(self, component_configer: MemoryConfiger) -> 'SqlAlchemyMemory':
         """Initialize the memory by the ComponentConfiger object.
@@ -222,13 +224,6 @@ class SqlAlchemyMemory(Memory):
         if self.memory_converter is None:
             self.memory_converter = DefaultMemoryConverter(self.sqldb_table_name)
         return self
-
-    def set_by_agent_model(self, **kwargs):
-        """ Assign values of parameters to the SqlAlchemyMemory model in the agent configuration."""
-        copied_obj = super().set_by_agent_model(**kwargs)
-        if 'llm_name' in kwargs and kwargs['llm_name']:
-            copied_obj.llm_name = kwargs['llm_name']
-        return copied_obj
 
     def _init_db(self) -> None:
         """Initialize the database."""

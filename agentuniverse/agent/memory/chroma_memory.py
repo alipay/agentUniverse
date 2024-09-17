@@ -6,11 +6,11 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: chroma_memory.py
 import uuid
+from datetime import datetime
 from urllib.parse import urlparse
-from typing import Optional, List, Any, Union
+from typing import Optional, List, Any
 
 import chromadb
-from chromadb import QueryResult, GetResult
 from pydantic import SkipValidation
 from chromadb.config import Settings
 from chromadb.api.models.Collection import Collection
@@ -23,7 +23,6 @@ from agentuniverse.base.util.memory_util import get_memory_tokens
 
 
 class ChromaMemory(Memory):
-    llm_name: Optional[str] = None
     collection_name: Optional[str] = 'memory'
     persist_path: Optional[str] = None
     embedding_model: Optional[str] = None
@@ -48,7 +47,7 @@ class ChromaMemory(Memory):
             self._init_collection()
         if message_list is None:
             return
-        metadata = {}
+        metadata = {'gmt_created': datetime.now().isoformat()}
         if session_id:
             metadata['session_id'] = session_id
         if agent_id:
@@ -92,25 +91,38 @@ class ChromaMemory(Memory):
                 )
             else:
                 results = self._collection.query(query_texts=[input], where=filters, n_results=top_k)
+            messages: List[Message] = self.to_messages(result=results)
+            return self.prune(messages, self.llm_name, True)
         else:
             results = self._collection.get(where=filters, limit=top_k)
-        messages: List[Message] = self.to_messages(results)
-        # prune messages
-        return self.prune(messages, self.llm_name)
+            messages: List[Message] = self.to_messages(result=results, sort_by_time=True)
+            # prune messages
+            return self.prune(messages, self.llm_name)
 
-    def prune(self, message_list: List[Message], llm_name: str, **kwargs) -> List[Message]:
+    def prune(self, message_list: List[Message], llm_name: str,
+              prune_from_end: bool = False, **kwargs) -> List[Message]:
         """Prune messages from the memory due to memory max token limitation."""
         if len(message_list) < 1:
             return []
-        prune_messages = message_list[:]
+        new_messages = message_list[:]
         # get the number of tokens of the session messages.
-        tokens = get_memory_tokens(prune_messages, llm_name)
+        tokens = get_memory_tokens(new_messages, llm_name)
         # truncate the memory if it exceeds the maximum number of tokens
         if tokens > self.max_tokens:
+            prune_messages = []
             while tokens > self.max_tokens:
-                prune_messages.pop(0)
-                tokens = get_memory_tokens(prune_messages, llm_name)
-        return prune_messages
+                if prune_from_end:
+                    prune_messages.append(new_messages.pop())
+                else:
+                    prune_messages.append(new_messages.pop(0))
+                tokens = get_memory_tokens(new_messages, llm_name)
+            summarized_memory = self.summarize_memory(prune_messages, self.max_tokens - tokens)
+            if summarized_memory:
+                if prune_from_end:
+                    new_messages.append(Message(content=summarized_memory))
+                else:
+                    new_messages.insert(0, Message(content=summarized_memory))
+        return new_messages
 
     def initialize_by_component_configer(self, component_configer: MemoryConfiger) -> 'ChromaMemory':
         """Initialize the memory by the ComponentConfiger object.
@@ -122,20 +134,11 @@ class ChromaMemory(Memory):
         super().initialize_by_component_configer(component_configer)
         if hasattr(component_configer, "collection_name"):
             self.collection_name = component_configer.collection_name
-        if hasattr(component_configer, "llm_name"):
-            self.llm_name = component_configer.llm_name
         if hasattr(component_configer, "embedding_model"):
             self.embedding_model = component_configer.embedding_model
         if hasattr(component_configer, "persist_path"):
             self.persist_path = component_configer.persist_path
         return self
-
-    def set_by_agent_model(self, **kwargs):
-        """ Assign values of parameters to the ChromaMemory model in the agent configuration."""
-        copied_obj = super().set_by_agent_model(**kwargs)
-        if 'llm_name' in kwargs and kwargs['llm_name']:
-            copied_obj.llm_name = kwargs['llm_name']
-        return copied_obj
 
     def _init_collection(self) -> Any:
         if self.persist_path.startswith('http') or \
@@ -155,21 +158,43 @@ class ChromaMemory(Memory):
         self._collection = client.get_or_create_collection(name=self.collection_name)
         return client
 
-    @staticmethod
-    def to_messages(result: Union[QueryResult, GetResult]) -> List[Message]:
+    def to_messages(self, result: dict, sort_by_time: bool = False) -> List[Message]:
+        message_list = []
         if not result or not result['ids']:
-            return []
-
-        metadatas = result.get('metadatas', [[]])
-        documents = result.get('documents', [[]])
-
-        message_list = [
-            Message(
-                content=documents[0][i],
-                metadata=metadatas[0][i] if metadatas[0] else None,
-                source=metadatas[0][i].get('source', '') if metadatas[0] else ''
-            )
-            for i in range(len(result['ids'][0]))
-        ]
-
+            return message_list
+        try:
+            if self.is_nested_list(result['ids']):
+                metadatas = result.get('metadatas', [[]])
+                documents = result.get('documents', [[]])
+                message_list = [
+                    Message(
+                        content=documents[0][i],
+                        metadata=metadatas[0][i] if metadatas[0] else None,
+                        source=metadatas[0][i].get('source', '') if metadatas[0] else ''
+                    )
+                    for i in range(len(result['ids'][0]))
+                ]
+            else:
+                metadatas = result.get('metadatas', [])
+                documents = result.get('documents', [])
+                message_list = [
+                    Message(
+                        content=documents[i],
+                        metadata=metadatas[i] if metadatas[i] else None,
+                        source=metadatas[i].get('source', '') if metadatas[i] else ''
+                    )
+                    for i in range(len(result['ids']))
+                ]
+            if sort_by_time:
+                # order by gmt_created desc
+                message_list = sorted(
+                    message_list,
+                    key=lambda msg: msg.metadata.get('gmt_created', ''),
+                )
+        except Exception as e:
+            print('ChromaMemory.to_messages failed, exception= ' + str(e))
         return message_list
+
+    @staticmethod
+    def is_nested_list(variable: List) -> bool:
+        return isinstance(variable, list) and len(variable) > 0 and isinstance(variable[0], list)

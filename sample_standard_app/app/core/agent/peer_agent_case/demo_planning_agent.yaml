@@ -10,7 +10,7 @@ plan:
   planner:
     name: 'planning_planner'
 memory:
-  name: 'demo_sql_memory'
+  name: 'demo_chroma_memory'
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.default.planning_agent.planning_agent'

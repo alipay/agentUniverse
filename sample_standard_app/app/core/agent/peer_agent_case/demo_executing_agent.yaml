@@ -10,7 +10,7 @@ plan:
   planner:
     name: 'executing_planner'
 memory:
-  name: 'demo_sql_memory'
+  name: 'demo_chroma_memory'
 action:
   knowledge:
     - ''

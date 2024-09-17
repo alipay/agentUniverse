@@ -22,6 +22,8 @@ class MemoryConfiger(ComponentConfiger):
         self.__type: Optional[str] = None
         self.__memory_key: Optional[str] = None
         self.__max_tokens: Optional[int] = None
+        self.__prompt_version: Optional[str] = None
+        self.__llm_name: Optional[str] = None
 
     @property
     def name(self) -> Optional[str]:
@@ -48,6 +50,16 @@ class MemoryConfiger(ComponentConfiger):
         """Return memory tokens of the Memory."""
         return self.__max_tokens
 
+    @property
+    def prompt_version(self) -> Optional[str]:
+        """Return the prompt version of the Memory."""
+        return self.__prompt_version
+
+    @property
+    def llm_name(self) -> Optional[str]:
+        """Return the llm name of the Memory."""
+        return self.__llm_name
+
     def load(self) -> 'MemoryConfiger':
         """Load the configuration by the Configer object.
         Returns:
@@ -70,6 +82,8 @@ class MemoryConfiger(ComponentConfiger):
             self.__type = configer.value.get('type')
             self.__memory_key = configer.value.get('memory_key')
             self.__max_tokens = configer.value.get('max_tokens')
+            self.__prompt_version = configer.value.get('prompt_version')
+            self.__llm_name = configer.value.get('llm_name')
         except Exception as e:
             raise Exception(f"Failed to parse the Memory configuration: {e}")
         return self

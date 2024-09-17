@@ -35,7 +35,6 @@ class ChatMemory(Memory):
     input_key: Optional[str] = 'input'
     output_key: Optional[str] = 'output'
     messages: Optional[List[Message]] = []
-    prompt_version: Optional[str] = None
 
     def as_langchain(self) -> BaseChatMemory:
         """Convert the agentUniverse(aU) chat memory class to the langchain chat memory class."""
@@ -74,8 +73,6 @@ class ChatMemory(Memory):
             self.input_key = component_configer.input_key
         if hasattr(component_configer, 'output_key') and component_configer.output_key:
             self.output_key = component_configer.output_key
-        if hasattr(component_configer, 'prompt_version') and component_configer.prompt_version:
-            self.prompt_version = component_configer.prompt_version
         return self
 
     def add(self, message_list: List[Message], **kwargs) -> None:
