@@ -11,11 +11,10 @@ from langchain.memory.chat_memory import BaseChatMemory
 
 from agentuniverse.agent.memory.enum import MemoryTypeEnum
 from agentuniverse.agent.memory.memory import Memory
-from agentuniverse.agent.memory.message import Message
 from agentuniverse.agent.memory.langchain_instance import AuConversationSummaryBufferMemory, \
     AuConversationTokenBufferMemory
+from agentuniverse.agent.memory.message import Message
 from agentuniverse.base.config.component_configer.configers.memory_configer import MemoryConfiger
-from agentuniverse.base.util.memory_util import get_memory_tokens
 from agentuniverse.llm.llm import LLM
 
 
@@ -28,13 +27,15 @@ class ChatMemory(Memory):
         round of conversations.
         output_key (Optional[str]): The output key in the model output parameters is used to find the specific result
         in a round of conversations.
+        prompt_version (Optional[str]): The version of the prompt used for compressing the memory.
         messages (Optional[List[Message]]): The list of conversation messages to send to the LLM memory.
     """
 
     llm: Optional[LLM] = None
     input_key: Optional[str] = 'input'
     output_key: Optional[str] = 'output'
-    messages: Optional[List[Message]] = []
+    prompt_version: Optional[str] = None
+    messages: Optional[List[Message]] = None
 
     def as_langchain(self) -> BaseChatMemory:
         """Convert the agentUniverse(aU) chat memory class to the langchain chat memory class."""
@@ -73,29 +74,16 @@ class ChatMemory(Memory):
             self.input_key = component_configer.input_key
         if hasattr(component_configer, 'output_key') and component_configer.output_key:
             self.output_key = component_configer.output_key
+        if hasattr(component_configer, 'prompt_version') and component_configer.prompt_version:
+            self.prompt_version = component_configer.prompt_version
         return self
 
     def add(self, message_list: List[Message], **kwargs) -> None:
-        """Add messages to the chat memory."""
-        if len(message_list) < 1:
+        """Add messages to the memory."""
+        if not message_list:
             return
-        self.messages.extend(message_list)
+        self.messages = message_list
 
     def get(self, **kwargs) -> List[Message]:
         """Get messages from the memory."""
-        return self.prune(self.messages, **kwargs)
-
-    def prune(self, message_list: List[Message], **kwargs) -> List[Message]:
-        """Prune messages from the memory due to memory max token limitation."""
-        if len(message_list) < 1:
-            return []
-        # truncate the memory if it exceeds the maximum number of tokens
-        prune_messages = message_list[:]
-        # get the number of tokens of the session messages.
-        tokens = get_memory_tokens(prune_messages, self.llm.name)
-        # truncate the memory if it exceeds the maximum number of tokens
-        if tokens > self.max_tokens:
-            while tokens > self.max_tokens:
-                prune_messages.pop(0)
-                tokens = get_memory_tokens(prune_messages, self.llm.name)
-        return prune_messages
+        return self.prune(self.messages)

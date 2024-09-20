@@ -80,7 +80,7 @@ class Planner(ComponentBase):
         if memory is None:
             return None
 
-        # generate a list of temporary messages from the given chat history
+        # generate a list of temporary messages from the given chat history and add them to the memory instance.
         temporary_messages: list[Message] = generate_messages(chat_history)
         if temporary_messages:
             memory.add(temporary_messages, **planner_input)
@@ -88,11 +88,9 @@ class Planner(ComponentBase):
         llm_model = agent_model.memory.get('llm_model') or dict()
         llm_name = llm_model.get('name', '') or agent_model.profile.get('llm_model', {}).get('name')
         llm: LLM = LLMManager().get_instance_obj(llm_name)
-
         params: dict = dict()
         params['llm'] = llm
-        params['llm_name'] = llm_name
-        # init memory and add messages to it
+        params['agent_llm_name'] = llm_name
         return memory.set_by_agent_model(**params)
 
     def run_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
@@ -190,12 +188,14 @@ class Planner(ComponentBase):
         output_stream.put_nowait(data)
 
     def invoke_chain(self, agent_model: AgentModel, chain: RunnableSerializable[Any, str], planner_input: dict,
+                     chat_history,
                      input_object: InputObject):
+
         if not input_object.get_data('output_stream'):
-            res = chain.invoke(input=planner_input)
+            res = chain.invoke(input=planner_input, config={"configurable": {"session_id": "unused"}})
             return res
         result = []
-        for token in chain.stream(input=planner_input):
+        for token in chain.stream(input=planner_input, config={"configurable": {"session_id": "unused"}}):
             self.stream_output(input_object, {
                 'type': 'token',
                 'data': {
@@ -219,7 +219,9 @@ class Planner(ComponentBase):
         """
         memory_messages = []
         if memory:
+            # get the memory messages from the memory instance.
             memory_messages = memory.get(**planner_input)
+            # convert the memory messages to a string and add it to the agent input object.
             memory_str = get_memory_string(memory_messages)
             planner_input[memory.memory_key] = memory_str
         return memory_messages
@@ -237,10 +239,11 @@ class Planner(ComponentBase):
             source (str): The source of the current memory message.
             memory_messages (List[Message]): The memory history messages.
         Returns:
-            list[Message]: The assembled memory messages.
+            list[Message]: The assembled memory history messages.
         """
         cur_memory_message = Message(content=content, source=source)
         if memory:
+            # add the current memory message to the memory instance.
             memory.add([cur_memory_message], **planner_input)
         if memory_messages is None:
             memory_messages = []

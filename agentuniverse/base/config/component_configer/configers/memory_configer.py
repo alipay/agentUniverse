@@ -5,7 +5,7 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: memory_configer.py
-from typing import Optional
+from typing import Optional, List
 
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.base.config.configer import Configer
@@ -22,8 +22,9 @@ class MemoryConfiger(ComponentConfiger):
         self.__type: Optional[str] = None
         self.__memory_key: Optional[str] = None
         self.__max_tokens: Optional[int] = None
-        self.__prompt_version: Optional[str] = None
-        self.__llm_name: Optional[str] = None
+        self.__memory_compressor: Optional[str] = None
+        self.__memory_storages: Optional[List[str]] = None
+        self.__memory_retrieval_storage: Optional[str] = None
 
     @property
     def name(self) -> Optional[str]:
@@ -51,14 +52,19 @@ class MemoryConfiger(ComponentConfiger):
         return self.__max_tokens
 
     @property
-    def prompt_version(self) -> Optional[str]:
-        """Return the prompt version of the Memory."""
-        return self.__prompt_version
+    def memory_compressor(self) -> Optional[str]:
+        """Return the compressor of the Memory."""
+        return self.__memory_compressor
 
     @property
-    def llm_name(self) -> Optional[str]:
-        """Return the llm name of the Memory."""
-        return self.__llm_name
+    def memory_storages(self) -> Optional[List[str]]:
+        """Return the storages of the Memory."""
+        return self.__memory_storages
+
+    @property
+    def memory_retrieval_storage(self) -> Optional[str]:
+        """Return the retrieval storage of the Memory."""
+        return self.__memory_retrieval_storage
 
     def load(self) -> 'MemoryConfiger':
         """Load the configuration by the Configer object.
@@ -82,8 +88,9 @@ class MemoryConfiger(ComponentConfiger):
             self.__type = configer.value.get('type')
             self.__memory_key = configer.value.get('memory_key')
             self.__max_tokens = configer.value.get('max_tokens')
-            self.__prompt_version = configer.value.get('prompt_version')
-            self.__llm_name = configer.value.get('llm_name')
+            self.__memory_compressor = configer.value.get('memory_compressor')
+            self.__memory_storages = configer.value.get('memory_storages')
+            self.__memory_retrieval_storage = configer.value.get('memory_retrieval_storage')
         except Exception as e:
             raise Exception(f"Failed to parse the Memory configuration: {e}")
         return self

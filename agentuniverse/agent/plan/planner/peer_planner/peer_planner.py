@@ -113,72 +113,39 @@ class PeerPlanner(Planner):
         expressingAgent: Agent = agents.get('expressing')
         reviewingAgent: Agent = agents.get('reviewing')
 
-        memory: Memory = self.handle_memory(agent_model, agent_input)
+        peer_memory: Memory = self.handle_memory(agent_model, agent_input)
 
         for _ in range(retry_count):
             LOGGER.info(f"Starting peer agents, retry_count is {_ + 1}.")
             if not planning_result or jump_step == "planning":
-                planning_result = self.planning_agent_run(planningAgent, input_object, agent_input, memory)
+                planning_result = self.planning_agent_run(planningAgent, input_object, agent_input, peer_memory)
 
             if not executing_result or jump_step in ["planning", "executing"]:
-                executing_result = self.executing_agent_run(executingAgent, input_object, agent_input, memory)
+                executing_result = self.executing_agent_run(executingAgent, input_object, agent_input, peer_memory)
 
             if not expressing_result or jump_step in ["planning", "executing", "expressing"]:
-                expressing_result = self.expressing_agent_run(expressingAgent, input_object, agent_input, memory)
+                expressing_result = self.expressing_agent_run(expressingAgent, input_object, agent_input, peer_memory)
 
             if not reviewing_result or jump_step in ["planning", "executing", "expressing", "reviewing"]:
-                if not reviewingAgent:
-                    LOGGER.warn("no reviewing agent.")
-                    loopResults.append({
-                        "planning_result": planning_result,
-                        "executing_result": executing_result,
-                        "expressing_result": expressing_result,
-                        "reviewing_result": reviewing_result
-                    })
-                    result['result'] = loopResults
-                    return result
-                else:
-                    LOGGER.info(f"Starting reviewing agent.")
+                reviewing_result = self.reviewing_agent_run(reviewingAgent, input_object, agent_input, peer_memory)
 
-                    reviewing_result = reviewingAgent.run(**input_object.to_dict())
-
-                    input_object.add_data('reviewing_result', reviewing_result)
-
-                    # add reviewing agent log info
-                    logger_info = f"\nReviewing agent execution result is :\n"
-                    reviewing_info_str = f"review suggestion: {reviewing_result.get_data('suggestion')} \n"
-                    reviewing_info_str += f"review score: {reviewing_result.get_data('score')} \n"
-                    LOGGER.info(logger_info + reviewing_info_str)
-
-                    # add reviewing agent intermediate steps
-                    self.stream_output(input_object,
-                                       {"data": {
-                                           'output': reviewing_result.get_data('suggestion'),
-                                           "agent_info": reviewingAgent.agent_model.info
-                                       }, "type": "reviewing"})
-                    content = (
-                        f"The agent responsible for evaluating the result is {reviewingAgent.agent_model.info.get('name')}, "
-                        f"Human: {agent_input.get(self.input_key)}, "
-                        f"AI: {reviewing_result.get_data('suggestion')}")
-                    self.assemble_memory_output(memory, agent_input, content,
-                                                reviewingAgent.agent_model.info.get('name'))
-
-                    if reviewing_result.get_data('score') and reviewing_result.get_data('score') >= eval_threshold:
-                        loopResults.append({
-                            "planning_result": planning_result,
-                            "executing_result": executing_result,
-                            "expressing_result": expressing_result,
-                            "reviewing_result": reviewing_result
-                        })
-                        result['result'] = loopResults
-                        return result
-                    else:
-                        loopResults.append({
-                            "planning_result": planning_result,
-                            "executing_result": executing_result,
-                            "expressing_result": expressing_result,
-                            "reviewing_result": reviewing_result
-                        })
+            if not reviewing_result.to_dict() or (
+                    reviewing_result.get_data('score') and reviewing_result.get_data('score') >= eval_threshold):
+                loopResults.append({
+                    "planning_result": planning_result,
+                    "executing_result": executing_result,
+                    "expressing_result": expressing_result,
+                    "reviewing_result": reviewing_result
+                })
+                result['result'] = loopResults
+                return result
+            else:
+                loopResults.append({
+                    "planning_result": planning_result,
+                    "executing_result": executing_result,
+                    "expressing_result": expressing_result,
+                    "reviewing_result": reviewing_result
+                })
         result['result'] = loopResults
         return result
 
@@ -214,7 +181,8 @@ class PeerPlanner(Planner):
                 'output': planning_result.get_data('framework'),
                 "agent_info": planning_agent.agent_model.info
             }, "type": "planning"})
-            content = (f"The agent responsible for the dismantling task is: {planning_agent_name}, "
+            content = (f"The agent responsible for planning and breaking down the task"
+                       f" raised by users into several sub-tasks is: {planning_agent_name}, "
                        f"Human: {agent_input.get(self.input_key)}, "
                        f"AI: {planning_result.get_data('framework')}")
             self.assemble_memory_output(peer_memory, agent_input, content, planning_agent_name)
@@ -293,9 +261,53 @@ class PeerPlanner(Planner):
                 'output': expressing_result.get_data('output'),
                 "agent_info": expressing_agent.agent_model.info
             }, "type": "expressing"})
-            content = (f"The agent responsible for summarizing and expressing is: {expressing_agent_name}, "
+            content = (f"The agent responsible for expressing and integrating the task raised by user"
+                       f" into a final result based on the results of several sub-tasks is: {expressing_agent_name}, "
                        f"Human: {agent_input.get(self.input_key)}, "
                        f"AI: {expressing_result.get_data('output')}")
             self.assemble_memory_output(peer_memory, agent_input, content, expressing_agent_name)
 
         return expressing_result
+
+    def reviewing_agent_run(self, reviewing_agent: Agent,
+                            input_object: InputObject, agent_input: dict, peer_memory: Memory) -> OutputObject:
+        """Run the reviewing agent.
+
+        Args:
+            reviewing_agent (Agent): Reviewing agent object.
+            input_object (InputObject): The input parameters passed by the user.
+            agent_input (dict): Agent input object.
+            peer_memory (Memory): Memory of the peer agent.
+        Returns:
+            OutputObject: The reviewing agent result.
+        """
+        reviewing_agent_name = reviewing_agent.agent_model.info.get('name') if reviewing_agent else ''
+        if not reviewing_agent:
+            LOGGER.warn("no reviewing agent.")
+            reviewing_result = OutputObject({})
+        else:
+            LOGGER.info(f"Starting reviewing agent.")
+            reviewing_result = reviewing_agent.run(**input_object.to_dict())
+
+        input_object.add_data('reviewing_result', reviewing_result)
+        # add reviewing agent log info
+        logger_info = f"\nReviewing agent execution result is :\n"
+        reviewing_info_str = f"review suggestion: {reviewing_result.get_data('suggestion')} \n"
+        reviewing_info_str += f"review score: {reviewing_result.get_data('score')} \n"
+        LOGGER.info(logger_info + reviewing_info_str)
+
+        # add reviewing agent intermediate steps
+        if reviewing_agent:
+            # add reviewing agent intermediate steps
+            self.stream_output(input_object,
+                               {"data": {
+                                   'output': reviewing_result.get_data('suggestion'),
+                                   "agent_info": reviewing_agent.agent_model.info
+                               }, "type": "reviewing"})
+            content = (
+                f"The agent responsible for reviewing"
+                f" and evaluating the result to the task raised by user is {reviewing_agent_name}, "
+                f"Human: {agent_input.get(self.input_key)}, "
+                f"AI: {reviewing_result.get_data('suggestion')}")
+            self.assemble_memory_output(peer_memory, agent_input, content, reviewing_agent_name)
+        return reviewing_result

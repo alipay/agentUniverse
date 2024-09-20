@@ -29,11 +29,9 @@ def generate_messages(memories: list) -> List[Message]:
         if isinstance(m, Message):
             messages.append(m)
         elif isinstance(m, dict):
-            message: Message = Message(type=m.get('type', ''), content=m.get('content', ''), source=m.get('source', ''),
-                                       metadata=m.get('metadata', {}))
-            messages.append(message)
+            messages.append(Message.from_dict(m))
         elif isinstance(m, str):
-            message: Message = Message(type='', content=m, source='', metadata={})
+            message: Message = Message(content=m, metadata={})
             messages.append(message)
     return messages
 
@@ -70,12 +68,21 @@ def get_memory_string(messages: List[Message]) -> str:
             m_str += f"Message role: {role} "
         if m.source:
             m_str += f"Message source: {m.source} "
-        m_str += f"Message content: {m.content} "
+        m_str += f"Message content: \n {m.content} "
         string_messages.append(m_str)
-    return "\n".join(string_messages)
+    return "\n\n".join(string_messages)
 
 
-def get_memory_tokens(messages: List[Message], llm_name: str) -> int:
-    memory_str = get_memory_string(messages)
+def get_memory_tokens(memories: List[Message], llm_name: str = None) -> int:
+    """Get the number of tokens in the given memories.
+
+    Args:
+        memories(List[Message]): The list of messages.
+        llm_name(str): The name of the LLM to use for token counting.
+
+    Returns:
+        int: The number of tokens in the given memories.
+    """
+    memory_str = get_memory_string(memories)
     llm_instance: LLM = LLMManager().get_instance_obj(llm_name)
     return llm_instance.get_num_tokens(memory_str) if llm_instance else len(memory_str)

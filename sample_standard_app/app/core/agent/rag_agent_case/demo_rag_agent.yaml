@@ -10,7 +10,7 @@ plan:
     name: 'rag_planner'
 action:
   tool:
-    - ''
+    - 'google_search_tool'
   knowledge:
     -
 memory:

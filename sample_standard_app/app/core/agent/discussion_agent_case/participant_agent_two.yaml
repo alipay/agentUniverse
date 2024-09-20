@@ -4,7 +4,7 @@ info:
 profile:
   prompt_version: participant_agent.cn
   llm_model:
-    name: 'default_deepseek_llm'
+    name: 'qwen_llm'
     temperature: 0.3
 plan:
   planner:
@@ -13,7 +13,7 @@ action:
   tool:
     - 'google_search_tool'
 memory:
-  name: 'demo_sql_memory'
+  name: 'demo_local_memory'
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.discussion_agent_case.participant_agent'

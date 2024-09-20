@@ -2,9 +2,11 @@ name: 'demo_sql_memory'
 description: 'demo sql memory'
 type: 'long_term'
 memory_key: 'chat_history'
-max_tokens: 2000
-sqldb_wrapper_name: 'memory_sqldb_wrapper'
+max_tokens: 3000
+memory_compressor: default_memory_compressor
+memory_storages:
+  - mysql_memory_storage
 metadata:
   type: 'MEMORY'
-  module: 'agentuniverse.agent.memory.sql_alchemy_memory'
-  class: 'SqlAlchemyMemory'
+  module: 'agentuniverse.agent.memory.memory'
+  class: 'Memory'

@@ -1,10 +1,10 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-# @Time    : 2024/7/18 21:08
+# @Time    : 2024/10/10 19:45
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
-# @FileName: sql_alchemy_memory.py
+# @FileName: sql_alchemy_memory_storage.py
 from abc import abstractmethod
 import json
 from typing import Optional, List, Any
@@ -13,16 +13,20 @@ from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Integer, String, DateTime, Text, Column, Index, and_, func
 
-from agentuniverse.agent.memory.memory import Memory
+from agentuniverse.agent.memory.memory_storage.memory_storage import MemoryStorage
 from agentuniverse.agent.memory.message import Message
-from agentuniverse.base.config.component_configer.configers.memory_configer import MemoryConfiger
-from agentuniverse.base.util.memory_util import get_memory_tokens
+from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.database.sqldb_wrapper import SQLDBWrapper
 from agentuniverse.database.sqldb_wrapper_manager import SQLDBWrapperManager
 
 
 class BaseMemoryConverter(BaseModel):
-    """Convert BaseMemory to the SQLAlchemy model."""
+    """ The base class for memory converter used for converting between aU Message and SQLAlchemy model.
+
+    Attributes:
+        model_class: The SQLAlchemy model class.
+        model_config: The model configuration.
+    """
 
     model_class: Any = None
     model_config = ConfigDict(protected_namespaces=())
@@ -33,7 +37,7 @@ class BaseMemoryConverter(BaseModel):
         raise NotImplementedError
 
     @abstractmethod
-    def to_sql_model(self, message: Message, session_id: str) -> Any:
+    def to_sql_model(self, message: Message) -> Any:
         """Convert a Message instance to a SQLAlchemy model."""
         raise NotImplementedError
 
@@ -64,11 +68,11 @@ def create_memory_model(table_name: str, DynamicBase: Any) -> Any:
         source = Column(String(500), default='')
         message = Column(Text)
         gmt_created = Column(DateTime, default=func.now())
-        gmt_modified = Column(DateTime, default=func.now(), onupdate=func.now())
 
         __table_args__ = (
-            Index('memory_ix_session_id', 'session_id'),
-            Index('memory_ix_agent_id_source', 'agent_id', 'source'),
+            Index('idx_session_id_source', 'session_id', 'agent_id', 'source'),
+            Index('idx_agent_id_source', 'agent_id', 'source'),
+            Index('idx_gmt_created', 'gmt_created'),
         )
 
     return MemoryModel
@@ -83,7 +87,7 @@ class DefaultMemoryConverter(BaseMemoryConverter):
 
     def from_sql_model(self, sql_message: Any) -> Message:
         """Convert a SQLAlchemy model to a Message instance."""
-        return Message.from_dict(json.loads(sql_message.message))
+        return Message.from_dict({'id': sql_message.id, **json.loads(sql_message.message)})
 
     def to_sql_model(self, message: Message, session_id: str = None, agent_id: str = None, source: str = None) -> Any:
         """Convert a Message instance to a SQLAlchemy model."""
@@ -97,10 +101,8 @@ class DefaultMemoryConverter(BaseMemoryConverter):
         return self.model_class
 
 
-class SqlAlchemyMemory(Memory):
-    """SqlAlchemyMemory class that stores messages in a SQL database.
-
-    Long-term memory: it is a long-term memory that stores messages in a SQL database.
+class SqlAlchemyMemoryStorage(MemoryStorage):
+    """SqlAlchemyMemoryStorage class that stores messages in a SQL database.
 
     Attributes:
         sqldb_table_name (str): The name of the table to store for the memory.
@@ -114,112 +116,22 @@ class SqlAlchemyMemory(Memory):
     memory_converter: BaseMemoryConverter = None
     _sqldb_wrapper: SQLDBWrapper = None
 
-    def delete(self, session_id: str = '', agent_id: str = '', **kwargs) -> None:
-        """Delete the memory from the database."""
-        if self._sqldb_wrapper is None:
-            self._init_db()
-        with self._sqldb_wrapper.get_session()() as session:
-            model_class = self.memory_converter.get_sql_model_class()
-            query = session.query(model_class)
+    def _initialize_by_component_configer(self,
+                                          memory_storage_config: ComponentConfiger) -> 'SqlAlchemyMemoryStorage':
+        """Initialize the SqlAlchemyMemoryStorage by the ComponentConfiger object.
 
-            # construct query based on the provided session_id and agent_id
-            if session_id:
-                query = query.filter(getattr(model_class, 'session_id') == session_id)
-            if agent_id:
-                query = query.filter(getattr(model_class, 'agent_id') == agent_id)
-
-            # execute delete and commit the session
-            query.delete(synchronize_session=False)
-            session.commit()
-
-    def add(self, message_list: List[Message], session_id: str = '', agent_id: str = '', **kwargs) -> None:
-        """Add messages to the memory db."""
-        if self._sqldb_wrapper is None:
-            self._init_db()
-        if message_list is None:
-            return
-        with self._sqldb_wrapper.get_session()() as session:
-            for message in message_list:
-                session.add(
-                    self.memory_converter.to_sql_model(message=message, session_id=session_id, agent_id=agent_id,
-                                                       source=message.source))
-            session.commit()
-
-    def get(self, session_id: str = '', agent_id: str = '', source: str = '', top_k=None, **kwargs) -> List[Message]:
-        """Get messages from the memory db."""
-        if self._sqldb_wrapper is None:
-            self._init_db()
-        with self._sqldb_wrapper.get_session()() as session:
-            # get the messages from the memory by session_id and agent_id
-            model_class = self.memory_converter.get_sql_model_class()
-            conditions = []
-
-            # conditionally add session_id to the query
-            if session_id:
-                session_id_col = getattr(model_class, 'session_id')
-                conditions.append(session_id_col == session_id)
-
-            # conditionally add agent_id to the query
-            if agent_id:
-                agent_id_col = getattr(model_class, 'agent_id')
-                conditions.append(agent_id_col == agent_id)
-
-            # conditionally add source to the query
-            if source:
-                source_col = getattr(model_class, 'source')
-                conditions.append(source_col == source)
-
-            # build the query with dynamic conditions
-            query = session.query(self.memory_converter.model_class)
-            if conditions:
-                query = query.where(and_(*conditions))
-            query = query.order_by(model_class.gmt_created.asc())
-
-            # Execute the query and fetch the results
-            records = query.all()
-
-            if top_k is not None:
-                records = records[-top_k:]
-
-            messages = []
-            for record in records:
-                messages.append(self.memory_converter.from_sql_model(record))
-
-            # prune messages
-            return self.prune(messages, self.llm_name)
-
-    def prune(self, message_list: List[Message], llm_name: str, **kwargs) -> List[Message]:
-        """Prune messages from the memory due to memory max token limitation."""
-        if len(message_list) < 1:
-            return []
-        new_messages = message_list[:]
-        # get the number of tokens of the session messages.
-        tokens = get_memory_tokens(new_messages, llm_name)
-        # truncate the memory if it exceeds the maximum number of tokens
-        if tokens > self.max_tokens:
-            prune_messages = []
-            while tokens > self.max_tokens:
-                prune_messages.append(new_messages.pop(0))
-                tokens = get_memory_tokens(new_messages, llm_name)
-            summarized_memory = self.summarize_memory(prune_messages, self.max_tokens - tokens)
-            if summarized_memory:
-                new_messages.insert(0, Message(content=summarized_memory))
-        return new_messages
-
-    def initialize_by_component_configer(self, component_configer: MemoryConfiger) -> 'SqlAlchemyMemory':
-        """Initialize the memory by the ComponentConfiger object.
         Args:
-            component_configer(MemoryConfiger): the ComponentConfiger object
+            memory_storage_config(ComponentConfiger): A configer contains sql_alchemy_memory_storage basic info.
         Returns:
-            SqlAlchemyMemory: the SqlAlchemyMemory object
+            SqlAlchemyMemoryStorage: A SqlAlchemyMemoryStorage instance.
         """
-        super().initialize_by_component_configer(component_configer)
-        if 'sqldb_wrapper_name' in component_configer.configer.value:
-            self.sqldb_wrapper_name = component_configer.configer.value.get('sqldb_wrapper_name', '')
+        super()._initialize_by_component_configer(memory_storage_config)
+        if getattr(memory_storage_config, 'sqldb_table_name', None):
+            self.sqldb_table_name = memory_storage_config.sqldb_table_name
+        if getattr(memory_storage_config, 'sqldb_wrapper_name', None):
+            self.sqldb_wrapper_name = memory_storage_config.sqldb_wrapper_name
         if self.sqldb_wrapper_name is None:
             raise Exception('`sqldb_wrapper_name` is not set')
-        if 'sqldb_table_name' in component_configer.configer.value:
-            self.sqldb_table_name = component_configer.configer.value.get('sqldb_table_name', '')
         # initialize the memory converter if not set
         if self.memory_converter is None:
             self.memory_converter = DefaultMemoryConverter(self.sqldb_table_name)
@@ -238,3 +150,96 @@ class SqlAlchemyMemory(Memory):
         with self._sqldb_wrapper.sql_database._engine.connect() as conn:
             if not conn.dialect.has_table(conn, self.sqldb_table_name):
                 self.memory_converter.get_sql_model_class().__table__.create(conn)
+
+    def delete(self, session_id: str = None, agent_id: str = None, **kwargs) -> None:
+        """Delete the memory from the database.
+
+        Args:
+            session_id (str): The session id of the memory to delete.
+            agent_id (str): The agent id of the memory to delete.
+        """
+        if self._sqldb_wrapper is None:
+            self._init_db()
+        if session_id is None and agent_id is None:
+            return
+        with self._sqldb_wrapper.get_session()() as session:
+            model_class = self.memory_converter.get_sql_model_class()
+            query = session.query(model_class)
+            # construct query based on the provided session_id and agent_id
+            if session_id is not None:
+                query = query.filter(getattr(model_class, 'session_id') == session_id)
+            if agent_id is not None:
+                query = query.filter(getattr(model_class, 'agent_id') == agent_id)
+
+            # execute delete and commit the session
+            query.delete(synchronize_session=False)
+            session.commit()
+
+    def add(self, message_list: List[Message], session_id: str = '', agent_id: str = '', **kwargs) -> None:
+        """Add messages to the memory db.
+
+        Args:
+            message_list (List[Message]): The list of messages to add.
+            session_id (str): The session id of the memory to add.
+            agent_id (str): The agent id of the memory to add.
+        """
+        if self._sqldb_wrapper is None:
+            self._init_db()
+        if message_list is None:
+            return
+        with self._sqldb_wrapper.get_session()() as session:
+            for message in message_list:
+                session.add(
+                    self.memory_converter.to_sql_model(message=message, session_id=session_id, agent_id=agent_id,
+                                                       source=message.source if message.source else None))
+            session.commit()
+
+    def get(self, session_id: str = '', agent_id: str = '', top_k=10, source: str = None, **kwargs) -> List[Message]:
+        """Get messages from the memory db.
+
+        Args:
+            session_id (str): The session id of the memory to get.
+            agent_id (str): The agent id of the memory to get.
+            top_k (int): The number of messages to get.
+            source (str): The source of the messages to get.
+
+        Returns:
+            List[Message]: The list of messages retrieved from the memory.
+        """
+        if self._sqldb_wrapper is None:
+            self._init_db()
+        with self._sqldb_wrapper.get_session()() as session:
+            # get the messages from the memory by session_id and agent_id
+            model_class = self.memory_converter.get_sql_model_class()
+            conditions = []
+
+            # conditionally add session_id to the query
+            if session_id is not None:
+                session_id_col = getattr(model_class, 'session_id')
+                conditions.append(session_id_col == session_id)
+
+            # conditionally add agent_id to the query
+            if agent_id is not None:
+                agent_id_col = getattr(model_class, 'agent_id')
+                conditions.append(agent_id_col == agent_id)
+
+            # conditionally add source to the query
+            if source:
+                source_col = getattr(model_class, 'source')
+                conditions.append(source_col == source)
+
+            # build the query with dynamic conditions
+            query = session.query(self.memory_converter.model_class)
+            if conditions:
+                query = query.where(and_(*conditions))
+            query = query.order_by(model_class.gmt_created.asc())
+
+            # Execute the query and fetch the results
+            records = query.all()
+
+            records = records[-top_k:]
+
+            messages = []
+            for record in records:
+                messages.append(self.memory_converter.from_sql_model(record))
+            return messages

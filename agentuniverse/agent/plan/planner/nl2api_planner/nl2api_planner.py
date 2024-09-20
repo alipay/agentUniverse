@@ -45,7 +45,7 @@ class Nl2ApiPlanner(Planner):
         memory_messages = self.assemble_memory_input(memory, planner_input)
 
         chain = prompt.as_langchain() | llm.as_langchain_runnable(agent_model.llm_params()) | StrOutputParser()
-        res = self.invoke_chain(agent_model, chain, planner_input, input_object)
+        res = self.invoke_chain(agent_model, chain, planner_input, None, input_object)
 
         memory_messages = self.assemble_memory_output(memory=memory,
                                                       planner_input=planner_input,
