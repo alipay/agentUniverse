@@ -25,35 +25,43 @@
 更多模式组件持续推出中...
 
 ****************************************
+
 ## 目录
-* [快速开始](#快速开始)
-* [案例与样例工程](#案例与样例工程)
-* [更多](#更多)
-  * [为什么使用agentUniverse](#为什么使用agentUniverse)
-  * [核心特性](#核心特性)
-  * [用户指南](#用户指南)
-  * [API参考](#API参考)
-  * [支持](#支持)
-  * [文献](#文献)
-  * [鸣谢](#鸣谢)
+* [快速开始](#快速开始)  
+|  &nbsp; [快速安装](#快速安装) &nbsp; |
+&nbsp; [运行案例](#运行第一个教程案例) &nbsp; |
+&nbsp; [产品平台](#产品化平台使用) &nbsp; |
+* [为什么使用agentUniverse](#为什么使用agentUniverse)
+* [如何搭建一个智能体应用](#如何搭建一个智能体应用)
+* [案例与样例工程](#案例与样例工程)  
+| &nbsp; [官方案例](#官方案例) &nbsp; | 
+&nbsp; [样例工程](#示例工程) &nbsp; | 
+&nbsp; [典型产品](#使用aU构建的典型产品) &nbsp; |
+* [用户指南手册](#用户指南手册)
+* [更多](#更多)  
+| &nbsp; Roadmap &nbsp; | 
+&nbsp; [API说明](#API参考) &nbsp; | 
+&nbsp; [项目支持](#支持) &nbsp; |  
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [文献](#文献) &nbsp;&nbsp;&nbsp;&nbsp; | 
+&nbsp;&nbsp;&nbsp;&nbsp; [鸣谢](#鸣谢)  &nbsp;&nbsp;&nbsp;&nbsp; |
+
 ****************************************
+
 ## 快速开始
+### 快速安装
 使用pip：
 ```shell
 pip install agentUniverse
 ```
 
-我们将向您展示如何：
-* 进行环境与应用工程准备
-* 构建一个简单的agent
-* 使用模式组件完成多agent协同
-* 对agent执行效果进行测试调优
-* 对agent进行快速服务化
+### 运行第一个教程案例
 
-详情请阅读[快速开始](docs/guidebook/zh/1_3_%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.md) 。
-****************************************
-## 产品化平台使用
-agentUniverse提供基于本地的产品化平台能力，请按照如下步骤快速启动
+运行您的第一个案例，您可以通过教程快速体验agentUniverse构建出的智能体(组)运行效果。 
+
+详细步骤请阅读文档: [运行第一个教程案例](./docs/guidebook/zh/1_运行第一个教程案例.md) 。
+
+### 产品化平台使用
+agentUniverse提供基于本地的产品化平台能力，请按照如下步骤快速启动。
 
 **通过pip安装**
 ```shell
@@ -65,13 +73,36 @@ pip install magent-ui ruamel.yaml
 运行sample_standard_app/app/boostrap下的[product_application.py](sample_standard_app/app/bootstrap/product_application.py)文件，一键启动。
 
 更多详情参考 [产品化平台快速开始](./docs/guidebook/zh/10_1_1_产品化平台快速开始.md)
-与 [产品化平台进阶指南](./10_1_2_产品化平台进阶指南.md) 。
-
-本功能由 [difizen](https://github.com/difizen/magent) X agentUniverse联合推出。
+与 [产品化平台进阶指南](./docs/guidebook/zh/10_1_2_产品化平台进阶指南.md) 。本功能由 [difizen](https://github.com/difizen/magent) 项目组 X agentUniverse 项目组联合推出。
 
 ****************************************
+
+## 为什么使用agentUniverse
+agentUniverse核心提供了搭建单一智能体的全部关键组件、多智能体之间的协作机制、以及专家经验的注入机制，可以帮助开发者轻松构建具备专业KnowHow的智能应用。更多核心特性与架构说明请阅读文档：[为什么使用agentUniverse?](./docs/guidebook/zh/1_为什么选择agentUniverse.md)。
+
+****************************************
+
+## 如何搭建一个智能体应用
+
+### 智能体创建与使用
+您可以通过 [智能体介绍](./docs/guidebook/zh/2_2_1_智能体.md) 了解智能体的重要组成部分，通过 [智能体创建与使用](./docs/guidebook/zh/2_2_1_智能体创建与使用.md) 了解创建智能体的详细过程。您也可以结合官方案例，如 [Python代码生成与执行Agent](./docs/guidebook/zh/7_1_1_Python自动执行案例.md) 进一步理解智能体创建与使用过程。 
+
+### 知识库构建与召回  
+在智能体应用构建中，知识库构建与召回是不可缺少的，agentUniverse框架以[RAG技术](./docs/guidebook/zh/2_2_4_RAG.md)为基础提供了高效的知识库构建和RAG检索召回环节的标准作业流程。您可以通过[知识介绍](./docs/guidebook/zh/2_2_4_知识.md)与[知识定义与使用](./docs/guidebook/zh/2_2_4_知识定义与使用.md)了解其使用方式，进一步通过[如何构建RAG智能体](./docs/guidebook/zh/2_2_4_如何构建RAG智能体.md)掌握如何快速构建知识库与构建具有召回能力的智能体。
+
+### 工具自定义与使用  
+在智能体应用构建中，智能体需要连接各种各样的工具，您需要为其指定可使用的工具范围列表。您可以通过[工具创建与使用](./docs/guidebook/zh/2_2_3_工具创建与使用.md)将各类自有API与服务以工具插件形式接入。目前框架已经集成了LangChain与部分第三方工具包，详细使用法可阅读[集成LangChain工具](./docs/guidebook/zh/2_2_3_集成LangChain工具.md)、[现有集成的工具](./docs/guidebook/zh/2_2_3_集成的工具.md)。
+
+### 效果评估  
+智能体的效果评估一方面可以通过人工专家评定，另一个方面也可以依托智能体的评估能力。agentUniverse推出了DataAgent（Minimum Viable Product版本）, DataAgent旨在使用智能体能力让您的Agent拥有自我评价与演进的能力，您也可以在其中自定义评估标准。详情见文档: [DataAgent - 数据自治智能体](./docs/guidebook/zh/8_1_1_数据自治智能体.md)。
+
+### 服务化
+agentUniverse提供多套标准的web serve能力, 同时提供标准的http与rpc协议。您可以进一步关注文档[服务注册与使用](./docs/guidebook/zh/2_4_1_服务注册与使用.md)与[Web_Server](./docs/guidebook/zh/2_4_1_Web_Server.md)部分。
+
+****************************************
+
 ## 案例与样例工程
-### 🌟 使用案例
+### 官方案例
 [法律咨询Agent_v2](./docs/guidebook/zh/7_1_1_法律咨询案例.md)
 
 [Python代码生成与执行Agent](./docs/guidebook/zh/7_1_1_Python自动执行案例.md)
@@ -82,19 +113,11 @@ pip install magent-ui ruamel.yaml
 
 [吴恩达反思工作流翻译智能体复刻](./docs/guidebook/zh/7_1_1_翻译案例.md)
 
-#### 🚩 如何快速构建RAG智能体
-RAG组件全面升级，教程提供一个在agentUniverse中快速构建一个RAG智能体，可查看文档[如何构建RAG智能体](./docs/guidebook/zh/2_2_4_如何构建RAG智能体.md)，更多原理性内容可查看文档[RAG介绍](./docs/guidebook/zh/2_2_4_RAG.md)。
-
-#### 🚩 DataAgent - 数据自治智能体
-agentUniverse推出了DataAgent（Minimum Viable Product版本）, DataAgent旨在使用智能体能力让您的Agent拥有自我评价与演进的能力。详情见文档: [DataAgent - 数据自治智能体](./docs/guidebook/zh/8_1_1_数据自治智能体.md)
-
-### 🌟 示例项目
+### 示例工程
 [agentUniverse 示例项目](sample_standard_app)
 
-### 🌟 使用aU构建的产品案例
+### 使用aU构建的典型产品
 [支小助 金融从业专家AI助手](https://zhu.alipay.com/?from=au)
-
-****************************************
 
 **投研支小助：助推大模型落地严谨产业，提升投研专家效率**
 
@@ -105,22 +128,13 @@ https://private-user-images.githubusercontent.com/39180831/355437700-192f712d-1b
 
 
 ****************************************
+
+## 用户指南手册
+💡 更多详细信息，请阅读[用户指南手册](docs/guidebook/zh/0_%E7%9B%AE%E5%BD%95.md) 。
+
+****************************************
+
 ## 更多
-### 为什么使用agentUniverse
-💡 [为什么使用agentUniverse?](./docs/guidebook/zh/1_为什么选择agentUniverse.md)
-
-### 核心特性
-
-* **丰富的多智能体协同模式：** 提供PEER（Plan/Execute/Express/Review）、DOE（Data-fining/Opinion-inject/Express）等产业中验证有效的协同模式，同时支持用户自定义编排新模式，让多个智能体有机合作；
-
-* **所有组件均可定制：** LLM、知识、工具、记忆等所有框架组件均提供自定义能力，供用户来增强专属智能体；
-
-* **轻松融入领域经验：** 提供领域prompt、知识构建与管理的能力，同时支持领域级SOP编排与注入，将智能体对齐至领域专家级别；
-
-💡 更多特点见[agentUniverse核心特性](docs/guidebook/zh/1_核心特性.md)部分。
-
-### 用户指南
-💡 更多详细信息，请阅读[用户指南](docs/guidebook/zh/0_%E7%9B%AE%E5%BD%95.md) 。
 
 ### API参考
 💡 请阅读[readthedocs](https://agentuniverse.readthedocs.io/en/latest/) 。
@@ -137,7 +151,11 @@ https://private-user-images.githubusercontent.com/39180831/355437700-192f712d-1b
 ![](./docs/guidebook/_picture/dingtalk_util20250429.png)
 
 #### 通过管理员Email联系我们
-😊 Email: [jerry.zzw@antgroup.com](mailto:jerry.zzw@antgroup.com)
+😊 Email: 
+
+[jihan.hanji@antgroup.com](mailto:jihan.hanji@antgroup.com)
+[jerry.zzw@antgroup.com](mailto:jerry.zzw@antgroup.com)
+[jinshi.zjs@antgroup.com](mailto:jinshi.zjs@antgroup.com)
 
 #### 微信公众号
 
@@ -168,5 +186,5 @@ BibTeX formatted
 文献简介：该文献详细介绍了介绍了PEER多智能体框架的机制原理，同时在实验部分分别从**完整性、相关性、紧凑性、事实性、逻辑性、结构性和全面性七个维度进行打分（各纬度满分为5分）**，PEER模式在每个测评维度的平均分数均高于BabyAGI，且在**完整性、相关性、逻辑性、结构性和全面性五个纬度有显著优势**；同时PEER模式在 GPT-3.5 turbo (16k) 模型下相较于 BabyAGI 的择优胜率达到 83%，在 GPT-4o 模型下择优胜率达到 81%，更多详情请阅读文献。
 https://arxiv.org/pdf/2407.06985
 
-## 鸣谢
+### 鸣谢
 本项目部分基于langchain、pydantic、gunicorn、flask、SQLAlchemy、chromadb等（详细依赖列表可见pyproject.toml）优秀开源项目实现，在此特别感谢相关项目与关联方。 🙏🙏🙏
