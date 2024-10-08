@@ -227,8 +227,8 @@ class RequestTask:
             result=dict(),
             steps=[],
             additional_args=dict(),
-            gmt_create=int(time.time()),
-            gmt_modified=int(time.time()),
+            gmt_create=datetime.now(),
+            gmt_modified=datetime.now(),
         )
         if self.saved:
             RequestLibrary().add_request(request_do)

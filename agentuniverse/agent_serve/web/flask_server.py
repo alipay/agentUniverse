@@ -2,10 +2,12 @@ import traceback
 
 from flask import Flask, Response
 from werkzeug.exceptions import HTTPException
+from concurrent.futures import TimeoutError
 
 from ..service_instance import ServiceInstance, ServiceNotFoundError
 from .request_task import RequestTask
-from .web_util import request_param, service_run_queue, make_standard_response
+from .web_util import request_param, service_run_queue, make_standard_response, FlaskServerManager
+from .thread_with_result import ThreadPoolExecutorWithContext
 from ...base.util.logging.logging_util import LOGGER
 
 
@@ -42,9 +44,18 @@ def service_run(service_id: str, params: dict, saved: bool = False):
         result: This key points to a nested dictionary that includes the
             result of the task.
     """
-    params = {} if params is None else params
-    request_task = RequestTask(ServiceInstance(service_id).run, saved, **params)
-    result = request_task.run()
+    try:
+        params = {} if params is None else params
+        request_task = RequestTask(ServiceInstance(service_id).run, saved,
+                                   **params)
+        with ThreadPoolExecutorWithContext() as executor:
+            future = executor.submit(request_task.run)
+            result = future.result(timeout=FlaskServerManager().sync_service_timeout)
+    except TimeoutError:
+        return make_standard_response(success=False,
+                                      message="AU sync service timeout",
+                                      status_code=504)
+
     return make_standard_response(success=True, result=result,
                                   request_id=request_task.request_id)
 
