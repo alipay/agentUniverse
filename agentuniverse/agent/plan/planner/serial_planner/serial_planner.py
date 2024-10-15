@@ -6,6 +6,7 @@ from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.output_object import OutputObject
 from agentuniverse.agent.plan.planner.planner import Planner
+from agentuniverse.base.util.logging.logging_util import LOGGER
 
 
 def execute_tool_or_agent(name: str, manager_class, planner_input: dict,
@@ -36,6 +37,7 @@ def execute_tool_or_agent(name: str, manager_class, planner_input: dict,
             planner_input.update(result.to_dict())
         else:
             planner_input[name] = result
+        return result
     except Exception as e:
         print(f"Error executing {name}: {e}")
 
@@ -68,9 +70,21 @@ class SerialPlanner(Planner):
             runtime_params = tool.get('runtime_params') or dict()
             tool_type = tool.get('type') or 'tool'
             if tool_type == 'tool':
-                execute_tool_or_agent(tool_name, ToolManager(), planner_input, runtime_params)
+                res = execute_tool_or_agent(tool_name, ToolManager(), planner_input, runtime_params)
+                LOGGER.info(f"start Executing tool: {tool_name}")
+                self.stream_output(input_object, {
+                    'data': res,
+                    "type": "tool",
+                    "agent_info": agent_model.info
+                })
             elif tool_type == 'agent':
-                execute_tool_or_agent(tool_name, AgentManager(), planner_input, runtime_params)
+                res = execute_tool_or_agent(tool_name, AgentManager(), planner_input, runtime_params)
+                LOGGER.info(f"start Executing Agent: {tool_name}")
+                self.stream_output(input_object, {
+                    'data': res.to_dict(),
+                    "type": "agent",
+                    "agent_info": agent_model.info
+                })
             else:
                 raise ValueError(f"Unsupported tool type: {tool_type}")
         return planner_input

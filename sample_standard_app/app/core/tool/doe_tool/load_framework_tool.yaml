@@ -1,0 +1,8 @@
+name: 'load_framework_tool'
+description: ''
+tool_type: 'api'
+input_keys: ['framework_path']
+metadata:
+  type: 'TOOL'
+  module: 'sample_standard_app.app.core.tool.doe_tool.framework_tool'
+  class: 'LoadFrameWorkTool'

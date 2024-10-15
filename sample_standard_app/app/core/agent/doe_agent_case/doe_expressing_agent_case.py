@@ -1,12 +1,11 @@
-from langchain_core.utils.json import parse_json_markdown
-
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
 
 
-class DataFiningAgent(Agent):
+class DOEExpressingAgent(Agent):
     def input_keys(self) -> list[str]:
-        return ['fund_id']
+        return ['fund_info', 'product_track', 'interpret_latitude', 'argument_direction', 'argument_direction_list',
+                'expression_techniques']
 
     def output_keys(self) -> list[str]:
         return []
@@ -17,6 +16,4 @@ class DataFiningAgent(Agent):
         return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:
-        return {
-            'fund_info': parse_json_markdown(planner_result.get('output'))
-        }
+        return planner_result

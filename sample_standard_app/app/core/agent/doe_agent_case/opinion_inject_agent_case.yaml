@@ -1,0 +1,19 @@
+info:
+  name: 'opinion_inject_agent'
+  description: 'opinion inject agent'
+profile:
+action:
+  tool:
+    - name: 'load_framework_tool'
+      type: 'tool'
+    - name: 'framework_matching_agent'
+      type: 'agent'
+    - name: 'json_output_parser_tool'
+      type: 'tool'
+plan:
+  planner:
+    name: 'serial_planner'
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.app.core.agent.doe_agent_case.opinion_inject_agent_case'
+  class: 'OpinionInjectAgent'
