@@ -40,8 +40,7 @@ def handle_memory(agent_model: AgentModel, agent_input: dict) -> Memory | None:
     if temporary_messages:
         memory.add(temporary_messages, **agent_input)
 
-    llm_model = agent_model.memory.get('llm_model') or dict()
-    llm_name = llm_model.get('name', '') or agent_model.profile.get('llm_model', {}).get('name')
+    llm_name = agent_model.profile.get('llm_model', {}).get('name')
     llm: LLM = LLMManager().get_instance_obj(llm_name)
 
     params: dict = dict()

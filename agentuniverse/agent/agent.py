@@ -147,12 +147,12 @@ class Agent(ComponentBase):
                 raise Exception(f'Output must have key: {key}.')
 
     def initialize_by_component_configer(self, component_configer: AgentConfiger) -> 'Agent':
-        """Initialize the LLM by the ComponentConfiger object.
+        """Initialize the Agent by the AgentConfiger object.
 
         Args:
-            component_configer(LLMConfiger): the ComponentConfiger object
+            component_configer(AgentConfiger): the ComponentConfiger object
         Returns:
-            LLM: the LLM object
+            Agent: the Agent object
         """
         agent_config: Optional[AgentConfiger] = component_configer.load()
         info: Optional[dict] = agent_config.info

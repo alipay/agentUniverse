@@ -85,9 +85,9 @@ class Planner(ComponentBase):
         if temporary_messages:
             memory.add(temporary_messages, **planner_input)
 
-        llm_model = agent_model.memory.get('llm_model') or dict()
-        llm_name = llm_model.get('name', '') or agent_model.profile.get('llm_model', {}).get('name')
+        llm_name = agent_model.profile.get('llm_model', {}).get('name')
         llm: LLM = LLMManager().get_instance_obj(llm_name)
+
         params: dict = dict()
         params['llm'] = llm
         params['agent_llm_name'] = llm_name
@@ -221,7 +221,7 @@ class Planner(ComponentBase):
         if memory:
             # get the memory messages from the memory instance.
             memory_messages = memory.get(**planner_input)
-            # convert the memory messages to a string and add it to the agent input object.
+            # convert the memory messages to a string and add it to the planner input object.
             memory_str = get_memory_string(memory_messages)
             planner_input[memory.memory_key] = memory_str
         return memory_messages
