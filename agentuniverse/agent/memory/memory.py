@@ -55,7 +55,7 @@ class Memory(ComponentBase):
         """Convert the agentUniverse(aU) memory class to the langchain memory class."""
         pass
 
-    def add(self, message_list: List[Message], session_id: str = '', agent_id: str = '',
+    def add(self, message_list: List[Message], session_id: str = None, agent_id: str = None,
             **kwargs) -> None:
         """Add messages to the memory."""
         if not message_list:
@@ -72,7 +72,7 @@ class Memory(ComponentBase):
             if memory_storage:
                 memory_storage.delete(session_id, **kwargs)
 
-    def get(self, session_id: str = '', agent_id: str = '', **kwargs) -> List[Message]:
+    def get(self, session_id: str = None, agent_id: str = None, **kwargs) -> List[Message]:
         """Get messages from the memory."""
         memory_storage: MemoryStorage = MemoryStorageManager().get_instance_obj(self.memory_retrieval_storage)
         if memory_storage:

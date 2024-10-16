@@ -175,7 +175,7 @@ class SqlAlchemyMemoryStorage(MemoryStorage):
             query.delete(synchronize_session=False)
             session.commit()
 
-    def add(self, message_list: List[Message], session_id: str = '', agent_id: str = '', **kwargs) -> None:
+    def add(self, message_list: List[Message], session_id: str = None, agent_id: str = None, **kwargs) -> None:
         """Add messages to the memory db.
 
         Args:
@@ -190,11 +190,13 @@ class SqlAlchemyMemoryStorage(MemoryStorage):
         with self._sqldb_wrapper.get_session()() as session:
             for message in message_list:
                 session.add(
-                    self.memory_converter.to_sql_model(message=message, session_id=session_id, agent_id=agent_id,
+                    self.memory_converter.to_sql_model(message=message, session_id=session_id if session_id else None,
+                                                       agent_id=agent_id if agent_id else None,
                                                        source=message.source if message.source else None))
             session.commit()
 
-    def get(self, session_id: str = '', agent_id: str = '', top_k=10, source: str = None, **kwargs) -> List[Message]:
+    def get(self, session_id: str = None, agent_id: str = None, top_k=10, source: str = None, **kwargs) -> List[
+        Message]:
         """Get messages from the memory db.
 
         Args:
@@ -214,12 +216,12 @@ class SqlAlchemyMemoryStorage(MemoryStorage):
             conditions = []
 
             # conditionally add session_id to the query
-            if session_id is not None:
+            if session_id:
                 session_id_col = getattr(model_class, 'session_id')
                 conditions.append(session_id_col == session_id)
 
             # conditionally add agent_id to the query
-            if agent_id is not None:
+            if agent_id:
                 agent_id_col = getattr(model_class, 'agent_id')
                 conditions.append(agent_id_col == agent_id)
 

@@ -89,7 +89,7 @@ class ChromaMemoryStorage(MemoryStorage):
             filters['agent_id'] = agent_id
         self._collection.delete(where=filters)
 
-    def add(self, message_list: List[Message], session_id: str = '', agent_id: str = '', **kwargs) -> None:
+    def add(self, message_list: List[Message], session_id: str = None, agent_id: str = None, **kwargs) -> None:
         """Add messages to the memory db.
 
         Args:
@@ -101,7 +101,11 @@ class ChromaMemoryStorage(MemoryStorage):
             self._init_collection()
         if not message_list:
             return
-        metadata = {'gmt_created': datetime.now().isoformat(), 'session_id': session_id, 'agent_id': agent_id}
+        metadata = {'gmt_created': datetime.now().isoformat()}
+        if session_id:
+            metadata['session_id'] = session_id
+        if agent_id:
+            metadata['agent_id'] = agent_id
         for message in message_list:
             embedding = []
             if self.embedding_model:
@@ -118,7 +122,7 @@ class ChromaMemoryStorage(MemoryStorage):
                 embeddings=[embedding] if len(embedding) > 0 else None,
             )
 
-    def get(self, session_id: str = '', agent_id: str = '', top_k=10, input: str = '', source: str = None, **kwargs) -> \
+    def get(self, session_id: str = None, agent_id: str = None, top_k=10, input: str = '', source: str = None, **kwargs) -> \
             List[Message]:
         """Get messages from the memory db.
 
@@ -134,12 +138,14 @@ class ChromaMemoryStorage(MemoryStorage):
         if self._collection is None:
             self._init_collection()
         filters = {"$and": []}
-        if session_id is not None:
+        if session_id:
             filters["$and"].append({'session_id': session_id})
-        if agent_id is not None:
+        if agent_id:
             filters["$and"].append({'agent_id': agent_id})
         if source:
             filters["$and"].append({'source': source})
+        if len(filters["$and"]) < 2:
+            filters = filters["$and"][0] if len(filters["$and"]) == 1 else {}
         if input:
             embedding = []
             if self.embedding_model:

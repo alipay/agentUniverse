@@ -39,7 +39,7 @@ class MemoryStorage(ComponentBase):
             self.description = memory_storage_config.description
         return self
 
-    def add(self, message_list: List[Message], session_id: str = '', agent_id: str = '', **kwargs) -> None:
+    def add(self, message_list: List[Message], session_id: str = None, agent_id: str = None, **kwargs) -> None:
         """Add messages to the memory db.
 
         Args:
@@ -58,7 +58,7 @@ class MemoryStorage(ComponentBase):
         """
         pass
 
-    def get(self, session_id: str = '', agent_id: str = '', top_k=10, **kwargs) -> List[Message]:
+    def get(self, session_id: str = None, agent_id: str = None, top_k=10, **kwargs) -> List[Message]:
         """Get messages from the memory db.
 
         Args:
