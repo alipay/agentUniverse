@@ -40,4 +40,4 @@ class PeerAgent(Agent):
         Returns:
             dict: Agent result object.
         """
-        return {"output": planner_result.get('result')[0].get('expressing_result').get_data('output')}
+        return {"output": planner_result.get('result')[-1].get('expressing_result').get_data('output')}

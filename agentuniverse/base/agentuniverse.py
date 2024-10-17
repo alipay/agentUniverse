@@ -48,6 +48,8 @@ class AgentUniverse(object):
         self.__system_default_reader_package = ['agentuniverse.agent.action.knowledge.reader.file']
         self.__system_default_rag_router_package = ['agentuniverse.agent.action.knowledge.rag_router']
         self.__system_default_query_paraphraser_package = ['agentuniverse.agent.action.knowledge.query_paraphraser']
+        self.__system_default_memory_compressor_package = ['agentuniverse.agent.memory.memory_compressor']
+        self.__system_default_memory_storage_package = ['agentuniverse.agent.memory.memory_storage']
 
     def start(self, config_path: str = None, core_mode: bool = False):
         """Start the agentUniverse framework.
@@ -149,6 +151,10 @@ class AgentUniverse(object):
                                         + self.__system_default_rag_router_package)
         core_query_paraphraser_package_list = ((app_configer.core_query_paraphraser_package_list or app_configer.core_default_package_list)
                                                + self.__system_default_query_paraphraser_package)
+        core_memory_compressor_package_list = ((app_configer.core_memory_compressor_package_list or app_configer.core_default_package_list)
+                                               + self.__system_default_memory_compressor_package)
+        core_memory_storage_package_list = ((app_configer.core_memory_storage_package_list or app_configer.core_default_package_list)
+                                            + self.__system_default_memory_storage_package)
 
         component_package_map = {
             ComponentEnum.AGENT: core_agent_package_list,
@@ -166,7 +172,9 @@ class AgentUniverse(object):
             ComponentEnum.READER: core_reader_package_list,
             ComponentEnum.STORE: core_store_package_list,
             ComponentEnum.RAG_ROUTER: core_rag_router_package_list,
-            ComponentEnum.QUERY_PARAPHRASER: core_query_paraphraser_package_list
+            ComponentEnum.QUERY_PARAPHRASER: core_query_paraphraser_package_list,
+            ComponentEnum.MEMORY_COMPRESSOR: core_memory_compressor_package_list,
+            ComponentEnum.MEMORY_STORAGE: core_memory_storage_package_list
         }
 
         component_configer_list_map = {}

@@ -15,12 +15,10 @@ from langchain_core.runnables import RunnableSerializable
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
 from agentuniverse.agent.action.knowledge.store.document import Document
-from agentuniverse.agent.action.knowledge.store.query import Query
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.input_object import InputObject
-from agentuniverse.agent.memory.chat_memory import ChatMemory
 from agentuniverse.agent.memory.memory import Memory
 from agentuniverse.agent.memory.message import Message
 from agentuniverse.agent.memory.memory_manager import MemoryManager
@@ -30,7 +28,7 @@ from agentuniverse.base.config.component_configer.configers.planner_configer imp
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt import Prompt
-from agentuniverse.base.util.memory_util import generate_messages, generate_memories
+from agentuniverse.base.util.memory_util import generate_messages, get_memory_string
 
 logging.getLogger().setLevel(logging.ERROR)
 
@@ -65,7 +63,7 @@ class Planner(ComponentBase):
         """
         pass
 
-    def handle_memory(self, agent_model: AgentModel, planner_input: dict) -> ChatMemory | None:
+    def handle_memory(self, agent_model: AgentModel, planner_input: dict) -> Memory | None:
         """Memory module processing.
 
         Args:
@@ -76,20 +74,23 @@ class Planner(ComponentBase):
         """
         chat_history: list = planner_input.get('chat_history')
         memory_name = agent_model.memory.get('name')
-        memory: ChatMemory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
+
+        # get memory instance
+        memory: Memory = MemoryManager().get_instance_obj(component_instance_name=memory_name)
         if memory is None:
             return None
 
-        llm_model = agent_model.memory.get('llm_model') or dict()
-        llm_name = llm_model.get('name') or agent_model.profile.get('llm_model').get('name')
+        # generate a list of temporary messages from the given chat history and add them to the memory instance.
+        temporary_messages: list[Message] = generate_messages(chat_history)
+        if temporary_messages:
+            memory.add(temporary_messages, **planner_input)
 
-        messages: list[Message] = generate_messages(chat_history)
+        llm_name = agent_model.profile.get('llm_model', {}).get('name')
         llm: LLM = LLMManager().get_instance_obj(llm_name)
+
         params: dict = dict()
-        params['messages'] = messages
         params['llm'] = llm
-        params['input_key'] = self.input_key
-        params['output_key'] = self.output_key
+        params['agent_llm_name'] = llm_name
         return memory.set_by_agent_model(**params)
 
     def run_all_actions(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject):
@@ -204,3 +205,47 @@ class Planner(ComponentBase):
             })
             result.append(token)
         return "".join(result)
+
+    @staticmethod
+    def assemble_memory_input(memory: Memory, planner_input: dict) -> list[Message]:
+        """Assemble memory intput variable.
+
+        Args:
+            memory (Memory): The memory instance.
+            planner_input (dict): Planner input object.
+
+        Returns:
+            list[Message]: The memory messages.
+        """
+        memory_messages = []
+        if memory:
+            # get the memory messages from the memory instance.
+            memory_messages = memory.get(**planner_input)
+            # convert the memory messages to a string and add it to the planner input object.
+            memory_str = get_memory_string(memory_messages)
+            planner_input[memory.memory_key] = memory_str
+        return memory_messages
+
+    @staticmethod
+    def assemble_memory_output(memory: Memory, planner_input: dict,
+                               content: str, source: str = None, memory_messages=None) -> \
+            list[Message]:
+        """Assemble memory output variable.
+
+        Args:
+            memory (Memory): The memory instance.
+            planner_input (dict): Planner input object.
+            content (str): The content of the current memory message.
+            source (str): The source of the current memory message.
+            memory_messages (List[Message]): The memory history messages.
+        Returns:
+            list[Message]: The assembled memory history messages.
+        """
+        cur_memory_message = Message(content=content, source=source)
+        if memory:
+            # add the current memory message to the memory instance.
+            memory.add([cur_memory_message], **planner_input)
+        if memory_messages is None:
+            memory_messages = []
+        memory_messages.append(cur_memory_message)
+        return memory_messages

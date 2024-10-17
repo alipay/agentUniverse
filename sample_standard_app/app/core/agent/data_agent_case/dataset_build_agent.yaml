@@ -3,9 +3,7 @@ info:
   description: 'dataset build agent'
 profile:
   concurrency_level: 1
-plan:
-  planner:
-    candidate: 'demo_rag_agent'
+  candidate: 'demo_rag_agent'
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.data_agent_case.dataset_build_agent'

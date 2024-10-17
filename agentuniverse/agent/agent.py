@@ -119,6 +119,8 @@ class Agent(ComponentBase):
         agent_input['background'] = input_object.get_data('background') or ''
         agent_input['image_urls'] = input_object.get_data('image_urls') or []
         agent_input['date'] = datetime.now().strftime('%Y-%m-%d')
+        agent_input['session_id'] = input_object.get_data('session_id') or ''
+        agent_input['agent_id'] = self.agent_model.info.get('name', '')
 
         self.parse_input(input_object, agent_input)
         return agent_input
@@ -145,12 +147,12 @@ class Agent(ComponentBase):
                 raise Exception(f'Output must have key: {key}.')
 
     def initialize_by_component_configer(self, component_configer: AgentConfiger) -> 'Agent':
-        """Initialize the LLM by the ComponentConfiger object.
+        """Initialize the Agent by the AgentConfiger object.
 
         Args:
-            component_configer(LLMConfiger): the ComponentConfiger object
+            component_configer(AgentConfiger): the ComponentConfiger object
         Returns:
-            LLM: the LLM object
+            Agent: the Agent object
         """
         agent_config: Optional[AgentConfiger] = component_configer.load()
         info: Optional[dict] = agent_config.info
