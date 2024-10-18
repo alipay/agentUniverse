@@ -1,22 +1,30 @@
+# !/usr/bin/env python3
+# -*- coding:utf-8 -*-
+
+# @Time    : 2024/10/18 15:25
+# @Author  : weizjajj
+# @Email   : weizhongjie.wzj@antgroup.com
+# @FileName: opinion_generate_agent.py
+
 from langchain_core.utils.json import parse_json_markdown
 
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
 
 
-class DataFiningAgent(Agent):
+class OpinionGenerateAgent(Agent):
     def input_keys(self) -> list[str]:
-        return ['fund_id']
+        return ['input','business_scene']
 
     def output_keys(self) -> list[str]:
         return []
 
     def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
-        for key in self.input_keys():
+        for key in input_object.to_dict():
             agent_input[key] = input_object.get_data(key)
         return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:
         return {
-            'fund_info': parse_json_markdown(planner_result.get('output'))
+            'opinions': parse_json_markdown(planner_result.get('output'))
         }

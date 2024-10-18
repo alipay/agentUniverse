@@ -1,3 +1,11 @@
+# !/usr/bin/env python3
+# -*- coding:utf-8 -*-
+
+# @Time    : 2024/10/18 15:25
+# @Author  : weizjajj
+# @Email   : weizhongjie.wzj@antgroup.com
+# @FileName: serial_planner.py
+
 from agentuniverse.agent.action.tool.tool import Tool
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent import Agent
@@ -39,7 +47,7 @@ def execute_tool_or_agent(name: str, manager_class, planner_input: dict,
             planner_input[name] = result
         return result
     except Exception as e:
-        print(f"Error executing {name}: {e}")
+        raise Exception(f"Error executing {name}: {e}")
 
 
 class SerialPlanner(Planner):
@@ -64,27 +72,32 @@ class SerialPlanner(Planner):
         if not isinstance(planner_input, dict):
             raise TypeError("planner_input must be a dictionary")
 
-        tools = agent_model.action.get('tool')
-        for tool in tools:
+        serials: dict = agent_model.plan.get('planner')
+        for key in serials:
+            if key == 'name':
+                continue
+            tool = serials.get(key)
             tool_name = tool.get('name')
             runtime_params = tool.get('runtime_params') or dict()
             tool_type = tool.get('type') or 'tool'
             if tool_type == 'tool':
-                res = execute_tool_or_agent(tool_name, ToolManager(), planner_input, runtime_params)
                 LOGGER.info(f"start Executing tool: {tool_name}")
+                res = execute_tool_or_agent(tool_name, ToolManager(), planner_input, runtime_params)
                 self.stream_output(input_object, {
                     'data': res,
                     "type": "tool",
                     "agent_info": agent_model.info
                 })
+                LOGGER.info(f"finished execute tool {tool_name},execute result {res}")
             elif tool_type == 'agent':
-                res = execute_tool_or_agent(tool_name, AgentManager(), planner_input, runtime_params)
                 LOGGER.info(f"start Executing Agent: {tool_name}")
+                res = execute_tool_or_agent(tool_name, AgentManager(), planner_input, runtime_params)
                 self.stream_output(input_object, {
                     'data': res.to_dict(),
                     "type": "agent",
                     "agent_info": agent_model.info
                 })
+                LOGGER.info(f"finished execute agent {tool_name},execute result {res.to_dict()}")
             else:
                 raise ValueError(f"Unsupported tool type: {tool_type}")
         return planner_input

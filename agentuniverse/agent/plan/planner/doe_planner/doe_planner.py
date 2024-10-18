@@ -1,8 +1,9 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
-# @Time    : 2024/10/14 10:42
+
+# @Time    : 2024/10/18 15:25
 # @Author  : weizjajj
-# @Email   : lc299034@antgroup.com
+# @Email   : weizhongjie.wzj@antgroup.com
 # @FileName: doe_planner.py
 """DOE planner module."""
 from agentuniverse.agent.agent_manager import AgentManager
