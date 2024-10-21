@@ -73,7 +73,7 @@ pip install agentUniverse
 #### 智能体创建与使用
 您可以通过 [智能体介绍](./docs/guidebook/zh/2_2_1_智能体.md) 了解智能体的重要组成部分，通过 [智能体创建与使用](./docs/guidebook/zh/2_2_1_智能体创建与使用.md) 了解创建智能体的详细过程。您也可以结合官方案例，如 [Python代码生成与执行Agent](./docs/guidebook/zh/7_1_1_Python自动执行案例.md) 进一步理解智能体创建与使用过程。 
 
-#### 知识库构建与召回  
+#### 知识库构建与使用  
 在智能体应用构建中，知识库构建与召回是不可缺少的，agentUniverse框架以[RAG技术](./docs/guidebook/zh/2_2_4_RAG.md)为基础提供了高效的知识库构建和RAG检索召回环节的标准作业流程。您可以通过[知识介绍](./docs/guidebook/zh/2_2_4_知识.md)与[知识定义与使用](./docs/guidebook/zh/2_2_4_知识定义与使用.md)了解其使用方式，进一步通过[如何构建RAG智能体](./docs/guidebook/zh/2_2_4_如何构建RAG智能体.md)掌握如何快速构建知识库与构建具有召回能力的智能体。
 
 #### 工具自定义与使用  
