@@ -71,7 +71,7 @@ class ReActPlanner(Planner):
                                        max_iterations=agent_model.plan.get('planner').get("max_iterations", 15))
 
         return agent_executor.invoke(input=planner_input, memory=memory.as_langchain() if memory else None,
-                                     chat_history=planner_input.get(memory.memory_key),
+                                     chat_history=planner_input.get(memory.memory_key) if memory else '',
                                      config=self.get_run_config(agent_model, input_object))
 
     @staticmethod
