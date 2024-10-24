@@ -67,7 +67,7 @@ def write_yaml_file(file_path, config_data) -> None:
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
     # Write the dictionary to the YAML file
-    with open(file_path, 'w') as yaml_file:
+    with open(file_path, 'w', encoding='utf-8') as yaml_file:
         yaml.dump(config_data, yaml_file)
 
 

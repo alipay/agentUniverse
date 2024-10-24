@@ -4,18 +4,15 @@ info:
 profile:
   prompt_version: host_agent.cn
   llm_model:
-    name: 'demo_llm'
+    name: 'qwen_llm'
     temperature: 0.6
-plan:
-  planner:
-    name: 'discussion_planner'
-    round: 2
-    participant:
-      name:
-        - 'participant_agent_one'
-        - 'participant_agent_two'
+  discussion_round: 2
+  discussion_participant:
+    name:
+      - 'participant_agent_one'
+      - 'participant_agent_two'
 memory:
-  name: 'demo_memory'
+  name: 'demo_memory_with_local_storage'
 metadata:
   type: 'AGENT'
   module: 'sample_standard_app.app.core.agent.discussion_agent_case.host_agent'
