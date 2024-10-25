@@ -16,10 +16,9 @@ action:
     - 'law_knowledge'
   agent:
     - 'law_rag_agent'
-plan:
-  planner:
-    name: 'react_planner'
+memory:
+  name: ''
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.react_agent.react_agent'
-  class: 'ReActAgent'
+  module: 'agentuniverse.agent.template.react_agent_template'
+  class: 'ReActAgentTemplate'

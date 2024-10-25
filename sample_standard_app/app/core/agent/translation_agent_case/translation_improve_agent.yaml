@@ -8,9 +8,6 @@ profile:
   llm_model:
     name: 'default_qwen_llm'
     max_tokens: 1000
-plan:
-  planner:
-    name: 'rag_planner'
 action:
   tool:
 memory:

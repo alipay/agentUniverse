@@ -50,6 +50,7 @@ class AgentUniverse(object):
         self.__system_default_query_paraphraser_package = ['agentuniverse.agent.action.knowledge.query_paraphraser']
         self.__system_default_memory_compressor_package = ['agentuniverse.agent.memory.memory_compressor']
         self.__system_default_memory_storage_package = ['agentuniverse.agent.memory.memory_storage']
+        self.__system_default_work_pattern_package = ['agentuniverse.agent.work_pattern']
 
     def start(self, config_path: str = None, core_mode: bool = False):
         """Start the agentUniverse framework.
@@ -155,6 +156,8 @@ class AgentUniverse(object):
                                                + self.__system_default_memory_compressor_package)
         core_memory_storage_package_list = ((app_configer.core_memory_storage_package_list or app_configer.core_default_package_list)
                                             + self.__system_default_memory_storage_package)
+        core_work_pattern_package_list = ((app_configer.core_work_pattern_package_list or app_configer.core_default_package_list)
+                                            + self.__system_default_work_pattern_package)
 
         component_package_map = {
             ComponentEnum.AGENT: core_agent_package_list,
@@ -174,7 +177,8 @@ class AgentUniverse(object):
             ComponentEnum.RAG_ROUTER: core_rag_router_package_list,
             ComponentEnum.QUERY_PARAPHRASER: core_query_paraphraser_package_list,
             ComponentEnum.MEMORY_COMPRESSOR: core_memory_compressor_package_list,
-            ComponentEnum.MEMORY_STORAGE: core_memory_storage_package_list
+            ComponentEnum.MEMORY_STORAGE: core_memory_storage_package_list,
+            ComponentEnum.WORK_PATTERN: core_work_pattern_package_list
         }
 
         component_configer_list_map = {}

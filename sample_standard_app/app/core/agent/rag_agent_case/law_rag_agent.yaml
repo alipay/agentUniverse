@@ -28,5 +28,5 @@ action:
     - 'law_knowledge'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.rag_agent_case.law_rag_agent'
-  class: 'LawRagAgent'
+  module: 'agentuniverse.agent.template.rag_agent_template'
+  class: 'RagAgentTemplate'

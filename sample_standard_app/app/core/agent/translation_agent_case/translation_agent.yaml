@@ -9,7 +9,6 @@ profile:
   llm_model:
     name: 'default_qwen_llm'
     max_tokens: 1000
-plan:
 action:
   tool:
 #    - 'google_search_tool'

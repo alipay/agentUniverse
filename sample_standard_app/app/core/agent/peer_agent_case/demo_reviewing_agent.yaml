@@ -5,12 +5,9 @@ profile:
   llm_model:
     name: 'qwen_llm'
     temperature: 0.5
-plan:
-  planner:
-    name: 'reviewing_planner'
 memory:
   name: ''
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.reviewing_agent.reviewing_agent'
-  class: 'ReviewingAgent'
+  module: 'agentuniverse.agent.template.reviewing_agent_template'
+  class: 'ReviewingAgentTemplate'

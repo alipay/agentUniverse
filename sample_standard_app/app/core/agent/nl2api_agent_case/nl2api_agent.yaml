@@ -11,10 +11,7 @@ action:
     - 'mul'
     - 'div'
     - 'google_search_tool'
-plan:
-  planner:
-    name: 'nl2api_planner'
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.nl2api_agent.nl2api_agent'
-  class: 'Nl2ApiAgent'
+  module: 'agentuniverse.agent.template.nl2api_agent_template'
+  class: 'Nl2ApiAgentTemplate'

@@ -6,9 +6,6 @@ profile:
   llm_model:
     name: 'qwen_llm'
     temperature: 0.4
-plan:
-  planner:
-    name: 'executing_planner'
 memory:
   name: ''
 action:
@@ -18,5 +15,5 @@ action:
     - 'google_search_tool'
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.default.executing_agent.executing_agent'
-  class: 'ExecutingAgent'
+  module: 'agentuniverse.agent.template.executing_agent_template'
+  class: 'ExecutingAgentTemplate'

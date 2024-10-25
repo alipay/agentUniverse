@@ -1,17 +1,15 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
-from queue import Queue
 
 # @Time    : 2024/6/25 16:56
 # @Author  : weizjajj 
 # @Email   : weizhongjie.wzj@antgroup.com
 # @FileName: translation_planner.py
+from queue import Queue
 
-from agentuniverse.agent.agent_manager import AgentManager
-
-from agentuniverse.base.util.logging.logging_util import LOGGER
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-
+from agentuniverse.agent.agent_manager import AgentManager
+from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.llm.llm import LLM
@@ -33,7 +31,7 @@ def calculate_chunk_size(token_count: int, token_limit: int) -> int:
 
 
 def output_middle_result(input_object: InputObject, data: any):
-    output_stream: Queue = input_object.get_data('output_stream',None)
+    output_stream: Queue = input_object.get_data('output_stream', None)
     if output_stream:
         output_stream.put(data)
 
@@ -91,7 +89,7 @@ class TranslationAgent(Agent):
         text_tokens = len(source_text)
         # 这里使用最大输入token，因为必须要保证有足够的token输出翻译结果
         if text_tokens < llm.max_tokens:
-            return self.execute_agents(input_object,agent_input)
+            return self.execute_agents(input_object, agent_input)
         agent_input['execute_type'] = 'multi'
         chunk_result = list[str]()
         chunk_size = calculate_chunk_size(text_tokens, llm.max_tokens)
@@ -108,7 +106,7 @@ class TranslationAgent(Agent):
             )
             agent_input['chunk_to_translate'] = source_text_chunks[i]
             agent_input['tagged_text'] = tagged_text
-            result = self.execute_agents(input_object,agent_input)
+            result = self.execute_agents(input_object, agent_input)
             chunk_result.append(result.get('output'))
 
         return {

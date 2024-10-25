@@ -19,12 +19,9 @@ profile:
 #    model_name: 'ERNIE-3.5-8K'
 #    name: 'deep_seek_llm'
     name: 'default_deepseek_llm'
-plan:
-  planner:
-    name: 'rag_planner'
 action:
   tool:
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
-  class: 'DemoRagAgent'
+  module: 'agentuniverse.agent.template.rag_agent_template'
+  class: 'RagAgentTemplate'

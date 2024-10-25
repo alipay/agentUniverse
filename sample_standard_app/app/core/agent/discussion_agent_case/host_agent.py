@@ -16,8 +16,9 @@ from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.memory import Memory
 from agentuniverse.agent.output_object import OutputObject
-from agentuniverse.base.util.agent_util import handle_memory, assemble_memory_output, stream_output, handle_llm, \
-    assemble_memory_input
+from agentuniverse.agent.template.agent_template import AgentTemplate
+from agentuniverse.base.util.agent_util import assemble_memory_output, assemble_memory_input
+from agentuniverse.base.util.common_util import stream_output
 from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
@@ -29,7 +30,7 @@ from agentuniverse.prompt.prompt_model import AgentPromptModel
 default_round = 2
 
 
-class HostAgent(Agent):
+class HostAgent(AgentTemplate):
 
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
@@ -105,7 +106,7 @@ class HostAgent(Agent):
         input_object.add_data('participants', ' and '.join(participant_agents.keys()))
 
         # get the host agent memory.
-        host_agent_memory: Memory = handle_memory(self.agent_model, agent_input)
+        host_agent_memory: Memory = self.process_memory(agent_input)
 
         for i in range(total_round):
             LOGGER.info("------------------------------------------------------------------")
@@ -164,9 +165,9 @@ class HostAgent(Agent):
         LOGGER.info(f"Discussion end.")
         LOGGER.info(f"Host agent starts summarize the discussion.")
         LOGGER.info("------------------------------------------------------------------")
-        memory: Memory = handle_memory(self.agent_model, agent_input)
+        memory: Memory = self.process_memory(agent_input)
 
-        llm: LLM = handle_llm(self.agent_model)
+        llm: LLM = self.process_llm()
 
         prompt: ChatPrompt = self.handle_prompt(agent_input)
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)

@@ -5,17 +5,13 @@ profile:
   prompt_version: demo_rag_agent.cn
   llm_model:
     name: 'qwen_llm'
-plan:
-  planner:
-    name: 'rag_planner'
 action:
   tool:
     - 'google_search_tool'
   knowledge:
-    -
 memory:
-  name: 'demo_memory_with_multiple_storages'
+  name: ''
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
-  class: 'DemoRagAgent'
+  module: 'agentuniverse.agent.template.rag_agent_template'
+  class: 'RagAgentTemplate'

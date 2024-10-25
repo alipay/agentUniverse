@@ -5,16 +5,15 @@
 # @Author  : weizjajj 
 # @Email   : weizhongjie.wzj@antgroup.com
 # @FileName: translation_planner.py
-
-import copy
-from agentuniverse.agent.plan.planner.planner import Planner
-from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
-
-from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
+from agentuniverse.agent.template.rag_agent_template import RagAgentTemplate
+from agentuniverse.prompt.chat_prompt import ChatPrompt
+from agentuniverse.prompt.prompt import Prompt
+from agentuniverse.prompt.prompt_manager import PromptManager
+from agentuniverse.prompt.prompt_model import AgentPromptModel
 
 
-class TranslationAgent(Agent):
+class TranslationAgent(RagAgentTemplate):
     def input_keys(self) -> list[str]:
         return self.agent_model.profile.get('input_keys')
 
@@ -29,13 +28,27 @@ class TranslationAgent(Agent):
     def parse_result(self, planner_result: dict) -> dict:
         return planner_result
 
-    def execute(self, input_object: InputObject, agent_input: dict) -> dict:
-        planner_base: Planner = PlannerManager().get_instance_obj(self.agent_model.plan.get('planner').get('name'))
-        agent_model = copy.deepcopy(self.agent_model)
-        translation_type = input_object.get_data('execute_type')
+    def process_prompt(self, agent_input: dict, **kwargs) -> ChatPrompt:
+        profile: dict = self.agent_model.profile
+        profile_prompt_model: AgentPromptModel = AgentPromptModel(introduction=profile.get('introduction'),
+                                                                  target=profile.get('target'),
+                                                                  instruction=profile.get('instruction'))
+        # get the prompt by the prompt version
+        prompt_version = self.prompt_version
+        translation_type = agent_input.get('execute_type')
         if translation_type == "multi":
-            agent_model.profile['prompt_version'] = translation_type + "_" + agent_model.profile['prompt_version']
-        if input_object.get_data('country') and self.agent_model.info.get('name') == 'translation_reflection_agent':
-            agent_model.profile['prompt_version'] = "country_" + agent_model.profile['prompt_version']
-        planner_result = planner_base.invoke(agent_model, agent_input, input_object)
-        return planner_result
+            prompt_version = f"multi_{self.prompt_version}"
+        if agent_input.get('country') and self.agent_model.info.get('name') == 'translation_reflection_agent':
+            prompt_version = f"country_{self.prompt_version}"
+
+        version_prompt: Prompt = PromptManager().get_instance_obj(prompt_version)
+        if version_prompt is None and not profile_prompt_model:
+            raise Exception("Either the `prompt_version` or `introduction & target & instruction`"
+                            " in agent profile configuration should be provided.")
+        if version_prompt:
+            version_prompt_model: AgentPromptModel = AgentPromptModel(
+                introduction=getattr(version_prompt, 'introduction', ''),
+                target=getattr(version_prompt, 'target', ''),
+                instruction=getattr(version_prompt, 'instruction', ''))
+            profile_prompt_model = profile_prompt_model + version_prompt_model
+        return ChatPrompt().build_prompt(profile_prompt_model, ['introduction', 'target', 'instruction'])

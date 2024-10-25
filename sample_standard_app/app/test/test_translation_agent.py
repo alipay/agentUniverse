@@ -37,7 +37,7 @@ class TranslationAgentTest(unittest.TestCase):
         print(res_info)
 
     # def test_translation_agent_short(self):
-    #     instance: Agent = AgentManager().get_instance_obj('translation_by_token_agent')
+    #     instance: Agent = AgentManager().get_instance_obj('translation_agent')
     #     with open('./translation_data/short_text.txt', 'r') as f:
     #         data = f.read()
     #
