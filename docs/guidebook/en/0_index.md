@@ -6,7 +6,7 @@
 * 1.1 [Introduction](1_1_Introduction.md)
 * 1.2 [Installation](1_2_Installation.md)
 * 1.3 [Quick Start](1_3_Quick_Start.md)
-* 1.4 [ApplicationStructure](1_4_Application_Engineering_Structure_Explanation.md)
+* 1.5 [ApplicationStructure](1_4_Application_Engineering_Structure_Explanation.md)
 
 **2. Principle Introduction**
 
@@ -60,7 +60,8 @@
     * 3.1.2.6 [Claude Usage Instructions](3_1_2_Claude_LLM_Use.md)
     * 3.1.2.7 [Ollama Usage Instructions](3_1_2_Ollama_LLM_Use.md)
     * 3.1.2.8 [DeepSeek Usage Instructions](3_1_2_DeepSeek_LLM_Use.md)
-    * 3.1.2.9 [General OpenAI Protocol Style Wrapper](3_1_2_OpenAIStyleLLM_Use.md)
+    * 3.1.2.9 [GLM Usage Instructions](3_1_2_GLM_LLM_Use.md)
+    * 3.1.2.10 [General OpenAI Protocol Style Wrapper](3_1_2_OpenAIStyleLLM_Use.md)
   * 3.1.3 List of Tools
     * 3.1.3.1 [Integration Tool Details](2_2_3_Integrated_Tools.md)
     * 3.1.3.2 [LangChain Tool Wrapper](2_2_3_Integrated_LangChain_Tools.md)

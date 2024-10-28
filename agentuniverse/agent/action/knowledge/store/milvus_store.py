@@ -163,7 +163,7 @@ class MilvusStore(Store):
                                 "you should provide embedding in your document or specify an embedding model.")
             embedding = EmbeddingManager().get_instance_obj(
                     self.embedding_model
-                ).get_embeddings([query.query_str], text_type="query")[0]
+                ).get_embeddings([query.query_str], text_type="query")
 
         if not search_args:
             search_args = self.search_args
