@@ -5,7 +5,7 @@ In the current au's sample project, the following tools are integrated.
 ## 1. Search Tools
 
 ### 1.1 Google Search
-[工具地址](../../../sample_standard_app/app/core/tool/google_search_tool.yaml)  
+[Tool path](../../../sample_standard_app/app/core/tool/google_search_tool.yaml)  
 Detailed Configuration Information:
 
 ```yaml
@@ -37,7 +37,7 @@ SERPER_API_KEY="xxxx"
 
 ### 1.2 Bing Search 
 Currently, it integrates with the official Bing search.
-[工具地址](../../../sample_standard_app/app/core/tool/bing_search_tool.yaml)  
+[Tool path](../../../sample_standard_app/app/core/tool/bing_search_tool.yaml)  
 Tool configuration:
 ```yaml
 name: 'bing_search_tool'
@@ -107,7 +107,7 @@ SEARCHAPI_API_KEY="xxxxxx"
 ## 2. Code Tool
 
 ### 2.1 PythonRepl
-[Tool address](../../../sample_standard_app/app/core/tool/python_repl_tool.yaml)  
+[Tool path](../../../sample_standard_app/app/core/tool/python_repl_tool.yaml)  
 This tool can execute a piece of Python code, the configuration information of the tool:  
 ```yaml
 name: 'python_runner'
@@ -137,7 +137,7 @@ This tool can be used directly without any key, but for system security, please 
 ## 3.HTTP Tool
 
 ### 3.1 HTTP GET
-[Tool address](../../../sample_standard_app/app/core/tool/request_get_tool.yaml)
+[Tool path](../../../sample_standard_app/app/core/tool/request_get_tool.yaml)
 The tool can send a GET request, with its configuration information being:
 ```yaml
 name: 'requests_get'

@@ -85,9 +85,9 @@ pip install agentUniverse
 #### 服务化
 agentUniverse提供多套标准的web serve能力, 同时提供标准的http与rpc协议。您可以进一步关注文档[服务注册与使用](./docs/guidebook/zh/2_4_1_服务注册与使用.md)与[Web_Server](./docs/guidebook/zh/2_4_1_Web_Server.md)部分。
 
-### 产品化搭建
+### 平台化搭建
 
-agentUniverse提供基于本地的产品可视化搭建能力，请按照如下步骤快速启动。
+agentUniverse提供基于本地的可视化平台搭建能力，请按照如下步骤快速启动。
 
 **通过pip安装**
 ```shell
@@ -133,7 +133,7 @@ BibTeX formatted
 }
 ```
 文献简介：该文献详细介绍了介绍了PEER多智能体框架的机制原理，同时在实验部分分别从**完整性、相关性、紧凑性、事实性、逻辑性、结构性和全面性七个维度进行打分（各纬度满分为5分）**，PEER模式在每个测评维度的平均分数均高于BabyAGI，且在**完整性、相关性、逻辑性、结构性和全面性五个纬度有显著优势**；同时PEER模式在 GPT-3.5 turbo (16k) 模型下相较于 BabyAGI 的择优胜率达到 83%，在 GPT-4o 模型下择优胜率达到 81%，更多详情请阅读文献。
-https://arxiv.org/pdf/2407.06985
+🔗https://arxiv.org/pdf/2407.06985
 
 ### 核心特性
 通过上述的介绍我们将其归纳总结，agentUniverse包含如下主要特点：
@@ -164,7 +164,7 @@ https://arxiv.org/pdf/2407.06985
 ⌨️ [agentUniverse 示例项目](sample_standard_app)
 
 ### 使用aU构建的典型产品
-🔗[支小助 金融从业专家AI助手](https://zhu.alipay.com/?from=au)
+🔗[支小助-金融从业专家AI助手](https://zhu.alipay.com/?from=au)
 
 **投研支小助：助推大模型落地严谨产业，提升投研专家效率**
 
