@@ -5,6 +5,8 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: reviewing_agent_template.py
+from queue import Queue
+
 from langchain_core.utils.json import parse_json_markdown
 
 from agentuniverse.agent.input_object import InputObject
@@ -46,13 +48,6 @@ class ReviewingAgentTemplate(AgentTemplate):
         final_result['output'] = output
         final_result['score'] = score
         final_result['suggestion'] = output.get('suggestion')
-        # add reviewing agent final result into the stream output.
-        stream_output(agent_result.get('output_stream'),
-                      {"data": {
-                          'output': final_result['suggestion'],
-                          "agent_info": self.agent_model.info
-                      }, "type": "reviewing"})
-
         # add reviewing agent log info.
         logger_info = f"\nReviewing agent execution result is :\n"
         reviewing_info_str = f"review suggestion: {final_result.get('suggestion')} \n"
@@ -60,6 +55,16 @@ class ReviewingAgentTemplate(AgentTemplate):
         LOGGER.info(logger_info + reviewing_info_str)
 
         return final_result
+
+    def add_output_stream(self, output_stream: Queue, agent_output: str) -> None:
+        if not output_stream:
+            return
+        # add reviewing agent final result into the stream output.
+        stream_output(output_stream,
+                      {"data": {
+                          'output': parse_json_markdown(agent_output).get('suggestion'),
+                          "agent_info": self.agent_model.info
+                      }, "type": "reviewing"})
 
     def initialize_by_component_configer(self, component_configer: AgentConfiger) -> 'ReviewingAgentTemplate':
         """Initialize the Agent by the AgentConfiger object.

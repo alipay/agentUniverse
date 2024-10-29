@@ -7,6 +7,7 @@
 # @FileName: agent_template.py
 from abc import ABC
 from typing import Optional, Any, List
+from queue import Queue
 
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableSerializable
@@ -63,7 +64,8 @@ class AgentTemplate(Agent, ABC):
         assemble_memory_output(memory=memory,
                                agent_input=agent_input,
                                content=f"Human: {agent_input.get('input')}, AI: {res}")
-        return {**agent_input, 'output': res, 'output_stream': input_object.get_data('output_stream', None)}
+        self.add_output_stream(input_object.get_data('output_stream'), res)
+        return {**agent_input, 'output': res}
 
     async def customized_async_execute(self, input_object: InputObject, agent_input: dict, memory: Memory,
                                        llm: LLM, prompt: Prompt, **kwargs) -> dict:
@@ -75,7 +77,8 @@ class AgentTemplate(Agent, ABC):
         assemble_memory_output(memory=memory,
                                agent_input=agent_input,
                                content=f"Human: {agent_input.get('input')}, AI: {res}")
-        return {**agent_input, 'output': res, 'output_stream': input_object.get_data('output_stream', None)}
+        self.add_output_stream(input_object.get_data('output_stream'), res)
+        return {**agent_input, 'output': res}
 
     def process_llm(self, **kwargs) -> LLM:
         return LLMManager().get_instance_obj(self.llm_name)
@@ -192,6 +195,9 @@ class AgentTemplate(Agent, ABC):
         return "\n\n".join(knowledge_results)
 
     def validate_required_params(self):
+        pass
+
+    def add_output_stream(self, output_stream: Queue, agent_output: str) -> None:
         pass
 
     def initialize_by_component_configer(self, component_configer: AgentConfiger) -> 'AgentTemplate':

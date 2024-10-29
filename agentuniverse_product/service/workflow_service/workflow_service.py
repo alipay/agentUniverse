@@ -40,9 +40,9 @@ class WorkflowService:
                 'type': 'WORKFLOW'
             }
         }
-
+        # TODO db/
         # write workflow YAML file
-        workflow_file_path = os.path.join('..', 'core', 'workflow', f"{workflow_id}.yaml")
+        workflow_file_path = os.path.join('...', 'platform', 'difizen', 'workflow', f"{workflow_id}.yaml")
         write_yaml_file(workflow_file_path, workflow_config)
         # register workflow instance
         register_workflow(workflow_file_path)

@@ -18,7 +18,7 @@ from langchain_core.tools import BaseTool, ToolsRenderer, render_text_descriptio
 
 from agentuniverse.agent.template.agent_template import AgentTemplate
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
-from agentuniverse.base.util.agent_util import assemble_memory_input
+from agentuniverse.base.util.agent_util import assemble_memory_input, assemble_memory_output
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
 from agentuniverse.agent.action.tool.tool import Tool
@@ -67,9 +67,13 @@ class ReActAgentTemplate(AgentTemplate):
                                        verbose=True,
                                        handle_parsing_errors=True,
                                        max_iterations=self.max_iterations)
-        return agent_executor.invoke(input=agent_input, memory=memory.as_langchain() if memory else None,
-                                     chat_history=agent_input.get(memory.memory_key) if memory else '',
-                                     config=self._get_run_config(input_object))
+        res = agent_executor.invoke(input=agent_input, memory=memory.as_langchain() if memory else None,
+                                    chat_history=agent_input.get(memory.memory_key) if memory else '',
+                                    config=self._get_run_config(input_object))
+        assemble_memory_output(memory=memory,
+                               agent_input=agent_input,
+                               content=f"Human: {agent_input.get('input')}, AI: {res.get('output')}")
+        return res
 
     async def customized_async_execute(self, input_object: InputObject, agent_input: dict, memory: Memory,
                                        llm: LLM, prompt: Prompt, **kwargs) -> dict:
@@ -83,9 +87,13 @@ class ReActAgentTemplate(AgentTemplate):
                                        verbose=True,
                                        handle_parsing_errors=True,
                                        max_iterations=self.max_iterations)
-        return await agent_executor.ainvoke(input=agent_input, memory=memory.as_langchain() if memory else None,
-                                            chat_history=agent_input.get(memory.memory_key) if memory else '',
-                                            config=self._get_run_config(input_object))
+        res = await agent_executor.ainvoke(input=agent_input, memory=memory.as_langchain() if memory else None,
+                                           chat_history=agent_input.get(memory.memory_key) if memory else '',
+                                           config=self._get_run_config(input_object))
+        assemble_memory_output(memory=memory,
+                               agent_input=agent_input,
+                               content=f"Human: {agent_input.get('input')}, AI: {res.get('output')}")
+        return res
 
     def create_react_agent(
             self,

@@ -5,6 +5,8 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: expressing_agent_template.py
+from queue import Queue
+
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.template.agent_template import AgentTemplate
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
@@ -29,13 +31,6 @@ class ExpressingAgentTemplate(AgentTemplate):
     def parse_result(self, agent_result: dict) -> dict:
         final_result = dict()
         final_result['output'] = agent_result['output']
-        # add expressing agent final result into the stream output.
-        stream_output(agent_result.get('output_stream'),
-                      {"data": {
-                          'output': final_result['output'],
-                          "agent_info": self.agent_model.info
-                      }, "type": "expressing"})
-
         # add expressing agent log info.
         logger_info = f"\nExpressing agent execution result is :\n"
         logger_info += f"{final_result.get('output')}"
@@ -62,3 +57,13 @@ class ExpressingAgentTemplate(AgentTemplate):
             raise ValueError(f'llm_name of the agent {self.agent_model.info.get("name")}'
                              f' is not set, please go to the agent profile configuration'
                              ' and set the `name` attribute in the `llm_model`.')
+
+    def add_output_stream(self, output_stream: Queue, agent_output: str) -> None:
+        if not output_stream:
+            return
+        # add expressing agent final result into the stream output.
+        stream_output(output_stream,
+                      {"data": {
+                          'output': agent_output,
+                          "agent_info": self.agent_model.info
+                      }, "type": "expressing"})

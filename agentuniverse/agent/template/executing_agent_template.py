@@ -116,7 +116,7 @@ class ExecutingAgentTemplate(AgentTemplate):
 
     def parse_result(self, agent_result: dict) -> dict:
         # add executing agent final result into the stream output.
-        stream_output(agent_result.get('output_stream'),
+        stream_output(agent_result.pop('output_stream'),
                       {"data": {
                           'output': agent_result.get('executing_result'),
                           "agent_info": self.agent_model.info

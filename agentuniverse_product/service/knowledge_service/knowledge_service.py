@@ -64,7 +64,8 @@ class KnowledgeService:
         knowledge_id = knowledge_dto.id
 
         product_file_name = f"{knowledge_id}_product"
-        product_file_path = os.path.join("..", "core", "product", "knowledge", f"{product_file_name}.yaml")
+        product_file_path = os.path.join("...", "platform", "difizen", "product", "knowledge",
+                                         f"{product_file_name}.yaml")
 
         product_config_data = assemble_knowledge_product_config_data(knowledge_dto)
 
@@ -73,7 +74,7 @@ class KnowledgeService:
         except Exception as e:
             raise e
 
-        knowledge_file_path = os.path.join("..", "core", "knowledge", f"{knowledge_id}.yaml")
+        knowledge_file_path = os.path.join("...", "intelligence", "agentic", "knowledge", f"{knowledge_id}.yaml")
 
         knowledge_config = assemble_knowledge_config(knowledge_dto)
 
@@ -184,7 +185,8 @@ class KnowledgeService:
             print(f"upload file failed: {e}")
             raise e
 
-        knowledge_store_file_path = os.path.join("..", "core", "store", f"{knowledge_id}_store.yaml")
+        knowledge_store_file_path = os.path.join("...", "intelligence", "agentic", "knowledge", "store",
+                                                 f"{knowledge_id}_store.yaml")
         knowledge_store_name = f"{knowledge_id}_chroma_store"
 
         knowledge = KnowledgeManager().get_instance_obj(component_instance_name=knowledge_id)
@@ -195,7 +197,7 @@ class KnowledgeService:
                 knowledge_store_config = {
                     "name": knowledge_store_name,
                     "description": knowledge_store_name,
-                    "persist_path": f"../../DB/{knowledge_store_name}.db",
+                    "persist_path": f"../../intelligence/db/{knowledge_store_name}.db",
                     "metadata": {
                         "type": "STORE",
                         "module": "agentuniverse.agent.action.knowledge.store.chroma_store",

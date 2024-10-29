@@ -5,6 +5,8 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: planning_agent_template.py
+from queue import Queue
+
 from langchain_core.utils.json import parse_json_markdown
 
 from agentuniverse.agent.input_object import InputObject
@@ -35,19 +37,11 @@ class PlanningAgentTemplate(AgentTemplate):
         final_result['framework'] = output.get('framework')
         final_result['thought'] = output.get('thought', '')
 
-        # add planning agent final result into the stream output.
-        stream_output(agent_result.get('output_stream'),
-                      {"data": {
-                          'output': final_result['framework'],
-                          "agent_info": self.agent_model.info
-                      }, "type": "planning"})
-
         # add planning agent log info.
         logger_info = f"\nPlanning agent execution result is :\n"
         for index, one_framework in enumerate(final_result.get('framework')):
             logger_info += f"[{index + 1}] {one_framework} \n"
         LOGGER.info(logger_info)
-
         return final_result
 
     def initialize_by_component_configer(self, component_configer: AgentConfiger) -> 'PlanningAgentTemplate':
@@ -61,3 +55,13 @@ class PlanningAgentTemplate(AgentTemplate):
             raise ValueError(f'llm_name of the agent {self.agent_model.info.get("name")}'
                              f' is not set, please go to the agent profile configuration'
                              ' and set the `name` attribute in the `llm_model`.')
+
+    def add_output_stream(self, output_stream: Queue, agent_output: str) -> None:
+        if not output_stream:
+            return
+        # add planning agent final result into the stream output.
+        stream_output(output_stream,
+                      {"data": {
+                          'output': parse_json_markdown(agent_output).get('framework'),
+                          "agent_info": self.agent_model.info
+                      }, "type": "planning"})
