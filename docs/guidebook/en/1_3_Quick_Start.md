@@ -106,7 +106,7 @@ action:
     - 'google_search_tool'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.rag_agent_case.demo_rag_agent'
   class: 'DemoRagAgent'
 ```
 In `xx_agent_case_a.yaml`, we define the configuration of a `DemoRagAgent`. The `info` part is the basic information setting of the agent, the `profile` part contains the setting of the agent using the llm model, the `plan` part contains the behavior planning setting of the agent (determining the working mode of the agent), the `action` part contains the setting of the tools and knowledge that the agent can use, and the `metadata` part contains the metadata setting of the agent object.
@@ -158,7 +158,7 @@ plan:
     reviewing: 'demo_reviewing_agent'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.peer_agent_case.demo_peer_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.peer_agent_case.demo_peer_agent'
   class: 'DemoPeerAgent'
 ```
 In `xx_agent_case_b.yaml`, we define the configuration of a `DemoPeerAgent`. The `info` part is the basic information setting of the agent, the `plan` part contains the behavior planning setting of the agent (determining the working mode of the agent), and the `metadata` part contains the metadata setting of the agent object.

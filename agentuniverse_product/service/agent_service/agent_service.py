@@ -280,14 +280,14 @@ class AgentService:
 
         # write product YAML file
         product_file_name = f"{agent_dto.id}_product"
-        product_file_path = os.path.join('...', 'platform', 'difizen', 'product', 'agent', f"{product_file_name}.yaml")
+        product_file_path = os.path.join('..', '..', 'platform', 'difizen', 'product', 'agent', f"{product_file_name}.yaml")
         write_yaml_file(product_file_path, product_config_data)
 
         # assemble agent config data
         agent_config_data = assemble_agent_config_data(agent_dto)
 
         # write agent YAML file
-        agent_file_path = os.path.join('..,', 'intelligence', 'agentic', 'agent', f"{agent_dto.id}.yaml")
+        agent_file_path = os.path.join('..', '..', 'intelligence', 'agentic', 'agent', f"{agent_dto.id}.yaml")
         write_yaml_file(agent_file_path, agent_config_data)
 
         # register product and agent instance

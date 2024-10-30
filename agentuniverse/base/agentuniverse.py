@@ -59,9 +59,9 @@ class AgentUniverse(object):
         # get default config path
         project_root_path = get_project_root_path()
         sys.path.append(str(project_root_path.parent))
-        app_path = project_root_path / 'app'
-        if app_path.exists():
-            sys.path.append(str(app_path))
+        # TODO
+        self._add_to_sys_path(project_root_path, ['intelligence', 'app'])
+
         if not config_path:
             config_path = project_root_path / 'config' / 'config.toml'
             config_path = str(config_path)
@@ -288,3 +288,9 @@ class AgentUniverse(object):
         module = importlib.import_module(module_path)
         cls = getattr(module, class_name)
         cls(configer)
+
+    def _add_to_sys_path(self, root_path, sub_dirs):
+        for sub_dir in sub_dirs:
+            app_path = root_path / sub_dir
+            if app_path.exists():
+                sys.path.append(str(app_path))

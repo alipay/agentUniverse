@@ -41,7 +41,7 @@ memory:
   name: 'demo_memory'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.discussion_agent_case.host_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.discussion_agent_case.host_agent'
   class: 'HostAgent'
 ```
 
@@ -105,7 +105,7 @@ memory:
   name: 'demo_memory'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.discussion_agent_case.host_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.discussion_agent_case.host_agent'
   class: 'HostAgent'
 ```
 

@@ -31,8 +31,8 @@ metadata:
 ## Building the Knowledge Index
 
 Origin docs：
-- [民法典.pdf](../../../sample_standard_app/app/resources/民法典.pdf)
-- [刑法.pdf](../../../sample_standard_app/app/resources/刑法.pdf)
+- [民法典.pdf](../../../sample_standard_app/platform/difizen/resources/民法典.pdf)
+- [刑法.pdf](../../../sample_standard_app/platform/difizen/resources/刑法.pdf)
 
 ### Extracting Text from PDFs
 Since the original documents in this case are in PDF format, we configured the Knowledge component as follows:

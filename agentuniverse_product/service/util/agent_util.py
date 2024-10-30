@@ -99,15 +99,12 @@ def assemble_agent_config_data(agent_dto: AgentDTO) -> Dict:
             'name': agent_dto.id,
             'description': agent_dto.description
         },
-        'profile': {},
-        'plan': {
-            'planner': {
-                'name': agent_dto.planner.id,
-                'workflow_id': agent_dto.planner.workflow_id
-            }
+        'profile': {
         },
         'action': {}
     }
+    if agent_dto.planner.workflow_id:
+        agent_config_data['profile']['workflow_id'] = agent_dto.planner.workflow_id
 
     if agent_dto.llm:
         llm = LLMManager().get_instance_obj(agent_dto.llm.id)
@@ -213,11 +210,12 @@ def get_planner_dto(agent: Agent) -> PlannerDTO | None:
     planner_name = planner.get('name') or get_default_planner_name(agent)
     if not planner_name:
         return None
+    workflow_id = planner.get('workflow_id') if planner.get('workflow_id') else agent_model.profile.get('workflow_id')
     members = None
     if planner_name == 'peer_planner':
         members = assemble_peer_planner_members(planner, agent_model)
     return PlannerDTO(nickname='', id=planner_name, members=members,
-                      workflow_id=planner.get('workflow_id'))
+                      workflow_id=workflow_id)
 
 
 def assemble_peer_planner_members(planner: dict, agent_model: AgentModel) -> list[AgentDTO]:

@@ -64,7 +64,7 @@ class KnowledgeService:
         knowledge_id = knowledge_dto.id
 
         product_file_name = f"{knowledge_id}_product"
-        product_file_path = os.path.join("...", "platform", "difizen", "product", "knowledge",
+        product_file_path = os.path.join("..", "..", "platform", "difizen", "product", "knowledge",
                                          f"{product_file_name}.yaml")
 
         product_config_data = assemble_knowledge_product_config_data(knowledge_dto)
@@ -74,7 +74,7 @@ class KnowledgeService:
         except Exception as e:
             raise e
 
-        knowledge_file_path = os.path.join("...", "intelligence", "agentic", "knowledge", f"{knowledge_id}.yaml")
+        knowledge_file_path = os.path.join("..", "..", "intelligence", "agentic", "knowledge", f"{knowledge_id}.yaml")
 
         knowledge_config = assemble_knowledge_config(knowledge_dto)
 
@@ -170,11 +170,11 @@ class KnowledgeService:
             bool: True if the file is uploaded successfully, False otherwise.
         """
 
-        upload_file_path = os.path.join("..", "resources")
+        upload_file_path = os.path.join("..", "..", "platform", "difizen", "resources")
 
         try:
             if not os.path.exists(upload_file_path):
-                os.makedirs(os.path.dirname(upload_file_path), exist_ok=True)
+                os.makedirs(upload_file_path, exist_ok=True)
 
             file_location = os.path.join(upload_file_path, file.filename)
 
@@ -185,7 +185,7 @@ class KnowledgeService:
             print(f"upload file failed: {e}")
             raise e
 
-        knowledge_store_file_path = os.path.join("...", "intelligence", "agentic", "knowledge", "store",
+        knowledge_store_file_path = os.path.join("..", "..", "intelligence", "agentic", "knowledge", "store",
                                                  f"{knowledge_id}_store.yaml")
         knowledge_store_name = f"{knowledge_id}_chroma_store"
 

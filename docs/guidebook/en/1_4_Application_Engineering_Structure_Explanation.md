@@ -78,7 +78,7 @@ As demonstrated by the recommended directory structure for the project, the proj
 # Perform a full component scan and registration for all the paths under this list.
 default = ['sample_standard_app.app.core']
 # Scan and register agent components for all paths under this list, with priority over the default.
-agent = ['sample_standard_app.app.core.agent']
+agent = ['sample_standard_app.intelligence.agentic.agent']
 # Scan and register agent components for all paths under this list, with priority over the default.
 knowledge = ['sample_standard_app.app.core.knowledge']
 # Scan and register knowledge components for all paths under this list, with priority over the default.
@@ -86,7 +86,7 @@ llm = ['sample_standard_app.app.core.llm']
 # Scan and register llm components for all paths under this list, with priority over the default.
 planner = ['sample_standard_app.app.core.planner']
 # Scan and register planner components for all paths under this list, with priority over the default.
-tool = ['sample_standard_app.app.core.tool']
+tool = ['sample_standard_app.intelligence.agentic.tool']
 # Scan and register memory components for all paths under this list, with priority over the default.
 memory = ['sample_standard_app.app.core.memory']
 # Scan and register service components for all paths under this list, with priority over the default.

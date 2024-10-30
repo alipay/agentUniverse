@@ -8,10 +8,10 @@ The case leverages the DashScope embedding and rerank features with the Qwen llm
 ### Legal Knowledge Base
 The legal knowledge base is constructed using [Knowledge Components](2_2_4_Knowledge_Related_Domain_Objects.md) from agentUniverse. By storing the original legal provisions in the ChromaDB and Sqlite database, the knowledge base facilitates efficient retrieval and consultation for the agent.
 Original legal documents:
-- [民法典.pdf](../../../sample_standard_app/app/resources/民法典.pdf)
-- [刑法.pdf](../../../sample_standard_app/app/resources/刑法.pdf)
+- [民法典.pdf](../../../sample_standard_app/platform/difizen/resources/民法典.pdf)
+- [刑法.pdf](../../../sample_standard_app/platform/difizen/resources/刑法.pdf)
 
-### [Knowledge Definition](../../../sample_standard_app/app/core/knowledge/law_knowledge.yaml)
+### [Knowledge Definition](../../../sample_standard_app/intelligence/agentic/knowledge/law_knowledge.yaml)
 ```yaml
 name: "law_knowledge"
 description: "中国民法与刑法相关的知识库"
@@ -40,22 +40,22 @@ metadata:
 - [default_pdf_reader](../../../agentuniverse/agent/action/knowledge/reader/file/pdf_reader.yaml)
 
 ### DocProcessor Component
-- [custom_query_keyword_extractor](../../../sample_standard_app/app/core/doc_processor/query_keyword_extractor.yaml)
+- [custom_query_keyword_extractor](../../../sample_standard_app/intelligence/agentic/knowledge/doc_processor/query_keyword_extractor.yaml)
 - [recursive_character_text_splitter](../../../agentuniverse/agent/action/knowledge/doc_processor/recursive_character_text_splitter.yaml)
 
 ### QueryParaphraser Component
-- [custom_query_keyword_extractor](../../../sample_standard_app/app/core/query_paraphraser/custom_query_keyword_extractor.yaml)
+- [custom_query_keyword_extractor](../../../sample_standard_app/intelligence/agentic/knowledge/query_paraphraser/custom_query_keyword_extractor.yaml)
 
 ### RagRouter Component
-- [nlu_rag_router](../../../sample_standard_app/app/core/rag_router/nlu_rag_router.yaml)
+- [nlu_rag_router](../../../sample_standard_app/intelligence/agentic/knowledge/rag_router/nlu_rag_router.yaml)
 
 ### Store Component
-- [civil_law_chroma_store](../../../sample_standard_app/app/core/store/civil_law_chroma_store.yaml)
-- [criminal_law_chroma_store](../../../sample_standard_app/app/core/store/criminal_law_chroma_store.yaml)
-- [civil_law_sqlite_store](../../../sample_standard_app/app/core/store/civil_law_sqlite_store.yaml)
-- [criminal_law_sqlite_store](../../../sample_standard_app/app/core/store/criminal_law_sqlite_store.yaml)
+- [civil_law_chroma_store](../../../sample_standard_app/intelligence/agentic/knowledge/store/civil_law_chroma_store.yaml)
+- [criminal_law_chroma_store](../../../sample_standard_app/intelligence/agentic/knowledge/store/criminal_law_chroma_store.yaml)
+- [civil_law_sqlite_store](../../../sample_standard_app/intelligence/agentic/knowledge/store/civil_law_sqlite_store.yaml)
+- [criminal_law_sqlite_store](../../../sample_standard_app/intelligence/agentic/knowledge/store/criminal_law_sqlite_store.yaml)
 
-For your convenience, we have placed the databases containing the relevant information in [this directory](../../../sample_standard_app/DB/). If you want to build the knowledge base from scratch, you can run the following code:
+For your convenience, we have placed the databases containing the relevant information in [this directory](../../../sample_standard_app/intelligence/db/). If you want to build the knowledge base from scratch, you can run the following code:
 ```python
 from agentuniverse.base.agentuniverse import AgentUniverse
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
@@ -78,11 +78,11 @@ if __name__ == '__main__':
 
 ### Law Agent
 This agent involves the following one file:
-- [law_rag_agent.yaml](../../../sample_standard_app/app/core/agent/rag_agent_case/law_rag_agent.yaml): Defines the agent's related prompts
+- [law_rag_agent.yaml](../../../sample_standard_app/intelligence/agentic/agent/agent_instance/rag_agent_case/law_rag_agent.yaml): Defines the agent's related prompts
 
 
 ### Demonstration Code
-[CodeLink](../../../sample_standard_app/app/examples/law_chat_bot.py)
+[CodeLink](../../../sample_standard_app/intelligence/test/examples/law_chat_bot.py)
 
 ## Demonstration
 ![Demonstration Image](../_picture/law_agent_demo.png)

@@ -32,7 +32,7 @@ metadata:
 
 The above is an actual example of a Tool configuration sample. 
 
-In addition to the standard configuration items introduced above, you can find more examples of tool configuration YAML files in the `sample_standard_app.app.core.tool` directory of our sample project.
+In addition to the standard configuration items introduced above, you can find more examples of tool configuration YAML files in the `sample_standard_app.intelligence.agentic.tool` directory of our sample project.
 
 Moreover, agentUniverse does not restrict users from extending the Tool YAML configuration content. You can create any custom configuration keys according to your own requirements, but please be careful not to duplicate the names of the default configuration keywords mentioned above.
 
@@ -81,7 +81,7 @@ Taking the configuration in the example project as an example, it is as follows.
 ```yaml
 [CORE_PACKAGE]
 # Scan and register tool components for all paths under this list, with priority over the default.
-tool = ['sample_standard_app.app.core.tool']
+tool = ['sample_standard_app.intelligence.agentic.tool']
 ```
 
 # How to Use the Tool Component
@@ -102,7 +102,7 @@ tool.run(**tool_input)
 ```
 
 # Learn More About Existing Tools
-More examples of tools provided by the framework can be found in the `sample_standard_app.app.core.tool` package path, where you can further explore the corresponding tools.
+More examples of tools provided by the framework can be found in the `sample_standard_app.intelligence.agentic.tool` package path, where you can further explore the corresponding tools.
 
 # Conclusion
 By now, you have mastered the definition and usage of Tool components. Go ahead and try creating and using tools.

@@ -80,14 +80,14 @@ class ToolService:
 
         # write product YAML file
         product_file_name = f"{tool_dto.id}_product"
-        product_file_path = os.path.join('...', 'platform', 'difizen', 'product', 'tool', f"{product_file_name}.yaml")
+        product_file_path = os.path.join('..', '..', 'platform', 'difizen', 'product', 'tool', f"{product_file_name}.yaml")
         write_yaml_file(product_file_path, product_config_data)
 
         # assemble tool config data
         tool_config_data = assemble_api_tool_config_data(tool_dto)
 
         # write tool YAML file
-        tool_file_path = os.path.join('...', 'intelligence', 'agentic', 'tool', f"{tool_dto.id}.yaml")
+        tool_file_path = os.path.join('..', '..', 'intelligence', 'agentic', 'tool', f"{tool_dto.id}.yaml")
         write_yaml_file(tool_file_path, tool_config_data)
 
         # register product and tool instance

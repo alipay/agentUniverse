@@ -77,7 +77,7 @@ class PluginService:
         product_config_data = assemble_plugin_product_config_data(plugin_dto, tool_id_list)
         # write product YAML file
         product_file_name = f"{plugin_dto.id}_product"
-        product_file_path = os.path.join('...', 'platform', 'difizen', 'product', 'plugin', f"{product_file_name}.yaml")
+        product_file_path = os.path.join('..', '..', 'platform', 'difizen', 'product', 'plugin', f"{product_file_name}.yaml")
         write_yaml_file(product_file_path, product_config_data)
         register_product(product_file_path)
         return plugin_dto.id
