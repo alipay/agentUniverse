@@ -1,0 +1,7 @@
+name: 'sqlite_sqldb_wrapper'
+description: 'sqlite_sqldb_wrapper'
+db_uri: "sqlite:///./sqlite_sqldb_wrapper.db"
+engine_args:
+  pool_size: 5
+metadata:
+  type: 'SQLDB_WRAPPER'
