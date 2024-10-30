@@ -10,5 +10,5 @@ profile:
     temperature: 0.1
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.data_agent_case.dataset_eval_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.data_agent_case.dataset_eval_agent'
   class: 'DatasetEvalAgent'

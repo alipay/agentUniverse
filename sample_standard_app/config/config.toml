@@ -21,8 +21,6 @@ memory = ['sample_standard_app.intelligence.agentic.memory']
 service = ['sample_standard_app.intelligence.service.agent_service']
 # Scan and register prompt components for all paths under this list, with priority over the default.
 prompt = ['sample_standard_app.intelligence.agentic.prompt']
-# Scan and register prompt components for all paths under this list, with priority over the default.
-sqldb_wrapper = ['sample_standard_app.intelligence.integration.sqldb_wrapper']
 # Scan and register product components for all paths under this list, with priority over the default.
 product = ['sample_standard_app.platform.difizen.product']
 # Scan and register workflow components for all paths under this list, with priority over the default.

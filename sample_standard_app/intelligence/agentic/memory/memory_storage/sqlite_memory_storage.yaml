@@ -1,8 +1,0 @@
-name: 'sqlite_memory_storage'
-description: 'demo sqlite memory storage'
-sqldb_table_name: 'memory'
-sqldb_wrapper_name: 'sqlite_sqldb_wrapper'
-metadata:
-  type: 'MEMORY_STORAGE'
-  module: 'agentuniverse.agent.memory.memory_storage.sql_alchemy_memory_storage'
-  class: 'SqlAlchemyMemoryStorage'

@@ -88,7 +88,7 @@ tool = ['sample_standard_app.intelligence.agentic.tool']
 ## Configure for use in an Agent
 You can set up any tool you have created in the tool of your agent according to the contents of [Agent Creation and Usage section](2_2_1_Agent_Create_And_Use.md).
 
-Refer to the example: `demo_rag_agent`, with the specific file path being `sample_standard_app/app/core/agent/rag_agent_case/demo_rag_agent.yaml`.
+Refer to the example: `demo_rag_agent`, with the specific file path being `sample_standard_app/intelligence/agentic/agent/agent_instance/rag_agent_case/demo_rag_agent.yaml`.
 
 ## Using the Tool Manager
 You can obtain the instance of the tool with the corresponding name through the `.get_instance_obj(xx_tool_name)` method in the Tool manager, and call it using the `run` method.

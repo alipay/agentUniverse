@@ -15,7 +15,6 @@ def stream_output(output_stream: Queue, data: dict):
         output_stream (Queue): The output stream.
         data (dict): The data to be streamed.
     """
-    # TODO
     if output_stream is None:
         return
     output_stream.put_nowait(data)

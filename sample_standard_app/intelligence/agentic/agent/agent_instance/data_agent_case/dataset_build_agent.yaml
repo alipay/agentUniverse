@@ -6,5 +6,5 @@ profile:
   candidate: 'demo_rag_agent'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.data_agent_case.dataset_build_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.data_agent_case.dataset_build_agent'
   class: 'DatasetBuildAgent'

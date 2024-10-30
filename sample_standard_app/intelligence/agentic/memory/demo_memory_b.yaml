@@ -1,4 +1,4 @@
-name: 'demo_memory_with_local_storage'
+name: 'demo_memory_b'
 description: 'demo memory with local storage'
 type: 'short_term'
 memory_key: 'chat_history'

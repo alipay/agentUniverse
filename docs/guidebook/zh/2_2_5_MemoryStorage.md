@@ -74,7 +74,7 @@ memory_retrieval_storage: chroma_memory_storage
 
 ```yaml
 [CORE_PACKAGE]
-memory_storage = ['sample_standard_app.app.core.memory_storage']
+memory_storage = ['sample_standard_app.intelligence.agentic.memory.memory_storage']
 ```
 
 ## agentUniverse目前内置有以下MemoryStorage组件:

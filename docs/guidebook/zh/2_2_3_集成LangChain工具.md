@@ -59,7 +59,6 @@ metadata:
 
 ## 2.集成维基百科搜索
 因为LangChain的定义当中，包含一个api_wrapper对象，因此定义对象文件，并重写初始化方法：
-
 ```python
 from langchain_community.tools import WikipediaQueryRun
 from langchain_community.utilities import WikipediaAPIWrapper

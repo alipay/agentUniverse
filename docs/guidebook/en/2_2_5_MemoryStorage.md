@@ -82,7 +82,7 @@ For example, the configuration in the sample project is as follows:
 
 ```yaml
 [CORE_PACKAGE]
-memory_storage = ['sample_standard_app.app.core.memory_storage']
+memory_storage = ['sample_standard_app.intelligence.agentic.memory.memory_storage']
 ```
 
 ## agentUniverse currently has the following built-in MemoryStorage components:

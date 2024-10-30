@@ -40,6 +40,7 @@ from agentuniverse_product.service.model.llm_dto import LlmDTO
 from agentuniverse_product.service.model.planner_dto import PlannerDTO
 from agentuniverse_product.service.model.prompt_dto import PromptDTO
 from agentuniverse_product.service.model.tool_dto import ToolDTO
+from agentuniverse_product.service.util.common_util import dict_does_not_contain_keys
 
 
 def assemble_product_config_data(agent_dto: AgentDTO) -> Dict:
@@ -379,6 +380,8 @@ def update_agent_config(agent: Agent, agent_dto: AgentDTO, agent_config_path: st
             agent.agent_model.profile['instruction'] = agent_dto.prompt.instruction
     if agent_dto.llm is not None:
         llm_dto = agent_dto.llm
+        if hasattr(agent, 'llm_name'):
+            agent.llm_name = agent_dto.llm.id
         if llm_dto.id:
             agent_updates['profile.llm_model.name'] = agent_dto.llm.id
             agent.agent_model.profile.get('llm_model')['name'] = agent_dto.llm.id
@@ -391,11 +394,15 @@ def update_agent_config(agent: Agent, agent_dto: AgentDTO, agent_config_path: st
     if agent_dto.tool is not None:
         tool_dto_list: List[ToolDTO] = agent_dto.tool
         tool_name_list = [tool_dto.id for tool_dto in tool_dto_list]
+        if hasattr(agent, 'tool_names'):
+            agent.tool_names = tool_name_list
         agent_updates['action.tool'] = tool_name_list
         agent.agent_model.action['tool'] = tool_name_list
     if agent_dto.knowledge is not None:
         knowledge_dto_list: List[KnowledgeDTO] = agent_dto.knowledge
         knowledge_name_list = [knowledge_dto.id for knowledge_dto in knowledge_dto_list]
+        if hasattr(agent, 'knowledge_names'):
+            agent.knowledge_names = knowledge_name_list
         agent_updates['action.knowledge'] = knowledge_name_list
         agent.agent_model.action['knowledge'] = knowledge_name_list
     if agent_updates:
@@ -461,8 +468,3 @@ def validate_and_assemble_agent_input(agent_id: str, session_id: str, input: str
     agent_input_dict.update(tool_input_dict)
 
     return agent_input_dict
-
-
-def dict_does_not_contain_keys(d: dict, keys: list) -> bool:
-    """Check if the dictionary does not contain any of the specified keys."""
-    return all(key not in d for key in keys)

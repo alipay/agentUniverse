@@ -78,7 +78,6 @@ class ExecutingAgentTemplate(AgentTemplate):
     def _execute_subtask(self, subtask, input_object, agent_input, index, memory, llm, prompt) -> dict:
         context_tokens = {}
         try:
-            # TODO context var测试
             # pass the framework context into the thread.
             for var_name, var_value in self._context_values.items():
                 token = FrameworkContextManager().set_context(var_name, var_value)

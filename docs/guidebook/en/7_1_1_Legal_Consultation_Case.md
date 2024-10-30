@@ -7,9 +7,6 @@ The case leverages the DashScope embedding and rerank features with the Qwen llm
 ## Components
 ### Legal Knowledge Base
 The legal knowledge base is constructed using [Knowledge Components](2_2_4_Knowledge_Related_Domain_Objects.md) from agentUniverse. By storing the original legal provisions in the ChromaDB and Sqlite database, the knowledge base facilitates efficient retrieval and consultation for the agent.
-Original legal documents:
-- [民法典.pdf](../../../sample_standard_app/platform/difizen/resources/民法典.pdf)
-- [刑法.pdf](../../../sample_standard_app/platform/difizen/resources/刑法.pdf)
 
 ### [Knowledge Definition](../../../sample_standard_app/intelligence/agentic/knowledge/law_knowledge.yaml)
 ```yaml
@@ -29,10 +26,9 @@ post_processors:
     - "dashscope_reranker"
 readers:
     pdf: "default_pdf_reader"
-
 metadata:
   type: 'KNOWLEDGE'
-  module: 'sample_standard_app.app.core.knowledge.law_knowledge'
+  module: 'sample_standard_app.intelligence.agentic.knowledge.law_knowledge'
   class: 'LawKnowledge'
 ```
 
@@ -82,7 +78,7 @@ This agent involves the following one file:
 
 
 ### Demonstration Code
-[CodeLink](../../../sample_standard_app/intelligence/test/examples/law_chat_bot.py)
+[CodeLink](../../../sample_standard_app/intelligence/test/law_chat_bot.py)
 
 ## Demonstration
 ![Demonstration Image](../_picture/law_agent_demo.png)

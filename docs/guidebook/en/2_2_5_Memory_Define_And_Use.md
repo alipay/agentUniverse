@@ -24,7 +24,6 @@ max_tokens: 3000
 memory_compressor: default_memory_compressor
 memory_storages:
   - chroma_memory_storage
-  - mysql_memory_storage
 memory_retrieval_storage: chroma_memory_storage
 metadata:
   type: 'MEMORY'
@@ -43,7 +42,7 @@ metadata:
 
 The aU sample project includes two examples of memory configurations:
 
-1. [demo_memory_with_multiple_storages](../../../sample_standard_app/intelligence/agentic/memory/demo_memory_a.yaml): An example of memory with multiple storages mounted
+1. [demo_memory_with_chroma_storage](../../../sample_standard_app/intelligence/agentic/memory/demo_memory_a.yaml): An example of memory with a chroma storage mounted
 2. [demo_memory_with_local_storage](../../../sample_standard_app/intelligence/agentic/memory/demo_memory_b.yaml): An example of memory with a local memory storage mounted
 
 ## Creating Memory Domain Behavior Definition - xx_memory.py

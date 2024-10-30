@@ -24,7 +24,7 @@ def update_nested_yaml_value(config_path: str, updates: dict) -> None:
 
     Examples:
         update_nested_yaml_value(
-        config_path='/xxx/agentUniverse/sample_standard_app/app/core/agent/rag_agent_case/demo_rag_agent.yaml',
+        config_path='/xxx/agentUniverse/sample_standard_app/intelligence/agentic/agent/agent_instance/rag_agent_case/demo_rag_agent.yaml',
         updates={'info.description': 'demo rag agent',
           'profile.llm_model.name': 'qwen_llm',
           'profile.llm_model.temperature': 0.5,

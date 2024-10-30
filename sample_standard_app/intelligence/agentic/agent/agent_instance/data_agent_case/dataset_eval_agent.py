@@ -187,7 +187,7 @@ class DatasetEvalAgent(Agent):
             LLM: The language model.
         """
         llm_name = self.agent_model.profile.get('llm_model').get('name')
-        llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name, new_instance=True)
+        llm: LLM = LLMManager().get_instance_obj(component_instance_name=llm_name)
         llm.set_by_agent_model(**self.agent_model.profile.get('llm_model'))
         return llm
 

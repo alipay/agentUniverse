@@ -6,7 +6,6 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: agentuniverse_product.py
 import sys
-from typing import List
 
 from agentuniverse.base.agentuniverse import AgentUniverse
 from agentuniverse.base.component.application_component_manager import ApplicationComponentManager

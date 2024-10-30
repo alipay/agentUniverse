@@ -77,7 +77,7 @@ In the config.toml file of the agentUniverse project, you need to configure the 
 For example, the configuration in the sample project is as follows:
 ```yaml
 [CORE_PACKAGE]
-doc_processor = ['sample_standard_app.app.core.doc_processor']
+doc_processor = ['sample_standard_app.intelligence.agentic.knowledge.doc_processor']
 ```
 
 

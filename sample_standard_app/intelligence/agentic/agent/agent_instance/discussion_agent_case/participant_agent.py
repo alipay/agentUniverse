@@ -5,11 +5,11 @@
 # @Author  : wangchongshi
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: participant_agent.py
-from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
+from agentuniverse.agent.template.rag_agent_template import RagAgentTemplate
 
 
-class ParticipantAgent(Agent):
+class ParticipantAgent(RagAgentTemplate):
     def input_keys(self) -> list[str]:
         return ['input']
 
@@ -24,5 +24,5 @@ class ParticipantAgent(Agent):
         agent_input['participants'] = input_object.get_data('participants')
         return agent_input
 
-    def parse_result(self, planner_result: dict) -> dict:
-        return planner_result
+    def parse_result(self, agent_result: dict) -> dict:
+        return agent_result

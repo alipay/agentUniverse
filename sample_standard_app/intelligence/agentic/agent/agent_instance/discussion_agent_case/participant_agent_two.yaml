@@ -6,15 +6,12 @@ profile:
   llm_model:
     name: 'qwen_llm'
     temperature: 0.3
-plan:
-  planner:
-    name: 'rag_planner'
 action:
   tool:
     - 'google_search_tool'
 memory:
-  name: 'demo_memory_with_local_storage'
+  name: 'demo_memory_b'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.discussion_agent_case.participant_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.discussion_agent_case.participant_agent'
   class: 'ParticipantAgent'

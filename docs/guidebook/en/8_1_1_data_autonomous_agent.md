@@ -43,7 +43,7 @@ plan:
     dataset_evaluator: 'dataset_eval_agent'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.data_agent_case.data_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.data_agent_case.data_agent'
   class: 'DataAgent'
 ```
 [data_agent sample configuration file](../../../sample_standard_app/intelligence/agentic/agent/agent_instance/data_agent_case/data_agent.yaml)
@@ -63,7 +63,7 @@ plan:
     candidate: 'demo_rag_agent'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.data_agent_case.dataset_build_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.data_agent_case.dataset_build_agent'
   class: 'DatasetBuildAgent'
 ```
 [dataset_build_agent sample configuration file](../../../sample_standard_app/intelligence/agentic/agent/agent_instance/data_agent_case/dataset_build_agent.yaml)
@@ -85,7 +85,7 @@ profile:
     temperature: 0.1
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.data_agent_case.dataset_eval_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.data_agent_case.dataset_eval_agent'
   class: 'DatasetEvalAgent'
 ```
 [dataset_eval_agent sample configuration file](../../../sample_standard_app/intelligence/agentic/agent/agent_instance/data_agent_case/dataset_eval_agent.yaml)
@@ -93,7 +93,7 @@ metadata:
 [dataset_eval_agent sample python file](../../../sample_standard_app/intelligence/agentic/agent/agent_instance/data_agent_case/dataset_eval_agent.py)
 
 ### step5 Run DataAgent
-Through the [dataAgent code entry](../../../sample_standard_app/intelligence/test/examples/data_agent.py), configure two parameters: `queryset_path` representing the path to the queryset, and `turn` representing the total number of rounds for the queryset execution, to start the dataAgent with one click.
+Through the [dataAgent code entry](../../../sample_standard_app/intelligence/test/data_agent.py), configure two parameters: `queryset_path` representing the path to the queryset, and `turn` representing the total number of rounds for the queryset execution, to start the dataAgent with one click.
 
 Tips: please configure the queryset and specific evaluation rows reasonably to avoid excessive computational and token consumption.
 
@@ -108,7 +108,7 @@ As shown in the figure below:
 
 ![data_agent_dataset](../_picture/data_agent_dataset_en.png)
 
-[dataAgent sample evaluation dataset](../../../sample_standard_app/intelligence/test/examples/data/dataset_turn_1_2024-07-10-15-06-24.jsonl)
+[dataAgent sample evaluation dataset](../../../sample_standard_app/intelligence/test/data/dataset_turn_1_2024-07-10-15-06-24.jsonl)
 
 
 ### Complete Evaluation Results
@@ -124,7 +124,7 @@ As shown in the figure below:
 - More dimensions Score/Suggestion: similar to the Relevance dimension.
 ![data_agent_eval_result](../_picture/data_agent_eval_result_en.png)
 
-[dataAgent sample eval result](../../../sample_standard_app/intelligence/test/examples/data/eval_result_turn_1_2024-07-10-15-06-24.xlsx)
+[dataAgent sample eval result](../../../sample_standard_app/intelligence/test/data/eval_result_turn_1_2024-07-10-15-06-24.xlsx)
 
 
 
@@ -139,7 +139,7 @@ As shown in the figure below:
 
 ![data_agent_eval_report](../_picture/data_agent_eval_report_en.png)
 
-[dataAgent sample evaluation report](../../../sample_standard_app/intelligence/test/examples/data/eval_report_2024-07-10-15-06-24.xlsx)
+[dataAgent sample evaluation report](../../../sample_standard_app/intelligence/test/data/eval_report_2024-07-10-15-06-24.xlsx)
 
 ### Comparative Experiment
 Adjust the llm model in demo_rag_agent within aU from the previous `qwen1.5-72b-chat` to `qwen1.5-7b-chat`, and after evaluation by dataAgent, the comprehensive evaluation reports are as follows:

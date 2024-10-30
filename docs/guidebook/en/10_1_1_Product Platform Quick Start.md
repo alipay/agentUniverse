@@ -22,7 +22,7 @@ If you have previously used aU’s sample project, please add the following info
 # Ignore the context content.
 [CORE_PACKAGE]
 # Scan and register product components for all paths under this list, with priority over the default.
-product = ['sample_standard_app.app.core.product']
+product = ['sample_standard_app.platform.difizen.product']
 # Ignore the context content.
 ```
 If you are using aU for the first time, you can directly use the latest sample project’s `config.toml`.

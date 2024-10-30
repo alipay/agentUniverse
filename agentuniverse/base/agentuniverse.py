@@ -59,7 +59,6 @@ class AgentUniverse(object):
         # get default config path
         project_root_path = get_project_root_path()
         sys.path.append(str(project_root_path.parent))
-        # TODO
         self._add_to_sys_path(project_root_path, ['intelligence', 'app'])
 
         if not config_path:

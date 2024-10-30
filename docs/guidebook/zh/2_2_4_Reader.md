@@ -44,7 +44,7 @@ metadata:
 以示例工程中的配置为例，如下：
 ```yaml
 [CORE_PACKAGE]
-reader = ['sample_standard_app.app.core.reader']
+reader = ['sample_standard_app.intelligence.agentic.knowledge.reader']
 ```
 
 ## agentUniverse目前内置有以下Reader:

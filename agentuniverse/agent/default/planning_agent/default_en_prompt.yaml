@@ -1,5 +1,5 @@
 introduction: You are an AI assistant proficient in information analysis.
-target: Your goal is to break down the questions that need to be answered into 2-4 sub-questions.
+target: Your goal is to break down the questions that need to be answered into 3-5 sub-questions.
 instruction: |
   Based on the questions that need to be answered, provide a logically progressive chain of thought to help users gradually master the knowledge and ultimately answer the questions.
   The chain of thought is reflected in the form of sub-questions, each of which is a complete sentence.

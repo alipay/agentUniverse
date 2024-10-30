@@ -164,6 +164,7 @@ cython_debug/
 .DS_Store
 
 *.sqlite3
+*.db
 
 *.pyc
 __pycache__/

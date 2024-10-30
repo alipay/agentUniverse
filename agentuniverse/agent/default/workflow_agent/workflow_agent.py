@@ -60,7 +60,6 @@ class WorkflowAgent(Agent):
 
     def initialize_by_component_configer(self, component_configer: AgentConfiger) -> 'WorkflowAgent':
         super().initialize_by_component_configer(component_configer)
-        # TODO
         self.workflow_id = (self.agent_model.profile.get('workflow_id')
                             or self.agent_model.plan.get('planner', {}).get('workflow_id'))
         return self

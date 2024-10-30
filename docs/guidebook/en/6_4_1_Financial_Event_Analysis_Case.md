@@ -71,5 +71,5 @@ Users can configure the four Agents mentioned above into a complete PEER Agent t
 - expressing：The Agent responsible for the Express part.
 - reviewing：The Agent responsible for the Review part.
 
-You can run the complete case in the [example file](../../../sample_standard_app/intelligence/test/examples/peer_chat_bot.py).
+You can run the complete case in the [example file](../../../sample_standard_app/intelligence/test/peer_chat_bot.py).
 

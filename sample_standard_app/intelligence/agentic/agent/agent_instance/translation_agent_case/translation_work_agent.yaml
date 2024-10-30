@@ -14,5 +14,5 @@ memory:
   name: ''
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.translation_agent_case.translation_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.translation_agent_case.translation_agent'
   class: 'TranslationAgent'

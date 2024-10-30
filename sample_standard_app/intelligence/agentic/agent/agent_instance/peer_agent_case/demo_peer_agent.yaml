@@ -1,9 +1,6 @@
 info:
   name: 'demo_peer_agent'
   description: 'demo peer agent'
-plan:
-  planner:
-    name: 'peer_planner'
 profile:
   planning: 'demo_planning_agent'
   executing: 'demo_executing_agent'

@@ -11,10 +11,9 @@ profile:
     max_tokens: 1000
 action:
   tool:
-#    - 'google_search_tool'
 memory:
   name: ''
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.translation_agent_case.translation_by_token_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.translation_agent_case.translation_by_token_agent'
   class: 'TranslationAgent'

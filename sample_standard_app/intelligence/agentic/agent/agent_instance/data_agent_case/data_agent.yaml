@@ -6,5 +6,5 @@ profile:
   dataset_evaluator: 'dataset_eval_agent'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.intelligence.agentic.agent.agent_case.data_agent_case.data_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.data_agent_case.data_agent'
   class: 'DataAgent'
