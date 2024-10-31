@@ -87,7 +87,7 @@ class DatasetBuildAgent(Agent):
         """Build q&a dataset from the candidate agent which needs to be evaluated."""
 
         candidate_agent_name = agent_input.get('candidate') \
-            if agent_input.get('candidate') else self.agent_model.plan.get('planner', {}).get('candidate', '')
+            if agent_input.get('candidate') else self.agent_model.profile.get('candidate', '')
         # get the candidate agent which needs to be evaluated
         candidate_agent: Agent = AgentManager().get_instance_obj(candidate_agent_name)
         if not candidate_agent:

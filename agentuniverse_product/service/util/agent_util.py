@@ -350,13 +350,13 @@ def update_agent_config(agent: Agent, agent_dto: AgentDTO, agent_config_path: st
             agent.agent_model.profile['instruction'] = agent_dto.prompt.instruction
     if agent_dto.llm is not None:
         llm_dto = agent_dto.llm
-        if llm_dto.id is not None:
+        if llm_dto.id:
             agent_updates['profile.llm_model.name'] = agent_dto.llm.id
             agent.agent_model.profile.get('llm_model')['name'] = agent_dto.llm.id
-        if llm_dto.temperature is not None:
+        if llm_dto.temperature:
             agent_updates['profile.llm_model.temperature'] = agent_dto.llm.temperature
             agent.agent_model.profile.get('llm_model')['temperature'] = agent_dto.llm.temperature
-        if llm_dto.model_name is not None:
+        if llm_dto.model_name:
             agent_updates['profile.llm_model.model_name'] = agent_dto.llm.model_name[0]
             agent.agent_model.profile.get('llm_model')['model_name'] = agent_dto.llm.model_name[0]
     if agent_dto.tool is not None:
