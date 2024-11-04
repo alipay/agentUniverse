@@ -9,7 +9,7 @@ from agentuniverse.base.agentuniverse import AgentUniverse
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 
-AgentUniverse().start(config_path='../../config/config.toml')
+AgentUniverse().start(config_path='../../config/config.toml', core_mode=True)
 
 
 def data_process(queryset_path: str, turn: int, **kwargs):
