@@ -28,6 +28,7 @@ from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.memory import Memory
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.agent.plan.planner.react_planner.stream_callback import StreamOutPutCallbackHandler
+from agentuniverse.base.util.agent_util import assemble_memory_input
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
 from agentuniverse.prompt.chat_prompt import ChatPrompt
@@ -59,7 +60,7 @@ class ReActPlanner(Planner):
         tools = self.acquire_tools(agent_model.action)
         prompt: Prompt = self.handle_prompt(agent_model, planner_input)
         process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
-        self.assemble_memory_input(memory, planner_input)
+        assemble_memory_input(memory, planner_input)
         stop_sequence = []
         if agent_model.plan.get('stop_sequence'):
             stop_sequence = agent_model.profile.get('stop_sequence')

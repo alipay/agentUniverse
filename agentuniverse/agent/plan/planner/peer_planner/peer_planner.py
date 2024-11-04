@@ -14,6 +14,7 @@ from agentuniverse.agent.memory.memory import Memory
 from agentuniverse.agent.output_object import OutputObject
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.base.util.logging.logging_util import LOGGER
+from agentuniverse.base.util.agent_util import assemble_memory_output
 
 default_sub_agents = {
     'planning': 'PlanningAgent',
@@ -185,7 +186,7 @@ class PeerPlanner(Planner):
                        f" raised by users into several sub-tasks is: {planning_agent_name}, "
                        f"Human: {agent_input.get(self.input_key)}, "
                        f"AI: {planning_result.get_data('framework')}")
-            self.assemble_memory_output(peer_memory, agent_input, content, planning_agent_name)
+            assemble_memory_output(peer_memory, agent_input, content, planning_agent_name)
         return planning_result
 
     def executing_agent_run(self, executing_agent: Agent,
@@ -227,7 +228,7 @@ class PeerPlanner(Planner):
                 f"The agent responsible for executing the specific subtask is: {executing_agent_name}, "
                 f"Human: {agent_input.get(self.input_key)}, "
                 f"AI: {executing_result.get_data('executing_result')}")
-            self.assemble_memory_output(peer_memory, agent_input, content, executing_agent_name)
+            assemble_memory_output(peer_memory, agent_input, content, executing_agent_name)
         return executing_result
 
     def expressing_agent_run(self, expressing_agent: Agent,
@@ -265,7 +266,7 @@ class PeerPlanner(Planner):
                        f" into a final result based on the results of several sub-tasks is: {expressing_agent_name}, "
                        f"Human: {agent_input.get(self.input_key)}, "
                        f"AI: {expressing_result.get_data('output')}")
-            self.assemble_memory_output(peer_memory, agent_input, content, expressing_agent_name)
+            assemble_memory_output(peer_memory, agent_input, content, expressing_agent_name)
 
         return expressing_result
 
@@ -309,5 +310,5 @@ class PeerPlanner(Planner):
                 f" and evaluating the result to the task raised by user is {reviewing_agent_name}, "
                 f"Human: {agent_input.get(self.input_key)}, "
                 f"AI: {reviewing_result.get_data('suggestion')}")
-            self.assemble_memory_output(peer_memory, agent_input, content, reviewing_agent_name)
+            assemble_memory_output(peer_memory, agent_input, content, reviewing_agent_name)
         return reviewing_result

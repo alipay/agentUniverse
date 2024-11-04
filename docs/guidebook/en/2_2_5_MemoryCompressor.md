@@ -67,7 +67,7 @@ For example, the configuration in the sample project is as follows:
 
 ```yaml
 [CORE_PACKAGE]
-memory_compressor = ['sample_standard_app.app.core.memory_compressor']
+memory_compressor = ['sample_standard_app.intelligence.agentic.memory.memory_compressor']
 ```
 
 ## agentUniverse currently has the following built-in MemoryCompressor:
