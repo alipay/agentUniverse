@@ -44,7 +44,7 @@ In the config.toml file of the agentUniverse project, you must configure the pac
 For example, in the configuration of the sample project:
 ```yaml
 [CORE_PACKAGE]
-reader = ['sample_standard_app.app.core.reader']
+reader = ['sample_standard_app.intelligence.agentic.knowledge.reader']
 ```
 
 ## Prebuilt Readers in agentUniverse:

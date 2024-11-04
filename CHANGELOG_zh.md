@@ -139,7 +139,7 @@ ReactAgent yaml配置目前已经支持stop_sequence关键词，用户可以自�
 - 新增通义千问、文心一言、Kimi、百川等常用LLM接入方式
 
 ### Note 
-- 添加多模态样例agent调用详情见`sample_standard_app.app.test.test_multimodal_agent.MultimodalAgentTest`
+- 添加多模态样例agent调用详情见`sample_standard_app.intelligence.test.test_multimodal_agent.MultimodalAgentTest`
 - 部分代码优化与文档更新
 
 ## [0.0.6] - 2024-05-15
