@@ -18,7 +18,7 @@ from agentuniverse.base.config.config_type_enum import ConfigTypeEnum
 class PlaceholderResolver:
     def __init__(self):
         self._resolvers = []
-        self.register_resolver(r'${(.+?)}',
+        self.register_resolver(r'\${(.+?)}',
                                    lambda match: os.getenv(match.group(1),
                                                            match.group(0)))
     def register_resolver(self, pattern, func):
