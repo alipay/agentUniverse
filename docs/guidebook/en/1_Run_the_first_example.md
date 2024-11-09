@@ -153,8 +153,8 @@ You need to apply for the SERPER_API_KEY on the official Serper website and conf
 After applying, find the corresponding key in the custom_key.toml configuration file and uncomment it as shown.
 
 ```toml
-##search api
-SEARCHAPI_API_KEY='key_xxxxxx'
+#Google search
+SERPER_API_KEY='xxxxxx'
 ```
 
 Follow the steps in Section 2 to execute other cases. You can now reference and run all official cases.
