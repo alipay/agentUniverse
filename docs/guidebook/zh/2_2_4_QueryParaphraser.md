@@ -19,13 +19,13 @@ class Query(BaseModel):
     ext_info: dict = {}
     similarity_top_k: Optional[int] = None
 ```
-- query_str: 一个可选的字符串字段，用于存储原始查询的文本内容。
-- query_text_bundles: 一个可选的字符串列表字段，用于存储多个改写后的查询文本片段。
-- query_image_bundles: 一个可选的图像列表字段，用于存储多个查询图像。
-- keywords: 一个可选的集合字段，用于存储查询的关键词。
-- embeddings: 一个嵌入向量列表字段，用于存储查询的嵌入表示，用于相似度匹配。
-- ext_info: 一个字典字段，用于存储与查询相关的额外信息，支持任意扩展。
-- similarity_top_k: 一个可选的整数字段，用于指定相似度搜索中返回的最相似结果的数量。
+- `query_str`: 一个可选的字符串字段，用于存储原始查询的文本内容。
+- `query_text_bundles`: 一个可选的字符串列表字段，用于存储多个改写后的查询文本片段。
+- `query_image_bundles`: 一个可选的图像列表字段，用于存储多个查询图像。
+- `keywords`: 一个可选的集合字段，用于存储查询的关键词。
+- `embeddings`: 一个嵌入向量列表字段，用于存储查询的嵌入表示，用于相似度匹配。
+- `ext_info`: 一个字典字段，用于存储与查询相关的额外信息，支持任意扩展。
+- `similarity_top_k`: 一个可选的整数字段，用于指定相似度搜索中返回的最相似结果的数量。
 
 QueryParaphraser定义如下：
 ```python

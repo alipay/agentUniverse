@@ -77,5 +77,5 @@ metadata:
   class: 'NluRagRouter'
 ```
 其中需要用户填写的内容包括：
-- store_amount: 指定查询会被路由到的存储库数量，控制查询的分发范围。
-- llm: 包含大语言模型的配置，用于根据Store的描述信息和Query中的query_str筛选相关的数据库。name 表示模型组件的名称，model_name 指定使用的具体模型。
+- `store_amount`: 指定查询会被路由到的存储库数量，控制查询的分发范围。
+- `llm`: 包含大语言模型的配置，用于根据Store的描述信息和Query中的query_str筛选相关的数据库。name 表示模型组件的名称，model_name 指定使用的具体模型。

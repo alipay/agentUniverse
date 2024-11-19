@@ -9,9 +9,9 @@ activate = 'true'
 max_workers = 10
 server_port = 50051
 ```
-- **activate**: 仅在该值为`true`的时候启动gRPC服务器
-- **max_workers**: gRPC服务器线程池的最大线程数量，默认为10
-- **server_port**: gRPC服务器的服务端口，默认为50051
+- **`activate`**: 仅在该值为`true`的时候启动gRPC服务器
+- **`max_workers`**: gRPC服务器线程池的最大线程数量，默认为10
+- **`server_port`**: gRPC服务器的服务端口，默认为50051
 
 然后启动grpc服务器：
 ```python
@@ -64,9 +64,9 @@ service AgentUniverseService {
   rpc service_run_result(AgentResultRequest) returns (AgentServiceResponse);
 }
 ```
-- **service_run**: 同步调用Agent服务，调用过程中阻塞直到Agent返回结果。
-- **service_run_async**: 异步调用Agent服务，调用后先返回一个`request_id`,后续可用该ID通过`service_run_result`接口查询Agent服务结果。
-- **service_run_result**: 查询Agent服务的结果。
+- **`service_run`**: 同步调用Agent服务，调用过程中阻塞直到Agent返回结果。
+- **`service_run_async`**: 异步调用Agent服务，调用后先返回一个`request_id`,后续可用该ID通过`service_run_result`接口查询Agent服务结果。
+- **`service_run_result`**: 查询Agent服务的结果。
 
 \
 调用Agent服务的请求体结构如下：
@@ -77,9 +77,9 @@ message AgentServiceRequest {
   bool saved = 3;
 }
 ```
-- **service_id**: 应用中注册的模型服务id。
-- **params**: JSON String格式的服务入参，会被`json.loads`拆解为`**kwargs`的形式传递给底层的Agent。
-- **saved**: 是否需要保存本次请求结果，该值为`false`的话则本次请求无法在`service_run_result`中查询到。
+- **`service_id`**: 应用中注册的模型服务id。
+- **`params`**: JSON String格式的服务入参，会被`json.loads`拆解为`**kwargs`的形式传递给底层的Agent。
+- **`saved`**: 是否需要保存本次请求结果，该值为`false`的话则本次请求无法在`service_run_result`中查询到。
 
 \
 查询Agent服务结果的请求体结构如下：
@@ -88,7 +88,7 @@ message AgentResultRequest {
     string request_id = 1;
 }
 ```
-- **request_id**: 需要查询的请求ID。
+- **`request_id`**: 需要查询的请求ID。
 
 \
 返回结果的结构如下：
@@ -100,10 +100,10 @@ message AgentServiceResponse {
   string result = 4;
 }
 ```
-- **message**: 请求失败时的详细错误信息。
-- **success**: 表示本次请求执行是否成功。
-- **request_id**: 本次请求的Id。
-- **result**: Agent服务执行的结果，异步接口`service_run_async`中为空。
+- **`message`**: 请求失败时的详细错误信息。
+- **`success`**: 表示本次请求执行是否成功。
+- **`request_id`**: 本次请求的Id。
+- **`result`**: Agent服务执行的结果，异步接口`service_run_async`中为空。
 
 ### 调用示例
 ```python
