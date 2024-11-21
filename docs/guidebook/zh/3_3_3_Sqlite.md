@@ -18,11 +18,11 @@ metadata:
   module: 'agentuniverse.agent.action.knowledge.store.sqlite_store'
   class: 'SQLiteStore'
 ```
-- db_path: SQLite 数据库文件的路径，用于存储和管理文本数据。
-- k1: BM25 算法中的参数 k1，控制词频对得分的影响。
-- b: BM25 算法中的参数 b，控制文档长度对得分的影响。
-- keyword_extractor: 用于提取关键词的工具名称，这里指定为 jieba_keyword_extractor。
-- similarity_top_k: 根据BM25分数返回的最相关的top k。
+- `db_path`: SQLite 数据库文件的路径，用于存储和管理文本数据。
+- `k1`: BM25 算法中的参数 k1，控制词频对得分的影响。
+- `b`: BM25 算法中的参数 b，控制文档长度对得分的影响。
+- `keyword_extractor`: 用于提取关键词的工具名称，这里指定为 jieba_keyword_extractor。
+- `similarity_top_k`: 根据BM25分数返回的最相关的top k。
 
 ### 使用方式
 [知识定义与使用](2_2_4_知识定义与使用.md)

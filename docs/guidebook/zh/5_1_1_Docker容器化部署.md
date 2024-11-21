@@ -15,8 +15,9 @@ docker pull registry.cn-hangzhou.aliyuncs.com/agent_universe/agent_universe:0.0.
 ```shell
 docker run -d -p 8888:8888 -e OPENAI_API_KEY=XXX -v ./sample_standard_app/:/usr/local/etc/workspace/project/sample_standard_app registry.cn-hangzhou.aliyuncs.com/agent_universe/agent_universe:0.0.9_centos8
 ```
-其中`-p 8888:8888`为Web Server的端口映射，前面的8888表示容器内的webserver启动在8888端口，后者表示映射到宿主机的8888端口，可自行根据实际应用的启动情况调整。-e OPENAI_API_KEY=XXX可以添加容器内的环境变量。  
-`-v {local_dir}:/usr/local/etc/workspace/project/{local_dir_name}`表示把本地`local_dir`目录挂载至容器内的`/usr/local/etc/workspace/project`目录，容器内目录为固定值，不可修改,`local_dir_name`表示你本地文件夹的名字，也就是`local_dir`的最后一级目录名称。
+- `-p 8888:8888`为Web Server的端口映射，前面的8888表示容器内的webserver启动在8888端口，后者表示映射到宿主机的8888端口，可自行根据实际应用的启动情况调整。
+- `-e OPENAI_API_KEY=XXX`可以添加容器内的环境变量。  
+- `-v {local_dir}:/usr/local/etc/workspace/project/{local_dir_name}`表示把本地`local_dir`目录挂载至容器内的`/usr/local/etc/workspace/project`目录，容器内目录为固定值，不可修改,`local_dir_name`表示你本地文件夹的名字，也就是`local_dir`的最后一级目录名称。
 
 ### 使用多个容器挂载相同目录时，有以下几点建议：
 由于多个容器在相同的挂载目录进行文件的读写，有几处设置可以优化并发读写的冲突：
@@ -38,7 +39,8 @@ docker run -d -p 8888:8888 -e OPENAI_API_KEY=XXX -v ./sample_standard_app/:/usr/
 docker run -d -p 8888:8888 --entrypoint=/bin/bash registry.cn-hangzhou.aliyuncs.com/agent_universe/agent_universe:0.0.5_centos8_beta -c "git clone {repo_addr}; mv {project_dir} /usr/local/etc/workspace/project; /bin/bash --login /usr/local/etc/workspace/shell/start.sh"
 ````
 
-其中`repo_addr`是你的git项目地址，`project_dir`是工程路径，比如`sample_standard_app`在你git项目下的`project`目录，那么`project_dir`就是`project/sample_standard_app`。
+- `repo_addr`是你的git项目地址
+- `project_dir`是工程路径，比如`sample_standard_app`在你git项目下的`project`目录，那么`project_dir`就是`project/sample_standard_app`。
 ## 结果验证
 以该示例中的8888端口为例，您可以通过curl命令验证服务是否正确启动
 ```shell

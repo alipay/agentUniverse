@@ -27,11 +27,11 @@ class Document(BaseModel):
             values['id'] = str(uuid.uuid5(uuid.NAMESPACE_URL, text))
         return values
 ```
-- id：用于标识一段特定文档的唯一标识，默认通过uuid生成。
-- text：文档中的文本内容
-- metadata：文档的元数据信息，通常包含原始文件名、原始文件中的位置等。
-- embedding：文档向量化后的形式，可以是文本向量，在Document的子类ImageDocument中，也可以是图像向量化后的结果。
-- keywords：文档中的关键词，也可以是这段文本的tag。
+- `id`: 用于标识一段特定文档的唯一标识，默认通过uuid生成。
+- `text`: 文档中的文本内容
+- `metadata`: 文档的元数据信息，通常包含原始文件名、原始文件中的位置等。
+- `embedding`: 文档向量化后的形式，可以是文本向量，在Document的子类ImageDocument中，也可以是图像向量化后的结果。
+- `keywords`: 文档中的关键词，也可以是这段文本的tag。
 
 DocProcessor定义如下：
 ```python
@@ -96,9 +96,9 @@ metadata:
   module: 'agentuniverse.agent.action.knowledge.doc_processor.character_text_splitter'
   class: 'CharacterTextSplitter'
 ```
-- chunk_size: 切分后文本长度大小。
-- chunk_overlap: 相邻切分文本重合部分的长度。
-- separators: 指定的分隔符
+- `chunk_size`: 切分后文本长度大小。
+- `chunk_overlap`: 相邻切分文本重合部分的长度。
+- `separators`: 指定的分隔符
 
 ### [TokenTextSplitter](../../../agentuniverse/agent/action/knowledge/doc_processor/character_text_splitter.yaml)
 该组件根据指定的 tokenizer 对文本进行切分，按照设定的 chunk_size 和 chunk_overlap 将文本拆分为多个片段，每个片段包含指定数量的tokens。
@@ -116,9 +116,9 @@ metadata:
   module: 'agentuniverse.agent.action.knowledge.doc_processor.token_text_splitter'
   class: 'TokenTextSplitter'
 ```
-- chunk_size: 切分后文本的token数量。
-- chunk_overlap: 相邻切分文本重合部分的token数量。
-- tokenizer: 指定的tokenizer，用于将文本切分为tokens
+- `chunk_size`: 切分后文本的token数量。
+- `chunk_overlap`: 相邻切分文本重合部分的token数量。
+- `tokenizer`: 指定的tokenizer，用于将文本切分为tokens
 
 ### [RecursiveCharacterTextSplitter](../../../agentuniverse/agent/action/knowledge/doc_processor/recursive_character_text_splitter.yaml)
 
@@ -138,9 +138,9 @@ metadata:
   module: 'agentuniverse.agent.action.knowledge.doc_processor.recursive_character_text_splitter'
   class: 'RecursiveCharacterTextSplitter'
 ```
-- chunk_size: 切分后文本长度大小。
-- chunk_overlap: 相邻切分文本重合部分的长度。
-- separators: 指定的分隔符列表，按顺序尝试使用分隔符进行切分。如果第一个分隔符不能满足条件，则递归地使用下一个分隔符。
+- `chunk_size`: 切分后文本长度大小。
+- `chunk_overlap`: 相邻切分文本重合部分的长度。
+- `separators`: 指定的分隔符列表，按顺序尝试使用分隔符进行切分。如果第一个分隔符不能满足条件，则递归地使用下一个分隔符。
 
 ### [JiebaKeywordExtractor](../../../agentuniverse/agent/action/knowledge/doc_processor/jieba_keyword_extractor.yaml)
 该组件使用结巴（Jieba）分词库从文本中提取关键词。它可以根据设定的 top_k 参数提取出最重要的几个关键词，用于后续作为倒排索引。  
@@ -154,7 +154,7 @@ metadata:
   module: 'agentuniverse.agent.action.knowledge.doc_processor.jieba_keyword_extractor'
   class: 'JiebaKeywordExtractor'
 ```
-- top_k: 从文本中提取的关键词数量，即排名前 top_k 的关键词会被提取。
+- `top_k`: 从文本中提取的关键词数量，即排名前 top_k 的关键词会被提取。
 
 ### [DashscopeReranker](../../../agentuniverse/agent/action/knowledge/doc_processor/dashscope_reranker.yaml)
 

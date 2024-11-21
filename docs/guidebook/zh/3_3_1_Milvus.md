@@ -42,11 +42,11 @@ metadata:
   module: 'agentuniverse.agent.action.knowledge.store.milvus_store'
   class: 'MilvusStore'
 ```
-- connection_args: 连接 Milvus 数据库的参数，包括主机地址 (host) 和端口号 (port)。
-- search_args: 搜索参数，定义了搜索时使用的距离度量类型 (metric_type) 和相关参数（如 nprobe）。
-- index_params: 索引参数，定义了使用的索引类型 (index_type)、距离度量类型 (metric_type) 以及构建索引时的具体参数（如 M 和 efConstruction）。
-- embedding_model: 用于生成嵌入向量的模型名称，这里指定为 dashscope_embedding。
-- similarity_top_k: 在相似度搜索中返回最相似结果的数量。
+- `connection_args`: 连接 Milvus 数据库的参数，包括主机地址 (host) 和端口号 (port)。
+- `search_args`: 搜索参数，定义了搜索时使用的距离度量类型 (metric_type) 和相关参数（如 nprobe）。
+- `index_params`: 索引参数，定义了使用的索引类型 (index_type)、距离度量类型 (metric_type) 以及构建索引时的具体参数（如 M 和 efConstruction）。
+- `embedding_model`: 用于生成嵌入向量的模型名称，这里指定为 dashscope_embedding。
+- `similarity_top_k`: 在相似度搜索中返回最相似结果的数量。
 
 ### 使用方式
 [知识定义与使用](2_2_4_知识定义与使用.md)
