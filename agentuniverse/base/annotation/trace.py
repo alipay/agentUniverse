@@ -8,10 +8,14 @@
 import asyncio
 import functools
 import inspect
+import sys
 
 from functools import wraps
 
+from agentuniverse.agent.memory.trace_memory import TraceMemory
+from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
+from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.base.util.monitor.monitor import Monitor
 from agentuniverse.llm.llm_output import LLMOutput
 
@@ -132,6 +136,46 @@ def _get_llm_input(func, *args, **kwargs) -> dict:
     return {k: v for k, v in bound_args.arguments.items()}
 
 
+def get_caller_info(instance: object = None):
+    # 获取上一层调用者的帧
+    if instance is None:
+        frame = sys._getframe(2)
+        instance = frame.f_locals.get('self')  # 获取调用者对象
+
+    source = ""
+    type = ""
+    # 判断对象的类型是Agent、Tool、还是其他类型
+    if hasattr(instance, 'component_type') and getattr(instance, 'component_type', None) == ComponentEnum.AGENT:
+        agent_model = getattr(instance, 'agent_model', None)
+        if isinstance(agent_model, object):
+            info = getattr(agent_model, 'info', None)
+            if isinstance(info, dict):
+                source = info.get('name', None)
+                type = 'agent'
+    elif hasattr(instance, 'component_type'):
+        component = getattr(instance, 'component_type', None)
+        if component == ComponentEnum.TOOL:
+            source = getattr(instance, 'name', None)
+            type = 'tool'
+        elif component == ComponentEnum.WORK_PATTERN:
+            # 智能体调用的work_pattern, frame需要向上找一层
+            frame = sys._getframe(4)
+            return get_caller_info(frame.f_locals.get('self'))
+        elif component == ComponentEnum.KNOWLEDGE:
+            source = getattr(instance, 'name', None)
+            type = 'knowledge'
+        elif component == ComponentEnum.SERVICE:
+            source = getattr(instance, 'name', None)
+            type = 'user'
+    else:
+        source = instance.__class__.__qualname__
+        type = "unknown"
+    return {
+        'source': source,
+        'type': type
+    }
+
+
 def trace_agent(func):
     """Annotation: @trace_agent
 
@@ -145,8 +189,8 @@ def trace_agent(func):
         # check whether the tracing switch is enabled
         source = func.__qualname__
         self = agent_input.pop('self', None)
-
         tracing = None
+        trace_memory = FrameworkContextManager().get_context('trace_memory')
         if isinstance(self, object):
             agent_model = getattr(self, 'agent_model', None)
             if isinstance(agent_model, object):
@@ -156,7 +200,13 @@ def trace_agent(func):
                     source = info.get('name', None)
                 if isinstance(profile, dict):
                     tracing = profile.get('tracing', None)
-
+                if trace_memory is None:
+                    memory = getattr(agent_model, 'memory', None)
+                    if isinstance(memory, dict):
+                        trace_memory = memory.get('trace_memory', '')
+                        FrameworkContextManager().set_context('trace_memory', trace_memory)
+        start_info = get_caller_info()
+        TraceMemory().add_agent_input_info(start_info, self, agent_input)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
 
@@ -167,6 +217,7 @@ def trace_agent(func):
         result = await func(*args, **kwargs)
         # add agent invocation info to monitor
         Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
+        TraceMemory().add_agent_result_info(self, result, start_info)
         return result
 
     @functools.wraps(func)
@@ -176,7 +227,7 @@ def trace_agent(func):
         # check whether the tracing switch is enabled
         source = func.__qualname__
         self = agent_input.pop('self', None)
-
+        trace_memory = FrameworkContextManager().get_context('trace_memory')
         tracing = None
         if isinstance(self, object):
             agent_model = getattr(self, 'agent_model', None)
@@ -187,7 +238,14 @@ def trace_agent(func):
                     source = info.get('name', None)
                 if isinstance(profile, dict):
                     tracing = profile.get('tracing', None)
+                if trace_memory is None:
+                    memory = getattr(agent_model, 'memory', None)
+                    if isinstance(memory, dict):
+                        trace_memory = memory.get('trace_memory', '')
+                        FrameworkContextManager().set_context('trace_memory', trace_memory)
 
+        start_info = get_caller_info()
+        TraceMemory().add_agent_input_info(start_info, self, agent_input)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
 
@@ -198,6 +256,7 @@ def trace_agent(func):
         result = func(*args, **kwargs)
         # add agent invocation info to monitor
         Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
+        TraceMemory().add_agent_result_info(self, result, start_info)
         return result
 
     if asyncio.iscoroutinefunction(func):
@@ -226,12 +285,15 @@ def trace_tool(func):
             name = getattr(self, 'name', None)
             if name is not None:
                 source = name
+        start_info = get_caller_info()
 
+        TraceMemory().add_tool_input_info(start_info, source, tool_input)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'tool'})
-
+        result = func(*args, **kwargs)
+        TraceMemory().add_tool_output_info(start_info, source, params=result)
         # invoke function
-        return func(*args, **kwargs)
+        return result
 
     # sync function
     return wrapper_sync
@@ -250,17 +312,24 @@ def trace_knowledge(func):
 
         source = func.__qualname__
         self = knowledge_input.pop('self', None)
+        # 获取上一层调用者的帧
+        frame = sys._getframe(2)
+        caller_self = frame.f_locals.get('self')  # 获取调用者对象
+        res = get_caller_info(caller_self)
 
         if isinstance(self, object):
             name = getattr(self, 'name', None)
             if name is not None:
                 source = name
 
+        LOGGER.info(f"{res} -> {source}: {Monitor().serialize_obj(knowledge_input)}")
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'knowledge'})
 
         # invoke function
-        return func(*args, **kwargs)
+        result = func(*args, **kwargs)
+        LOGGER.info(f"{res} -> {source}: {Monitor().serialize_obj(result)}")
+        return result
 
     # sync function
     return wrapper_sync
