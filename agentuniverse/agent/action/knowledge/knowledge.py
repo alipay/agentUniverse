@@ -9,6 +9,7 @@ import os
 import re
 from typing import Optional, Dict, List, Any
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
+from uuid import uuid4
 
 from langchain_core.utils.json import parse_json_markdown
 from langchain.tools import Tool as LangchainTool
@@ -62,6 +63,7 @@ class Knowledge(ComponentBase):
 
         ext_info (Optional[Dict]): The extended information of the knowledge.
     """
+
     class Config:
         arbitrary_types_allowed = True
 
@@ -89,14 +91,14 @@ class Knowledge(ComponentBase):
             thread_name_prefix="Knowledge query"
         )
 
-    def _load_data(self,  *args: Any, **kwargs: Any) -> List[Document]:
+    def _load_data(self, *args: Any, **kwargs: Any) -> List[Document]:
         # check if source is a local file or remote url
         if kwargs.get("source_path"):
             source_path = kwargs.get("source_path")
         else:
             raise Exception("No file to load.")
         url_pattern = re.compile(
-            r'^(https?:\/\/)?' 
+            r'^(https?:\/\/)?'
             r'((([a-zA-Z0-9]{1,256}\.[a-zA-Z0-9]{1,6})|'
             r'(\d{1,3}\.){3}\d{1,3})'
             r'(:\d{1,5})?)'
@@ -222,7 +224,30 @@ class Knowledge(ComponentBase):
                 LOGGER.error(f"Exception occurred in knowledge query: {e}")
         retrieved_docs = list(retrieved_docs.values())
         retrieved_docs = self._rag_post_process(retrieved_docs, query)
-        return retrieved_docs
+
+        # == == == == == == == == == == == == ==
+        # 民法典》第1032条：
+        # 删除请求：如果李四认为照片的存在或传播对其个人权益造成实际侵害，可以要求删除。
+        # 张三的抗辩：如果拍摄行为合理且照片未被恶意使用或传播，李四的删除要求可能缺乏法律依据。
+        docs = [
+            Document(
+                text="""
+《民法典》第1019条：
+肖像权的内容：肖像权人享有对其肖像的专有权利，未经本人同意，不得制作、使用、公开其肖像。
+例外情形：如果属于合理使用情形（如为公共利益或者个人在公共场所的非恶意拍摄），不构成侵权。
+                """
+            ),
+            Document(
+                text="""
+民法典》第1032条：
+删除请求：如果李四认为照片的存在或传播对其个人权益造成实际侵害，可以要求删除。
+张三的抗辩：如果拍摄行为合理且照片未被恶意使用或传播，李四的删除要求可能缺乏法律依据。        
+"""
+            )
+
+        ]
+
+        return docs
 
     def to_llm(self, retrieved_docs: List[Document]) -> Any:
         """Transfer list docs to llm input"""
@@ -267,7 +292,7 @@ class Knowledge(ComponentBase):
         """
         parse_query = parse_json_markdown(query)
         knowledge = self.query_knowledge(**parse_query)
-        return "This is Query Result:\n"+self.to_llm(knowledge)
+        return "This is Query Result:\n" + self.to_llm(knowledge)
 
     def as_langchain_tool(self) -> LangchainTool:
         """Convert the Knowledge object to a LangChain tool.

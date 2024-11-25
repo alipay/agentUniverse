@@ -9,6 +9,8 @@ from agentuniverse.agent.output_object import OutputObject
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.agent_manager import AgentManager
 from agentuniverse.base.agentuniverse import AgentUniverse
+from sample_standard_app.intelligence.agentic.agent.agent_instance.rag_agent_case.rag_agent_template import \
+    RagAgentTemplate
 
 AgentUniverse().start(config_path='../../config/config.toml', core_mode=True)
 
