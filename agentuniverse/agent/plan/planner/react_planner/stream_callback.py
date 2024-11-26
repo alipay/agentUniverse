@@ -14,7 +14,7 @@ from langchain_core.agents import AgentAction, AgentFinish
 from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.outputs import GenerationChunk, ChatGenerationChunk, LLMResult
 
-from agentuniverse.agent.memory.trace_memory import TraceMemory
+from agentuniverse.agent.memory.conversation_memory import ConversationMemory
 
 
 class StreamOutPutCallbackHandler(BaseCallbackHandler):
@@ -60,7 +60,7 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
             inputs: Optional[Dict[str, Any]] = None,
             **kwargs: Any,
     ) -> Any:
-        TraceMemory().add_tool_input_info(
+        ConversationMemory().add_tool_input_info(
             start_info={
                 "source": self.agent_info.get('name'),
                 "type": 'agent',
@@ -114,7 +114,7 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
                     "agent_info": self.agent_info
                 }
             })
-        TraceMemory().add_tool_output_info(
+        ConversationMemory().add_tool_output_info(
             start_info={
                 "source": self.agent_info.get('name'),
                 "type": 'agent',
@@ -175,7 +175,7 @@ class InvokeCallbackHandler(BaseCallbackHandler):
             "type": "agent",
         }
 
-        TraceMemory().add_llm_input_info(start_info, self.llm_name, prompt)
+        ConversationMemory().add_llm_input_info(start_info, self.llm_name, prompt)
 
     def on_llm_end(
             self,
@@ -189,7 +189,7 @@ class InvokeCallbackHandler(BaseCallbackHandler):
             "source": self.source,
             "type": "agent",
         }
-        TraceMemory().add_llm_output_info(
+        ConversationMemory().add_llm_output_info(
             start_info, self.llm_name,
             response.generations[0][0].text
         )

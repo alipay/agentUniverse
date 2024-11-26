@@ -12,7 +12,7 @@ import sys
 
 from functools import wraps
 
-from agentuniverse.agent.memory.trace_memory import TraceMemory
+from agentuniverse.agent.memory.conversation_memory import ConversationMemory
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 from agentuniverse.base.util.logging.logging_util import LOGGER
@@ -206,7 +206,7 @@ def trace_agent(func):
                         trace_memory = memory.get('trace_memory', '')
                         FrameworkContextManager().set_context('trace_memory', trace_memory)
         start_info = get_caller_info()
-        TraceMemory().add_agent_input_info(start_info, self, agent_input)
+        ConversationMemory().add_agent_input_info(start_info, self, agent_input)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
 
@@ -217,7 +217,7 @@ def trace_agent(func):
         result = await func(*args, **kwargs)
         # add agent invocation info to monitor
         Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
-        TraceMemory().add_agent_result_info(self, result, start_info)
+        ConversationMemory().add_agent_result_info(self, result, start_info)
         return result
 
     @functools.wraps(func)
@@ -245,7 +245,7 @@ def trace_agent(func):
                         FrameworkContextManager().set_context('trace_memory', trace_memory)
 
         start_info = get_caller_info()
-        TraceMemory().add_agent_input_info(start_info, self, agent_input)
+        ConversationMemory().add_agent_input_info(start_info, self, agent_input)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
 
@@ -256,7 +256,7 @@ def trace_agent(func):
         result = func(*args, **kwargs)
         # add agent invocation info to monitor
         Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
-        TraceMemory().add_agent_result_info(self, result, start_info)
+        ConversationMemory().add_agent_result_info(self, result, start_info)
         return result
 
     if asyncio.iscoroutinefunction(func):
@@ -287,11 +287,11 @@ def trace_tool(func):
                 source = name
         start_info = get_caller_info()
 
-        TraceMemory().add_tool_input_info(start_info, source, tool_input)
+        ConversationMemory().add_tool_input_info(start_info, source, tool_input)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'tool'})
         result = func(*args, **kwargs)
-        TraceMemory().add_tool_output_info(start_info, source, params=result)
+        ConversationMemory().add_tool_output_info(start_info, source, params=result)
         # invoke function
         return result
 
@@ -320,13 +320,13 @@ def trace_knowledge(func):
 
         start = get_caller_info()
 
-        TraceMemory().add_knowledge_input_info(start, source, knowledge_input)
+        ConversationMemory().add_knowledge_input_info(start, source, knowledge_input)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'knowledge'})
 
         # invoke function
         result = func(*args, **kwargs)
-        TraceMemory().add_knowledge_output_info(start, source, params=result)
+        ConversationMemory().add_knowledge_output_info(start, source, params=result)
         return result
 
     # sync function

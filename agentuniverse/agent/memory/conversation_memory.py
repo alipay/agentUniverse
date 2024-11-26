@@ -21,7 +21,7 @@ from agentuniverse.base.util.logging.logging_util import LOGGER
 
 
 @singleton
-class TraceMemory:
+class ConversationMemory:
     """
     1. 采集memory调度信息
     """
