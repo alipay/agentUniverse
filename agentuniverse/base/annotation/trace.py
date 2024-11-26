@@ -312,23 +312,21 @@ def trace_knowledge(func):
 
         source = func.__qualname__
         self = knowledge_input.pop('self', None)
-        # 获取上一层调用者的帧
-        frame = sys._getframe(2)
-        caller_self = frame.f_locals.get('self')  # 获取调用者对象
-        res = get_caller_info(caller_self)
 
         if isinstance(self, object):
             name = getattr(self, 'name', None)
             if name is not None:
                 source = name
 
-        LOGGER.info(f"{res} -> {source}: {Monitor().serialize_obj(knowledge_input)}")
+        start = get_caller_info()
+
+        TraceMemory().add_knowledge_input_info(start, source, knowledge_input)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'knowledge'})
 
         # invoke function
         result = func(*args, **kwargs)
-        LOGGER.info(f"{res} -> {source}: {Monitor().serialize_obj(result)}")
+        TraceMemory().add_knowledge_output_info(start, source, params=result)
         return result
 
     # sync function
