@@ -11,6 +11,9 @@ import queue
 import traceback
 import uuid
 from threading import Thread
+from typing import List
+
+from agentuniverse.agent.action.knowledge.store.document import Document
 
 from agentuniverse.agent.memory.memory_manager import MemoryManager
 from agentuniverse.agent.memory.message import Message
@@ -148,9 +151,14 @@ class ConversationMemory:
         target_info = {'source': target, 'type': 'knowledge'}
         self.add_trace_info(start_info, target_info, 'input', params)
 
-    def add_knowledge_output_info(self, start_info: dict, target: str, params: dict):
+    def add_knowledge_output_info(self, start_info: dict, target: str, params: List[Document]):
         target_info = {'source': target, 'type': 'knowledge'}
-        self.add_trace_info(target_info, start_info, 'output', params)
+        doc_data = []
+        for doc in params:
+            doc_data.append(doc.text)
+        self.add_trace_info(target_info, start_info, 'output', {
+            'output': "\n==============================\n".join(doc_data)
+        })
 
     def add_agent_result_info(self, agent_instance: 'Agent', agent_result: OutputObject, target_info: dict):
         conversation_memory = FrameworkContextManager().get_context('conversation_memory')
