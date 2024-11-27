@@ -1,44 +1,69 @@
-# Application Engineering Structure and Explanation
-As you can see, `agentUniverse` is designed with lightness and integrative capabilities in mind, allowing you to incorporate `agentUniverse` into any of your projects for seamless operation.
+# Application Project Structure and Explanation
+As you can see, `agentUniverse` is designed with lightweight and integration capabilities, allowing you to incorporate `agentUniverse` into any of your projects.
 
 ## Recommended Project Directory Structure and Explanation
 The directory structure provided below is only a suggestion, and you are free to adjust it according to your preferences and actual situation. We will explain this in more detail later in the document.
 
 ```
 /
-├── app/
-│   ├── biz/
-│   ├── bootstarp/
+├── bootstrap/
+│   ├── intelligence/
 │   │   └── server_application.py
-│   ├── core/
+│   ├── platform/
+│   │   └── product_application.py
+├── intelligence/
+│   ├── agentic/
 │   │   ├── agent
+│   │   │   └── agent_instance
+│   │   │   └── agent_template
 │   │   ├── knowledge
+│   │   │   └── store/
+│   │   │   └── rag_router/
+│   │   │   └── doc_processor/
 │   │   ├── llm
+│   │   ├── prompt
 │   │   ├── memory
-│   │   ├── planner
-│   │   ├── service
-│   │   └── tool
-│   ├── test/
-│   └── web/
+│   │   ├── tool
+│   │   └── work_pattern
+│   ├── service/
+│   │   └── agent_service
+│   │   └── classic_service
+│   ├── dal/
+│   ├── integration/
+│   ├── utils/
+│   └── test/
+├── platform/
 ├── config
 ├── pyproject.toml
 └── other project files...
 ```
 
-The specific meanings of each package directory level are as follows:
-* app - The main application program code
-  * biz - Your business code, where you can organize the next level of the directory structure as you wish
-  * bootstrap - The entry layer for starting the web server, for starting details refer to server_application.py
-  * core - The core layer of LLM agent application components
-    * agent - Place the agents you build
-    * knowledge - The knowledge you customize and use
-    * llm - The LLM (Language Model) you customize and use
-    * memory - The memory you customize and use
-    * planner - The collaborative mode you customize and use
-    * service - Service registration directory
-    * tool - The tools you customize and use
-  * test - Directory for tests
-  * web - The upper web layer, currently left blank
+The specific descriptions for each level of package directories are as follows:
+* bootstrap: The entry layer for starting the web server
+  * intelligence - The entry layer for starting Intelligent web server
+  * platform - The entry layer for productization web server
+* intelligence: Intelligent project layer, used for agent construction, component customization, and service implementation.
+  * agentic: Intelligent domain layer, where related domain components of agentUniverse are placed.
+    * agent - Agent layer, corresponding to the agent component of agentUniverse, which can be used to build agent templates and instances.
+      * agent_template - Agent template layer, abstracted from business understanding, to help users quickly build agents. After the template is built, users only need to configure specific attributes based on the template to execute the corresponding logic. 
+      * agent_instance - Agent instance layer.
+    * knowledge - Knowledge layer, corresponding to the knowledge component of agentUniverse, including knowledge injection and search capabilities.
+      * store - Knowledge store, corresponding to the store component of agentUniverse.
+      * rag_router - Knowledge RAG router, corresponding to the rag_router component of agentUniverse.
+      * doc_processor - Knowledge document processor, corresponding to the doc_processor component of agentUniverse.
+    * llm - LLM layer, corresponding to the llm component of agentUniverse, providing llm services such as ChatGPT/Qwen.
+    * prompt - Prompt layer, corresponding to the prompt component of agentUniverse, providing prompt templates and generation capabilities.
+    * memory - Memory layer, corresponding to the memory component of agentUniverse, providing agent memory capabilities, including memory compression and storage.
+    * tool - Tool layer, corresponding to the tool component of agentUniverse, providing auxiliary tools such as API services.
+    * work_pattern - Work pattern layer, providing typical single-agent and multi-agent collaboration patterns, including PEER/DOE/MAP, etc.
+  * service: Intelligent project service layer.
+    * agent_service - Intelligent service layer, corresponding to the service component of agentUniverse, associating agent instances and providing external services.
+    * classic_service - Traditional service layer, handling non-agent services such as file services and session services.
+  * dal: Data access layer, providing data source access interfaces.
+  * integration: Integration layer, used to connect and coordinate different systems, services, and components.
+  * utils: Basic utility layer, providing small and general-purpose helper functions.
+  * test: Unit tests.
+* platform: Platform project layer, handling platform capabilities outside intelligent project.
 * config - Application configuration code
 
 ## Using Any Project Directory Structure
@@ -71,8 +96,7 @@ ServerApplication.start()
 As mentioned in the [Bootstrap Startup Directory](#bootstrap-startup-directory), the default config path for the project is `project_root_dir/config/config.toml`. If you have made any adjustments to this, please ensure that the correct config file path is passed to the startup method when the application server is launched.
 
 ### Core Directory
-As demonstrated by the recommended directory structure for the project, the project directory within the core directory is mainly used for placing custom domain components such as agents, knowledge, LLM, and others. You are free to position all core components wherever you like and not limited to the same main package. You only need to define it in the `[CORE_PACKAGE]` section of the main configuration file `config/config.toml` of the project, as follows:
-
+As shown in the recommended directory structure, the agentic directory within intelligence is primarily used to place domain components related to agents, knowledge, and LLMs. If you want to customize the location of core components, you can specify the paths of the domain components in the [CORE_PACKAGE] section of the main configuration file config/config.toml as follows:
 ```toml
 [CORE_PACKAGE]
 # Perform a full component scan and registration for all the paths under this list.
@@ -110,4 +134,4 @@ workflow = ['sample_standard_app.platform.difizen.workflow']
 ```
 The format for defining packages follows the standard Python package path format. The framework will register, scan, and manage all types of component packages uniformly based on the defined package paths during startup.
 
-**Tips**: The package path starts one level below your project's root directory. For example, in the sample_standard_app example, since the package path is under the agentUniverse level, it starts with sample_standard_app. If you are using sample_standard_app as a project template, then the path should start with app.xxx.
+**Tips**: The package path starts from the next level of your project root directory. For example, in the sample_standard_app sample, the package path starts with sample_standard_app because it is under the agentUniverse level. If you use sample_standard_app as a project template, the path should start with intelligence.xxx.
