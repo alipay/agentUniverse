@@ -86,21 +86,19 @@ class ConversationMemory:
         prefix = self.generate_relation_str(source, target, source_type, target_type, type)
         if not prefix:
             return
-        memory = MemoryManager().get_instance_obj(kwargs.get('trace_memory'))
-
-        message = Message(
-            content=f"{prefix}:{content}",
-            metadata={'session_id': kwargs.get('session_id')},
-            source=kwargs.get('trace_id'),
-            type=kwargs.get('type'),
-        )
-
-        memory.add([message], session_id=kwargs.get('session_id'))
-
-        LOGGER.info(f"{kwargs.get('trace_memory')} | {kwargs.get('trace_id')} | {prefix}:{content}")
+        memory = MemoryManager().get_instance_obj(kwargs.get('conversation_memory'))
+        if memory:
+            message = Message(
+                content=f"{prefix}:{content}",
+                metadata={'session_id': kwargs.get('session_id')},
+                source=kwargs.get('trace_id'),
+                type=kwargs.get('type'),
+            )
+            memory.add([message], session_id=kwargs.get('session_id'))
+        LOGGER.info(f"{kwargs.get('conversation_memory')} | {kwargs.get('trace_id')} | {prefix}:{content}")
 
     def _add_trace(self, start_info, target_info: dict, type: str, params: dict, session_id: str, trace_id: str,
-                   trace_memory: str):
+                   conversation_memory: str):
         if "kwargs" in params:
             params = params['kwargs']
         if params is str:
@@ -109,13 +107,13 @@ class ConversationMemory:
             }
         kwargs = {'source': start_info['source'], 'source_type': start_info['type'], 'target': target_info['source'],
                   'target_type': target_info['type'], 'type': type, 'params': params, 'trace_id': trace_id,
-                  'session_id': session_id, 'trace_memory': trace_memory}
+                  'session_id': session_id, 'conversation_memory': conversation_memory}
         self._add_trace_info(**kwargs)
 
     def add_trace_info(self, start_info: dict, target_info: dict, type: str, params: dict):
         """Add trace info to the memory."""
-        trace_memory = FrameworkContextManager().get_context('trace_memory')
-        if not trace_memory:
+        conversation_memory = FrameworkContextManager().get_context('conversation_memory')
+        if not conversation_memory:
             return
         trace_id = FrameworkContextManager().get_context('trace_id')
         if trace_id is None:
@@ -128,7 +126,7 @@ class ConversationMemory:
             FrameworkContextManager().set_context('session_id', "session_id_1111111")
 
         def add_trace():
-            self._add_trace(start_info, target_info, type, params, session_id, trace_id, trace_memory)
+            self._add_trace(start_info, target_info, type, params, session_id, trace_id, conversation_memory)
 
         self.queue.put_nowait(add_trace)
 
@@ -155,8 +153,8 @@ class ConversationMemory:
         self.add_trace_info(target_info, start_info, 'output', params)
 
     def add_agent_result_info(self, agent_instance: 'Agent', agent_result: OutputObject, target_info: dict):
-        trace_memory = FrameworkContextManager().get_context('trace_memory')
-        if not trace_memory:
+        conversation_memory = FrameworkContextManager().get_context('conversation_memory')
+        if not conversation_memory:
             return
 
         trace_id = FrameworkContextManager().get_context('trace_id')
@@ -171,7 +169,7 @@ class ConversationMemory:
                 "source": agent_instance.agent_model.info.get('name'),
                 "type": "agent"
             }
-            self._add_trace(start_info, target_info, 'output', params, session_id, trace_id, trace_memory)
+            self._add_trace(start_info, target_info, 'output', params, session_id, trace_id, conversation_memory)
 
         self.queue.put_nowait(add_trace)
 

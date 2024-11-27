@@ -190,7 +190,7 @@ def trace_agent(func):
         source = func.__qualname__
         self = agent_input.pop('self', None)
         tracing = None
-        trace_memory = FrameworkContextManager().get_context('trace_memory')
+        conversation_memory = FrameworkContextManager().get_context('conversation_memory')
         if isinstance(self, object):
             agent_model = getattr(self, 'agent_model', None)
             if isinstance(agent_model, object):
@@ -200,11 +200,11 @@ def trace_agent(func):
                     source = info.get('name', None)
                 if isinstance(profile, dict):
                     tracing = profile.get('tracing', None)
-                if trace_memory is None:
+                if conversation_memory is None:
                     memory = getattr(agent_model, 'memory', None)
                     if isinstance(memory, dict):
-                        trace_memory = memory.get('trace_memory', '')
-                        FrameworkContextManager().set_context('trace_memory', trace_memory)
+                        conversation_memory = memory.get('conversation_memory', '')
+                        FrameworkContextManager().set_context('conversation_memory', conversation_memory)
         start_info = get_caller_info()
         ConversationMemory().add_agent_input_info(start_info, self, agent_input)
         # add invocation chain to the monitor module.
@@ -227,7 +227,7 @@ def trace_agent(func):
         # check whether the tracing switch is enabled
         source = func.__qualname__
         self = agent_input.pop('self', None)
-        trace_memory = FrameworkContextManager().get_context('trace_memory')
+        conversation_memory = FrameworkContextManager().get_context('conversation_memory')
         tracing = None
         if isinstance(self, object):
             agent_model = getattr(self, 'agent_model', None)
@@ -238,11 +238,11 @@ def trace_agent(func):
                     source = info.get('name', None)
                 if isinstance(profile, dict):
                     tracing = profile.get('tracing', None)
-                if trace_memory is None:
+                if conversation_memory is None:
                     memory = getattr(agent_model, 'memory', None)
                     if isinstance(memory, dict):
-                        trace_memory = memory.get('trace_memory', '')
-                        FrameworkContextManager().set_context('trace_memory', trace_memory)
+                        conversation_memory = memory.get('conversation_memory', '')
+                        FrameworkContextManager().set_context('conversation_memory', conversation_memory)
 
         start_info = get_caller_info()
         ConversationMemory().add_agent_input_info(start_info, self, agent_input)
