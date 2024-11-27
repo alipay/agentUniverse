@@ -138,9 +138,12 @@ def _get_llm_input(func, *args, **kwargs) -> dict:
 
 def get_caller_info(instance: object = None):
     # 获取上一层调用者的帧
+    func_name = "unknown func"
     if instance is None:
         frame = sys._getframe(2)
         instance = frame.f_locals.get('self')  # 获取调用者对象
+        # 获取调用函数
+        func_name = frame.f_code.co_name
 
     source = ""
     type = ""
@@ -167,8 +170,11 @@ def get_caller_info(instance: object = None):
         elif component == ComponentEnum.SERVICE:
             source = getattr(instance, 'name', None)
             type = 'user'
-    else:
+    elif instance is not None:
         source = instance.__class__.__qualname__
+        type = "unknown"
+    else:
+        source = func_name
         type = "unknown"
     return {
         'source': source,
