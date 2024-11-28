@@ -126,7 +126,7 @@ class ConversationMemory:
         session_id = FrameworkContextManager().get_context('session_id')
         if session_id is None:
             session_id = str(uuid.uuid4())
-            FrameworkContextManager().set_context('session_id', "session_id_1111111")
+            FrameworkContextManager().set_context('session_id', session_id)
 
         def add_trace():
             self._add_trace(start_info, target_info, type, params, session_id, trace_id, conversation_memory)
