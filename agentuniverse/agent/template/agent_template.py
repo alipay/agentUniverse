@@ -10,7 +10,7 @@ from typing import Optional, Any, List
 from queue import Queue
 
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnableSerializable
+from langchain_core.runnables import RunnableSerializable, RunnableConfig
 
 from agentuniverse.agent.action.knowledge.knowledge import Knowledge
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
@@ -22,6 +22,7 @@ from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.memory.memory import Memory
 from agentuniverse.agent.memory.memory_manager import MemoryManager
 from agentuniverse.agent.memory.message import Message
+from agentuniverse.agent.plan.planner.react_planner.stream_callback import InvokeCallbackHandler
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
 from agentuniverse.base.util.agent_util import assemble_memory_input, assemble_memory_output
 from agentuniverse.base.util.common_util import stream_output
@@ -132,10 +133,10 @@ class AgentTemplate(Agent, ABC):
     def invoke_chain(self, chain: RunnableSerializable[Any, str], agent_input: dict, input_object: InputObject,
                      **kwargs):
         if not input_object.get_data('output_stream'):
-            res = chain.invoke(input=agent_input)
+            res = chain.invoke(input=agent_input, config=self.get_run_config())
             return res
         result = []
-        for token in chain.stream(input=agent_input):
+        for token in chain.stream(input=agent_input, config=self.get_run_config()):
             stream_output(input_object.get_data('output_stream', None), {
                 'type': 'token',
                 'data': {
@@ -146,13 +147,20 @@ class AgentTemplate(Agent, ABC):
             result.append(token)
         return "".join(result)
 
+    def get_run_config(self, **kwargs) -> dict:
+        callbacks = [InvokeCallbackHandler(
+            source=self.agent_model.info.get('name'),
+            llm_name=self.llm_name
+        )]
+        return RunnableConfig(callbacks=callbacks)
+
     async def async_invoke_chain(self, chain: RunnableSerializable[Any, str], agent_input: dict,
                                  input_object: InputObject, **kwargs):
         if not input_object.get_data('output_stream'):
-            res = await chain.ainvoke(input=agent_input)
+            res = await chain.ainvoke(input=agent_input, config=self.get_run_config())
             return res
         result = []
-        async for token in chain.astream(input=agent_input):
+        async for token in chain.astream(input=agent_input, config=self.get_run_config()):
             stream_output(input_object.get_data('output_stream', None), {
                 'type': 'token',
                 'data': {

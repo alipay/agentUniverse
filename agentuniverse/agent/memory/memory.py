@@ -80,6 +80,14 @@ class Memory(ComponentBase):
             return self.prune(memories)
         return []
 
+    def get_with_no_prune(self, session_id: str = None, agent_id: str = None, **kwargs) -> List[Message]:
+        """Get messages from the memory."""
+        memory_storage: MemoryStorage = MemoryStorageManager().get_instance_obj(self.memory_retrieval_storage)
+        if memory_storage:
+            memories = memory_storage.get(session_id, agent_id, **kwargs)
+            return memories
+        return []
+
     def prune(self, memories: List[Message]) -> List[Message]:
         if not memories:
             return []
