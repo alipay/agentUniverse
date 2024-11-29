@@ -171,7 +171,7 @@ class ConversationMemory:
             }
         kwargs = {'source': start_info['source'], 'source_type': start_info['type'], 'target': target_info['source'],
                   'target_type': target_info['type'], 'type': type, 'params': params, 'trace_id': trace_id,
-                  'session_id': session_id, 'conversation_memory': conversation_memory}
+                  'session_id': session_id, 'conversation_memory': conversation_memory,"language":language}
         self._add_trace_info(**kwargs)
 
     def add_trace_info(self, start_info: dict, target_info: dict, type: str, params: dict):
@@ -189,7 +189,7 @@ class ConversationMemory:
             session_id = str(uuid.uuid4())
             FrameworkContextManager().set_context('session_id', session_id)
 
-        language = FrameworkContextManager().get_context('language', "en")
+        language = FrameworkContextManager().get_context('language', "zh")
 
         def add_trace():
             self._add_trace(start_info, target_info, type, params, session_id, trace_id, conversation_memory, language)
@@ -230,7 +230,7 @@ class ConversationMemory:
 
         trace_id = FrameworkContextManager().get_context('trace_id')
         session_id = FrameworkContextManager().get_context('session_id')
-        language = FrameworkContextManager().get_context('language')
+        language = FrameworkContextManager().get_context('language',"zh")
 
         def add_trace():
             output_keys = agent_instance.output_keys()
