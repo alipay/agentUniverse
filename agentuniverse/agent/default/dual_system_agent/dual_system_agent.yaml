@@ -3,7 +3,7 @@ info:
   description: 'Agent implementing fast/slow thinking systems'
 plan:
   planner:
-    name: 'dual_system_planner'
+    name: 'DualSystemPlanner'
     # System 1 (Fast Thinking) Configuration
     system1:
       confidence_threshold: 0.7  # Aligned with planner threshold

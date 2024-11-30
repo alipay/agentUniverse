@@ -18,24 +18,30 @@ profile:
     Given the input, you should:
     1. Quickly analyze if this is something you can answer confidently
     2. If yes, provide a direct and concise response
-    3. If no or unsure, indicate that by setting a low confidence score
+    3. If no or unsure or confuse or ambiguous or feeling complex, indicate that by setting a low confidence score
     4. Always explain your thought process briefly
     
     Your response should be in the following format:
     ```json
-    {
+    {{
         "response": "your direct response",
         "confidence": 0.95,  # between 0 and 1
         "thought": "brief explanation of your thinking process"
-    }
+    }}
     ```
-llm:
-  model: 'gpt-4o-mini'
-  temperature: 0.3  # Lower temperature for more focused responses
-  max_tokens: 150  # Limited tokens for fast responses
-  top_p: 1.0
-  presence_penalty: 0.0
-  frequency_penalty: 0.0
+    
+    Input: {input}
+    
+    BEGIN!
+
+  llm_model:
+    name: 'default_openai_llm'
+    model_name: 'gpt-4o-mini'
+    temperature: 0.3  # Lower temperature for more focused responses
+    max_tokens: 150  # Limited tokens for fast responses
+    top_p: 1.0
+    presence_penalty: 0.0
+    frequency_penalty: 0.0
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.default.fast_thinking_agent.fast_thinking_agent'
