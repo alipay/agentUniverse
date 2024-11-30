@@ -7,6 +7,7 @@ plan:
     # System 1 (Fast Thinking) Configuration
     system1:
       name: 'FastThinkingAgent'
+      complexity_evaluator: 'default_complexity_evaluator'
       confidence_threshold: 0.7  # Aligned with planner threshold
     # System 2 (Slow Thinking) Configuration
     system2:
