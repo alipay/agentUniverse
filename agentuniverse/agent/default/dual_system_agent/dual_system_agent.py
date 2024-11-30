@@ -7,57 +7,37 @@
 
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
+from agentuniverse.agent.output_object import OutputObject
+from .constants import AgentKeys, SystemType
 import json
+import logging
 
 class DualSystemAgent(Agent):
     """Dual System Agent class implementing fast and slow thinking."""
 
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
-        return ['input']
+        return [AgentKeys.INPUT]
 
     def output_keys(self) -> list[str]:
         """Return the output keys of the Agent."""
-        return ['output', 'system_type', 'confidence']
+        return [AgentKeys.OUTPUT, AgentKeys.SYSTEM_TYPE, AgentKeys.CONFIDENCE]
 
     def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
-        """Agent parameter parsing.
-
-        Args:
-            input_object (InputObject): input parameters passed by the user.
-            agent_input (dict): agent input preparsed by the agent.
-        Returns:
-            dict: agent input parsed from `input_object` by the user.
-        """
-        agent_input['input'] = input_object.get_data('input')
+        """Agent parameter parsing."""
+        agent_input[AgentKeys.INPUT] = input_object.get_data(AgentKeys.INPUT)
         return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:
-        """Planner result parser.
-
-        Args:
-            planner_result (dict): Planner result
-        Returns:
-            dict: Agent result object containing the system type (fast/slow),
-                 confidence score, and output.
-        """
+        """Planner result parser."""
         # Extract the system type and confidence from planner result
-        system_type = planner_result.get('system_type', 'slow')
-        confidence = planner_result.get('confidence', 0.0)
-        
-        if system_type == 'fast':
-            # For fast thinking, return direct output
-            return {
-                "output": planner_result.get('result'),
-                "system_type": "fast",
-                "confidence": confidence
+        system_type: SystemType = planner_result.get(AgentKeys.SYSTEM_TYPE, 'slow')
+        confidence = planner_result.get(AgentKeys.CONFIDENCE, 0.0)
+        logging.debug(f"planner_result: {json.dumps(planner_result, ensure_ascii=False)}")
+        return {
+                AgentKeys.OUTPUT: planner_result.get(AgentKeys.OUTPUT),
+                AgentKeys.SYSTEM_TYPE: system_type,
+                AgentKeys.CONFIDENCE: confidence
             }
-        else:
-            # For slow thinking, process through PEER framework
-            peer_result = planner_result.get('result')
-            print(f"Peer result: {json.dumps(peer_result, ensure_ascii=False)}")
-            return {
-                "output": peer_result,
-                "system_type": "slow",
-                "confidence": planner_result.get('confidence', 0.0)
-            }
+            
+

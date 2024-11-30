@@ -54,166 +54,27 @@ class DualSystemAgentTest(unittest.TestCase):
     def test_system1_fast_thinking(self) -> None:
         # Case 1: Simple calculation
         result = self.run_task('What is 2 + 2?', 'fast_calculation')
-        self.assertEqual(result.get_data('system_type'), 'fast')
+        self.assertEqual(result.get_data('system_type'), 'fast_thinking')
         self.assertGreaterEqual(result.get_data('confidence'), 0.7)
         self.assertIn('4', result.get_data('output'))
         
         # Case 2: Common knowledge with high confidence
         result = self.run_task('What is the capital of China?', 'common_knowledge')
-        self.assertEqual(result.get_data('system_type'), 'fast')
+        self.assertEqual(result.get_data('system_type'), 'fast_thinking')
         self.assertGreaterEqual(result.get_data('confidence'), 0.9)
         self.assertIn('Beijing', result.get_data('output'))
         
         # Case 3: Common knowledge with high confidence
         result = self.run_task('GDP 的定义是什么', 'common_knowledge')
-        self.assertEqual(result.get_data('system_type'), 'fast')
+        self.assertEqual(result.get_data('system_type'), 'fast_thinking')
         self.assertGreaterEqual(result.get_data('confidence'), 0.7)
         
         # Case 4: Borderline confidence case
         result = self.run_task('黄金后面还涨不涨了?', 'borderline_confidence')
         print(f"Result: {json.dumps(result.to_dict(), ensure_ascii=False)}")
         # Should switch to slow thinking due to uncertainty
-        self.assertEqual(result.get_data('system_type'), 'slow')
-
-    # def test_system2_slow_thinking(self):
-    #     """Test System 2 (Slow Thinking) with complex tasks.
-        
-    #     Test cases:
-    #     1. Analysis tasks
-    #     2. Multi-step reasoning
-    #     3. Creative tasks
-    #     4. Stream output verification
-    #     """
-    #     # Case 1: Complex analysis
-    #     result = self.run_task('Analyze the potential impact of quantum computing on cybersecurity.', 'complex_analysis')
-    #     self.assertEqual(result.get_data('system_type'), 'slow')
-        
-    #     # Verify PEER system execution
-    #     stream_types = [output.get('type') for output in self.stream_outputs]
-    #     self.assertIn('planning', stream_types)
-    #     self.assertIn('executing', stream_types)
-    #     self.assertIn('expressing', stream_types)
-        
-    #     # Case 2: Multi-step reasoning
-    #     self.stream_outputs.clear()
-    #     result = self.run_task('Design a strategy to reduce urban traffic congestion.', 'multi_step_reasoning')
-    #     self.assertEqual(result.get_data('system_type'), 'slow')
-    #     self.assertTrue(any(output.get('type') == 'planning' 
-    #                       for output in self.stream_outputs))
-        
-    #     # Case 3: Creative task
-    #     self.stream_outputs.clear()
-    #     result = self.run_task('Create an innovative solution for reducing plastic waste in oceans.', 'creative_task')
-    #     self.assertEqual(result.get_data('system_type'), 'slow')
-    #     self.assertIsNotNone(result.get_data('output'))
-
-    # def test_system_switching(self):
-    #     """Test the system's ability to switch between fast and slow thinking.
-        
-    #     Test cases:
-    #     1. Initially simple but requiring deeper analysis
-    #     2. Complex question with simple sub-tasks
-    #     3. Error handling
-    #     4. Confidence threshold boundary cases
-    #     5. System interruption and recovery
-    #     """
-    #     # Case 1: Question requiring deeper analysis
-    #     result = self.run_task('What is 2+2 and explain its significance in mathematical theory.', 'deeper_analysis')
-    #     self.assertEqual(result.get_data('system_type'), 'slow')
-    #     self.assertIn('4', result.get_data('output'))
-        
-    #     # Case 2: Complex question with simple sub-tasks
-    #     self.stream_outputs.clear()
-    #     result = self.run_task('Calculate the total cost: 3 items at $5 each, with 10% discount', 'complex_question')
-    #     self.assertEqual(result.get_data('system_type'), 'fast')
-    #     self.assertIn('13.5', result.get_data('output'))
-        
-    #     # Case 3: Error handling - empty input
-    #     self.stream_outputs.clear()
-    #     with self.assertRaises(ValueError):
-    #         self.run_task('', 'error_handling')
-            
-    #     # Case 4: Error handling - very long input
-    #     self.stream_outputs.clear()
-    #     with self.assertRaises(ValueError):
-    #         self.run_task('A' * 10000, 'error_handling')  # Very long input
-            
-    #     # Case 5: Confidence threshold boundary
-    #     self.stream_outputs.clear()
-    #     result = self.run_task('What is the 50th element in the periodic table?', 'confidence_boundary')
-    #     confidence = result.get_data('confidence')
-    #     self.assertTrue(0.6 <= confidence <= 0.8)  # Boundary case
-        
-    #     # Case 6: System interruption and recovery
-    #     self.stream_outputs.clear()
-    #     result = self.run_task('Analyze climate change impact but stop halfway', 'system_interruption')
-    #     self.assertTrue(any(output.get('type') == 'interrupted' 
-    #                       for output in self.stream_outputs))
-        
-    # def test_concurrent_processing(self):
-    #     """Test the agent's ability to handle concurrent requests.
-        
-    #     Test cases:
-    #     1. Multiple fast thinking tasks
-    #     2. Multiple slow thinking tasks
-    #     3. Mix of fast and slow thinking tasks
-    #     """
-    #     import threading
-    #     import queue
-        
-    #     results_queue = queue.Queue()
-        
-    #     def run_task(input_text: str, task_type: str):
-    #         result = self.run_task(input_text, task_type)
-    #         results_queue.put(result)
-        
-    #     # Case 1: Multiple fast thinking tasks
-    #     fast_tasks = [
-    #         ('What is 3 + 5?', 'fast_calculation'),
-    #         ('What is the capital of Japan?', 'common_knowledge'),
-    #         ('Is water wet?', 'pattern_matching')
-    #     ]
-    #     threads = []
-    #     for task in fast_tasks:
-    #         thread = threading.Thread(target=run_task, args=task)
-    #         thread.start()
-    #         threads.append(thread)
-        
-    #     for thread in threads:
-    #         thread.join()
-        
-    #     while not results_queue.empty():
-    #         result = results_queue.get()
-    #         self.assertEqual(result.get_data('system_type'), 'fast')
-            
-    #     # Case 2: Mix of fast and slow thinking tasks
-    #     mixed_tasks = [
-    #         ('What is 7 * 8?', 'fast_calculation'),  # Fast
-    #         ('Explain quantum entanglement', 'complex_analysis'),  # Slow
-    #         ('Hello!', 'pattern_matching'),  # Fast
-    #         ('Design a sustainable city', 'creative_task')  # Slow
-    #     ]
-        
-    #     results_queue = queue.Queue()  # Clear queue
-    #     threads = []
-    #     for task in mixed_tasks:
-    #         thread = threading.Thread(target=run_task, args=task)
-    #         thread.start()
-    #         threads.append(thread)
-        
-    #     for thread in threads:
-    #         thread.join()
-        
-    #     fast_count = slow_count = 0
-    #     while not results_queue.empty():
-    #         result = results_queue.get()
-    #         if result.get_data('system_type') == 'fast':
-    #             fast_count += 1
-    #         else:
-    #             slow_count += 1
-        
-    #     self.assertEqual(fast_count, 2)
-    #     self.assertEqual(slow_count, 2)
+        self.assertEqual(result.get_data('system_type'), 'slow_thinking')
+        # self.assertEqual(result.get_data('output'), 'This is a mock response')
 
 if __name__ == '__main__':
     unittest.main()

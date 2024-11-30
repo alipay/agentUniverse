@@ -6,20 +6,11 @@ plan:
     name: 'DualSystemPlanner'
     # System 1 (Fast Thinking) Configuration
     system1:
+      name: 'FastThinkingAgent'
       confidence_threshold: 0.7  # Aligned with planner threshold
-      max_tokens: 150  # Maximum tokens for fast thinking
-      temperature: 0.3  # Lower temperature for more focused responses
     # System 2 (Slow Thinking) Configuration
     system2:
-      max_tokens: 500  # More tokens for detailed thinking
-      temperature: 0.7  # Higher temperature for more creative thinking
-      eval_threshold: 60
-      retry_count: 2
-      agents:
-        planning: 'PlanningAgent'
-        executing: 'ExecutingAgent'
-        expressing: 'ExpressingAgent'
-        reviewing: 'ReviewingAgent'
+      name: 'PeerAgent'
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.default.dual_system_agent.dual_system_agent'

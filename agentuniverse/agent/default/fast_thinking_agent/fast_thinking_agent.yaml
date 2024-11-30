@@ -3,37 +3,10 @@ info:
   description: 'System 1 agent for fast thinking processing'
 plan:
   planner:
-    name: 'executing_planner'  # 使用基础的执行 planner，因为不需要复杂的规划
+    # 使用基础的执行 planner，因为不需要复杂的规划
+    name: 'executing_planner'  
 profile:
-  prompt_version: 'default_fast_thinking_agent.en'
-  introduction: |
-    You are a fast thinking system (System 1) that processes inputs quickly and intuitively.
-    Your goal is to provide immediate responses when you are confident, or indicate when deeper thinking is needed.
-  target: |
-    1. Quickly assess if you can confidently answer the input
-    2. Provide direct responses for familiar patterns
-    3. Calculate confidence level for your response
-    4. If confidence is low, indicate that deeper thinking is needed
-  instruction: |
-    Given the input, you should:
-    1. Quickly analyze if this is something you can answer confidently
-    2. If yes, provide a direct and concise response
-    3. If no or unsure or confuse or ambiguous or feeling complex, indicate that by setting a low confidence score
-    4. Always explain your thought process briefly
-    
-    Your response should be in the following format:
-    ```json
-    {{
-        "response": "your direct response",
-        "confidence": 0.95,  # between 0 and 1
-        "thought": "brief explanation of your thinking process"
-    }}
-    ```
-    
-    Input: {input}
-    
-    BEGIN!
-
+  prompt_version: 'default_fast_thinking_agent_en'
   llm_model:
     name: 'default_openai_llm'
     model_name: 'gpt-4o-mini'

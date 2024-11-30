@@ -10,6 +10,8 @@ from langchain.output_parsers.json import parse_json_markdown
 
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
+from agentuniverse.common.constants import AgentKeys
+from agentuniverse.agent.default.dual_system_agent.constants import (DualSystemKeys)
 
 
 class FastThinkingAgent(Agent):
@@ -17,38 +19,23 @@ class FastThinkingAgent(Agent):
 
     def input_keys(self) -> list[str]:
         """Return the input keys of the Agent."""
-        return ['input']
+        return [AgentKeys.INPUT]
 
     def output_keys(self) -> list[str]:
         """Return the output keys of the Agent."""
-        return ['output', 'confidence', 'thought']
+        return [AgentKeys.OUTPUT, DualSystemKeys.CONFIDENCE, DualSystemKeys.THOUGHT]
 
     def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
-        """Agent parameter parsing.
-
-        Args:
-            input_object (InputObject): input parameters passed by the user.
-            agent_input (dict): agent input preparsed by the agent.
-        Returns:
-            dict: agent input parsed from `input_object` by the user.
-        """
-        agent_input['input'] = input_object.get_data('input')
-        # 设置快速思考的prompt模板
-        self.agent_model.profile.setdefault('prompt_version', 'default_fast_thinking_agent.en')
+        """Agent parameter parsing."""
+        agent_input[AgentKeys.INPUT] = input_object.get_data(AgentKeys.INPUT)
         return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:
-        """Planner result parser.
-
-        Args:
-            planner_result (dict): Planner result
-        Returns:
-            dict: Agent result object.
-        """
-        output = planner_result.get('output')
+        """Planner result parser."""
+        output = planner_result.get(AgentKeys.OUTPUT)
         output = parse_json_markdown(output)
         return {
-            'output': output.get('response'),
-            'confidence': output.get('confidence', 0.0),
-            'thought': output.get('thought', '')
+            AgentKeys.OUTPUT: output.get(DualSystemKeys.RESPONSE),
+            DualSystemKeys.CONFIDENCE: output.get(DualSystemKeys.CONFIDENCE, 0.0),
+            DualSystemKeys.THOUGHT: output.get(DualSystemKeys.THOUGHT, '')
         }
