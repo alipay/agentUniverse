@@ -7,7 +7,7 @@
 
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
-
+import json
 
 class DualSystemAgent(Agent):
     """Dual System Agent class implementing fast and slow thinking."""
@@ -18,7 +18,7 @@ class DualSystemAgent(Agent):
 
     def output_keys(self) -> list[str]:
         """Return the output keys of the Agent."""
-        return ['output', 'system', 'confidence']
+        return ['output', 'system_type', 'confidence']
 
     def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
         """Agent parameter parsing.
@@ -30,8 +30,6 @@ class DualSystemAgent(Agent):
             dict: agent input parsed from `input_object` by the user.
         """
         agent_input['input'] = input_object.get_data('input')
-        # Set the default prompt version for the agent
-        self.agent_model.profile.setdefault('prompt_version', 'default_dual_system_agent.cn')
         return agent_input
 
     def parse_result(self, planner_result: dict) -> dict:
@@ -51,16 +49,15 @@ class DualSystemAgent(Agent):
             # For fast thinking, return direct output
             return {
                 "output": planner_result.get('result'),
-                "system": "fast",
+                "system_type": "fast",
                 "confidence": confidence
             }
         else:
             # For slow thinking, process through PEER framework
-            peer_result = planner_result.get('result')[0]
+            peer_result = planner_result.get('result')
+            print(f"Peer result: {json.dumps(peer_result, ensure_ascii=False)}")
             return {
-                "output": peer_result.get('expressing_result').get_data('output'),
-                "system": "slow",
-                "confidence": confidence,
-                "framework": peer_result.get('planning_result', {}).get('framework', []),
-                "thought": peer_result.get('executing_result', {}).get('thought', '')
+                "output": peer_result,
+                "system_type": "slow",
+                "confidence": planner_result.get('confidence', 0.0)
             }

@@ -10,7 +10,8 @@
 from typing import Dict, Any, Optional
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
-from agentuniverse.agent.plan.planner.planner import Planner
+from agentuniverse.agent.plan.planner.planner import AgentManager, Planner
+from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.default.fast_thinking_agent.fast_thinking_agent import FastThinkingAgent
 from agentuniverse.base.util.logging.logging_util import LOGGER
 
@@ -47,7 +48,7 @@ class DualSystemPlanner(Planner):
         Returns:
             ThinkingResult containing the fast thinking output
         """
-        fast_agent = FastThinkingAgent()
+        fast_agent = AgentManager().get_instance_obj("FastThinkingAgent")
         result = fast_agent.run(**input_object.to_dict())
         
         # Stream the fast thinking output
@@ -67,7 +68,7 @@ class DualSystemPlanner(Planner):
             thought=result.get_data('thought')
         )
         
-    def _process_slow_thinking(self, agent_model: Agent, input_object: InputObject) -> ThinkingResult:
+    def _process_slow_thinking(self, agent_model: AgentModel, input_object: InputObject) -> ThinkingResult:
         """Process input using System 2 (slow thinking).
         
         Args:
@@ -77,7 +78,9 @@ class DualSystemPlanner(Planner):
         Returns:
             ThinkingResult containing the slow thinking output
         """
-        result = agent_model.run(**input_object.to_dict())
+        # todo match config
+        slow_agent = AgentManager().get_instance_obj("PeerAgent")
+        result = slow_agent.run(**input_object.to_dict())
         
         # Stream the slow thinking output
         self.stream_output(input_object, {
@@ -95,7 +98,7 @@ class DualSystemPlanner(Planner):
             thought=result.get_data('thought')
         )
 
-    def invoke(self, agent_model: Agent, planner_input: dict, input_object: InputObject) -> dict:
+    def invoke(self, agent_model: AgentModel, planner_input: dict, input_object: InputObject) -> dict:
         """Invoke the planner to process input using dual system thinking.
         
         Args:

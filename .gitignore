@@ -171,3 +171,5 @@ __pycache__/
 
 # Visual Studio Code 
 .vscode/
+
+tests/test_agentuniverse/unit/agent/custom_key.toml

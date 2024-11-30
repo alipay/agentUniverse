@@ -1,6 +1,5 @@
-info:
-  name: 'DualSystemPlanner'
-  description: 'Planner implementing dual-process theory with fast and slow thinking systems'
+name: 'DualSystemPlanner'
+description: 'Planner implementing dual-process theory with fast and slow thinking systems'
 metadata:
   type: 'PLANNER'
   module: 'agentuniverse.agent.plan.planner.dual_system_planner.dual_system_planner'
