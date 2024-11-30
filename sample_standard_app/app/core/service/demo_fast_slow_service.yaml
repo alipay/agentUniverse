@@ -1,0 +1,5 @@
+name: 'demo_fast_slow_service'
+description: 'demo fast_slow service of demo agent'
+agent: 'demo_peer_agent'
+metadata:
+  type: 'SERVICE'

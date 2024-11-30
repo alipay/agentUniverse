@@ -1,0 +1,18 @@
+info:
+  name: 'DualSystemAgent'
+  description: 'Agent implementing fast/slow thinking systems'
+plan:
+  planner:
+    name: 'DualSystemPlanner'
+    # System 1 (Fast Thinking) Configuration
+    system1:
+      name: 'FastThinkingAgent'
+      complexity_evaluator: 'default_complexity_evaluator'
+      confidence_threshold: 0.7  # Aligned with planner threshold
+    # System 2 (Slow Thinking) Configuration
+    system2:
+      name: 'PeerAgent'
+metadata:
+  type: 'AGENT'
+  module: 'agentuniverse.agent.default.dual_system_agent.dual_system_agent'
+  class: 'DualSystemAgent'

@@ -1,0 +1,21 @@
+info:
+  name: 'FastThinkingAgent'
+  description: 'System 1 agent for fast thinking processing'
+plan:
+  planner:
+    # 使用基础的执行 planner，因为不需要复杂的规划
+    name: 'executing_planner'  
+profile:
+  prompt_version: 'default_fast_thinking_agent_en'
+  llm_model:
+    name: 'default_openai_llm'
+    model_name: 'gpt-4o-mini'
+    temperature: 0.3  # Lower temperature for more focused responses
+    max_tokens: 150  # Limited tokens for fast responses
+    top_p: 1.0
+    presence_penalty: 0.0
+    frequency_penalty: 0.0
+metadata:
+  type: 'AGENT'
+  module: 'agentuniverse.agent.default.fast_thinking_agent.fast_thinking_agent'
+  class: 'FastThinkingAgent'
