@@ -10,7 +10,7 @@ from langchain.output_parsers.json import parse_json_markdown
 
 from agentuniverse.agent.agent import Agent
 from agentuniverse.agent.input_object import InputObject
-from agentuniverse.common.constants import AgentKeys
+from agentuniverse.base.common.constants import AgentKeys
 from agentuniverse.agent.default.dual_system_agent.constants import (DualSystemKeys)
 
 

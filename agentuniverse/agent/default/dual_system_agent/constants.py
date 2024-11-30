@@ -1,7 +1,7 @@
 from enum import Enum
 from dataclasses import dataclass
 from typing import Any, Literal, Optional, Dict, TypedDict
-from agentuniverse.common.constants import AgentKeys
+from agentuniverse.base.common.constants import AgentKeys
 
 class DualSystemKeys(str, Enum):
     """Keys specific to dual system thinking."""
@@ -38,4 +38,3 @@ class ThinkingResult:
             DualSystemKeys.CONFIDENCE: self.confidence,
             DualSystemKeys.THOUGHT: self.thought
         }
-

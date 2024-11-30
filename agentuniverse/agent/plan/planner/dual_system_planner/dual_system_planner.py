@@ -15,7 +15,7 @@ from agentuniverse.agent.agent_model import AgentModel
 from agentuniverse.agent.default.fast_thinking_agent.fast_thinking_agent import FastThinkingAgent
 from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.agent.output_object import OutputObject
-from agentuniverse.common.constants import AgentKeys
+from agentuniverse.base.common.constants import AgentKeys
 from agentuniverse.agent.default.dual_system_agent.constants import (
     DualSystemKeys, SystemType, ThinkingState, ThinkingResult
 )
