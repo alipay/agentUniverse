@@ -180,7 +180,7 @@ https://private-user-images.githubusercontent.com/39180831/355437700-192f712d-1b
 ## Support
 
 ### Submit Questions via GitHub Issues
-😊 We recommend submitting your queries using [GitHub Issues](https://github.com/alipay/agentUniverse/issues), we typically respond within 2 days.
+😊 We recommend submitting your queries using [GitHub Issues](https://github.com/antgroup/agentUniverse/issues), we typically respond within 2 days.
 
 ### Contact Us via Discord
 😊 Join our [Discord Channel](https://discord.gg/DHFcdkWAhn) to interact with us.
