@@ -34,7 +34,7 @@ spec:
         ports:
         - containerPort: 8888
         command: ["/bin/bash", "-c"]
-        args: ["git clone git@github.com:alipay/agentUniverse.git; mv agentUniverse/sample_standard_app /usr/local/etc/workspace/project; /bin/bash --login /usr/local/etc/workspace/shell/start.sh"]
+        args: ["git clone git@github.com:antgroup/agentUniverse.git; mv agentUniverse/sample_standard_app /usr/local/etc/workspace/project; /bin/bash --login /usr/local/etc/workspace/shell/start.sh"]
         # Uncomment and replace "XXX" with your key to configure the agent
         # env:
         # - name: OPENAI_API_KEY
@@ -62,7 +62,7 @@ In the resource configuration file, uncomment the `env` section and replace `val
 
 #### Method 2
 
-Please refer to the description at the beginning of the configuration file: [Quick Start Guide](https://github.com/alipay/agentUniverse/blob/master/docs/guidebook/zh/1_3_快速开始.md)
+Please refer to the description at the beginning of the configuration file: [Quick Start Guide](https://github.com/antgroup/agentUniverse/blob/master/docs/guidebook/zh/1_3_快速开始.md)
 
 ## 2. Building Resources
 

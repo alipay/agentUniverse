@@ -4,7 +4,7 @@
 ## 1. 环境准备
 使用 git clone aU 项目,并进入到样例工程目录
 ```shell
-git clone https://github.com/alipay/agentUniverse.git
+git clone https://github.com/antgroup/agentUniverse.git
 cd agentUniverse/sample_standard_app
 ```
 ### 1.1 无有效Python环境
