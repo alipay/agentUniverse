@@ -69,7 +69,7 @@ pip install agentUniverse
 ### Run the first example
 Run your first example, and you can quickly experience the performance of the agents (or agent groups) built by agentUniverse through the tutorial.
 
-Please refer to the document for detail steps: [Run the first example](./docs/guidebook/en/1_Run_the_first_example.md) 。
+Please refer to the document for detail steps: [Run the first example](docs/guidebook/en/Get_Start/Quick_Start.md) 。
 
 ****************************************
 
@@ -79,19 +79,19 @@ Please refer to the document for detail steps: [Run the first example](./docs/gu
 setup the standard project: [agentUniverse Standard Project](sample_standard_app)
 
 ### Create and use agents
-You can learn about the important components of agents through the [Introduction to Agents](./docs/guidebook/en/2_2_1_Agent.md). For detailed information on creating agents, refer to [Creating and Using Agents](./docs/guidebook/en/2_2_1_Agent_Create_And_Use.md). You can also deepen your understanding of the creation and usage of agents by exploring official examples, such as the [Python Code Generation and Execution Agent](./docs/guidebook/en/7_1_1_Python_Auto_Runner.md).
+You can learn about the important components of agents through the [Introduction to Agents](docs/guidebook/en/In-Depth_Guides/Tutorials/Agent/Agent.md). For detailed information on creating agents, refer to [Creating and Using Agents](docs/guidebook/en/In-Depth_Guides/Tutorials/Agent/Agent_Create_And_Use.md). You can also deepen your understanding of the creation and usage of agents by exploring official examples, such as the [Python Code Generation and Execution Agent](docs/guidebook/en/Examples/Python_Auto_Runner.md).
 
 ### Setting and use knowledgeBase
-In the construction of intelligent agent applications, knowledge base construction and recall are indispensable. The agentUniverse framework, based on RAG technology, provides an efficient standard operating procedure for knowledge base construction and the retrieval and recall process of RAG. You can learn about its usage through the [Knowledge Introduction](./docs/guidebook/en/2_2_4_Knowledge.md) and [Knowledge Definition and Usage](./docs/guidebook/en/2_2_4_Knowledge_Define_And_Use.md), and further master how to quickly build a knowledge base and create a recall-capable agent through [How to Build RAG Agents](./docs/guidebook/en/2_2_4_How_To_Build_A_RAG_Agent.md).
+In the construction of intelligent agent applications, knowledge base construction and recall are indispensable. The agentUniverse framework, based on RAG technology, provides an efficient standard operating procedure for knowledge base construction and the retrieval and recall process of RAG. You can learn about its usage through the [Knowledge Introduction](docs/guidebook/en/In-Depth_Guides/Tutorials/Knowledge/Knowledge.md) and [Knowledge Definition and Usage](docs/guidebook/en/In-Depth_Guides/Tutorials/Knowledge/Knowledge_Define_And_Use.md), and further master how to quickly build a knowledge base and create a recall-capable agent through [How to Build RAG Agents](docs/guidebook/en/How-to/How_To_Build_A_RAG_Agent.md).
 
 ### Create and use Tools
-In the construction of agent applications, agents need to connect to a variety of tools. You should specify a range of tools that they can use. You can integrate various proprietary APIs and services as tool plugins through [Tool Creation and Usage](./docs/guidebook/en/2_2_3_Tool_Create_And_Use.md). The framework has already integrated LangChain and some third-party toolkits. For detailed usage, you can refer to [Integrating LangChain Tools](./docs/guidebook/en/2_2_3_Integrated_LangChain_Tools.md) and [Existing Integrated Tools](./docs/guidebook/en/2_2_3_Integrated_Tools.md).
+In the construction of agent applications, agents need to connect to a variety of tools. You should specify a range of tools that they can use. You can integrate various proprietary APIs and services as tool plugins through [Tool Creation and Usage](docs/guidebook/en/In-Depth_Guides/Tutorials/Tool/Tool_Create_And_Use.md). The framework has already integrated LangChain and some third-party toolkits. For detailed usage, you can refer to [Integrating LangChain Tools](docs/guidebook/en/In-Depth_Guides/Components/Tools/Integrated_LangChain_Tools.md) and [Existing Integrated Tools](docs/guidebook/en/In-Depth_Guides/Components/Tools/Integrated_Tools.md).
 
 ### Effectiveness evaluation
-The effectiveness evaluation of agents can be conducted through expert assessments on one hand and by leveraging the evaluation capabilities of the agents on the other. agentUniverse has launched DataAgent (Minimum Viable Product version), which aims to empower your agents with self-evaluation and evolution capabilities using agent intelligence. You can also customize the evaluation criteria within it. For more details, see the documentation: [DataAgent - Autonomous Data Agents](./docs/guidebook/en/8_1_1_data_autonomous_agent.md).
+The effectiveness evaluation of agents can be conducted through expert assessments on one hand and by leveraging the evaluation capabilities of the agents on the other. agentUniverse has launched DataAgent (Minimum Viable Product version), which aims to empower your agents with self-evaluation and evolution capabilities using agent intelligence. You can also customize the evaluation criteria within it. For more details, see the documentation: [DataAgent - Autonomous Data Agents](docs/guidebook/en/In-Depth_Guides/Tutorials/Data_Autonomous_Agent.md).
 
 ### agentServe
-agentUniverse offers multiple standard web server capabilities, as well as standard HTTP and RPC protocols. You can further explore the documentation on [Service Registration and Usage](./docs/guidebook/en/2_4_1_Service_Registration_and_Usage.md) and the [Web Server](./docs/guidebook/en/2_4_1_Web_Server.md) sections.
+agentUniverse offers multiple standard web server capabilities, as well as standard HTTP and RPC protocols. You can further explore the documentation on [Service Registration and Usage](docs/guidebook/en/In-Depth_Guides/Tech_Capabilities/Service/Service_Registration_and_Usage.md) and the [Web Server](docs/guidebook/en/In-Depth_Guides/Tech_Capabilities/Service/Web_Server.md) sections.
 
 ****************************************
 
@@ -108,7 +108,7 @@ pip install magent-ui ruamel.yaml
 
 Run the [product_application.py](sample_standard_app/app/bootstrap/product_application.py) file located in sample_standard_app/app/bootstrap for a one-click start.
 
-For more details, refer to [Quick Start for Product Platform](./docs/guidebook/en/10_1_1_Product%20Platform%20Quick%20Start.md) and the [Advanced Guide](./docs/guidebook/en/10_1_2_Product_Platform_Advancement_Guide.md).
+For more details, refer to [Quick Start for Product Platform](docs/guidebook/en/How-to/Product_Platform_Quick_Start.md) and the [Advanced Guide](docs/guidebook/en/How-to/Product_Platform_Advancement_Guide.md).
 
 This feature is jointly launched by [difizen](https://github.com/difizen/magent) and agentUniverse.
 
@@ -137,21 +137,21 @@ Rich and Effective Multi-Agent Collaboration Models: It offers collaborative mod
 
 Easy Integration of Domain Expertise: It offers capabilities for domain prompts, knowledge construction, and management, supporting the orchestration and injection of domain-level SOPs, aligning agents with expert-level domain knowledge.
 
-💡 For more features, see the [key features of agentUniverse](./docs/guidebook/en/1_Core_Features.md) section.
+💡 For more features, see the [key features of agentUniverse](docs/guidebook/en/Concepts/Core_Features.md) section.
 
 ****************************************
 
 ## Sample Projects
 
-🚩 [Legal Consultation Agent v2](./docs/guidebook/en/7_1_1_Legal_Consultation_Case.md)
+🚩 [Legal Consultation Agent v2](docs/guidebook/en/Examples/Legal_Advice.md)
 
-🚩 [Python Code Generation and Execution Agent](./docs/guidebook/en/7_1_1_Python_Auto_Runner.md)
+🚩 [Python Code Generation and Execution Agent](docs/guidebook/en/Examples/Python_Auto_Runner.md)
 
-🚩 [Discussion Group Based on Multi-Turn Multi-Agent Mode](./docs/guidebook/en/6_2_1_Discussion_Group.md)
+🚩 [Discussion Group Based on Multi-Turn Multi-Agent Mode](docs/guidebook/en/Examples/Discussion_Group.md)
 
-🚩 [Financial Event Analysis Based on PEER Multi-Agent Mode](./docs/guidebook/en/6_4_1_Financial_Event_Analysis_Case.md)
+🚩 [Financial Event Analysis Based on PEER Multi-Agent Mode](docs/guidebook/en/Examples/Financial_Event_Analysis.md)
 
-🚩 [Andrew Ng's Reflexive Workflow Translation Agent Replication](./docs/guidebook/en/7_1_1_Translation_Case.md)
+🚩 [Andrew Ng's Reflexive Workflow Translation Agent Replication](docs/guidebook/en/Examples/Translation_Assistant.md)
 
 ****************************************
 
@@ -170,7 +170,7 @@ https://private-user-images.githubusercontent.com/39180831/355437700-192f712d-1b
 ## Documents
 
 ### User Guide
-💡 For more detailed information, please read the [User Guide](./docs/guidebook/en/0_index.md).
+💡 For more detailed information, please read the [User Guide](./docs/guidebook/en/Contents.md).
 
 ### API Reference
 💡 Please read the [API Reference](https://agentuniverse.readthedocs.io/en/latest/).
