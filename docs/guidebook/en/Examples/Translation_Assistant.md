@@ -9,7 +9,7 @@ This case is based on the Qianwen large model. Prior to use, you need to configu
 
 ## Collaborative Working Process of Multi-Agents
 During the translation process, the priority is to ascertain whether the model's length surpasses the maximum number of tokens it can accommodate. For instances where the length exceeds the limit, the text is initially segmented, followed by the translation of each segment. However, the entire translation process adheres to the initial translation -> reflection -> revision workflow.
-![](assets/17332297960881.jpg)
+![](../../_picture/translation_flow_graph.png)
 
 
 Implementing this translation in agentUniverse involves the following steps:
@@ -29,7 +29,7 @@ Implementing this translation in agentUniverse involves the following steps:
 3. Define the collaborative work process of the three agents
 The collaborative process is illustrated in the earlier-mentioned flowchart of multi-agent collaboration. 
 
-![](assets/17332298612184.jpg)
+![](../../_picture/translation_execute_flow.png)    
 
 
 For a deeper dive into the processes, refer to the [detailed code file](../../../../sample_standard_app/app/core/agent/translation_agent_case/translation_by_token_agent.py).  
@@ -48,11 +48,11 @@ The [configuration file](../../../../sample_standard_app/app/core/agent/translat
 We can see that using agentUniverse maintains consistency with the results of the orginal translation_agent project, which hasa been successfully replicated.
 agentUniverse Results:  
 
-![](assets/17332298883233.jpg)
+![](../../_picture/long_translation_au.png)    
 
 translation_agent Results:  
 
-![](assets/17332299736651.jpg)
+![](../../_picture/long_translation_wu.png)  
 
 
 ### Others

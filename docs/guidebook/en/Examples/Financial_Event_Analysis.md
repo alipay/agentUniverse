@@ -11,7 +11,7 @@ Reference the original code files:
 
 The Planning Agent is tasked with breaking down the initial  financial problem into multiple sub-problems that can be independently solved and then provided to the subsequent Executing Agent. In this particular scenario, the overarching question "Analyze the reasons for Buffett's reduction in BYD shares" can be dissected into several sub-questions, as illustrated in the diagram below.
 
-![](assets/17332952767908.jpg)
+![planning_result](../../_picture/6_4_1_planning_result.png)
 
 
 Additionally, you have the ability to debug the Planning Agent independently within the designated [test file](../../../../sample_standard_app/app/test/test_planning_agent.py).
@@ -25,7 +25,7 @@ In this Agent, we provide a tool named[google_search_tool](../../../../sample_st
 
 
 The Executing Agent is responsible for solving the sub-problems that have been broken down by the Planning Agent. In this particular case, the execution results of the Executing Agent are as follows: 
-![](assets/17332953677758.jpg)
+![executing_result](../../_picture/6_4_1_executing_result.png)
 
 Due to the length of the result, only the execution results of the first two questions are displayed here. You can debug the Executing Agent independently in the designated[test file](../../../../sample_standard_app/app/test/test_executing_agent.py) to obtain the complete results.
 
@@ -36,7 +36,7 @@ Reference the original code files:
 
 The Expressing Agent is responsible for summarizing all the results outputted by the Executing Agent and formulating them into an answer to the original question, adhering to the requirements specified in the prompt file. In thisinstance, the output result of the Expressing Agent is as follows:
 
-![](assets/17332954532829.jpg)
+![expressing_result](../../_picture/6_4_1_expressing_result.png)
 
 
 You can debug the Expressing Agent individually in the [test file](../../../../sample_standard_app/app/test/test_expressing_agent.py).
@@ -47,7 +47,7 @@ Reference the original code files:
 
 The Reviewing Agent is responsible for evaluating whether the answer produced by the Expressing Agent effectively addresses the original question. In this particular case, the Reviewing Agent accepted the answer provided by the Expressing Agent:
 
-![](assets/17332957236427.jpg)
+![reviewing_result](../../_picture/6_4_1_reviewing_result.png)
 
 
 You can debug the Reviewing Agent individually in the [test file](../../../../sample_standard_app/app/test/test_reviewing_agent.py).

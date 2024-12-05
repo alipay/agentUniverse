@@ -66,7 +66,7 @@ if __name__ == '__main__':
 ### Result Demonstration
 Which tastes better, Coca-Cola or Pepsi：
 
-![](assets/17332951870699.jpg)
+![](../../_picture/coca-cola_or_pepsi.png)
 
 
 ## More Details

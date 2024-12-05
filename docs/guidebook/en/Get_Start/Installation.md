@@ -40,4 +40,4 @@ pip list | grep agentUniverse
 ```
 If you see `agentUniverse` and its version numberin the output, the installation was successful.
 
-![](assets/17332295362085.png)
+![](../../_picture/1_2_Installation_0.png)

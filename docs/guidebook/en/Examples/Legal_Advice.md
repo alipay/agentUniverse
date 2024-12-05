@@ -86,4 +86,4 @@ This agent involves the following two files:
 [CodeLink](../../../../sample_standard_app/app/examples/law_chat_bot.py)
 
 ## Demonstration
-![](assets/17332296567466.png)
+![](../../_picture/law_agent_demo.png)
