@@ -1,14 +1,15 @@
 # Product Platform Quick Start
 In this section, we will show you how to:
 
-* Start the agentUniverse productized service
-* Configure the agentUniverse product modules
-* Quickly get started with productized features
-* Debug and experience agents online, optimizing agent performance
+● Initiate the productized service of agentUniverse
+● Configure the modules within the agentUniverse framework
+● Quickly begin utilizing the productized features
+● Debug and test agents online, optimizing agent performance
 
 ## Environment and Application Engineering Preparation
 ### Application Engineering Preparation
-We have placed the **product module samples** in the agentUniverse’s sample_standard_app project. You can view them [here](../../../../sample_standard_app/app/core/product). This part can be configured in the background through YAML, and of course, these functions can be automatically created and managed through the product page.
+We have placed the sample of product module witnin the  sample_standard_app project of agentUniverse. You can access and view them [here](../../../../sample_standard_app/app/core/product). These modules can be configured in the background using YAML file, and additionally, the functions can be automatically created and managed via the product page.
+
 
 ### Installing Dependencies
 **Using pip**
@@ -17,7 +18,7 @@ pip install magent-ui ruamel.yaml
 ```
 
 ### Configuration File
-If you have previously used aU’s sample project, please add the following information to the `config.toml` file configuration to include the product module path, as configured in sample_standard_app:
+If you have previously used agentUniverse’s sample project, please add the following information to the `config.toml`  file  to include the product module path as configured in sample_standard_app:
 ```toml
 # Ignore the context content.
 [CORE_PACKAGE]
@@ -25,34 +26,31 @@ If you have previously used aU’s sample project, please add the following info
 product = ['sample_standard_app.app.core.product']
 # Ignore the context content.
 ```
-If you are using aU for the first time, you can directly use the latest sample project’s `config.toml`.
+If you are using agentUniverse for the first time, you can directly adopt the latest sample project’s `config.toml` file.
 
 #### Private Configuration File
-Of course, when using the agent, you need to pre-configure the various LLM model keys/Tool keys, otherwise, the overall process of the agent cannot be connected. This part is currently not provided in the product page configuration management. Please reuse aU’s original key configuration method. In future versions, we will directly provide key management capabilities for each model in the product.
+Of course, when utilizing the agent, you need to preconfigure the various LLM model keys/Tool keys; otherwise, the agent's overall process will fail to connect. Currently, this configuration is not available in the product page's configuration management. Please continue to use agentUniverse’s original key configuration method. In future versions, we will directly provide key management capabilities for each model within the product.
 
 
 ## Using the agentUniverse Product Platform
 ### Starting the Product Service
-Run the [product_application](../../../../sample_standard_app/app/bootstrap/product_application.py) file located in `sample_standard_app/app/bootstrap` to start with one click.
-
+To start the product service with a single click, run the [product_application](../../../../sample_standard_app/app/bootstrap/product_application.py) file located in `sample_standard_app/app/bootstrap` .
 ![img.png](../../_picture/product_start.png)
 
-After a successful start, it will automatically redirect to the product homepage, which includes system presets and your custom Agent/Tool/Knowledge product modules.
+Upon successful initiation, it will automatically redirect you to the product homepage, which features system presets as well as your customized Agent, Tool and Knowledge product modules.
 ![agentuniverse_product_homepage](../../_picture/agentuniverse_product_homepage.png)
 
 ### Experience the Agent
-As shown in the image above, click the chat button on the right of the peer multi-agent group to enter the conversation page.
-
-The conversation management system includes the last 10 agent conversation history records, allowing you to directly engage in multi-turn dialogues and experience the capabilities of the peer multi-agent group (default is streaming dialogue, and the multi-agent group includes the intermediate thinking process).
+As shown in the image above, click the chat button positioned on the right side of the peer multi-agent group to access the conversation page.
+The conversation management system incorporates the last 10 conversation history records from agents, enabling you to engage in multi-turn dialogues seamlessly and experience the capabilities of the peer multi-agent group (by default, it is set to streaming dialogue, and the multi-agent group showcases the intermediate thinking process).
 ![agentuniverse_product_agent_chat](../../_picture/agentuniverse_product_agent_chat.png)
 
 ### Debugging the Agent
-On the product homepage, click the edit button on the left of the agent to enter the online debugging page.
-
-You can debug the agent’s Prompt/Tool/Knowledge/LLM online. Click the save button, and aU-product will automatically save the configuration to the corresponding yaml file.
+On the product homepage, click the edit button on the left of the agent to access the online debugging page.
+You have the ability to debug the agent's Prompt, Tool, Knowledge, and LLM online. Simply click the save button, and the aU-product (AgentUniverse framework) will automatically save the configuration to the corresponding YAML file.
 ![agentuniverse_product_agent_editor](../../_picture/agentuniverse_product_agent_editor.png)
 
-Click the debug button in the upper right corner of the image above to view the Trace information, including token consumption, call chain, and latency of the agent’s specific invocation process.
+To view the Trace information, including token consumption, call chain, and latency of the agent's specific invocation process, click the debug button located in the upper right corner of the image provided above.
 ![agentuniverse_product_agent_trace](../../_picture/agentuniverse_product_agent_trace.png)
 
 ## Configuring agentUniverse Product Modules
@@ -81,11 +79,9 @@ As shown in the yaml file above:
 - Other parameters can be configured as needed (the same applies to tool/knowledge modules)
 
 ### Configuring Global Config
-In the global `config.toml`, configure the package scan path corresponding to the product module. With one click, you can start the product platform and display the corresponding agent/tool/knowledge information.
+In the `config.toml`file for global settings, configure the package scan path that corresponds to the product module. With a single click, you can launch the product platform and view the corresponding agent, tool, and knowledge information.
 
 ## More
-The agentUniverse-product platform is continuously iterating, and more convenient and useful features will be available for community users to experience in the future. We also welcome your valuable suggestions.
-
-This feature is jointly launched by [difizen](https://github.com/difizen/magent) and agentUniverse.
-
-Let’s explore and progress together!
+The AgentUniverse product platform is undergoing continuous iteration, and in the future, even more convenient and useful features will be available for community users to experience. We warmly welcome your valuable suggestions and feedback.
+This feature has been jointly launched by [difizen](https://github.com/difizen/magent) and agentUniverse.
+Let's explore and make progress together!

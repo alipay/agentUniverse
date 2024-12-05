@@ -1,11 +1,9 @@
 # How to Build a RAG Agent
 
-This tutorial provides a quick guide to building a RAG (Retrieval-Augmented Generation) agent within agentUniverse. The full structure and content of the case can be found in [this document](../Examples/Legal_Advice.md). This document focuses on the construction process, so some non-essential content has been omitted.
+This tutorial offers a quick guide to constructing a RAG (Retrieval-Augmented Generation) agent within the agentUniverse framework. The comprehensive structure and detailed content of the case can be found in [this document](../Examples/Legal_Advice.md). However, this document specifically focuses on the construction process, so some non-essential details have been omitted for brevity.
 
 ## Case Description
-This case is based on RagPlanner and sets up a simple legal consultation agent that provides relevant legal advice by retrieving applicable articles from the Civil Code and Criminal Code and considering the case background.
-The case uses the Qianwen large model and DashScope's embedding and rerank functionalities. Before using it, you need to configure the `DASHSCOPE_API_KEY` in your environment variables.
-
+This case is based on RagPlanner and sets up a simple legal consultation agent. This agent provides relevant legal advice by retrieving applicable articles from the Civil Code and Criminal Code, while also considering the case background. The case utilizes the Qianwen large model and DashScope's embedding and reranking functionalities. Before using it, you need to configure the  `DASHSCOPE_API_KEY` in your environment variables.
 The knowledge file is defined as follows:
 ```yaml
 name: "law_knowledge"
@@ -43,15 +41,15 @@ readers:
 This allows the extraction of text from the PDF. If you want to read more file formats, you can refer to the [Reader component](../In-Depth_Guides/Tutorials/Knowledge/Reader.md).
 
 ### Splitting Long Text
-Since the text content in the original documents is very long, we need to split it into smaller chunks. Here we use `recursive_character_text_splitter` for splitting, configured as follows:：
+Since the text content in the original documents is very long, we need to split it into smaller chunks. Here, we use the `recursive_character_text_splitter` ffor splitting, configured as follows:
 ```yaml
 insert_processors:
     - "recursive_character_text_splitter"
 ```
-This configuration is a list format, allowing multiple document processors to be configured. The only specified processor in this case, recursive_character_text_splitter, recursively splits the original document according to a specified delimiter until it meets the required length. For more details, refer to [DocProcessor](../In-Depth_Guides/Tutorials/Knowledge/DocProcessor.md). This document also includes other document processors that you can use or customize.
+This configuration is in list format, allowing multiple document processors to be specified. In this case, the only processor specified is recursive_character_text_splitter, which recursively splits the original document according to a specified delimiter until the required length is met. For more details, refer to the  [DocProcessor](../In-Depth_Guides/Tutorials/Knowledge/DocProcessor.md)documentation. Additionally, this framework (agentUniverse) includes other document processors that you can use or customize.
 
 ### Configuring the Store
-This case includes four Stores: the Civil Law and Criminal Law are stored separately in SQLite and ChromaDB. We will take `civil_law_chroma_store` as an example, with other Stores being similar.
+This case includes four Stores: the Civil Law and Criminal Law are stored separately in SQLite and ChromaDB. We will use the `civil_law_chroma_store` as an example, with the other Stores being similar.
 ```yaml
 name: 'civil_law_chroma_store'
 description: '保存了中国民法典的所有内容，以文本向量形式存储'
@@ -64,7 +62,7 @@ metadata:
   class: 'ChromaStore'
 ```
 
-The `persist_path` specifies the local storage location of the database file and designates `dashscope_embedding` as the component for vectorizing the text in the database. `similarity_top_k` indicates the number of documents to be retrieved. For more details on Store, refer to [this document](../In-Depth_Guides/Tutorials/Knowledge/Store.md).
+The `persist_path` specifies the local storage location of the database file and designates `dashscope_embedding` as the component responsible for vectorizing the text within the database. The `similarity_top_k` parameter indicates the number of documents to be retrieved. For more details on Stores, refer to [this document](../In-Depth_Guides/Tutorials/Knowledge/Store.md) or the agentuniverse framework documentation..
 
 ### Executing the Insertion Process
 
@@ -82,18 +80,17 @@ if __name__ == '__main__':
         stores=["civil_law_sqlite_store"]
     )
 ```
-We specify the data to be inserted using the `source_path` parameter in the `insert_knowledge` method and designate different Stores for different documents using the `stores` parameter. The `stores` parameter is optional; if not specified, the data is inserted into all stores by default.
-
+We specify the data to be inserted using the `source_path` parameter in the `insert_knowledge` method, and we designate different Stores for different documents by using the  `stores` parameter. The `stores` parameter is optional; if it is not specified, the data will be inserted into all stores by default.
 
 ## Building the Retrieval Process
 
 ### Re-ranking
-We configured the post-processing flow of the knowledge as follows:
+We have configured the post-processing flow for the knowledge within the agentuniverse as follows:
 ```yaml
 post_processors:
     - "dashscope_reranker"
 ```
-This indicates that we will use Dashscope’s re-ranking service to re-rank the documents. You can also add other post-processing flows here.
+This configuration indicates that we will utilize Dashscope's re-ranking service to reorder the documents based on relevance. Additionally, you have the option to incorporate other post-processing steps here as needed.
 
 ## Using RAG in the Agent
 
@@ -105,6 +102,5 @@ action:
   knowledge:
     - 'law_knowledge'
 ```
-We configure the knowledge like this in the YAML file of the Agent.
-
-For the complete case and how to invoke it, please refer to [this document](../Examples/Legal_Advice.md).
+The specific configuration for the knowledge, as outlined, is defined in the YAML file of the Agent within the agentunivers.
+For the complete case and how to invoke it, please refer to  [this document](../Examples/Legal_Advice.md).

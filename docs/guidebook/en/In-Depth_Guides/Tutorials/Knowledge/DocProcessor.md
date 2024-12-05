@@ -1,6 +1,6 @@
 # DocProcessor
 
-The DocProcessor is responsible for various processing tasks on Document, such as text splitting, keyword extraction, etc. The input and output of DocProcessor are both List[Document], ensuring that multiple DocProcessors can be stacked to form a processing pipeline for the Document.
+The DocProcessor is responsible for various processing tasks on Document, such as text splitting, keyword extraction. The input and output of DocProcessor are both List[Document], ensuring that multiple DocProcessors can be stacked to form a processing pipeline for the Document.
 
 The Document is defined as follows:
 ```python
@@ -60,7 +60,7 @@ class DocProcessor(ComponentBase):
 ```
 Users need to mainly override the _process_docs function in their custom DocProcessor to implement the specific logic for processing Document.
 
-After writing the corresponding code, you can refer to the following YAML configuration to register your DocProcessor as an aU component:
+After writing the corresponding code, you can refer to the following YAML configuration to register your DocProcessor as an agentUniverse component:
 ```yaml
 name: 'dashscope_reranker'
 description: 'reranker use dashscope api'

@@ -1,13 +1,13 @@
 # Legal Advice
 ## Case Description
-This case demonstrates a simple legal consultation agent built using `RagPlanner`. The agent provides legal advice by retrieving relevant provisions from the Civil Law and the Criminal Law, and combining them with the case background.
+This case demonstrates a simple legal consultation agent built utilizing `RagPlanner`. The agent provides legal advice by retrieving relevant provisions from the Civil Law and the Criminal Law, and integrating them with the case background.
 
-The case leverages the DashScope embedding and rerank features with the Qwen llm. Before using this, you need to configure the `DASHSCOPE_API_KEY` in your environment variables.
+The case leverages the embedding and reranking features of DashScope in conjunction with the Qwen llm. Before using this, you need to configure the `DASHSCOPE_API_KEY` in your environment variables.
 
 ## Components
 ### Legal Knowledge Base
-The legal knowledge base is constructed using [Knowledge Components](../In-Depth_Guides/Tutorials/Knowledge/Knowledge_Related_Domain_Objects.md) from agentUniverse. By storing the original legal provisions in the ChromaDB and Sqlite database, the knowledge base facilitates efficient retrieval and consultation for the agent.
-Original legal documents:
+The legal knowledge base is constructed using [Knowledge Components](../In-Depth_Guides/Tutorials/Knowledge/Knowledge_Related_Domain_Objects.md) from agentUniverse. By storing the original legal provisions in the both ChromaDB and Sqlite database, the knowledge base enables efficient retrieval and consultation for the agent.
+Original legal documents
 - [民法典.pdf](../../../../sample_standard_app/app/resources/民法典.pdf)
 - [刑法.pdf](../../../../sample_standard_app/app/resources/刑法.pdf)
 
@@ -86,4 +86,4 @@ This agent involves the following two files:
 [CodeLink](../../../../sample_standard_app/app/examples/law_chat_bot.py)
 
 ## Demonstration
-![Demonstration Image](../../_picture/law_agent_demo.png)
+![](assets/17332296567466.png)

@@ -1,7 +1,7 @@
 ## ChromaDB
 
-The agentUniverse already integrates ChromaDB-related dependencies, so you do not need to install additional packages to use ChromaDB's features.
-If you want to learn about the underlying principles of ChromaDB, you can visit the [official ChromaDB website](https://www.trychroma.com/).
+The agentUniverse already integrates ChromaDB-related dependencies, so there is no need for you to install additional packages to utilize ChromaDB's features.
+If you wish to gain insights into the underlying principles of ChromaDB, you may visit the  [official ChromaDB website](https://www.trychroma.com/).
 
 ### How to Configure ChromaDB Components
 ```yaml
@@ -15,9 +15,9 @@ metadata:
   module: 'agentuniverse.agent.action.knowledge.store.chroma_store'
   class: 'ChromaStore'
 ```
-- persist_path: The persistence storage path for the database, used for storing and loading vector data.
-- embedding_model: The model used to generate embedding vectors, specified here as dashscope_embedding.
-- similarity_top_k: The number of most similar results returned in similarity search.
+- persist_path: The path for persistence storage of the database, utilized for saving and retrieving vector data.
+- embedding_model: The model employed to generate embedding vectors, specified here as dashscope_embedding.
+- similarity_top_k: The number of most similar results returned during a similarity search.
 
 ### Usage
 [Knowledge_Define_And_Use](../../../In-Depth_Guides/Tutorials/Knowledge/Knowledge_Define_And_Use.md)

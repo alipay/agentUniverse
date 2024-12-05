@@ -1,5 +1,5 @@
 # Application Project Structure and Explanation
-As you can see, `agentUniverse` is designed with lightness and integrative capabilities in mind, allowing you to incorporate `agentUniverse` into any of your projects for seamless operation.
+As you can see, `agentUniverse`  is designed with lightweight and integration capabilities in mind, allowing you to incorporate `agentUniverse`  into any of your projects for seamless operation.
 
 ## Recommended Project Directory Structure and Explanation
 The directory structure provided below is only a suggestion, and you are free to adjust it according to your preferences and actual situation. We will explain this in more detail later in the document.
@@ -25,27 +25,27 @@ The directory structure provided below is only a suggestion, and you are free to
 └── other project files...
 ```
 
-The specific meanings of each package directory level are as follows:
+Here's what each package directory level means:
 * app - The main application program code
-  * biz - Your business code, where you can organize the next level of the directory structure as you wish
+  * biz - Your business code, where you can organize subdirectories as needed
   * bootstrap - The entry layer for starting the web server, for starting details refer to server_application.py
   * core - The core layer of LLM agent application components
     * agent - Place the agents you build
     * knowledge - The knowledge you customize and use
     * llm - The LLM (Language Model) you customize and use
-    * memory - The memory you customize and use
+    * memory - The memory sysytem you customize and use
     * planner - The collaborative mode you customize and use
-    * service - Service registration directory
+    * service - Directory for service registration
     * tool - The tools you customize and use
   * test - Directory for tests
-  * web - The upper web layer, currently left blank
+  * web - TThe web layer, currently left empty for future development 
 * config - Application configuration code
 
 ## Using Any Project Directory Structure
-You can adjust the project directory structure according to your preferences and actual circumstances, but please be sure to follow the rules below.
+You can adjust the project directory structure according to your preferences and actual circumstances, but please ensure you follow the rules below.
 
 ### Bootstrap Startup Directory
-Regardless of the location of your project's startup script, except for testing, please ensure that the application service is started with the following statement:
+Regardless of the location of your project's startup script, except for testing, you should start the application service with the following statement:
 
 ```python
 from agentuniverse.agent_serve.web.web_booster import start_web_server
@@ -65,14 +65,14 @@ class ServerApplication:
 ServerApplication.start()
 
 ```
-`ServerApplication.start()` is the server startup method for this framework, which accepts a configuration path `config_path` as an input parameter. The default `config_path` is a file located at `project_root_dir/config/config.toml` under the config directory in the project root path. Please ensure that the config file path is correct. If you've further changed the directory of the config file, please adjust the `config_path` accordingly.
+`ServerApplication.start()` is the server startup method for this framework, which accepts a configuration path `config_path` as an input parameter. The default `config_path` points to a file named 'config.toml', located in the config directory under the project root path(`project_root_dir/config/config.toml`). Ensure that the config file path is correct; if you have further changed the directory of the config file, adjust the `config_path` accordingly.
 
 ### Config Directory
-As mentioned in the [Bootstrap Startup Directory](#bootstrap-startup-directory), the default config path for the project is `project_root_dir/config/config.toml`. If you have made any adjustments to this, please ensure that the correct config file path is passed to the startup method when the application server is launched.
+As mentioned in the [Bootstrap Startup Directory](#bootstrap-startup-directory), the default config path for the project is `project_root_dir/config/config.toml`. If you have made any adjustments to this, please ensure that the correct config file path is provided to the startup method when the application server is launched.
 
 ### Core Directory
-As demonstrated by the recommended directory structure for the project, the project directory within the core directory is mainly used for placing custom domain components such as agents, knowledge, LLM, and others. You are free to position all core components wherever you like and not limited to the same main package. You only need to define it in the `[CORE_PACKAGE]` section of the main configuration file `config/config.toml` of the project, as follows:
-
+The core directory, as recommended in the project's directory structure, is primarily used for placing custom domain components like agents, knowledge bases, LLMs, and other related items. You are free to place all core components wherever you like and not limited to the same main package. You only need to specify the core package path in the `[CORE_PACKAGE]` section of the main configuration file `config/config.toml`.
+ 
 ```toml
 [CORE_PACKAGE]
 # Perform a full component scan and registration for all the paths under this list.
@@ -94,6 +94,6 @@ service = ['sample_standard_app.app.core.service']
 # Scan and register prompt components for all paths under this list, with priority over the default.
 prompt = []
 ```
-The format for defining packages follows the standard Python package path format. The framework will register, scan, and manage all types of component packages uniformly based on the defined package paths during startup.
+The format for specifying package paths in the configuration follows the standard Python package path format. The framework will register, scan, and manage all types of component packages uniformly based on the defined package paths during startup.
 
-**Tips**: The package path starts one level below your project's root directory. For example, in the sample_standard_app example, since the package path is under the agentUniverse level, it starts with sample_standard_app. If you are using sample_standard_app as a project template, then the path should start with app.xxx.
+**Tips**: The package path should be specified relative to one level below your project's root directory. For example, in the sample_standard_app project, since the package path is specified under the project's top-level directory, it starts with sample_standard_app. If you are using sample_standard_app as a project template and organizing your components under an app subdirectory, then the package path should start with app.xxx.”

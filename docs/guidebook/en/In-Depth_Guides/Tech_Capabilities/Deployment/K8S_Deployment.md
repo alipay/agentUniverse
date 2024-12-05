@@ -1,9 +1,9 @@
 # High Availability Deployment with K8S
-AgentUniverse provides standard working environment images, designed to support containerized deployments on Kubernetes (K8S) clusters. This guide will show you how to utilize these working environment images to deploy and set up a cluster on K8S. You can get full tag list in [this site](https://cr.console.aliyun.com/repository/cn-hangzhou/agent_universe/agent_universe/images).
+agentUniverse provides standard working environment images specifically designed to support containerized deployments on Kubernetes (K8S) clusters. This guide will demonstrate how to utilize these images to deploy and set up a cluster within a K8S  environment. You can get the full list of tags on [this site](https://cr.console.aliyun.com/repository/cn-hangzhou/agent_universe/agent_universe/images).
 Official K8S Documentation: [Kubernetes Setup Documentation](https://kubernetes.io/docs/setup/)
 
 ## 1. Resource Configuration
-First, you need to configure the necessary resource files. Below is an example used to define the required Namespace, Deployment, and Service resources using a YAML configuration file:
+Firstly, you need to configure the necessary resource files. Below is an example YAML configuration file used to define the required Namespace, Deployment, and Service resources:
 
 ```yaml
 apiVersion: v1
@@ -58,7 +58,7 @@ spec:
 
 #### Method 1 (Recommended)
 
-In the resource configuration file, uncomment the `env` section and replace `value` with your key. For additional security considerations, it's recommended to use K8S officially recommended methods, such as ConfigMap. See the [ConfigMap Configuration Documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/).
+In the resource configuration file, uncomment the `env` section and replace `value` with your key. For additional security considerations, it's recommended to use officially recommended K8S methods, such as ConfigMap. Pliase refer to the [ConfigMap Configuration Documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) for more details.
 
 #### Method 2
 

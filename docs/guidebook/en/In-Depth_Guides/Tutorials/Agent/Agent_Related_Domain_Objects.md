@@ -1,5 +1,5 @@
 # Agent and Related Domain Objects
-In this chapter, we will highlight agent and related core domain objects. We have omitted their corresponding code parts. If you wish to learn more, please read the [API Reference](../../../In-Depth_Guides/Tech_Capabilities/Others/API_Reference.md) Section.
+In this chapter, we will highlight the agent and its related core domain objects. Note that we have omitted their corresponding code parts for brevity. If you wish to learn more, please refer to the [API Reference](../../../In-Depth_Guides/Tech_Capabilities/Others/API_Reference.md) section.
 
 ## Agent Base Class
 Package path: `agentuniverse.agent.agent.Agent`

@@ -32,7 +32,7 @@ sls_log_send_interval = 3.0
 - **`sls_log_store`**: The log store in Aliyun sls.
 - **`access_key_id`**: The access key id for Aliyun sls.
 - **`access_key_secret`**: The access key secret for Aliyun sls.
-- **`sls_log_queue_max_size`**: The AgentUniverse adopts a mechanism of timing batch uploading of logs. This parameter signifies the maximum number of log entries that can be cached during each upload interval.
+- **`sls_log_queue_max_size`**: The AgentUniverse employs a mechanism for timed batch uploading of logs, where this parameter signifies the maximum number of log entries that can be cached during each upload interval.
 - **`sls_log_send_interval`**: The interval for uploading logs to sls, in seconds.
 
- After configuration, you can directly use the global log component or your custom log components to record logs. AgentUniverse will automatically upload the recorded content to your sls.
+ After configuration, you can directly use the global log component or your custom log components to record logs. AgentUniverse will automatically upload the recorded logs to your specified sls project and log store.
