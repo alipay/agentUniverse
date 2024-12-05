@@ -1,11 +1,11 @@
 # Python Auto Runner
 ## Case Illustration
-This case is based on ReactPlanner, building a simple case that can automatically generate and execute Python code.
-This case is based on the QianWen large language model and the google_search function, requiring you to configure the environment variables DASHSCOPE_API_KEY, SERPER_API_KEY before use.
+This case is built using ReactPlanner, creating a simple application that can automatically generate and execute Python code.
+This case is leverages the QianWen large language model and the google_search function, necessitating the configuration of environment variables DASHSCOPE_API_KEY and SERPER_API_KEY prior to use.
 
 ## Quick Start
 ### Configure API Key
-For example, configure key information in the file custom_key.toml where agentUniverse manages private keys (the default discussion group uses qwen as the base model and serper as the google search tool).
+For instance, configure key information in the custom_key.toml file, which is where agentUniverse manages private keys (the default setup uses qwen as the base model and serper as the google search tool).
 ```toml
 [KEY_LIST]
 # serper google search key
@@ -64,9 +64,9 @@ curl --location --request POST 'http://localhost:8888/service_run' \
 ### Result
 ![test_case](../../_picture/react_demo_step.png)
 
-In the image, React went through three steps in total:  
-Step 1: The model provided a piece of Python code and handed it over to the Python Runner tool for execution, but the execution failed due to the failure to use print to output the execution result.  
-Step 2: The model realized the mistake and proactively modified the code. It then used the Python Runner tool again for execution, which was successful.  
+In the image, React underwent a total of three steps:
+Step 1: The model provided a piece of Python code and submitted it to the Python Runner tool for execution. However,  the execution failed due to an inability to use print to output the execution result.
+Step 2: The model recognized the mistake and proactively revised the code. It then resubmitted the code to the Python Runner tool for execution, which was successful this time.
 Step 3: The model conveyed the successfully executed code to the user.  
 
 ### Please note

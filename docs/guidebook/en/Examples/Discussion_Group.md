@@ -1,15 +1,13 @@
 # Discussion: Multi-Agent Discussion Group
-In this use case, we will demonstrate how to use agentUniverse for multi-agent discussions.
 
-There are two agent roles: discussion group host (one) and discussion group participants (several).
-
-The user initiates a discussion topic, and the host organizes the participants to start the discussion. In each round, each participant expresses his or her own views according to the topic of the discussion (the views of each participant are not immutable and will be constantly adjusted as the discussion goes on). After several rounds of discussion, the host will summarize the discussion process and return the results of the participants after several rounds of discussion to the user.
-
-Many heads are better than one, imagine that you have a question you want to answer and submit it directly to the agentUniverse discussion group, The host will organize multiple agents with different ideas together, focus on your question, and finally give you a comprehensive and intelligent answer, which is an interesting agent experiment.
+In this use case, we will demonstrate how to utilize agentUniverse for multi-agent discussions.
+There are two agent roles: the discussion group host (one role) and discussion group participants (multiple roles).
+The user initiates a discussion topic, and the host organizes the participants to commence the discussion. In each round, each participant expresses his or her own views based on the discussion topic (note that the views of each participant are not static and will be constantly adjusted as the discussion progresses). After several rounds of discussion, the host will summarize the discussion process and present the participants' consolidated results back to the user.
+Many minds are better than one. Imagine having a question you wish to answer and submitting it directly to an agentUniverse discussion group, The host will assemble multiple agents with diverse perspectives, focus on your question, and ultimately provide you a comprehensive and intelligent response, which is an interesting agent experiment.
 
 ## Quick Start
 ### Configure API Key
-For example, configure key information in the file `custom_ key.toml` in which agentUniverse manages private key configuration (The agentUniverse discussion group uses GPT as the base model and Serper as the Google search tool by default. The following describes how to use other models or tools).
+For example, configure key information in the file `custom_ key.toml` , which agentUniverse uses to manage private key configuration. (The agentUniverse discussion group defaults to using GPT as the base model and Serper as the Google search tool. The following describes how to use alternative models or tools)
 ```toml
 [KEY_LIST]
 # serper google search key
@@ -18,7 +16,7 @@ SERPER_API_KEY='xxx'
 OPENAI_API_KEY='xxx'
 ```
 ### Modify Prompt Version
-Modify the prompt version of agents to the english version, the discussion group multi-agent configuration file is located in the app/core/agent/discussion_agent_case directory in the `sample_standard_app` sample project. Find the host_agent.yaml and change `prompt_version` to `host_agent.en`, similarly find the participants yaml file and change the `prompt_version` to `participant_agent.en`.
+Modify the prompt version of agents to the English version. The configuration file for the multi-agent discussion group are located in the app/core/agent/discussion_agent_case directory within the `sample_standard_app` sample project. Locate the host_agent.yaml file and change the `prompt_version` to `host_agent.en`. Similarly, find the participants' yaml file and change its `prompt_version` to `participant_agent.en`.
 
 ```yaml
 info:
@@ -47,9 +45,8 @@ metadata:
 
 
 ### Run Discussion Group
-In the sample project of agentUnvierse `sample_standard_app`, find the `discussion_chat_bots.py` file in the app/examples directory, enter the question you want to answer in the chat method, and run it.
-
-For example, enter the question: Which tastes better, Coca-Cola or Pepsi
+In the sample project of agentUnvierse `sample_standard_app`, find the `discussion_chat_bots.py` file in the app/examples directory. Enter the question you wish to pose within the chat function and then run the script.
+For example, you might enter the question: Which tastes better, Coca-Cola or Pepsi?
 ```python
 from agentuniverse.base.agentuniverse import AgentUniverse
 from agentuniverse.agent.agent import Agent
@@ -69,20 +66,21 @@ if __name__ == '__main__':
 ### Result Demonstration
 Which tastes better, Coca-Cola or Pepsi：
 
-![Picture](../../_picture/coca-cola_or_pepsi.png)
+![](../../_picture/coca-cola_or_pepsi.png)
+
 
 ## More Details
 ### Agent Configuration
-The discussion group multi-agent configuration files are located in the app/core/agent/discussion_agent_case directory in the `sample_standard_app` sample project.
+The configuration files for the multi-agent discussion group  are located in the app/core/agent/discussion_agent_case directory within the `sample_standard_app` sample project.
 
-The host corresponds to `host_agent.yaml` and the participant corresponds to `participant_agent_*.yaml`.
+The `host_agent.yaml` file corresponds to the host agent, and the `participant_agent_*.yaml`files corresponds to the participant agents.
 
 
-The prompt is managed by the prompt version. For example, the default prompt_version of host_agent is `host_agent.cn`, and the corresponding prompt file is `host_agent.cn.yaml` under the app/core/prompt directory.
+The prompts are managed by the prompt version. For example, the default prompt_version of the host_agent is `host_agent.cn`, and the corresponding prompt file is `host_agent.cn.yaml` located under the app/core/prompt directory.
 
-If the LLM Model will be modified to another, such as the Qwen model, change the `llm_model` name information (such as the `qwen_llm` built into the aU system).
+If you plan to switch to another LLM Model, such as the Qwen model, you need to update the  `llm_model` name information accordingly(such as the `qwen_llm` built into the agentUniverse system).
 
-The number of discussion rounds in agent plan defaults to 2, which users can adjust as needed. The default participants are two agents built into aU, which can add discussion group members by creating new agents and configuring the agent name parameter to the `participant` of the planner.
+The number of discussion rounds in the agent plan defaults to 2, but users can adjust this as needed. By default,  there are two agents built into agentUniverse serving as participants. To add more members to the discussion group, you can create new agents and configuring their name as parameter in the planner.
 
 ```yaml
 info:
@@ -110,13 +108,13 @@ metadata:
 ```
 
 ### Memory Configuration
-Participants in the aU discussion group configure `demo_memory` in the `sample_standard_app` sample project by default to store common memory information for the entire discussion group.
+Participants in the agentUniverse discussion group configure `demo_memory` in the `sample_standard_app` sample project by default to store common memory information for the entire discussion group.
 
 ### Planner Configuration
-The planner configuration file is located in the app/core/planner directory of the `sample_standard_app` sample project, where the `discussion_planner.py` file is the specific plan process code of the discussion group. If you are interested, you can read it yourself.
+The planner configuration file is located in the app/core/planner directory of the `sample_standard_app` sample project. The `discussion_planner.py` file contains the specific planning process code for the discussion group. If you are curious, you are welcome to review it yourself.
 
 ### Prompt Configuration
-The prompt is managed by the prompt version, and the default prompt files of the aU discussion group agent are configured in the app/core/prompt directory. Corresponding to the Chinese and English versions (host_agent_xx.yaml/participant_agent_xx.yaml), users can change the prompt_version in the agent configuration to complete fast switching.
+The prompts are managed through the prompt_version. The default prompt files for the AgentUniverse (aU) discussion group agents are configured in the app/core/prompt directory. Corresponding to both Chinese and English versions (e.g., host_agent_xx.yaml and participant_agent_xx.yaml), users can modify the prompt_version in the agent configuration to achieve rapid switching.
 
 ### Tool Configuration
-Two participants in the aU discussion group are configured with google_search_tool by default. Users can change the `tool name` in the `participant_agent_xxx.yaml` under the app/core/agent/discussion_agent_case directory in the `sample_standard_app` sample project to switch tool calls.
+Two participants in the agentUniverse discussion group are configured with google_search_tool by default. Users have the option to change the `tool name` in the `participant_agent_xxx.yaml` file, located under the app/core/agent/discussion_agent_case directory within the `sample_standard_app` sample project, in order  to switch between different tool calls.

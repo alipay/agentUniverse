@@ -10,12 +10,11 @@ agent: 'demo_agent'
 metadata:
   type: 'SERVICE'
 ```
-The `demo_agent` accepts a string type input parameter,
-and returns a string: `"Your input is {input}."`
+The `demo_agent` accepts a string type input parameter and returns a string in the format:: `"Your input is {input}."`
 
 ## /service_run
-This POST interface calls the Agent service in a synchronous manner, and the call will block until the target Agent service returns a result.
-An example call is as follows:
+This POST interface invokes the Agent service in a synchronous manner, meaning that the call will block until the targeted Agent service responds with a result.
+An example response structure is as follows:
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{"service_id":"demo_service","params":{"input":"Hello!"}}' http://127.0.0.1:8888/service_run
 ```
@@ -28,10 +27,10 @@ The expected return value example is as follows:
         "request_id": "7dd7d737b6b64c3c92addf541e73e97c"
 }
 ```
-- **`success`**: Indicates whether the Agent call was successful or not, with values `true` and `false`.。
-- **`message`**: When the `success` value is `false`, this value represents the error message, and it is `null` when successful.
-- **`result`**: Represents the result of the execution when the Agent call is successful.
-- **`request_id`**: A random string, used for a unique request. It can be used in the [/service_run_result](#service_run_result) interface to query the result of the corresponding request.
+- **`success`**:  Indicates whether the Agent invocation was successful. It takes the values `true` or `false`.
+- **`message`**: When `success` is `false`, this field contains the error message. It is `null` when the operation is successful.
+- **`result`**: Represents the outcome of the execution when the Agent invocation is successful.
+- **`request_id`**: A randomly generated string serving as a unique identifier for the request. It can be utilized in the [/service_run_result](#service_run_result) interface to retrieve the result of the corresponding request.
 
 ## /service_run_stream
 
@@ -39,14 +38,14 @@ This POST interface is similar to `/service_run`, and its call method is consist
 ```shell
 curl -X POST -H "Content-Type: application/json" -d '{"service_id":"demo_service","params":{"input":"Hello!"}}' http://127.0.0.1:8888/service_run_stream
 ```
-However, the return result of the Agent will be returned in a streaming manner:
+However, there is one key difference: the return result of the Agent will be streamed back to the client. 
 ```text
 # agentuniverse.agent_serve_web.flask_server.service_run_stream
 
 response = Response(task.stream_run(), mimetype="text/event-stream")
 response.headers['X-Request-ID'] = task.request_id
 ```
-`request_id` will be included in the response header X-Request-ID.
+Additionally, the `request_id` will be included in the response header as X-Request-ID.
 
 ## /service_run_async
 This POST interface calls the Agent service in an asynchronous manner. The calling method is as follows:
@@ -62,11 +61,11 @@ The interface will return immediately:
         "request_id": "7dd7d737b6b64c3c92addf541e73e97c"
 }
 ```
-The return result will only contain the success indicating whether the call was successful or not, and the request_id indicating this call.
-For the result of the call, you need to use the request_id to query in the [/service_run_result](#service_run_result) interface.
+The response will only include an indication of success (whether the call was successful or not) and a request_id that uniquely identifies this specific call.
+To retrieve the result of the call, you need to use the request_id to query the [/service_run_result](#service_run_result) interface.
 
 ## /service_run_result
-This GET interface allows users to check the request status with request_id, an example call is as follows:
+This GET interface enables users to check the status of a request using the request_id. An example of how to make such a call is as follows:
 ```shell
  curl 'http://127.0.0.1:8888/service_run_result?request_id=8e6f17dbe7ff4730a62b4a2914d73c74'
 ```
@@ -83,8 +82,8 @@ The expected return value example is as follows:
   "success":true}
 
 ```
-The `result` contains three parts: `result` indicates the result of the Agent service execution, `state` indicates the state of the Agent service execution, and `steps` indicates the intermediate process of the Agent service execution.  
-`state` represents the task status and includes the following scenarios:
+The `result` comprises three parts: `result` indicates the outcome of the Agent service execution, `state` represents the status of the Agent service execution, and `steps` details the intermediate processes involved in the Agent service execution.  
+The `state` field indicates the task status and encompasses the following scenarios:
 ```text
 # agentuniverse.agent_serve.web.request_task.TaskStateEnum
 

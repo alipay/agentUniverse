@@ -1,6 +1,6 @@
 # Integrated Tools
 
-In the current au's sample project, the following tools are integrated.
+In the current agentUniverse's sample project, the following tools are integrated.
 
 ## 1. Search Tools
 
@@ -25,11 +25,12 @@ metadata:
 To use this API, you must apply for a BING_SUBSCRIPTION_KEY at https://serper.dev and configure it in your environment variables. 
 Configuration method:
 1. Configure via Python code You must configure: SERPER_API_KEY
+
 ```python
 import os
 os.environ['SERPER_API_KEY'] = 'xxxx'
 ```
-2. Configure via configuration file In the custom_key.toml file located in the config directory of the project, add the configuration:  
+2. Configure via configuration file In the custom_key.toml file located in the config directory of the project, add the configuration:
 ```toml
 SERPER_API_KEY="xxxx"
 ```
@@ -87,7 +88,7 @@ metadata:
 ```
 Parameter description:
 
-search_type: Represents the format of the expected search results, where json represents the expectation for JSON format and common represents the expectation for string string format.
+search_type: Represents the format of the expected search results, where json represents the expectation for JSON format and common represents the expectation for string format.
 search_params: Represents additional parameters that need to be passed to the search engine, such as in Baidu search, num represents the number of returned search results, detailed parameters need to be referenced at [https://www.searchapi.io/].
 engine: The search engine you expect to use, including baidu, google, bing, amazon, youtube, ... To use this API, you must apply for SEARCH_API_KEY from the official website ([https://www.searchapi.io/]) and configure it in environment variables.
 Configuration method:
@@ -108,7 +109,7 @@ SEARCHAPI_API_KEY="xxxxxx"
 
 ### 2.1 PythonRepl
 [Tool path](../../../../../../sample_standard_app/app/core/tool/python_repl_tool.yaml)  
-This tool can execute a piece of Python code, the configuration information of the tool:  
+This tool can execute a piece of Python code, the configuration information of the tool:    
 ```yaml
 name: 'python_runner'
 description: 'The tool can execute Python code, which can be directly run in PyCharm. The input to the tool must be valid Python code. If you want to view the execution result of the tool, you must use print(...) to print the content you want to view in the Python code.
@@ -181,9 +182,9 @@ metadata:
   class: 'RequestTool'
 ```
 Parameter Description:
-    method: The method of the request, such as GET, POST, PUT, etc.
-    headers: The HTTP headers required for sending the request.
-    json_parse: Specifies whether the input parameters need to be parsed by HTTP. It should be set to True for POST requests and False for GET requests.
-    response_content_type: The parsing method for the HTTP request result. If set to 'json', the result will be returned in JSON format; if set to 'text', the result will be returned as text.
-This tool can be used directly without any keys required.
+    method: the method of the request, such as GET, POST, PUT, etc.
+    headers: the HTTP headers neccessary for sending the request.
+    json_parse: indicates whether the input parameters should be serialized as JSON and sent in the request body (True for POST requests) or not (False for GET requests, where parameters are typically sent as a query string).
+    response_content_type: the output format for the HTTP request result. If set to 'json', the result will be returned in JSON format; if set to 'text', it will be returned as plain text.
+This tool can be used directly without  requiring any keys.
 

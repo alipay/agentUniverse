@@ -1,6 +1,6 @@
 # Service Information Storage
 
-agentUniverse uses a system-level database to store various types of information generated during application runtime, such as the results of asynchronous service requests, which are stored in this database.
+agentUniverse utilizes a system-level database to store various types of information generated during application runtime, including the results of asynchronous service requests, which are stored within this database.
 
 ## System Database Configuration
 You can configure the system database address in the `config.toml` file:
@@ -10,9 +10,7 @@ You can configure the system database address in the `config.toml` file:
 # If it's empty, agentUniverse will create a local sqlite db as default choice.
 system_db_uri = ''
 ```
-Please note that this URI should comply with the URI format specification in SQLAlchemy.
-When this value is empty, a `DB` folder will be created in the project root directory, and a SQLite DB file named `agent_universe.db` will be created in the folder as the default system database.
-If you wish to obtain more information on how to use the system database, you can refer to the section [SQLDB_WRAPPER](../Storage/SQLDB_WRAPPER.md), where the name of the system database is registered as `__system_db__`.
+Please note that this URI must comply with the URI format specification required by SQLAlchemy. If this value is left empty, a DB folder will be created in the project's root directory, and within that folder, a SQLite database file named `agent_universe.db` will be created to serve as the default system database. If you wish to obtain more information on how to use the system database, you can refer to the [SQLDB_WRAPPER](../Storage/SQLDB_WRAPPER.md) section, where the system database is registered with the name `__system_db__`.
 
 
 
@@ -34,4 +32,9 @@ class RequestORM(Base):
     gmt_modified = Column(DateTime, default=datetime.datetime.now,
                           onupdate=datetime.datetime.now)
 ```
-Where `id` is an auto-incremented primary key, `request_id` is a unique ID for each request, `stat`e represents the execution state of the agent task corresponding to the request, `result` is the execution result, `steps` are the intermediate outputs during the execution process, `session_id` and `additional_args` are reserved fields in the current version.
+● id: An auto-incremented primary key.
+● request_id: A unique identifier for each request.
+● state: Represents the execution state of the agent task associated with the request.
+● result: The execution result of the task.
+● steps: Intermediate outputs generated during the execution process.
+● session_id and additional_args: Reserved fields in the current version of the framework.

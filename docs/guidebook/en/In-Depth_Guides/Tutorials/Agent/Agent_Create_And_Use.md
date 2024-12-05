@@ -1,37 +1,37 @@
 # How to create agents.
-You might have already learned how to quickly create an agent in the [Quick Start](../../../Get_Start/Quick_Start.md) chapter, or grasped the important components of an agent in the [Principles of Agents](../../../In-Depth_Guides/Tutorials/Agent/Agent.md). In this section, we will further elaborate on how to create an agent in detail.
+You may have already learned how to quickly create an agent from the [Quick Start](../../../Get_Start/Quick_Start.md) chapter, or you may have grasped the essential components of an agent from the [Principles of Agents](../../../In-Depth_Guides/Tutorials/Agent/Agent.md) section.
 
-Based on the design features of the agentUniverse domain components, creating an agent consists of two parts during the creation process.
+Based on the design features of the agentUniverse framework's domain components, the creation process of an agent involves two main parts.
 * agent_xx.yaml
 * agent_xx.py
 
-Among them, `agent_xx.yaml` must be created, which includes important attribute information of the agent such as Introduction, Target, Instruction, LLM, etc.; `agent_xx.py` is created as needed, containing specific behaviors of the agent and supporting users to inject custom domain behaviors into the agent. Understanding this principle, let's take a closer look at how to create these two parts.
+Among them, the `agent_xx.yaml` file must be created, which contains crucial attribute information for the agent, such as Introduction, Target, Instruction, LLM, and so forth. The `agent_xx.py` file, on the other hand, is created as needed and includes specific behaviors of the agent, allowing users to inject custom domain-specific behaviors into the agent. With this understanding, let's delve deeper into the creation of these two essential parts.
 
 ## Creating Agent Configuration - agent_xx.yaml
-We will provide detailed descriptions of each component in the configuration.
+We will provide detailed descriptions of each component within the configuration file.
 
 ### Setting the basic information of the agent.
 **`info` - basic information of the agent**
-* `name`:  name of the agent
-* `description`:  description of the agent
+* `name`:  the name of the agent
+* `description`:  a description of the agent's purpose or funtion 
 
 ### Setting the global configurations for the agent.
 **`profile` - Agent global settings.**
-* `introduction`:  introduction to the agent's role
-* `target`:  target of the agent
-* `instruction`: instruction of the agent
-* `llm_model`: The LLM used by the agent
-  * `name`: name of LLM
-  * `model_name`: model_name of LLM
+* `introduction`:  an introduction to the agent's role and responsibilities
+* `target`:  the agent's target or intended purpose
+* `instruction`: instruction or guidelines for the agent;s behavior
+* `llm_model`: the LLM used by the agent
+  * `name`: the name of the LLM
+  * `model_name`: the specific model name of the LLM
 
-  You can choose any existing LLM or connect to any LLM of your choice. We will not elaborate on this part here; you can refer to the [LLM section](../../../In-Depth_Guides/Tutorials/LLM/LLM.md) for more details.
-
+  Note: You can choose any existing LLM or connect to any LLM of your choice. We will not elaborate on this part here; for more details, please refer to the [LLM section](../../../In-Depth_Guides/Tutorials/LLM/LLM.md) .
+  
 ### Setting the agent's plan
 **`plan` - plan of agent**
-* `planner` : planner of agent
-  * `name`: name of planner
+* `planner` : the planner utilized by the agent
+* `name`: name of planner
   
-  You can choose any existing Planner or connect to any Planner of your choice. We will not elaborate on this part here; you can refer to the Planner section for more details.
+  Note: You can choose any existing planner or connect to any planner of your choice. We will not elaborate on this part here; for more details, please refer to the planner section .
 
 ### Setting the agent's action
 **`action` - action of agent**
@@ -41,7 +41,7 @@ We will provide detailed descriptions of each component in the configuration.
     \- tool_name_b  
     \- tool_name_c  
 
-  You can choose any existing Tool or connect to any Tool of your choice. We will not elaborate on this part here; you can refer to the [Tool section](../../../In-Depth_Guides/Tutorials/Tool/Tool.md) for more details.
+  Note: You can choose any existing tool or connect to any tool of your choice. We will not elaborate on this part here; you can refer to the [Tool section](../../../In-Depth_Guides/Tutorials/Tool/Tool.md) for more details.
 
 * `Knowledge` : Knowledge available for the agent's use.
   * knowledge_name_list，list of knowledge names, for example:   
@@ -49,20 +49,20 @@ We will provide detailed descriptions of each component in the configuration.
     \- knowledge_name_b  
     \- knowledge_name_c
   
-  You can choose any existing Knowledge or connect to any Knowledge of your choice. We will not elaborate on this part here; you can refer to the Knowledge section for more details.
+  Note: You can choose any existing Knowledge or connect to any knowledge of your choice. We will not elaborate on this part here; you can refer to the knowledge section for more details.
 
 ### Setting up the agent's memory.
 **`memory` - memory of agent**
 
-The agent already has a default memory mode built-in, so you do not need to set it up. Additionally, memory supports customization and type selection, and we will make this capability available in an upcoming feature.
+The agent already has a default memory mode built-in, so there is no need to set it up separately. Additionally,  the memory supports customization and type selection, a feature that will be available in a future release.
 
 ### Setting up component metadata.
 **`metadata` - metadata of component**
-* `type` : type of component，use 'AGENT'
-* `module`: Agent entity package path
-* `class`: Agent entity class name
+* `type` : the type of component，use 'AGENT'
+* `module`: the package path for the agent entity
+* `class`: the class name of the agent entity
 
-All provided Agent components will have their corresponding `module` and `class` copied to this section. This section will integrate all configurations and behaviors of the agent into a whole. If you have extended the behavior of the agent, you need to fill in this section according to the actual path. We will further explain this in the "Creating from an Existing Agent Object" section later in the text.
+All provided Agent components will have their corresponding `module` and `class` details copied into this section. This section serves to integrate all configurations and behaviors of the agent into a cohesive whole. If you have extended the behavior of the agent, you need to fill in this section according to the actual path and class name. We will further elaborate on this  in the "Creating from an Existing Agent Object" section later in the document.
 
 ### An actual example of an agent configuration.
 ```yaml
@@ -104,74 +104,74 @@ metadata:
   module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
   class: 'DemoRagAgent'
 ```
-The above is an actual example of an agent configuration. In addition to the standard configuration items introduced above, the observant among you may have noticed variables in the prompt like `{background}` and `{input}`. This is a very practical prompt replacement feature, which we will explain in the section [How to dynamically adjust settings based on user input](#How to dynamically adjust settings based on user input).
+The above is an actual example of an agent configuration. Besides the standard configuration items introduced above, those of you who are observant may have noticed variables in the prompt, such as `{background}` and `{input}`. This is a very practical prompt replacement feature, which we will explain further in the section titled "[How to dynamically adjust settings based on user input](#How to dynamically adjust settings based on user input)".
 
-You can find more agent configuration YAML examples in our sample project under the path `sample_standard_app.app.core.agent`.
+You can find more examples of agent configuration YAML files in our sample project, located under the path `sample_standard_app.app.core.agent`.
 
-In addition to this, agentUniverse does not restrict users from extending the YAML configuration content for agents. You can create any custom configuration key according to your own requirements, but please be careful not to duplicate the default configuration keywords mentioned above.
+In addition, agentUniverse does not restrict users from extending the YAML configuration content for agents. You can create any custom configuration keys according to your own requirements, but please ensure that you do not duplicate the default configuration keywords mentioned above.
 
 ## Creating Agent Domain Behavior Definition agent_xx.py
-In this section, you can orchestrate and customize the behavior of any agent. Of course, if you are completely using existing Agent capabilities, this section is not mandatory.
+In this section, you can orchestrate and customize the behavior of any agent. Of course, if you are solely utilizing existing agent capabilities, this section may not be mandatory.
 
-In this section, we will focus on commonly used definitions of agent domain behavior and the common techniques you may use in the actual process of defining agent domain behaviors.
+In this section, we will focus on commonly used definitions for agent domain behavior and the techniques you may employ in the actual process of defining these behaviors.
 
 ### Create an Agent class object.
-Create the corresponding Agent class object and inherit the AgentUniverse framework's base class Agent.
+Create the corresponding agent class object by inheriting from the base class agent provided by the agentUniverse framework.
 
 ### Customize the corresponding agent domain behaviors.
-Common customizable agent behaviors are as follows.
+Common customizable agent behaviors include the  follows:
 
 #### input_keys method
-Represents the list of input key parameters from users in the agent's execution process, which needs to be implemented by each custom Agent class.
+This method represents the list of input key parameters from users during the agent's execution process. It must be implemented by each custom Agent class. 
 
-For example, if the agent runs with only one parameter passed in, such as question=xxx, then the input_keys method should return ['question'].
+For instance, if the agent operates with only one parameter passed in, such as question=xxx, then the input_keys method should return ['question'].
 
 #### output_keys method
-Represents the list of output key parameters when the agent's execution ends, which needs to be implemented by each custom Agent class.
+This method represents the list of output key parameters when the agent's execution completes. It must be implemented by each custom Agent class. 
 
-For example, if the agent outputs a result that includes a response, then the output_keys method should return ['response'].
+For example, if the agent produces an output that contains a response, then the output_keys method should return ['response'].
 
 #### parse_input method
-The input processing node before agent execution; an agent's input can be natural language or structured data such as JSON. You can process any user input in this part, and it needs to be implemented by each custom Agent class.
+The parse_input method serves as the input processing stage before agent execution. An agent's input can be in the form of natural language or structured data such as JSON. This part allows you to process any user input, and it must be implemented by each custom Agent class.
 
-This section has two input parameters, as follows:
+This method has two input parameters:
 
-* `input_object`: The original data inputted to the agent
+* `input_object`: The raw data inputted to the agent.
   * You can retrieve corresponding data from input_object using the `input_object.get_data('input_key')` method.
   
-    For example, if a user inputs `question=xxx` to the agent, we can obtain the current question from the user by using `input_object.get_data('question')`.
+    For instance, if a user inputs `question=xxx` to the agent, you can obtain the user's current question by using `input_object.get_data('question')`.
 
-* `agent_input`: The data processed by the agent's input handler, of type `dict`.
-  * `agent_input` includes the following key parameters and data by default.
-    * `chat_history`: Includes historical chat data.
-    * `background`: Includes background.
-    * `date`: Includes the current date.
+* `agent_input`: The data processed by the agent's input handler, which is of type `dict`.
+  * By default, `agent_input` includes the following key parameters and data:
+    * `chat_history`:  Contains historical chat data.
+    * `background`: Contains background information.
+    * `date`: Contains the current date.
   * Append the user input to agent_input.
     * For example: `agent_input['input'] = input_object.get_data('question')`.
   
-The output object for the `parse_input` method is generally used `agent_input`.
+The output object for the `parse_input` method is typically the modified `agent_input`.
 
 #### parse_result method
-The output processing node before agent execution, where an agent's output can be natural language or structured data such as JSON. You can manage any content that needs to be output in this part, and it needs to be implemented by each custom Agent class.
+The parse_result method serves as the output processing node before agent execution. An agent's output can be in the form of natural language or structured data such as JSON. This part allows you to manage any content that needs to be outputted, and it must be implemented by each custom Agent class.
 
-This section has one input parameter, as follows:
+This method has one input parameter:
 * `agent_result`: Agent output data, of type `dict`.  
-* The output object for the `parse_result` method is typically used `agent_result`.
+  The output object for the `parse_result` method is typically used `agent_result`.
 
 #### execute method
-This method is the core entry point for the agent's execution flow. The agent's base class implements the execution method by default, and users can also override this method to customize the execution method for any agent.
+This method is the core entry point for the agent's execution flow. The agent's base class provides a default implementation of the execution method, and users can also override this method to customize the execution method for any agent.
 
 ##### Default execute implementation.
 * The default logic for the execute method in the agent base class is as follows:
 
-  * Get the planner name corresponding to the agent YAML configuration
-  * Obtain a Planner instance through the Planner manager
-  * Execute the invoke method of the Planner instance
+  *   Retrieve the planner name corresponding to the agent's YAML configuration.
+  *   Obtain a planner instance through the planner manager
+  *   Execute the invoke method of the obtained planner instance
 
 ##### Custom execute implementation.
-You can also customize the execution flow of the agent by overriding the execute method. Overriding execute will override the default implementation of the agent's base class, meaning the agent will lose the ability to automatically select a Planner. If needed, you can refer to the default implementation of the agent's base class to load and use the corresponding planner.
+You can also customize the execution flow of the agent by overriding the execute method. Overriding the execute method will replace the default implementation provided by the agent's base class, meaning the agent will no longer automatically select a planner. If needed, you can refer to the default implementation in the agent's base class to load and use the corresponding planner.
 
-Below is an example of a custom execute implementation:
+Below is an example of a custom execute method implementation:
 ```text
 def execute(self, input_object: InputObject, agent_input: dict) -> dict:
     # Do anything, as exemplified below.
@@ -188,7 +188,7 @@ def execute(self, input_object: InputObject, agent_input: dict) -> dict:
 ```
 
 #### Get the properties of the agent object.
-Through `self.agent_model`, the agent object can access the properties of the agent. In the definition of agent domain behaviors, you can read all the properties configured in the agent configuration section.
+Through `self.agent_model`, the agent object can access its properties. In the definition of agent domain behaviors, you can read all the properties configured in the agent's configuration section.
 
 A specific example is as follows:
 ```text
@@ -208,10 +208,10 @@ def execute(self, input_object: InputObject, agent_input: dict) -> dict:
     return planner_result
 ```
 
-In this example, the `plan` section from the agent configuration attributes is accessed within the execution method using `self.agent_model.plan`, and further, the actual name of the `planner` is obtained through the get method.
+In this example, within the execution method, the `plan` section from the agent's configuration attributes is accessed using `self.agent_model.plan`, and further, the actual name of the `planner` is obtained through the get method.
 
 
-The properties and domain behaviors of the agent are both dependent on the Agent base class in the agentUniverse framework, which is located at `agentuniverse.agent.agent.Agent`. We will also focus on the underlying objects in the sections on agents and related domain objects. If you are interested in the underlying technical implementation, you can further refer to the corresponding code and documentation.
+The properties and domain behaviors of the agent are both dependent on the Agent base class in the agentUniverse framework, which is located at `agentuniverse.agent.agent.Agent`. We will also delve into the underlying objects in the sections discussing agents and related domain objects. If you are interested in the underlying technical implementation, you can further refer to the corresponding code and documentation.
 
 #### An actual example of an agent domain behavior definition.
 ```python
@@ -239,14 +239,15 @@ class DemoRagAgent(Agent):
     #     planner_result = planner_base.invoke(self.agent_model, agent_input, input_object)
     #     return planner_result
 ```
-The above is an actual example of an agent domain behavior definition.
+The above provides an actual example of an agent domain behavior definition.
+
 
 ## Pay attention to the package path where your defined agent is located
-With the above agent configuration and domain definition part, you have mastered all the steps to create an agent; next, we will use these agents. Before using, please ensure that the created agents are within the correct package scanning path.
+With the agent configuration and domain definition provided above, you have now mastered all the steps required to create an agent. Next, we will proceed to use these agents. Before doing so, please ensure that the created agents are located within the correct package scanning path.
 
-In the `config.toml` of the agentUniverse project, you need to configure the package corresponding to the agent file. Please confirm again that the package path where your created file is located is under the `CORE_PACKAGE` in the `agent` path or its subpaths.
+In the `config.toml` file of the agentUniverse project, you need to configure the package that corresponds to your agent file. Please confirm once again that the package path where your created file is located falls under the `CORE_PACKAGE` in the `agent` path or one of its subpaths.
 
-Taking the configuration of the example project as a reference, it would be as follows：
+Taking the configuration of the example project as a reference, it would look something like this:
 
 ```yaml
 [CORE_PACKAGE]
@@ -256,13 +257,13 @@ agent = ['sample_standard_app.app.core.agent']
 
 ## Other techniques for agent development
 ### Customize and orchestrate the execution process of agents freely
-In the [Creating Agent Domain Behavior Definitions](#Creating Agent Domain Behavior Definition-agent_xx.py) section of this document, we have already detailed how to customize an execute method. This method is often used in practice customizing processes and inject SOPs (Standard Operating Procedures) according to user demands.
+In the [Creating Agent Domain Behavior Definitions](#Creating Agent Domain Behavior Definition-agent_xx.py) section of this document, we have already detailed how to customize an execute method. This method is often used in practice to customize processes and inject SOPs (Standard Operating Procedures) according to user demands.
 
 ### How to dynamically adjust settings based on user input
 
 **Method 1 (Recommended): Through the standard prompt template variable replacement method.**  
 
-In [An actual example of an agent configuration](#An actual example of an agent configuration.) section of this document, the prompt includes variables like `{background}`,`{input}`, etc. This feature is the prompt variable template replacement function, aimed at dynamically influencing the prompt based on the user's input. One only needs to define the text using `{variable}` format in the agent configuration settings section, and define it in the parse_input's `agent_input` to dynamically replace the corresponding prompt based on the input portion.
+In the [An actual example of an agent configuration](#An actual example of an agent configuration.) section of this document, the prompt includes variables like `{background}`,`{input}`, etc. This feature is the prompt variable template replacement function, aimed at dynamically influencing the prompt based on the user's input. One only needs to define the text using  `{variable}` format in the agent configuration settings section and then define the corresponding variables in the `agent_input` method's agent_input to dynamically replace the prompt based on the input portion.
 
 For example, in the sample agent `sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent.py`, there is the following `parse_input` method.
 
@@ -272,7 +273,7 @@ def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
     return agent_input
 ```
 
-In its agent settings `sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent.yaml`, in the `instruction` section, we can see the following configuration.
+In its agent settings file `sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent.yaml`, in the `instruction` section, we can see the following configuration.
 
 ```text
 instruction: |
@@ -293,22 +294,22 @@ instruction: |
     The question to answer is: {input}
 ```
 
-Through this process, we can bring each input, memory or background knowledge, and any information you care about into the interaction between the agent and the LLM using this method.
+Through this process, we can incorporate each input, memory or background knowledge, and any other information you care about into the interaction between the agent and the LLM using this method.
 
 **Method 2: Adjust the prompt within the parse_input method or the execute method**
 
-Through the agent's `parse_input` method or `execute` method, we can customize the agent in terms of data or behavior. Additionally, by combining the get method in `self.agent_model` with the agent input parameter `input_object`, this means that you can modify any of your settings content through these customization methods.
+Through the agent's `parse_input` method or `execute` method, we can customize the agent's  data or behavior. Additionally, by combining the get method in `self.agent_model` with the agent input parameter `input_object`, this means that you can modify any of your settings content through these customization methods.
 
 ### Create an agent from an existing agent object
 
-In the actual process of creating applications, we may have many agents of the same type. For example, we might want to create several Retrieval Augmented Generation (RAG) type agents to be used in different question-answering scenarios. By analyzing their similarities and differences, it is not difficult to find that most RAG type agents share the following commonalities and differences:
+In the actual process of creating applications, we may have many agents of the same type. For instance, we might want to create several Retrieval Augmented Generation (RAG) type agents for use in various question-answering scenarios. By analyzing their similarities and differences, it is not difficult to discern that most RAG type agents share certain commonalities while also exhibiting distinct differences:
 
 * Main similarity: They often need to retrieve multiple types of knowledge simultaneously.
-* Main difference: RAG agents in different scenarios need to retrieve using different tools and may have different global agent settings.
+* Main difference: RAG agents deployed in different scenarios require the use of different retrieval tools and may have distinct global agent settings.
 
-Upon further analysis, we can achieve this goal through the same domain behavior and differentiated attribute configurations. This is why configuring settings in YAML is essential during the agent creation process, while domain behavior customization is based on actual needs.
+Upon further analysis, we realize that we can achieve this differentiation through the use of a common domain behavior definition coupled with differentiated attribute configurations. This underscores the importance of configuring settings in YAML during the agent creation process, while domain behavior customization should be based on actual needs.
 
-Fortunately, we have a significant number of effective agent types, and they are still expanding. As described in this case, combining the agent domain component setting process, we only need to set different types of agent configuration YAMLs, and complete this goal by setting `metadata`.
+Fortunately, we have a substantial number of effective agent types available, and this list is continually expanding. As illustrated in this case, by leveraging the agent domain component setting process, we simply need to create different types of agent configuration YAMLs and set the appropriate metadata to accomplish our goals.
 
 
 For example:
@@ -366,11 +367,12 @@ metadata:
 You can find more information about existing agents and understand their roles in the [Learn more about agents](#Learn more about agents) section of this document.
 
 # How to Use an Agent
-In the agentUniverse, all agent entities are managed by a global agent manager. If you need to use an agent during any framework execution process, you can do so through the agent manager. Additionally, leveraging the framework's service capabilities, you can quickly turn an agent into a service and make network calls to it using standard HTTP or RPC protocols.
+In the agentUniverse, all agent entities are managed by a global agent manager. If you need to utilize an agent during any framework execution process, you can do so through the agent manager. Additionally, by leveraging the framework's service capabilities, you can quickly turn an agent into a service and make network calls to it using standard HTTP or RPC protocols.
 
 ## Solution 1: Use the agent manager
 
-Through the `get_instance_obj('agent_name_xxx')` method in the agent manager, you can obtain the agent instance with the corresponding name. Meanwhile, the agent can be utilized through its own `run(input='xxx')` method. The `test_rag_agent(self)` method in the test class below demonstrates debugging the agent using this approach.
+Through the `get_instance_obj('agent_name_xxx')` method in the agent manager, you can obtain the agent instance with the corresponding name. 
+Furthermore, the agent can be utilized through its own `run(input='xxx')` method. The `test_rag_agent(self)` method in the test class below demonstrates how to debug the agent using this approach.
 
 ```python
 import unittest
@@ -401,7 +403,7 @@ if __name__ == '__main__':
 
 ## Solution 2: Utilize the service capabilities of agent_serve
 
-The agentUniverse offers a variety of standard web serve capabilities, along with standard HTTP and RPC protocols. You can further refer to the documentation sections on [Service Registration and Usage](../../../In-Depth_Guides/Tech_Capabilities/Service/Service_Registration_and_Usage.md) and [Web_Server](../../../In-Depth_Guides/Tech_Capabilities/Service/Web_Server.md).
+The agentUniverse offers a variety of standard web server capabilities, along with standard HTTP and RPC protocols. You can further refer to the documentation sections on [Service Registration and Usage](../../../In-Depth_Guides/Tech_Capabilities/Service/Service_Registration_and_Usage.md) , as well as  [Web_Server](../../../In-Depth_Guides/Tech_Capabilities/Service/Web_Server.md) section.
 
 # Learn more about agents
 The agents provided by the framework can be found under the `agentuniverse.agent.default` package path. You can further explore the corresponding code or learn more about them in our extension component introduction section.
