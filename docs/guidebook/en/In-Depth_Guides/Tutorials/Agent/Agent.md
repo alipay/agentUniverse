@@ -1,7 +1,6 @@
 # Agent
-An agent is capable of autonomously acting to achieve goals set by humans, with abilities in learning, reasoning, decision-making, and execution. It accomplishes objectives through steps such as task decomposition, using tools and knowledge, and progress control, and then independently concludes its work. Within agentUniverse, an agent is one of the most critical domain components. It integrates a series of other domain components, including tools, knowledge, and plans, into a cohesive whole, ultimately completing the tasks assigned to it by people.
-
-The performance of an agent directly impacts the strength of application service capabilities. In complex service scenarios, often one or multiple outstanding agents are required to complete tasks. In agentUniverse, drawing from the achievements of industry and academia as well as practical experience in industry implementation, the following definition for agents is established, as shown in the figure.
+An agent is capable of autonomously acting to achieve goals set by humans, having capabilities for learning, reasoning, decision-making, and execution. It accomplishes objectives through steps such as task decomposition, using tools and knowledge, and progress control, and then independently completes its tasks. Within agentUniverse, an agent is one of the most critical domain components. It integrates a series of other domain components, including tools, knowledge, and plans, into a cohesive and efficient system, ultimately completing the tasks assigned to it by people.
+The performance of an agent directly impacts the effectiveness of application service. In complex service scenarios, often one or multiple competent agents are required to complete tasks. In agentUniverse, utilizing the achievements of industry and academia as well as practical experience in industry implementation, the following definition for agents is established, as shown in the figure.
 ![](../../../../_picture/agent.jpg)
 
 Let's introduce the roles of the various components within the Agent component separately.
@@ -10,10 +9,10 @@ Let's introduce the roles of the various components within the Agent component s
 This section is the global settings of the Agent, including the Agent's Target, Introduction, and LLM parts.
 
 ### Introduction
-For the description of the Agent's role, for example: You are an AI assistant skilled in information analysis.
+For the description of the Agent's role, such as being an AI assistant skilled in information analysis.
 
 ### Target
-The goal that the Agent needs to achieve. The Agent will revolve around this goal to complete a series of subsequent tasks.
+The goal that the Agent needs to achieve. The Agent will focus on this goal to complete a series of subsequent tasks.
   
 ```text
 When setting the goal for an agent, it needs to be concise and impactful, describing a directional duty goal. Providing a specific and specialized domain scope is optimal.
@@ -24,7 +23,7 @@ When setting the goal for an agent, it needs to be concise and impactful, descri
 ```
   
 ### Instruction
-It includes specific settings for the Agent, such as personality traits, background knowledge, and behavioral guidelines.
+It includes specific settings for the Agent, such as personality traits, background knowledge, and behavioral patterns.
 
 ```text
 How to write a good Instruction? We can adopt the following paradigm:
@@ -52,27 +51,26 @@ You are skilled at providing various fitness plans tailored to different groups 
 ```
 
 ### LLM
-The LLM used by the Agent. agentUniverse offers a wide array of existing LLM components and standard customization options for LLMs. You can choose to utilize or define the LLMs you wish to use. We will detail how they work in the LLM section.
+The LLM utilized by the Agent. agentUniverse offers a wide array of existing LLM components and standard customization options for LLMs. You can choose to use or define the LLMs you need. We will detail how they work in the LLM section.
 
 ## Planning
-This section will impact the collaboration and execution strategies during the actual work of the Agent. It embodies the collaborative and execution ideas of patterns. Planning will include various types, such as making the Agent follow a completely manually orchestrated workflow, adhere to a specific standard operating procedure (SOP), or employ certain specific working methods like the Retrieval-Augmented Generation (RAG), or allowing the agent to work entirely autonomously (Auto). Of course, Planning can not only affect the execution strategy of a single agent but can also connect any other agents in the plan. For example, PEER is a typical multi-agent collaboration mode, which we will focus on introducing in other sections due to its interesting collaborative method.
+This section will impact the collaboration and execution strategies during the actual work of the Agent. It embodies the collaborative and execution ideas of patterns. Planning will include various types, such as making the Agent follow a completely manually orchestrated workflow, adhere to a specific standard operating procedure (SOP), or use certain specific working methods like the Retrieval-Augmented Generation (RAG), or allowing the agent to work entirely autonomously (Auto). Of course, Planning can not only affect the execution strategy of a single agent but can also involve or coordinate any other agents in the plan. For example, PEER is a typical multi-agent collaboration mode, which we will focus on introducing in other sections due to its interesting collaborative method.
 
 ### Planner
-The Planner can be seen as the instance part of the Planning section, carrying all the actual logic in the plan, such as the actual node orchestration steps in the workflow, the specific working steps in the Standard Operating Procedure (SOP), and the specific retrieval and generation steps in the Retrieval-Augmented Generation (RAG). Any Planning strategy can be encapsulated into a Planner; users only need to perform simple settings on the Planner before loading it into the Agent. Then, the Agent will start working with the specific Planning strategy.
-
-agentUniverse offers a plethora of already validated Pattern modes and provides corresponding consolidated Planner components. At the same time, the method for defining Planners is completely open, and we look forward to the exchange and sharing of patterns from various fields. We will explain specifically how they work in the Planner section.
+The Planner can be seen as the instance part of the Planning section, containing all the actual logic in the plan, such as the actual node orchestration steps in the workflow, the specific working steps in the Standard Operating Procedure (SOP), and the specific retrieval and generation proccess in the Retrieval-Augmented Generation (RAG). Any Planning strategy can be encapsulated into a Planner; users only need to configure the Planner before loading it into the Agent. Then, the Agent will start working with the specific Planning strategy.
+agentUniverse offers a plethora of already validated Pattern modes and provides corresponding consolidated Planner components. At the same time, the method for defining Planners is completely open, and we look forward to the exchange and sharing of Planner configurations from various fields. We will explain specifically how they work in the Planner section.
 
 ## Action
-This section mainly contains tools and knowledge. Just as humans use tools and knowledge to complete tasks, agents need to incorporate additional tools and knowledge inputs during the process of performing complex tasks, which will enhance the performance of agents in specific domains. 
+This section primarily consists of tools and knowledge. Just as humans use tools and knowledge to complete tasks, agents need to acquire additional knowledge and skills, as well as incorporate additional tools, during the process of performing complex tasks, which will improve their performance in specific domains. 
 
 ### Tool
-Tools available for Agents. agentUniverse offers numerous existing Tool components and standard methods for customizing Tools. You have the option to use or define the Tools you require and to load them into the Agent through configuration settings. Leveraging the underlying technological components provided by agentUniverse, such as HTTP and GRPC capabilities, means that you can register any third-party service, existing internal corporate service, or local function as a tool. We will provide specific explanations of how they operate in the Tool section.
+Tools available to Agents. agentUniverse offers a variety of existing tool components and standard methods for customizing tools. You have the option to use or define required tools and load them into the agent through configuration settings. Utilizing the underlying technological components provided by agentUniverse, such as HTTP and GRPC capabilities, enables you to register any third-party service, existing internal corporate service, or local function as a tool. Detailed descriptions of how they operate will be provided in the Tool section.
 
 ### Knowledge
-Knowledge available for Agents. agentUniverse provides a wide range of existing Knowledge components and standard methods for Knowledge customization. You can opt to use or define the Knowledge you want to use, and then load it into the Agent through configuration. In addition, agentUniverse supports the expanded integration of underlying storage technology middleware, such as SQLite, Chroma, and other storage options, meaning you can access data from any storage medium. We will explain in detail how they work in the Knowledge section.
+Knowledge accessible to Agents. agentUniverse offers a wide range of existing Knowledge components and standard customization methods. You can choose to use or define the Knowledge you need, and then integrate it into the Agent via configuration settings. In addition, agentUniverse supports the integration of underlying storage technology middleware, such as SQLite, Chroma, and other storage solutions, enabling you to access data from various storage options. We will explain in detail how they work in the Knowledge section.
 
 ## Memory
-The memory available for Agents. agentUniverse provides standard optional memory types, and in most cases, users do not need to concern themselves with the specific implementation of memory. The memory component also offers the capability for users to customize it themselves. We will explain in detail how they work in the Memory section.
+The memory resources available to agents. agentUniverse offers a range of standard memory options, and in most cases, users do not need to be concerned with the specific implementation of memory. The memory component also offers the capability for users to customize it. We will explain in detail how they work in the memory section.
 
 # Conclusion
-Up to this point, you have gained a comprehensive understanding of the components and principles of an Agent. In the next section, we will specifically introduce the standard definitions of Agent components, how to customize an Agent, and how to use an Agent, among other topics.
+Up to this point, you have acquired a comprehensive understanding of the components and underlying principles of an agent within the agentUniverse framework. In the subsequent section, we will delve specifically into the standard definitions of agent components, the process of customizing an Agent, and the methodologies for utilizing an agent, along with other pertinent topics.

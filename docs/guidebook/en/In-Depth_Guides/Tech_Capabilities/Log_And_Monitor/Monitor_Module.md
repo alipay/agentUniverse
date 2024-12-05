@@ -1,12 +1,10 @@
 # Monitor Module
 
-agentUniverse monitor module, mainly around the agent runtime LLM invocation/token expenses for data tracking and
-recording. In this document, we will provide a detailed introduction on how to use the **LLM and Agent invocation tracking
-capabilities** that are currently open in the agentUniverse.
+The agentUniverse monitor module focuses primarily on tracking and recording the LLM invocation and token expenses during the agent's runtime. In this document, we will provide a detailed introduction on how to utilize the LLM and agent invocation tracking capabilities that are currently available in agentUniverse.
 
 ## Monitor Configuration
 
-Configure the monitor module settings in the main configuration file `config.toml` of agentUniverse, as follows:
+Configure the settings for the monitor module in the main configuration file`config.toml` oof agentUniverse as follows:
 
 ```toml
 [MONITOR]
@@ -14,19 +12,14 @@ activate = true
 dir = './monitor'
 ```
 
-- **`activate`**: The master switch for the monitor module is set to off by default. When set to true, it will turn on
-  the LLM and Agent invocation tracking functions.
-- **`dir`**: The local storage directory corresponding to the monitor module is, by default, the 'monitor' directory one
-  level above the runtime directory. Users can customize the configuration of the directory path.
+- **`activate`**: The master switch for the monitor module is set tooff by default. When set to true, it will activate the LLM and agent invocation tracking functions.
+- **`dir`**: The local storage directory for the monitor module, by default, is the 'monitor' directory located one level above the runtime directory. Users can customize the path of this directory.
 
 ### LLM Tracing Configuration
 
-For the LLM invocation tracking capability, agentUniverse also supports model granularity configuration. Once the main
-switch of the monitor module is turned on, the invocation tracking function for specific models can be selectively
-disabled through the LLM's yaml file.
+For the LLM invocation tracking capability in agentUniverse, the framework supports model granularity configuration. Once the main switch of the monitor module is activated, the invocation tracking function for specific models can be selectively disabled through the corresponding YAML file for the LLM.
 
-For example, for a user-defined model such as `demo_llm`, if the tracing is set to false, then the invocation tracking
-function for this model will be turned off.
+For instance, if you have a user-defined model named demo_llm and you set the tracing option to false in its YAML configuration, the invocation tracking function for this model will be deactivated.
 
 ```yaml
 name: 'demo_llm'
@@ -41,17 +34,14 @@ metadata:
   class: 'DefaultOpenAILLM'
 ```
 
-Special note: In the main configuration file of agentUniverse, the monitor module's master switch has the **highest
-priority**. If the `activate` configuration is set to false, the model granularity configuration will not take effect.
+**Special note:** In the main configuration file (config.toml) of agentUniverse, the master switch for the monitor module has the highest priority. If the activate configuration is set to false, any model granularity configurations will not take effect.
 
 ### Agent Tracing Configuration
 
-For the agent invocation tracking capability, agentUniverse also supports agent granularity configuration. Once the main
-switch of the monitor module is turned on, the invocation tracking function for specific agent can be selectively
-disabled through the agent's yaml file.
+FFor the agent invocation tracking capability, agentUniverse also supports agent-granularity configuration. Once the main
+switch of the monitor module is activated, the invocation tracking function for specific agents can be selectively disabled through the corresponding YAML file for each agent.
 
-For example, for a user-defined agent such as `demo_agent`, if the tracing is set to false, then the invocation tracking
-function for this agent will be turned off.
+For instance, for a user-defined agent named demo_agent, if the tracing is set to false in its YAML configuration, the invocation tracking function for this agent will be deactivated.
 
 ```yaml
 info:
@@ -76,22 +66,18 @@ metadata:
   class: 'DemoRagAgent'
 ```
 
-Special note: In the main configuration file of agentUniverse, the monitor module's master switch has the **highest
-priority**. If the `activate` configuration is set to false, the agent granularity configuration will not take effect.
+**Special note:** In the main configuration file of agentUniverse, the master switch for the monitor module holds the highest priority. If the activate configuration option is set to false, any agent-granularity configurations will not take effect.
 
 
 ## Monitor Module Introduction
 
 ### LLM Invocation Tracking
 
-If the user utilizes the **default model class** supported by the agentUniverse, the feature can be used after the
-configuration as described above is completed.
+If the user utilizes the **default model class** supported by agentUniverse, the feature can be enabled after the configuration, as described above, is completed.
 
 #### trace_llm Decorator
 
-If a user customizes the extension based on the agentUniverse's model base class `LLM` to implement a custom model
-invocation, it is necessary to add the `@trace_llm` decorator to the call/acall method of the custom model class.
-
+If a user customizes an extension based on the agentUniverse's model base class LLM to implement a custom model invocation, it is necessary to add the @trace_llm decorator to the call/acall method of the custom model class.
 Custom model example code as follows:
 
 ```python
@@ -112,15 +98,11 @@ class DemoLLM(LLM):
         pass
 ```
 
-agentUniverse implements the `@trace_llm` decorator, which, when the agent calls the corresponding LLM call/acall
-methods, collects the model's prompt and response, serializes the information into JSON, and stores it in the local
-storage directory corresponding to the monitor configuration in the form of a jsonl file, divided by the hour.
+agentUniverse implements the `@trace_llm` decorator. When an agent calls the corresponding call/acall methods of the LLM, this decorator collects the model's prompt and response, serializes the information into JSON format, and stores it in the local storage directory corresponding to the monitor configuration. The data is stored in the form of jsonl files, divided by the hour.
 
 #### Demo Effect
 
-Call the `demo_rag_agent` in the sample project of agentUniverse, using the gpt-4o model, with the query to analyze the
-reasons behind Warren Buffett's reduction of his stake in BYD. The model invocation tracking function captures the
-following data:
+When calling the `demo_rag_agent` iin the sample project of agentUniverse, using the gpt-4omodel with a query to analyze the reasons behind Warren Buffett's reduction of his stake in BYD, the model invocation tracking function captures the following data:
 
 ```json
 {
@@ -151,22 +133,19 @@ following data:
 
 - **`source`**: the source of LLM invocation during agent runtime.
 - **`date`**: LLM invocation time
-- **`llm_input`**: LLM invocation messages and model parameters
-- **`llm_output`**: LLM output text
+- **`llm_input`**: The messages and model parameters used for the LLM invocation.
+- **`llm_output`**: The text output by the LLM.
+
 
 ### Agent Invocation Tracking
 
 #### trace_agent Decorator
 
-agentUniverse implements the `@trace_agent` decorator, which, when the agent calls the run
-method, collects the agent's input and output parameters, serializes the information into JSON, and stores it in the local
-storage directory corresponding to the monitor configuration in the form of a jsonl file, divided by the hour and the specific agent.
+agentUniverse implements the `@trace_agent` decorator. When an agent calls its run method, this decorator collects the agent's input and output parameters, serializes the information into JSON format, and stores it in the local storage directory that corresponds to the monitor configuration. The data is stored in the form of jsonl files, divided by both the hour and the specific agent.
 
 #### Demo Effect
 
-Call the `demo_rag_agent` in the sample project of agentUniverse, using the gpt-4o model, with the query to analyze the
-reasons behind Warren Buffett's reduction of his stake in BYD. The agent invocation tracking function captures the
-following data:
+When you call the `demo_rag_agent`  in the sample project of agentUniverse, using the gpt-4o model with a query to analyze the reasons behind Warren Buffett's reduction of his stake in BYD, the agent invocation tracking function captures the following data:
 
 ```json
 {

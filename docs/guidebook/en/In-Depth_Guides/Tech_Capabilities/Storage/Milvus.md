@@ -1,8 +1,9 @@
 ## Milvus
-If you want to use the Milvus vector database in aU, you need to:
+If you wish to utilize the Milvus vector database within agentUniverse, you need to follow these steps:
 
 1. Install the Milvus vector database
-You can refer to the [official Milvus installation documentation](https://milvus.io/docs/install_standalone-docker.md) to install and use Milvus. We recommend starting the Milvus container in Docker with the following commands:
+You can consult the [official Milvus installation documentation](https://milvus.io/docs/install_standalone-docker.md) for detailed instructions on installing and using Milvus. As a recommendation, you can start the Milvus container in Docker by executing the following commands:
+
 ``` shell
 # Download the installation script
 $ curl -sfL https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/standalone_embed.sh
@@ -10,7 +11,7 @@ $ curl -sfL https://raw.githubusercontent.com/milvus-io/milvus/master/scripts/st
 # Start the Docker container
 $ bash standalone_embed.sh start
 ```
-These two commands will pull the Milvus image and start a container, providing database services on port 19530. For more details and other installation methods, please refer to the official documentation.
+These commands will download the Milvus image and initiate a container, thereby offering database services on port 19530. For additional information and alternative installation methods, kindly refer to the official documentation.
 
 2. Install the Milvus Python SDK
 ```
@@ -41,11 +42,12 @@ metadata:
   module: 'agentuniverse.agent.action.knowledge.store.milvus_store'
   class: 'MilvusStore'
 ```
-- connection_args: Parameters for connecting to the Milvus database, including the host address (host) and port number (port).
-- search_args: Search parameters, defining the distance metric type (metric_type) used during searches and related parameters such as nprobe.
-- index_params: Indexing parameters, specifying the index type (index_type), distance metric type (metric_type), and specific parameters for building the index, such as M and efConstruction.
-- embedding_model: The model used to generate embedding vectors, specified here as dashscope_embedding.
-- similarity_top_k: The number of most similar results returned in similarity search.
+- connection_args: Parameters required for connecting to the Milvus database, encompassing the host address (host) and port number (port).
+- search_args: Search parameters, defining the type of distance metric (metric_type) utilized during searches, along with related parameters such as nprobe.
+- index_params: Indexing parameters, specifying the index type (index_type), distance metric type (metric_type), and specific parameters pertinent to index construction, such as M and efConstruction.
+- embedding_model: The model employed to generate embedding vectors, specified here as dashscope_embedding.
+- similarity_top_k: The number of the most similar results returned in a similarity search.
+
 ### Usage
 [Knowledge_Define_And_Use](../../../In-Depth_Guides/Tutorials/Knowledge/Knowledge_Define_And_Use.md)
 

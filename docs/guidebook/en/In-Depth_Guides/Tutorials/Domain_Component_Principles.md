@@ -7,11 +7,11 @@ agentUniverse includes several domain components, which combine to form the fund
 * Memory
 * Planner
 
-All domain components in agentUniverse follow a unified design philosophy, exhibiting the following characteristics:
+All domain components within agentUniverse adhere to a unified design philosophy, exhibiting the following key characteristics:
 
-* Development is configuration-oriented, enhancing the efficiency of component creation and reuse.
-* Possess independent managers, providing a unified and isolated mechanism for component registration and management.
-* Standard domain definitions support the injection of all similar type components in the industry.
-* Components are customizable, opening up capabilities for all domain components to be tailored.
+* Configuration-oriented development enhances the efficiency of component creation and reuse.
+* Each component has an independent manager, providing a unified and isolated mechanism for component registration, management, and integration.
+* Standardized domain definitions support the seamless integration of similar components from across the industry.
+* Components are highly customizable, allowing for tailored configurations to meet specific domain requirements.
 
-This chapter will specifically introduce the design principles of each domain component and how to use them. Please read the sub-documents within this chapter.
+This chapter will delve into the design principles of each domain component and provide guidance on how to effectively utilize them. Please refer to the sub-documents within this chapter for detailed information.
