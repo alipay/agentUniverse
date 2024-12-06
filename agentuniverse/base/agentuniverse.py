@@ -48,6 +48,9 @@ class AgentUniverse(object):
         self.__system_default_reader_package = ['agentuniverse.agent.action.knowledge.reader.file']
         self.__system_default_rag_router_package = ['agentuniverse.agent.action.knowledge.rag_router']
         self.__system_default_query_paraphraser_package = ['agentuniverse.agent.action.knowledge.query_paraphraser']
+        self.__system_default_memory_compressor_package = ['agentuniverse.agent.memory.memory_compressor']
+        self.__system_default_memory_storage_package = ['agentuniverse.agent.memory.memory_storage']
+        self.__system_default_work_pattern_package = ['agentuniverse.agent.work_pattern']
 
     def start(self, config_path: str = None, core_mode: bool = False):
         """Start the agentUniverse framework.
@@ -56,9 +59,8 @@ class AgentUniverse(object):
         # get default config path
         project_root_path = get_project_root_path()
         sys.path.append(str(project_root_path.parent))
-        app_path = project_root_path / 'app'
-        if app_path.exists():
-            sys.path.append(str(app_path))
+        self._add_to_sys_path(project_root_path, ['intelligence', 'app'])
+
         if not config_path:
             config_path = project_root_path / 'config' / 'config.toml'
             config_path = str(config_path)
@@ -149,6 +151,12 @@ class AgentUniverse(object):
                                         + self.__system_default_rag_router_package)
         core_query_paraphraser_package_list = ((app_configer.core_query_paraphraser_package_list or app_configer.core_default_package_list)
                                                + self.__system_default_query_paraphraser_package)
+        core_memory_compressor_package_list = ((app_configer.core_memory_compressor_package_list or app_configer.core_default_package_list)
+                                               + self.__system_default_memory_compressor_package)
+        core_memory_storage_package_list = ((app_configer.core_memory_storage_package_list or app_configer.core_default_package_list)
+                                            + self.__system_default_memory_storage_package)
+        core_work_pattern_package_list = ((app_configer.core_work_pattern_package_list or app_configer.core_default_package_list)
+                                            + self.__system_default_work_pattern_package)
 
         component_package_map = {
             ComponentEnum.AGENT: core_agent_package_list,
@@ -166,7 +174,10 @@ class AgentUniverse(object):
             ComponentEnum.READER: core_reader_package_list,
             ComponentEnum.STORE: core_store_package_list,
             ComponentEnum.RAG_ROUTER: core_rag_router_package_list,
-            ComponentEnum.QUERY_PARAPHRASER: core_query_paraphraser_package_list
+            ComponentEnum.QUERY_PARAPHRASER: core_query_paraphraser_package_list,
+            ComponentEnum.MEMORY_COMPRESSOR: core_memory_compressor_package_list,
+            ComponentEnum.MEMORY_STORAGE: core_memory_storage_package_list,
+            ComponentEnum.WORK_PATTERN: core_work_pattern_package_list
         }
 
         component_configer_list_map = {}
@@ -276,3 +287,9 @@ class AgentUniverse(object):
         module = importlib.import_module(module_path)
         cls = getattr(module, class_name)
         cls(configer)
+
+    def _add_to_sys_path(self, root_path, sub_dirs):
+        for sub_dir in sub_dirs:
+            app_path = root_path / sub_dir
+            if app_path.exists():
+                sys.path.append(str(app_path))

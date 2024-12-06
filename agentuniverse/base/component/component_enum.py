@@ -28,6 +28,9 @@ class ComponentEnum(Enum):
     STORE = "STORE"
     RAG_ROUTER = "RAG_ROUTER"
     QUERY_PARAPHRASER = "QUERY_PARAPHRASER"
+    WORK_PATTERN = "WORK_PATTERN"
+    MEMORY_COMPRESSOR = "MEMORY_COMPRESSOR"
+    MEMORY_STORAGE = "MEMORY_STORAGE"
 
     @staticmethod
     def to_value_list():

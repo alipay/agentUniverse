@@ -139,7 +139,7 @@ If your system has external access, we strongly recommend installing version v0.
 - Added LLM integration methods for Qwen, WenXin, Kimi, Baichuan, etc.
 
 ### Note
-- Added a multimodal example agent, see the invocation details in `sample_standard_app.app.test.test_multimodal_agent.MultimodalAgentTest`.
+- Added a multimodal example agent, see the invocation details in `sample_standard_app.intelligence.test.test_multimodal_agent.MultimodalAgentTest`.
 - Some code optimizations and documentation updates.
 
 ## [0.0.6] - 2024-05-15
