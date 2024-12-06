@@ -59,7 +59,7 @@ pip install agentUniverse
 [readthedocs](https://agentuniverse.readthedocs.io/en/latest/)
 
 ## お問い合わせ
-* github: https://github.com/alipay/agentUniverse
+* github: https://github.com/antgroup/agentUniverse
 * gitee: https://gitee.com/agentUniverse/agentUniverse
 * gitcode: https://gitcode.com/agentUniverse
 * Stack Overflow: https://stackoverflowteams.com/c/agentuniverse/questions
