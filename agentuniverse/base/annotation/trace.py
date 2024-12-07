@@ -12,10 +12,9 @@ import sys
 
 from functools import wraps
 
-from agentuniverse.agent.memory.conversation_memory import ConversationMemory
+from agentuniverse.agent.memory.conversation_memory.conversation_memory import ConversationMemory
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
-from agentuniverse.base.util.logging.logging_util import LOGGER
 from agentuniverse.base.util.monitor.monitor import Monitor
 from agentuniverse.llm.llm_output import LLMOutput
 

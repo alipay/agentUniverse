@@ -14,7 +14,7 @@ from langchain_core.agents import AgentAction, AgentFinish
 from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.outputs import GenerationChunk, ChatGenerationChunk, LLMResult
 
-from agentuniverse.agent.memory.conversation_memory import ConversationMemory
+from agentuniverse.agent.memory.conversation_memory.conversation_memory import ConversationMemory
 
 
 class StreamOutPutCallbackHandler(BaseCallbackHandler):

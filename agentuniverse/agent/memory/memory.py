@@ -72,12 +72,14 @@ class Memory(ComponentBase):
             if memory_storage:
                 memory_storage.delete(session_id, **kwargs)
 
-    def get(self, session_id: str = None, agent_id: str = None, **kwargs) -> List[Message]:
+    def get(self, session_id: str = None, agent_id: str = None, prune: bool = False, **kwargs) -> List[Message]:
         """Get messages from the memory."""
         memory_storage: MemoryStorage = MemoryStorageManager().get_instance_obj(self.memory_retrieval_storage)
         if memory_storage:
             memories = memory_storage.get(session_id, agent_id, **kwargs)
-            return self.prune(memories)
+            if prune:
+                memories = self.prune(memories)
+            return memories
         return []
 
     def get_with_no_prune(self, session_id: str = None, agent_id: str = None, **kwargs) -> List[Message]:
