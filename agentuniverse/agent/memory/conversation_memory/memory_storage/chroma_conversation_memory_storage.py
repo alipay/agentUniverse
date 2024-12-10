@@ -18,7 +18,7 @@ from chromadb.api.models.Collection import Collection
 
 from agentuniverse.agent.action.knowledge.embedding.embedding_manager import EmbeddingManager
 from agentuniverse.agent.memory.conversation_memory.conversation_message import ConversationMessage
-from agentuniverse.agent.memory.conversation_memory.enum import ConversationMessageEnum
+from agentuniverse.agent.memory.conversation_memory.enum import ConversationMessageEnum, ConversationMessageSourceType
 from agentuniverse.agent.memory.memory_storage.memory_storage import MemoryStorage
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 
@@ -104,23 +104,25 @@ class ChromaConversationMemoryStorage(MemoryStorage):
             self._init_collection()
         if not message_list:
             return
-        metadata = {'gmt_created': datetime.now().isoformat()}
-        if session_id:
-            metadata['session_id'] = session_id
-        if trace_id:
-            metadata['trace_id'] = trace_id
         for message in message_list:
             embedding = []
             if self.embedding_model:
                 embedding = EmbeddingManager().get_instance_obj(
                     self.embedding_model
                 ).get_embeddings([message.content])[0]
+            metadata = {'gmt_created': datetime.now().isoformat()}
+            if session_id:
+                metadata['session_id'] = session_id
+            metadata['trace_id'] = message.trace_id
             metadata['source'] = message.source
             metadata['source_type'] = message.source_type if message.source_type else ''
             metadata['target'] = message.target
             metadata['target_type'] = message.target_type if message.target_type else ''
             metadata['type'] = message.type if message.type else ''
             metadata['session_id'] = session_id if session_id else message.conversation_id
+            metadata['params'] = message.metadata.get('params')
+            metadata['prefix'] = message.metadata.get('prefix')
+            metadata['pair_id'] = message.metadata.get('pair_id')
             self._collection.add(
                 ids=[message.id if message.id else str(uuid.uuid4())],
                 documents=[message.content],
@@ -146,21 +148,47 @@ class ChromaConversationMemoryStorage(MemoryStorage):
         filters = {"$and": []}
         if session_id:
             filters["$and"].append({'session_id': session_id})
-        if agent_id:
+        if agent_id and 'types' not in kwargs:
             filters["$and"].append({
                 "$or": [
                     {"$and": [
                         {'target': agent_id},
+                        {'target_type': ConversationMessageSourceType.AGENT.value},
                         {'type': ConversationMessageEnum.INPUT.value}
                     ]},
                     {
                         "$and": [
                             {'source': agent_id},
+                            {'source_type': ConversationMessageSourceType.AGENT.value},
                             {'type': ConversationMessageEnum.OUTPUT.value}
                         ]
                     }
                 ]
             })
+        elif agent_id and 'types' in kwargs:
+            filters["$and"].append({
+                "$or": [
+                    {"$and": [
+                        {'target': agent_id},
+                        {'target_type': ConversationMessageSourceType.AGENT.value},
+                        {'source_type': {
+                            '$in': kwargs['types']
+                        }}
+                    ]},
+                    {
+                        "$and": [
+                            {'source': agent_id},
+                            {'source_type': ConversationMessageSourceType.AGENT.value},
+                            {'target_type': {
+                                '$in': kwargs['types']
+                            }}
+                        ]
+                    }
+                ]
+            })
+
+        if 'trace_id' in kwargs:
+            filters["$and"].append({'trace_id': kwargs['trace_id']})
 
         if len(filters["$and"]) < 2:
             filters = filters["$and"][0] if len(filters["$and"]) == 1 else {}

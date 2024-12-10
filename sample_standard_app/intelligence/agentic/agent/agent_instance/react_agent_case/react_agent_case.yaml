@@ -1,11 +1,10 @@
 info:
-  name: 'demo_react_agent'
+  name: 'react_agent_case'
   description: 'react agent'
 profile:
   prompt_version: qwen_react_agent.cn
   llm_model:
-    name: 'qwen_llm'
-    model_name: 'qwen-max'
+    name: 'deep_seek_llm'
     stop: 'Observation'
     temperature: 0.1
 action:
@@ -17,7 +16,7 @@ action:
   agent:
     - 'law_rag_agent'
 memory:
-  name: 'demo_memory_a'
+  conversation_memory: 'demo_memory_d'
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.template.react_agent_template'

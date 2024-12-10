@@ -6,14 +6,12 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: sql_alchemy_memory_storage.py
 import datetime
-import sqlite3
 from abc import abstractmethod
-import json
 from typing import Optional, List, Any
 
 from pydantic import BaseModel, ConfigDict
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import Integer, String, DateTime, Text, Column, Index, and_, func, or_
+from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from sqlalchemy import Integer, String, DateTime, Text, Column, Index, and_, func, or_, create_engine, Engine
 
 from agentuniverse.agent.memory.conversation_memory.conversation_message import ConversationMessage
 from agentuniverse.agent.memory.conversation_memory.enum import ConversationMessageEnum, ConversationMessageSourceType
@@ -66,8 +64,7 @@ def create_memory_model(table_name: str, DynamicBase: Any) -> Any:
         __tablename__ = table_name
         id = Column(Integer, primary_key=True, autoincrement=True)
         session_id = Column(String(100), default='')
-        # agent_id = Column(String(100), default='')
-        message = Column(Text)
+        content = Column(Text)
         trace_id = Column(String(100), default='')
         source = Column(String(50), default='')
         source_type = Column(String(50), default='')
@@ -76,6 +73,8 @@ def create_memory_model(table_name: str, DynamicBase: Any) -> Any:
         type = Column(String(50), default='')
         prefix = Column(String(200), default='')
         gmt_created = Column(DateTime, default=func.now())
+        params = Column(Text)
+        pair_id = Column(String(50), default=0)
 
         __table_args__ = (
             Index('idx_session_id_source', 'session_id', 'source', 'source_type'),
@@ -95,7 +94,20 @@ class DefaultMemoryConverter(BaseMemoryConverter):
 
     def from_sql_model(self, sql_message: Any) -> ConversationMessage:
         """Convert a SQLAlchemy model to a Message instance."""
-        return ConversationMessage.from_dict({'id': sql_message.id, **json.loads(sql_message.message)})
+        return ConversationMessage.from_dict({'id': sql_message.id,
+                                              'conversation_id': sql_message.session_id,
+                                              'source': sql_message.source,
+                                              'source_type': sql_message.source_type,
+                                              'target': sql_message.target,
+                                              'target_type': sql_message.target_type,
+                                              'content': sql_message.content,
+                                              'metadata': {
+                                                  'prefix': sql_message.prefix,
+                                                  'gmt_created': sql_message.gmt_created,
+                                                  'params': sql_message.params,
+                                                  'pair_id': sql_message.pair_id
+                                              }
+                                              })
 
     def to_sql_model(self, message: ConversationMessage, session_id: str = None) -> Any:
         """Convert a Message instance to a SQLAlchemy model."""
@@ -108,7 +120,9 @@ class DefaultMemoryConverter(BaseMemoryConverter):
             target_type=message.target_type,
             type=message.type,
             prefix=message.metadata.get('prefix'),
-            gmt_created=message.metadata.get('gmt_created', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+            gmt_created=message.metadata.get('gmt_created', datetime.datetime.now()),
+            params=message.metadata.get('params'),
+            pair_id=message.metadata.get('pair_id')
         )
 
     def get_sql_model_class(self) -> Any:
@@ -116,7 +130,7 @@ class DefaultMemoryConverter(BaseMemoryConverter):
         return self.model_class
 
 
-class SqlAlchemyMemoryStorage(MemoryStorage):
+class SqliteMemoryStorage(MemoryStorage):
     """SqlAlchemyMemoryStorage class that stores messages in a SQL database.
 
     Attributes:
@@ -129,9 +143,16 @@ class SqlAlchemyMemoryStorage(MemoryStorage):
     sqldb_table_name: Optional[str] = 'memory'
     sqldb_path: Optional[str] = None
     memory_converter: BaseMemoryConverter = None
+    engine: Optional[Engine] = None
+    session: Optional[Any] = None
+
+    model_config = {
+        "arbitrary_types_allowed": True,  # 允许任意类型
+    }
 
     def _new_client(self):
-        self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
+        self.engine = create_engine(self.sqldb_path)
+        self.session = sessionmaker(bind=self.engine)
         self._init_db()
 
     def _initialize_by_component_configer(self,
@@ -153,6 +174,7 @@ class SqlAlchemyMemoryStorage(MemoryStorage):
         # initialize the memory converter if not set
         if self.memory_converter is None:
             self.memory_converter = DefaultMemoryConverter(self.sqldb_table_name)
+        self._new_client()
         return self
 
     def _init_db(self) -> None:
@@ -160,22 +182,23 @@ class SqlAlchemyMemoryStorage(MemoryStorage):
 
     def _create_table_if_not_exists(self) -> None:
         """Create the db table if it does not exist."""
-        with self._sqldb_wrapper.sql_database._engine.connect() as conn:
+
+        with self.engine.connect() as conn:
             if not conn.dialect.has_table(conn, self.sqldb_table_name):
                 self.memory_converter.get_sql_model_class().__table__.create(conn)
 
-    def delete(self, session_id: str = None, agent_id: str = None, **kwargs) -> None:
+    def delete(self, session_id: str = None, agent_id: str = None, trace_id: str = None, **kwargs) -> None:
         """Delete the memory from the database.
 
         Args:
             session_id (str): The session id of the memory to delete.
             agent_id (str): The agent id of the memory to delete.
         """
-        if self._sqldb_wrapper is None:
+        if self.engine is None:
             self._init_db()
         if session_id is None and agent_id is None:
             return
-        with self._sqldb_wrapper.get_session()() as session:
+        with self.session() as session:
             model_class = self.memory_converter.get_sql_model_class()
             query = session.query(model_class)
             # construct query based on the provided session_id and agent_id
@@ -198,6 +221,8 @@ class SqlAlchemyMemoryStorage(MemoryStorage):
                 agent_id_col = or_(source_condition, target_condition)
 
                 query.filter(agent_id_col)
+            if trace_id is not None:
+                query.filter(getattr(model_class, 'trace_id') == trace_id)
 
             # execute delete and commit the session
             query.delete(synchronize_session=False)
@@ -212,17 +237,18 @@ class SqlAlchemyMemoryStorage(MemoryStorage):
             session_id (str): The session id of the memory to add.
             agent_id (str): The agent id of the memory to add.
         """
-        if self._sqldb_wrapper is None:
+        if self.engine is None:
             self._init_db()
         if message_list is None:
             return
-        with self._sqldb_wrapper.get_session()() as session:
+
+        with self.session() as session:
             for message in message_list:
                 session.add(
                     self.memory_converter.to_sql_model(message=message, session_id=session_id if session_id else None))
             session.commit()
 
-    def get(self, session_id: str = None, agent_id: str = None, top_k=10, **kwargs) -> List[
+    def get(self, session_id: str = None, agent_id: str = None, top_k=10, trace_id: str = None, **kwargs) -> List[
         ConversationMessage]:
         """Get messages from the memory db.
 
@@ -234,9 +260,9 @@ class SqlAlchemyMemoryStorage(MemoryStorage):
         Returns:
             List[Message]: The list of messages retrieved from the memory.
         """
-        if self._sqldb_wrapper is None:
+        if self.session is None:
             self._init_db()
-        with self._sqldb_wrapper.get_session()() as session:
+        with self.session() as session:
             # get the messages from the memory by session_id and agent_id
             model_class = self.memory_converter.get_sql_model_class()
             conditions = []
@@ -246,24 +272,41 @@ class SqlAlchemyMemoryStorage(MemoryStorage):
                 session_id_col = getattr(model_class, 'session_id')
                 conditions.append(session_id_col == session_id)
 
+            source_col = getattr(model_class, 'source')
+            type_col = getattr(model_class, 'type')
+            agent_type_col = getattr(model_class, 'source_type')
+            target_col = getattr(model_class, 'target')
+            target_agent_type_col = getattr(model_class, 'target_type')
+
             # conditionally add agent_id to the query
-            if agent_id:
-                source_col = getattr(model_class, 'source')
-                type_col = getattr(model_class, 'type')
-                agent_type_col = getattr(model_class, 'source_type')
+            if agent_id and not "types" in kwargs:
                 source_type_col = and_(source_col == agent_id,
                                        type_col == ConversationMessageEnum.OUTPUT.value,
                                        agent_type_col == ConversationMessageSourceType.AGENT.value
                                        )
-
-                target_col = getattr(model_class, 'target')
-                target_agent_type_col = getattr(model_class, 'target_type')
                 target_type_col = and_(target_col == agent_id,
                                        type_col == ConversationMessageEnum.INPUT.value,
                                        target_agent_type_col == ConversationMessageSourceType.AGENT.value)
                 agent_id_col = or_(source_type_col, target_type_col)
 
                 conditions.append(agent_id_col)
+            elif agent_id and "types" in kwargs:
+                # conditions.append(and_(source_col == agent_id,
+                #                        agent_type_col == ConversationMessageSourceType.AGENT.value,
+                #                        target_agent_type_col.in_(kwargs["types"])))
+                conditions.append(or_(
+                    and_(source_col == agent_id,
+                         agent_type_col == ConversationMessageSourceType.AGENT.value,
+                         target_agent_type_col.in_(kwargs["types"])),
+                    and_(target_col == agent_id,
+                         target_agent_type_col == ConversationMessageSourceType.AGENT.value,
+                         agent_type_col.in_(kwargs["types"])
+                         )
+                ))
+            if trace_id:
+                trace_id_col = getattr(model_class, 'trace_id')
+                conditions.append(trace_id_col == trace_id)
+
             # build the query with dynamic conditions
             query = session.query(self.memory_converter.model_class)
             if conditions:

@@ -1,6 +1,6 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
-
+import uuid
 # @Time    : 2024/12/5 17:43
 # @Author  : weizjajj 
 # @Email   : weizhongjie.wzj@antgroup.com
@@ -33,7 +33,7 @@ class ConversationMessage(BaseModel):
         content (Optional[str]): Message content.
         metadata (Optional[dict]): The metadata of the message.
     """
-    id: Optional[str] = None
+    id: Optional[str | int] = uuid.uuid4().hex
     trace_id: Optional[str] = None
     conversation_id: Optional[str] = None
     source: Optional[str] = None
@@ -70,3 +70,8 @@ class ConversationMessage(BaseModel):
             return AIMessagePromptTemplate.from_template(self.content)
         else:
             return BaseStringMessagePromptTemplate.from_template(self.content)
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        """Convert the agentUniverse(aU) message class to the dict."""
+        return cls(**data)

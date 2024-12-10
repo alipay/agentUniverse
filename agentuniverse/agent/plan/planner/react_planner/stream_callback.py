@@ -69,6 +69,7 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
             params={
                 "input": input_str
             },
+            pair_id=f"tool_{run_id.hex}"
         )
 
     def on_llm_new_token(
@@ -119,10 +120,11 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
                 "source": self.agent_info.get('name'),
                 "type": 'agent',
             },
-            target=kwargs.get('tool_name'),
+            target=kwargs.get('name'),
             params={
                 "output": output
             },
+            pair_id=f"tool_{kwargs.get('run_id').hex}"
         )
 
     def on_text(
@@ -175,7 +177,7 @@ class InvokeCallbackHandler(BaseCallbackHandler):
             "type": "agent",
         }
 
-        ConversationMemory().add_llm_input_info(start_info, self.llm_name, prompt)
+        ConversationMemory().add_llm_input_info(start_info, self.llm_name, prompt, f"llm_{run_id.hex}")
 
     def on_llm_end(
             self,
@@ -191,5 +193,6 @@ class InvokeCallbackHandler(BaseCallbackHandler):
         }
         ConversationMemory().add_llm_output_info(
             start_info, self.llm_name,
-            response.generations[0][0].text
+            response.generations[0][0].text,
+            f"llm_{run_id.hex}"
         )

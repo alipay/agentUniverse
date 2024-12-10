@@ -9,6 +9,7 @@ import asyncio
 import functools
 import inspect
 import sys
+import uuid
 
 from functools import wraps
 
@@ -211,7 +212,8 @@ def trace_agent(func):
                         conversation_memory = memory.get('conversation_memory', '')
                         FrameworkContextManager().set_context('conversation_memory', conversation_memory)
         start_info = get_caller_info()
-        ConversationMemory().add_agent_input_info(start_info, self, agent_input)
+        pair_id = f"agent_{uuid.uuid4().hex}"
+        ConversationMemory().add_agent_input_info(start_info, self, agent_input, pair_id)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
 
@@ -222,7 +224,7 @@ def trace_agent(func):
         result = await func(*args, **kwargs)
         # add agent invocation info to monitor
         Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
-        ConversationMemory().add_agent_result_info(self, result, start_info)
+        ConversationMemory().add_agent_result_info(self, result, start_info, pair_id)
         return result
 
     @functools.wraps(func)
@@ -248,9 +250,9 @@ def trace_agent(func):
                     if isinstance(memory, dict):
                         conversation_memory = memory.get('conversation_memory', '')
                         FrameworkContextManager().set_context('conversation_memory', conversation_memory)
-
+        pair_id = f"agent_{uuid.uuid4().hex}"
         start_info = get_caller_info()
-        ConversationMemory().add_agent_input_info(start_info, self, agent_input)
+        ConversationMemory().add_agent_input_info(start_info, self, agent_input, pair_id)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
 
@@ -261,7 +263,7 @@ def trace_agent(func):
         result = func(*args, **kwargs)
         # add agent invocation info to monitor
         Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
-        ConversationMemory().add_agent_result_info(self, result, start_info)
+        ConversationMemory().add_agent_result_info(self, result, start_info, pair_id)
         return result
 
     if asyncio.iscoroutinefunction(func):
@@ -291,12 +293,12 @@ def trace_tool(func):
             if name is not None:
                 source = name
         start_info = get_caller_info()
-
-        ConversationMemory().add_tool_input_info(start_info, source, tool_input)
+        pair_id = f"tool_{uuid.uuid4().hex}"
+        ConversationMemory().add_tool_input_info(start_info, source, tool_input, pair_id)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'tool'})
         result = func(*args, **kwargs)
-        ConversationMemory().add_tool_output_info(start_info, source, params=result)
+        ConversationMemory().add_tool_output_info(start_info, source, params=result, pair_id=pair_id)
         # invoke function
         return result
 
@@ -324,14 +326,14 @@ def trace_knowledge(func):
                 source = name
 
         start = get_caller_info()
-
-        ConversationMemory().add_knowledge_input_info(start, source, knowledge_input)
+        pair_id = f"knowledge_{uuid.uuid4().hex}"
+        ConversationMemory().add_knowledge_input_info(start, source, knowledge_input, pair_id)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'knowledge'})
 
         # invoke function
         result = func(*args, **kwargs)
-        ConversationMemory().add_knowledge_output_info(start, source, params=result)
+        ConversationMemory().add_knowledge_output_info(start, source, params=result, pair_id=pair_id)
         return result
 
     # sync function

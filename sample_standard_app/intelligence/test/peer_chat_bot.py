@@ -18,9 +18,9 @@ def chat(question: str):
 
     The peer agents in agentUniverse become a chatbot and can ask questions to get the answer.
     """
-    FrameworkContextManager().set_context("session_id","test_weizj_002")
-    FrameworkContextManager().get_context("trace_id","111111222222223325")
-    instance: Agent = AgentManager().get_instance_obj('demo_peer_agent')
+    FrameworkContextManager().set_context("session_id","test_weizj_005")
+    FrameworkContextManager().get_context("trace_id","005")
+    instance: Agent = AgentManager().get_instance_obj('peer_agent_case')
     instance.run(input=question)
 
 

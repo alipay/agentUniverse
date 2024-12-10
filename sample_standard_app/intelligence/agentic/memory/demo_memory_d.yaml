@@ -5,7 +5,7 @@ memory_key: 'chat_history'
 max_tokens: 3000
 memory_compressor: default_memory_compressor
 memory_storages:
-  - chroma_conversation_memory_storage
+  - sqlite_conversation_memory_storage
 metadata:
   type: 'MEMORY'
   module: 'agentuniverse.agent.memory.memory'
