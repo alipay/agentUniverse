@@ -18,6 +18,7 @@ from agentuniverse.agent.input_object import InputObject
 from agentuniverse.agent.output_object import OutputObject
 from agentuniverse.agent.plan.planner.planner import Planner
 from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
+from agentuniverse.agent.security.security_manager import SecurityManager
 from agentuniverse.base.annotation.trace import trace_agent
 from agentuniverse.base.component.component_base import ComponentBase
 from agentuniverse.base.component.component_enum import ComponentEnum
@@ -79,8 +80,11 @@ class Agent(ComponentBase, ABC):
         """
         self.input_check(kwargs)
         input_object = InputObject(kwargs)
+        security_base = SecurityManager().get_instance_obj(self.agent_model.security)
+        security_base.pre_invoke(input_object)
 
         agent_input = self.pre_parse_input(input_object)
+        input_object.add_data('security', security_base)
 
         planner_result = self.execute(input_object, agent_input)
 
@@ -88,6 +92,7 @@ class Agent(ComponentBase, ABC):
 
         self.output_check(agent_result)
         output_object = OutputObject(agent_result)
+        security_base.final_invoke(output_object)
         return output_object
 
     @trace_agent
@@ -175,8 +180,9 @@ class Agent(ComponentBase, ABC):
         plan: Optional[dict] = agent_config.plan
         memory: Optional[dict] = agent_config.memory
         action: Optional[dict] = agent_config.action
+        security: Optional[str] = agent_config.security
         agent_model: Optional[AgentModel] = AgentModel(info=info, profile=profile,
-                                                       plan=plan, memory=memory, action=action)
+                                                       plan=plan, memory=memory, action=action, security=security)
         self.agent_model = agent_model
         return self
 
