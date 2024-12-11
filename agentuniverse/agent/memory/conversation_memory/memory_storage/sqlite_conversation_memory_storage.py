@@ -16,6 +16,7 @@ from sqlalchemy import Integer, String, DateTime, Text, Column, Index, and_, fun
 from agentuniverse.agent.memory.conversation_memory.conversation_message import ConversationMessage
 from agentuniverse.agent.memory.conversation_memory.enum import ConversationMessageEnum, ConversationMessageSourceType
 from agentuniverse.agent.memory.memory_storage.memory_storage import MemoryStorage
+from agentuniverse.agent.memory.message import Message
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
 from agentuniverse.database.sqldb_wrapper import SQLDBWrapper
 
@@ -92,7 +93,7 @@ class DefaultMemoryConverter(BaseMemoryConverter):
         super().__init__(**kwargs)
         self.model_class = create_memory_model(table_name, declarative_base())
 
-    def from_sql_model(self, sql_message: Any) -> ConversationMessage:
+    def from_sql_model(self, sql_message: Any) -> Message:
         """Convert a SQLAlchemy model to a Message instance."""
         return ConversationMessage.from_dict({'id': sql_message.id,
                                               'conversation_id': sql_message.session_id,

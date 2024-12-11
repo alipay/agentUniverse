@@ -4,10 +4,11 @@ info:
 profile:
   prompt_version: demo_executing_agent.cn
   llm_model:
-    name: 'qwen_llm'
+    name: 'deep_seek_llm'
     temperature: 0.4
 memory:
   name: ''
+  conversation_memory: 'demo_conversation_memory'
 action:
   knowledge:
     - ''

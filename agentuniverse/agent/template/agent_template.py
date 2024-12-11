@@ -24,9 +24,10 @@ from agentuniverse.agent.memory.memory_manager import MemoryManager
 from agentuniverse.agent.memory.message import Message
 from agentuniverse.agent.plan.planner.react_planner.stream_callback import InvokeCallbackHandler
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
+from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 from agentuniverse.base.util.agent_util import assemble_memory_input, assemble_memory_output
 from agentuniverse.base.util.common_util import stream_output
-from agentuniverse.base.util.memory_util import generate_messages
+from agentuniverse.base.util.memory_util import generate_messages, get_memory_string
 from agentuniverse.base.util.prompt_util import process_llm_token
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
@@ -42,6 +43,7 @@ class AgentTemplate(Agent, ABC):
     tool_names: Optional[list[str]] = None
     knowledge_names: Optional[list[str]] = None
     prompt_version: Optional[str] = None
+    conversation_memory_name: Optional[str] = None
 
     def execute(self, input_object: InputObject, agent_input: dict, **kwargs) -> dict:
         memory: Memory = self.process_memory(agent_input, **kwargs)
@@ -57,14 +59,18 @@ class AgentTemplate(Agent, ABC):
 
     def customized_execute(self, input_object: InputObject, agent_input: dict, memory: Memory, llm: LLM, prompt: Prompt,
                            **kwargs) -> dict:
-        assemble_memory_input(memory, agent_input)
+        if self.memory_name:
+            assemble_memory_input(memory, agent_input)
+        elif self.conversation_memory_name:
+            self.assemble_conversation_memory_input(memory, agent_input)
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)
         chain = prompt.as_langchain() | llm.as_langchain_runnable(
             self.agent_model.llm_params()) | StrOutputParser()
         res = self.invoke_chain(chain, agent_input, input_object, **kwargs)
-        assemble_memory_output(memory=memory,
-                               agent_input=agent_input,
-                               content=f"Human: {agent_input.get('input')}, AI: {res}")
+        if self.memory_name:
+            assemble_memory_output(memory=memory,
+                                   agent_input=agent_input,
+                                   content=f"Human: {agent_input.get('input')}, AI: {res}")
         self.add_output_stream(input_object.get_data('output_stream'), res)
         return {**agent_input, 'output': res}
 
@@ -86,8 +92,12 @@ class AgentTemplate(Agent, ABC):
 
     def process_memory(self, agent_input: dict, **kwargs) -> Memory | None:
         memory: Memory = MemoryManager().get_instance_obj(component_instance_name=self.memory_name)
-        if memory is None:
+        conversation_memory: Memory = MemoryManager().get_instance_obj(
+            component_instance_name=self.conversation_memory_name)
+        if memory is None and conversation_memory is None:
             return None
+        if memory is None:
+            memory = conversation_memory
 
         chat_history: list = agent_input.get('chat_history')
         # generate a list of temporary messages from the given chat history and add them to the memory instance.
@@ -188,9 +198,7 @@ class AgentTemplate(Agent, ABC):
     def invoke_knowledge(self, query_str: str, input_object: InputObject, **kwargs):
         if not self.knowledge_names or not query_str:
             return ''
-
         knowledge_results: list = list()
-
         for knowledge_name in self.knowledge_names:
             knowledge: Knowledge = KnowledgeManager().get_instance_obj(knowledge_name)
             if knowledge is None:
@@ -214,4 +222,46 @@ class AgentTemplate(Agent, ABC):
         self.memory_name = self.agent_model.memory.get('name')
         self.tool_names = self.agent_model.action.get('tool', [])
         self.knowledge_names = self.agent_model.action.get('knowledge', [])
+        self.conversation_memory_name = self.agent_model.memory.get('conversation_memory', '')
         return self
+
+    def assemble_conversation_memory_input(self, memory: Memory, agent_input: dict) -> list[Message]:
+        """Assemble memory information for the agent input parameters.
+
+        Args:
+            memory (Memory): The memory instance.
+            agent_input (dict): Agent input parameters for the agent.
+
+        Returns:
+            list[Message]: The retrieved memory messages.
+        """
+        session_id = FrameworkContextManager().get_context('session_id')
+        memory_messages = []
+        if memory:
+            # get the memory messages from the memory instance.
+            if not agent_input['session_id']:
+                agent_input['session_id'] = session_id
+            memory_messages = memory.get(**agent_input)
+            # convert the memory messages to a string and add it to the agent input object.
+            memory_str = self.get_conversation_memory_string(memory_messages)
+            agent_input[memory.memory_key] = memory_str
+        return memory_messages
+
+    def get_conversation_memory_string(self,messages: List[Message]) -> str:
+        """Convert the given messages to a string.
+
+        Args:
+            messages(List[Message]): The list of messages.
+
+        Returns:
+            str: The string representation of the messages.
+        """
+        messages_contents = []
+        for m in messages:
+            prefix:str = m.metadata.get('prefix')
+            prefix = prefix.replace(self.agent_model.info.get('name'),'你')
+            messages_contents.append(f"{prefix}:{m.content}")
+
+        return "\n\n".join(messages_contents)
+
+

@@ -7,10 +7,10 @@ profile:
     name: 'deep_seek_llm'
 action:
   tool:
-    - 'google_search_tool'
+#    - 'google_search_tool'
   knowledge:
 memory:
-  conversation_memory: 'demo_memory_d'
+  conversation_memory: 'global_conversation_memory'
   query_field: 'input'
   output_field: 'output'
 

@@ -1,23 +1,23 @@
 # !/usr/bin/env python3
 # -*- coding:utf-8 -*-
-import uuid
+
 # @Time    : 2024/12/5 17:43
 # @Author  : weizjajj 
 # @Email   : weizhongjie.wzj@antgroup.com
 # @FileName: conversation_message.py
 
+import uuid
 from typing import Optional, List
 
 from agentuniverse.agent.memory.enum import ChatMessageEnum
 from langchain_core.prompts import HumanMessagePromptTemplate, AIMessagePromptTemplate
 from langchain_core.prompts.chat import BaseStringMessagePromptTemplate
 
-from pydantic import BaseModel
-
 from agentuniverse.agent.memory.conversation_memory.enum import ConversationMessageSourceType, ConversationMessageEnum
+from agentuniverse.agent.memory.message import Message
 
 
-class ConversationMessage(BaseModel):
+class ConversationMessage(Message):
     """
     The basic class for conversation memory message
 

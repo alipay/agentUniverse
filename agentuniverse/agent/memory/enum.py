@@ -20,3 +20,5 @@ class ChatMessageEnum(Enum):
     SYSTEM = 'system'
     HUMAN = 'human'
     AI = 'ai'
+    INPUT = 'input'
+    OUTPUT = 'output'

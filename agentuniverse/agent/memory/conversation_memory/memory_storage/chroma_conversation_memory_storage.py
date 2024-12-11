@@ -130,7 +130,7 @@ class ChromaConversationMemoryStorage(MemoryStorage):
                 embeddings=[embedding] if len(embedding) > 0 else None,
             )
 
-    def get(self, session_id: str = None, agent_id: str = None, top_k=10, input: str = '', **kwargs) -> \
+    def get(self, session_id: str = None, agent_id: str = None, top_k=50, input: str = '', **kwargs) -> \
             List[ConversationMessage]:
         """Get messages from the memory db.
 
@@ -192,6 +192,7 @@ class ChromaConversationMemoryStorage(MemoryStorage):
 
         if len(filters["$and"]) < 2:
             filters = filters["$and"][0] if len(filters["$and"]) == 1 else {}
+        input = None
         if input:
             embedding = []
             if self.embedding_model:

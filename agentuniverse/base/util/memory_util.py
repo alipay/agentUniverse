@@ -61,6 +61,8 @@ def get_memory_string(messages: List[Message]) -> str:
             role = 'Human'
         elif m.type == ChatMessageEnum.AI.value:
             role = "AI"
+        elif m.type == ChatMessageEnum.INPUT.value or m.type == ChatMessageEnum.OUTPUT.value:
+            role = m.metadata.get('prefix')
         else:
             role = ""
         m_str = ""

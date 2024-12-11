@@ -196,7 +196,6 @@ def trace_agent(func):
         source = func.__qualname__
         self = agent_input.pop('self', None)
         tracing = None
-        conversation_memory = FrameworkContextManager().get_context('conversation_memory')
         if isinstance(self, object):
             agent_model = getattr(self, 'agent_model', None)
             if isinstance(agent_model, object):
@@ -206,17 +205,11 @@ def trace_agent(func):
                     source = info.get('name', None)
                 if isinstance(profile, dict):
                     tracing = profile.get('tracing', None)
-                if conversation_memory is None:
-                    memory = getattr(agent_model, 'memory', None)
-                    if isinstance(memory, dict):
-                        conversation_memory = memory.get('conversation_memory', '')
-                        FrameworkContextManager().set_context('conversation_memory', conversation_memory)
         start_info = get_caller_info()
         pair_id = f"agent_{uuid.uuid4().hex}"
         ConversationMemory().add_agent_input_info(start_info, self, agent_input, pair_id)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
-
         if tracing is False:
             return await func(*args, **kwargs)
 
@@ -234,7 +227,6 @@ def trace_agent(func):
         # check whether the tracing switch is enabled
         source = func.__qualname__
         self = agent_input.pop('self', None)
-        conversation_memory = FrameworkContextManager().get_context('conversation_memory')
         tracing = None
         if isinstance(self, object):
             agent_model = getattr(self, 'agent_model', None)
@@ -245,11 +237,6 @@ def trace_agent(func):
                     source = info.get('name', None)
                 if isinstance(profile, dict):
                     tracing = profile.get('tracing', None)
-                if conversation_memory is None:
-                    memory = getattr(agent_model, 'memory', None)
-                    if isinstance(memory, dict):
-                        conversation_memory = memory.get('conversation_memory', '')
-                        FrameworkContextManager().set_context('conversation_memory', conversation_memory)
         pair_id = f"agent_{uuid.uuid4().hex}"
         start_info = get_caller_info()
         ConversationMemory().add_agent_input_info(start_info, self, agent_input, pair_id)

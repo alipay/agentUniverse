@@ -48,7 +48,7 @@ class RagAgentTest(unittest.TestCase):
         FrameworkContextManager().set_context("session_id","test_weizj_007")
         FrameworkContextManager().set_context("trace_id","007")
         instance: Agent = AgentManager().get_instance_obj('rag_agent_case')
-        output_object: OutputObject = instance.run(input='分析下巴菲特减持比亚迪的原因')
+        output_object: OutputObject = instance.run(input='小明的职业是什么')
         res_info = f"\nRag agent execution result is :\n"
         res_info += output_object.get_data('output')
         print(res_info)
