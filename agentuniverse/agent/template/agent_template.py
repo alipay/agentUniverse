@@ -59,10 +59,7 @@ class AgentTemplate(Agent, ABC):
 
     def customized_execute(self, input_object: InputObject, agent_input: dict, memory: Memory, llm: LLM, prompt: Prompt,
                            **kwargs) -> dict:
-        if self.memory_name:
-            assemble_memory_input(memory, agent_input)
-        elif self.conversation_memory_name:
-            self.assemble_conversation_memory_input(memory, agent_input)
+        assemble_memory_input(memory, agent_input, collection_types=self.memory_collection_types())
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)
         chain = prompt.as_langchain() | llm.as_langchain_runnable(
             self.agent_model.llm_params()) | StrOutputParser()
@@ -76,14 +73,15 @@ class AgentTemplate(Agent, ABC):
 
     async def customized_async_execute(self, input_object: InputObject, agent_input: dict, memory: Memory,
                                        llm: LLM, prompt: Prompt, **kwargs) -> dict:
-        assemble_memory_input(memory, agent_input)
+        assemble_memory_input(memory, agent_input, collection_types=self.memory_collection_types())
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)
         chain = prompt.as_langchain() | llm.as_langchain_runnable(
             self.agent_model.llm_params()) | StrOutputParser()
         res = await self.async_invoke_chain(chain, agent_input, input_object, **kwargs)
-        assemble_memory_output(memory=memory,
-                               agent_input=agent_input,
-                               content=f"Human: {agent_input.get('input')}, AI: {res}")
+        if self.memory_name:
+            assemble_memory_output(memory=memory,
+                                   agent_input=agent_input,
+                                   content=f"Human: {agent_input.get('input')}, AI: {res}")
         self.add_output_stream(input_object.get_data('output_stream'), res)
         return {**agent_input, 'output': res}
 
@@ -216,6 +214,9 @@ class AgentTemplate(Agent, ABC):
     def add_output_stream(self, output_stream: Queue, agent_output: str) -> None:
         pass
 
+    def memory_collection_types(self) -> list[str]:
+        return self.agent_model.memory.get('collection_types', [])
+
     def initialize_by_component_configer(self, component_configer: AgentConfiger) -> 'AgentTemplate':
         super().initialize_by_component_configer(component_configer)
         self.llm_name = self.agent_model.profile.get('llm_model', {}).get('name')
@@ -224,44 +225,3 @@ class AgentTemplate(Agent, ABC):
         self.knowledge_names = self.agent_model.action.get('knowledge', [])
         self.conversation_memory_name = self.agent_model.memory.get('conversation_memory', '')
         return self
-
-    def assemble_conversation_memory_input(self, memory: Memory, agent_input: dict) -> list[Message]:
-        """Assemble memory information for the agent input parameters.
-
-        Args:
-            memory (Memory): The memory instance.
-            agent_input (dict): Agent input parameters for the agent.
-
-        Returns:
-            list[Message]: The retrieved memory messages.
-        """
-        session_id = FrameworkContextManager().get_context('session_id')
-        memory_messages = []
-        if memory:
-            # get the memory messages from the memory instance.
-            if not agent_input['session_id']:
-                agent_input['session_id'] = session_id
-            memory_messages = memory.get(**agent_input)
-            # convert the memory messages to a string and add it to the agent input object.
-            memory_str = self.get_conversation_memory_string(memory_messages)
-            agent_input[memory.memory_key] = memory_str
-        return memory_messages
-
-    def get_conversation_memory_string(self,messages: List[Message]) -> str:
-        """Convert the given messages to a string.
-
-        Args:
-            messages(List[Message]): The list of messages.
-
-        Returns:
-            str: The string representation of the messages.
-        """
-        messages_contents = []
-        for m in messages:
-            prefix:str = m.metadata.get('prefix')
-            prefix = prefix.replace(self.agent_model.info.get('name'),'你')
-            messages_contents.append(f"{prefix}:{m.content}")
-
-        return "\n\n".join(messages_contents)
-
-

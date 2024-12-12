@@ -11,6 +11,7 @@ from langchain_core.chat_history import BaseChatMessageHistory
 
 from agentuniverse.agent.memory.enum import ChatMessageEnum
 from agentuniverse.agent.memory.message import Message
+from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 from agentuniverse.llm.llm import LLM
 from agentuniverse.llm.llm_manager import LLMManager
 
@@ -52,7 +53,7 @@ def get_memory_string(messages: List[Message]) -> str:
     Returns:
         str: The string representation of the messages.
     """
-
+    current_trace_id = FrameworkContextManager().get_context("trace_id")
     string_messages = []
     for m in messages:
         if m.type == ChatMessageEnum.SYSTEM.value:
@@ -62,7 +63,12 @@ def get_memory_string(messages: List[Message]) -> str:
         elif m.type == ChatMessageEnum.AI.value:
             role = "AI"
         elif m.type == ChatMessageEnum.INPUT.value or m.type == ChatMessageEnum.OUTPUT.value:
+            if current_trace_id == m.trace_id:
+                continue
             role = m.metadata.get('prefix')
+            m_str = f"{m.metadata.get('gmt_created')} {role}:{m.content}"
+            string_messages.append(m_str)
+            continue
         else:
             role = ""
         m_str = ""

@@ -15,7 +15,7 @@ profile:
     selector:
 memory:
 #  name: 'demo_memory_a'
-  conversation_memory: 'demo_memory_c'
+  conversation_memory: 'demo_conversation_memory'
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.template.peer_agent_template'

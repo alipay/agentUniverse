@@ -13,7 +13,7 @@ import uuid
 
 from functools import wraps
 
-from agentuniverse.agent.memory.conversation_memory.conversation_memory import ConversationMemory
+from agentuniverse.agent.memory.conversation_memory.conversation_memory_module import ConversationMemoryModule
 from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 from agentuniverse.base.util.monitor.monitor import Monitor
@@ -207,17 +207,17 @@ def trace_agent(func):
                     tracing = profile.get('tracing', None)
         start_info = get_caller_info()
         pair_id = f"agent_{uuid.uuid4().hex}"
-        ConversationMemory().add_agent_input_info(start_info, self, agent_input, pair_id)
+        ConversationMemoryModule().add_agent_input_info(start_info, self, agent_input, pair_id)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
         if tracing is False:
             return await func(*args, **kwargs)
-
+        kwargs['memory_source_info'] = start_info
         # invoke function
         result = await func(*args, **kwargs)
         # add agent invocation info to monitor
         Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
-        ConversationMemory().add_agent_result_info(self, result, start_info, pair_id)
+        ConversationMemoryModule().add_agent_result_info(self, result, start_info, pair_id)
         return result
 
     @functools.wraps(func)
@@ -239,18 +239,17 @@ def trace_agent(func):
                     tracing = profile.get('tracing', None)
         pair_id = f"agent_{uuid.uuid4().hex}"
         start_info = get_caller_info()
-        ConversationMemory().add_agent_input_info(start_info, self, agent_input, pair_id)
+        kwargs['memory_source_info'] = start_info
+        ConversationMemoryModule().add_agent_input_info(start_info, self, agent_input, pair_id)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
-
-        if tracing is False:
-            return func(*args, **kwargs)
 
         # invoke function
         result = func(*args, **kwargs)
         # add agent invocation info to monitor
-        Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
-        ConversationMemory().add_agent_result_info(self, result, start_info, pair_id)
+        if tracing:
+            Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
+        ConversationMemoryModule().add_agent_result_info(self, result, start_info, pair_id)
         return result
 
     if asyncio.iscoroutinefunction(func):
@@ -281,11 +280,11 @@ def trace_tool(func):
                 source = name
         start_info = get_caller_info()
         pair_id = f"tool_{uuid.uuid4().hex}"
-        ConversationMemory().add_tool_input_info(start_info, source, tool_input, pair_id)
+        ConversationMemoryModule().add_tool_input_info(start_info, source, tool_input, pair_id)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'tool'})
         result = func(*args, **kwargs)
-        ConversationMemory().add_tool_output_info(start_info, source, params=result, pair_id=pair_id)
+        ConversationMemoryModule().add_tool_output_info(start_info, source, params=result, pair_id=pair_id)
         # invoke function
         return result
 
@@ -314,13 +313,13 @@ def trace_knowledge(func):
 
         start = get_caller_info()
         pair_id = f"knowledge_{uuid.uuid4().hex}"
-        ConversationMemory().add_knowledge_input_info(start, source, knowledge_input, pair_id)
+        ConversationMemoryModule().add_knowledge_input_info(start, source, knowledge_input, pair_id)
         # add invocation chain to the monitor module.
         Monitor.add_invocation_chain({'source': source, 'type': 'knowledge'})
 
         # invoke function
         result = func(*args, **kwargs)
-        ConversationMemory().add_knowledge_output_info(start, source, params=result, pair_id=pair_id)
+        ConversationMemoryModule().add_knowledge_output_info(start, source, params=result, pair_id=pair_id)
         return result
 
     # sync function

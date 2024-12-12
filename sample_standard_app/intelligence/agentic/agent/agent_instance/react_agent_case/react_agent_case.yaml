@@ -16,7 +16,7 @@ action:
   agent:
     - 'law_rag_agent'
 memory:
-  conversation_memory: 'demo_memory_d'
+  conversation_memory: 'demo_conversation_memory'
 metadata:
   type: 'AGENT'
   module: 'agentuniverse.agent.template.react_agent_template'

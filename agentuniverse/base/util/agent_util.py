@@ -7,10 +7,11 @@
 # @FileName: agent_util.py
 from agentuniverse.agent.memory.memory import Memory
 from agentuniverse.agent.memory.message import Message
+from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 from agentuniverse.base.util.memory_util import get_memory_string
 
 
-def assemble_memory_input(memory: Memory, agent_input: dict) -> list[Message]:
+def assemble_memory_input(memory: Memory, agent_input: dict, collection_types=None) -> list[Message]:
     """Assemble memory information for the agent input parameters.
 
     Args:
@@ -20,10 +21,12 @@ def assemble_memory_input(memory: Memory, agent_input: dict) -> list[Message]:
     Returns:
         list[Message]: The retrieved memory messages.
     """
+    if 'session_id' not in agent_input or not agent_input['session_id']:
+        agent_input['session_id'] = FrameworkContextManager().get_context('session_id')
     memory_messages = []
     if memory:
         # get the memory messages from the memory instance.
-        memory_messages = memory.get(**agent_input)
+        memory_messages = memory.get(types=collection_types,**agent_input)
         # convert the memory messages to a string and add it to the agent input object.
         memory_str = get_memory_string(memory_messages)
         agent_input[memory.memory_key] = memory_str

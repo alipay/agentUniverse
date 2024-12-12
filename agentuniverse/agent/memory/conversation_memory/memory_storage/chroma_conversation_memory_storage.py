@@ -165,7 +165,7 @@ class ChromaConversationMemoryStorage(MemoryStorage):
                     }
                 ]
             })
-        elif agent_id and 'types' in kwargs:
+        elif agent_id and 'types' in kwargs and kwargs['types']:
             filters["$and"].append({
                 "$or": [
                     {"$and": [

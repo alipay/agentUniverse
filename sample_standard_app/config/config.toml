@@ -68,10 +68,10 @@ dir = './monitor'
 # Whether to activate conversation memory.
 activate = true
 # The name of the memory.
-memory_name = 'global_conversation_memory'
+instance_name = 'demo_conversation_memory'
 # Whether to enable logging.
 logging = true
-# The language of the memory zh/en.
-language = 'zh'
+# The language of the memory cn/en.
+conversation_format = 'cn'
 # The types you want to collection
-collections = ['llm','tool','agent','knowledge']
+collection_types = ['llm','tool','agent','knowledge']

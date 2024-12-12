@@ -14,7 +14,7 @@ from langchain_core.agents import AgentAction, AgentFinish
 from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.outputs import GenerationChunk, ChatGenerationChunk, LLMResult
 
-from agentuniverse.agent.memory.conversation_memory.conversation_memory import ConversationMemory
+from agentuniverse.agent.memory.conversation_memory.conversation_memory_module import ConversationMemoryModule
 
 
 class StreamOutPutCallbackHandler(BaseCallbackHandler):
@@ -60,7 +60,7 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
             inputs: Optional[Dict[str, Any]] = None,
             **kwargs: Any,
     ) -> Any:
-        ConversationMemory().add_tool_input_info(
+        ConversationMemoryModule().add_tool_input_info(
             start_info={
                 "source": self.agent_info.get('name'),
                 "type": 'agent',
@@ -115,7 +115,7 @@ class StreamOutPutCallbackHandler(BaseCallbackHandler):
                     "agent_info": self.agent_info
                 }
             })
-        ConversationMemory().add_tool_output_info(
+        ConversationMemoryModule().add_tool_output_info(
             start_info={
                 "source": self.agent_info.get('name'),
                 "type": 'agent',
@@ -177,7 +177,7 @@ class InvokeCallbackHandler(BaseCallbackHandler):
             "type": "agent",
         }
 
-        ConversationMemory().add_llm_input_info(start_info, self.llm_name, prompt, f"llm_{run_id.hex}")
+        ConversationMemoryModule().add_llm_input_info(start_info, self.llm_name, prompt, f"llm_{run_id.hex}")
 
     def on_llm_end(
             self,
@@ -191,7 +191,7 @@ class InvokeCallbackHandler(BaseCallbackHandler):
             "source": self.source,
             "type": "agent",
         }
-        ConversationMemory().add_llm_output_info(
+        ConversationMemoryModule().add_llm_output_info(
             start_info, self.llm_name,
             response.generations[0][0].text,
             f"llm_{run_id.hex}"

@@ -12,7 +12,7 @@ import queue
 import traceback
 import uuid
 from threading import Thread
-from typing import List
+from typing import List, Optional
 
 from agentuniverse.agent.agent_manager import AgentManager
 
@@ -85,10 +85,9 @@ def generate_relation_str_en(source: str, target: str, source_type: str, target_
 
 def sync_to_sub_agent_memory(message: ConversationMessage, session_id: str, memory_name: str):
     def add_message(agent_name: str, memory_names: list):
-        message.id = uuid.uuid4().hex
         agent_instance = AgentManager().get_instance_obj(agent_name)
         agent_memory = agent_instance.agent_model.memory.get('conversation_memory')
-        if agent_memory and agent_memory not in memory_names:
+        if agent_memory :
             memory_instance = MemoryManager().get_instance_obj(agent_memory)
             memory_instance.add([message], session_id=session_id)
             memory_names.append(agent_memory)
@@ -102,15 +101,15 @@ def sync_to_sub_agent_memory(message: ConversationMessage, session_id: str, memo
 
 
 @singleton
-class ConversationMemory:
+class ConversationMemoryModule:
 
     def __init__(self):
         conversation_memory_configer = ApplicationConfigManager().app_configer.conversation_memory_configer
-        self.memory_name = conversation_memory_configer.get('memory_name', '')
+        self.instance_name = conversation_memory_configer.get('instance_name', '')
         self.activate = conversation_memory_configer.get('activate', False)
         self.logging = conversation_memory_configer.get('logging', False)
-        self.collections = conversation_memory_configer.get('collections', ['agent', 'user'])
-        self.language = conversation_memory_configer.get('language', 'zh')
+        self.collection_types = conversation_memory_configer.get('collection_types', ['agent', 'user'])
+        self.conversation_format = conversation_memory_configer.get('conversation_format', 'cn')
         self.queue = queue.Queue(1000)
         Thread(target=self._consume_queue, daemon=True).start()
 
@@ -160,7 +159,7 @@ class ConversationMemory:
             params_json = json.dumps({
                 "error": str(e)
             }, ensure_ascii=False)
-        if self.language == 'zh':
+        if self.conversation_format == 'cn':
             prefix = generate_relation_str(source, target, source_type, target_type, type)
         else:
             prefix = generate_relation_str_en(source, target, source_type, target_type, type)
@@ -168,7 +167,7 @@ class ConversationMemory:
             return
         if self.logging:
             LOGGER.info(
-                f"{self.memory_name} | {kwargs.get('session_id')} | {kwargs.get('trace_id')}| {kwargs.get('pair_id')} |\n {prefix}:{content}")
+                f"{self.instance_name} | {kwargs.get('session_id')} | {kwargs.get('trace_id')}| {kwargs.get('pair_id')} |\n {prefix}:{content}")
         message = ConversationMessage(
             id=uuid.uuid4().hex,
             conversation_id=kwargs.get('session_id'),
@@ -186,11 +185,11 @@ class ConversationMemory:
             },
             content=f"{content}"
         )
-        if self.memory_name:
-            memory = MemoryManager().get_instance_obj(self.memory_name)
+        if self.instance_name:
+            memory = MemoryManager().get_instance_obj(self.instance_name)
             if memory:
                 memory.add([message], session_id=kwargs.get('session_id'))
-        sync_to_sub_agent_memory(message, kwargs.get('agent_id'), self.memory_name)
+        sync_to_sub_agent_memory(message, kwargs.get('session_id'), self.instance_name)
 
     def _add_trace(self, start_info, target_info: dict, type: str, params: dict, session_id: str, trace_id: str,
                    pair_id: str):
@@ -231,7 +230,7 @@ class ConversationMemory:
         """Add trace info to the memory."""
         if not self.activate:
             return
-        if 'tool' not in self.collections:
+        if 'tool' not in self.collection_types:
             return
         target_info = {'source': target, 'type': 'tool'}
         self.add_trace_info(start_info, target_info, 'input', params, pair_id)
@@ -240,26 +239,31 @@ class ConversationMemory:
         """Add trace info to the memory."""
         if not self.activate:
             return
-        if 'tool' not in self.collections:
+        if 'tool' not in self.collection_types:
             return
         target_info = {'source': target, 'type': 'tool'}
         self.add_trace_info(target_info, start_info, 'output', params, pair_id)
 
-    def add_agent_input_info(self, start_info: dict, instance: 'Agent', params: dict, pair_id: str):
+    def add_agent_input_info(self, start_info: dict, instance: 'Agent', params: dict, pair_id: str,
+                             by_user: bool = False):
         if not self.activate:
             return
-        if 'agent' not in self.collections:
+        if 'agent' not in self.collection_types:
+            return
+        if not instance.agent_model.memory.get('auto_trace', True) and not by_user:
             return
         target_info = {'source': instance.agent_model.info.get('name'), 'type': 'agent'}
         input_keys = instance.input_keys()
-        params = params['kwargs']
-        params = {key: params[key] for key in input_keys}
+        if "kwargs" in params:
+            params = params['kwargs']
+        if not by_user:
+            params = {key: params[key] for key in input_keys}
         self.add_trace_info(start_info, target_info, 'input', params, pair_id)
 
     def add_knowledge_input_info(self, start_info: dict, target: str, params: dict, pair_id: str):
         if not self.activate:
             return
-        if 'knowledge' not in self.collections:
+        if 'knowledge' not in self.collection_types:
             return
         target_info = {'source': target, 'type': 'knowledge'}
         self.add_trace_info(start_info, target_info, 'input', params, pair_id)
@@ -267,7 +271,7 @@ class ConversationMemory:
     def add_knowledge_output_info(self, start_info: dict, target: str, params: List[Document], pair_id: str):
         if not self.activate:
             return
-        if 'knowledge' not in self.collections:
+        if 'knowledge' not in self.collection_types:
             return
         target_info = {'source': target, 'type': 'knowledge'}
         doc_data = []
@@ -277,20 +281,23 @@ class ConversationMemory:
             'output': "\n==============================\n".join(doc_data)
         }, pair_id)
 
-    def add_agent_result_info(self, agent_instance: 'Agent', agent_result: OutputObject, target_info: dict,
-                              pair_id: str):
+    def add_agent_result_info(self, agent_instance: 'Agent', agent_result: Optional[OutputObject|dict], target_info: dict,
+                              pair_id: str, by_user: bool = False):
         if not self.activate:
             return
-        if 'agent' not in self.collections:
+        if 'agent' not in self.collection_types:
             return
         trace_id = FrameworkContextManager().get_context('trace_id')
         session_id = FrameworkContextManager().get_context('session_id')
+        if not agent_instance.agent_model.memory.get('auto_trace', True) and not by_user:
+            return
 
         def add_trace():
             output_keys = agent_instance.output_keys()
-            params = {}
-            for key in output_keys:
-                params[key] = agent_result.get_data(key)
+            if not by_user:
+                params = {key: agent_result.get_data(key) for key in output_keys}
+            else:
+                params = agent_result
             start_info = {
                 "source": agent_instance.agent_model.info.get('name'),
                 "type": "agent"
@@ -302,7 +309,7 @@ class ConversationMemory:
     def add_llm_input_info(self, start_info: dict, target: str, prompt: str, pair_id: str):
         if not self.activate:
             return
-        if 'llm' not in self.collections:
+        if 'llm' not in self.collection_types:
             return
         target_info = {'source': target, 'type': 'llm'}
         self.add_trace_info(start_info, target_info, 'input', {'input': prompt}, pair_id)
@@ -310,7 +317,7 @@ class ConversationMemory:
     def add_llm_output_info(self, start_info: dict, target: str, output: str, pair_id: str):
         if not self.activate:
             return
-        if 'llm' not in self.collections:
+        if 'llm' not in self.collection_types:
             return
         target_info = {'source': target, 'type': 'llm'}
         self.add_trace_info(target_info, start_info, 'output', {

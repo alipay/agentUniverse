@@ -7,8 +7,10 @@ profile:
     name: 'deep_seek_llm'
     temperature: 0.4
 memory:
-  name: ''
   conversation_memory: 'demo_conversation_memory'
+  auto_trace: False
+  collection_types: ['agent']
+  top_k: 50
 action:
   knowledge:
     - ''
