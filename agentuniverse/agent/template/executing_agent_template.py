@@ -106,7 +106,7 @@ class ExecutingAgentTemplate(AgentTemplate):
             agent_input_copy['input'] = subtask
 
             process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input_copy)
-            assemble_memory_input(memory, agent_input_copy, self.memory_collection_types())
+            assemble_memory_input(memory, agent_input_copy, self.get_memory_params())
 
             chain = prompt.as_langchain() | llm.as_langchain_runnable(
                 self.agent_model.llm_params()) | StrOutputParser()

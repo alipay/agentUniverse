@@ -48,7 +48,7 @@ class RagAgentTest(unittest.TestCase):
         FrameworkContextManager().set_context("session_id","test_weizj_008")
         # FrameworkContextManager().set_context("trace_id","009")
         instance: Agent = AgentManager().get_instance_obj('rag_agent_case')
-        output_object: OutputObject = instance.run(input='上海的天气')
+        output_object: OutputObject = instance.run(input='黄金的价格是多少')
         res_info = f"\nRag agent execution result is :\n"
         res_info += output_object.get_data('output')
         print(res_info)

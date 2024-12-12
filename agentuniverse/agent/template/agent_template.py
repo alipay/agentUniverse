@@ -24,7 +24,6 @@ from agentuniverse.agent.memory.memory_manager import MemoryManager
 from agentuniverse.agent.memory.message import Message
 from agentuniverse.agent.plan.planner.react_planner.stream_callback import InvokeCallbackHandler
 from agentuniverse.base.config.component_configer.configers.agent_configer import AgentConfiger
-from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 from agentuniverse.base.util.agent_util import assemble_memory_input, assemble_memory_output
 from agentuniverse.base.util.common_util import stream_output
 from agentuniverse.base.util.memory_util import generate_messages, get_memory_string
@@ -59,7 +58,7 @@ class AgentTemplate(Agent, ABC):
 
     def customized_execute(self, input_object: InputObject, agent_input: dict, memory: Memory, llm: LLM, prompt: Prompt,
                            **kwargs) -> dict:
-        assemble_memory_input(memory, agent_input, collection_types=self.memory_collection_types())
+        assemble_memory_input(memory, agent_input, self.get_memory_params())
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)
         chain = prompt.as_langchain() | llm.as_langchain_runnable(
             self.agent_model.llm_params()) | StrOutputParser()
@@ -73,7 +72,7 @@ class AgentTemplate(Agent, ABC):
 
     async def customized_async_execute(self, input_object: InputObject, agent_input: dict, memory: Memory,
                                        llm: LLM, prompt: Prompt, **kwargs) -> dict:
-        assemble_memory_input(memory, agent_input, collection_types=self.memory_collection_types())
+        assemble_memory_input(memory, agent_input, self.get_memory_params())
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)
         chain = prompt.as_langchain() | llm.as_langchain_runnable(
             self.agent_model.llm_params()) | StrOutputParser()
@@ -214,8 +213,10 @@ class AgentTemplate(Agent, ABC):
     def add_output_stream(self, output_stream: Queue, agent_output: str) -> None:
         pass
 
-    def memory_collection_types(self) -> list[str]:
-        return self.agent_model.memory.get('collection_types', [])
+    def get_memory_params(self) -> dict:
+        memory_types = self.agent_model.memory.get('memory_types', [])
+        prune = self.agent_model.memory.get('prune', False)
+        return {'types': memory_types, 'prune': prune}
 
     def initialize_by_component_configer(self, component_configer: AgentConfiger) -> 'AgentTemplate':
         super().initialize_by_component_configer(component_configer)

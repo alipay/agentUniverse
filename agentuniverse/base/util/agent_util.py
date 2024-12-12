@@ -11,12 +11,13 @@ from agentuniverse.base.context.framework_context_manager import FrameworkContex
 from agentuniverse.base.util.memory_util import get_memory_string
 
 
-def assemble_memory_input(memory: Memory, agent_input: dict, collection_types=None) -> list[Message]:
+def assemble_memory_input(memory: Memory, agent_input: dict, configs: dict[str, str] = {}) -> list[Message]:
     """Assemble memory information for the agent input parameters.
 
     Args:
         memory (Memory): The memory instance.
         agent_input (dict): Agent input parameters for the agent.
+        configs (dict): other query configs in agent config
 
     Returns:
         list[Message]: The retrieved memory messages.
@@ -26,9 +27,9 @@ def assemble_memory_input(memory: Memory, agent_input: dict, collection_types=No
     memory_messages = []
     if memory:
         # get the memory messages from the memory instance.
-        memory_messages = memory.get(types=collection_types,**agent_input)
+        memory_messages = memory.get(**agent_input, **configs)
         # convert the memory messages to a string and add it to the agent input object.
-        memory_str = get_memory_string(memory_messages)
+        memory_str = get_memory_string(memory_messages, agent_input.get('agent_id'))
         agent_input[memory.memory_key] = memory_str
     return memory_messages
 

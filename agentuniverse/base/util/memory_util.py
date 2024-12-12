@@ -44,11 +44,12 @@ def generate_memories(chat_messages: BaseChatMessageHistory) -> list:
     ] if chat_messages.messages else []
 
 
-def get_memory_string(messages: List[Message]) -> str:
+def get_memory_string(messages: List[Message], agent_id=None) -> str:
     """Convert the given messages to a string.
 
     Args:
         messages(List[Message]): The list of messages.
+
 
     Returns:
         str: The string representation of the messages.
@@ -65,8 +66,11 @@ def get_memory_string(messages: List[Message]) -> str:
         elif m.type == ChatMessageEnum.INPUT.value or m.type == ChatMessageEnum.OUTPUT.value:
             if current_trace_id == m.trace_id:
                 continue
-            role = m.metadata.get('prefix')
-            m_str = f"{m.metadata.get('gmt_created')} {role}:{m.content}"
+            role: str = m.metadata.get('prefix', "")
+            if agent_id:
+                role = role.replace(f"智能体 {agent_id}", " 你")
+                role = role.replace(f"Agent {agent_id}", " You")
+            m_str = f"{m.metadata.get('timestamp')} {role}:{m.content}"
             string_messages.append(m_str)
             continue
         else:

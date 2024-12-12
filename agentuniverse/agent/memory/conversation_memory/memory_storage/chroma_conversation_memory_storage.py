@@ -110,7 +110,7 @@ class ChromaConversationMemoryStorage(MemoryStorage):
                 embedding = EmbeddingManager().get_instance_obj(
                     self.embedding_model
                 ).get_embeddings([message.content])[0]
-            metadata = {'gmt_created': datetime.now().isoformat()}
+            metadata = {'timestamp': datetime.now().isoformat()}
             if session_id:
                 metadata['session_id'] = session_id
             metadata['trace_id'] = message.trace_id
@@ -265,10 +265,10 @@ class ChromaConversationMemoryStorage(MemoryStorage):
                     for i in range(len(result['ids']))
                 ]
             if sort_by_time:
-                # order by gmt_created asc
+                # order by timestamp asc
                 message_list = sorted(
                     message_list,
-                    key=lambda msg: msg.metadata.get('gmt_created', ''),
+                    key=lambda msg: msg.metadata.get('timestamp', ''),
                 )
         except Exception as e:
             print('ChromaMemory.to_messages failed, exception= ' + str(e))

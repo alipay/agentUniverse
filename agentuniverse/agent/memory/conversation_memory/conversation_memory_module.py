@@ -96,20 +96,23 @@ def generate_relation_str_en(source: str, target: str, source_type: str, target_
 
 
 def sync_to_sub_agent_memory(message: ConversationMessage, session_id: str, memory_name: str):
-    def add_message(agent_name: str, memory_names: list):
+    def add_message(agent_name: str, memory_names: list, collect_type: str):
         agent_instance = AgentManager().get_instance_obj(agent_name)
         agent_memory = agent_instance.agent_model.memory.get('conversation_memory')
-        if agent_memory :
+        collection_types = agent_instance.agent_model.memory.get('collection_types')
+        if collection_types and len(collection_types) and collect_type not in collection_types:
+            return
+        if agent_memory:
             memory_instance = MemoryManager().get_instance_obj(agent_memory)
             memory_instance.add([message], session_id=session_id)
             memory_names.append(agent_memory)
 
     memory_names = [memory_name]
     if message.source_type == ConversationMessageSourceType.AGENT.value:
-        add_message(message.source, memory_names)
+        add_message(message.source, memory_names, message.target_type)
 
     if message.target_type == ConversationMessageSourceType.AGENT.value:
-        add_message(message.target, memory_names)
+        add_message(message.target, memory_names, message.source_type)
 
 
 @singleton
@@ -190,7 +193,7 @@ class ConversationMemoryModule:
             target_type=target_type,
             type=type,
             metadata={
-                "gmt_created": datetime.datetime.now(),
+                "timestamp": datetime.datetime.now(),
                 "prefix": prefix,
                 "params": params_json,
                 "pair_id": kwargs.get('pair_id')
@@ -247,7 +250,7 @@ class ConversationMemoryModule:
         target_info = {'source': target, 'type': 'tool'}
         self.add_trace_info(start_info, target_info, 'input', params, pair_id)
 
-    def add_tool_output_info(self, start_info: dict, target: str, params: dict, pair_id: str):
+    def add_tool_output_info(self, start_info: dict, target: str, params: dict, pair_id: str, by_user: bool = False):
         """Add trace info to the memory."""
         if not self.activate:
             return
@@ -267,7 +270,9 @@ class ConversationMemoryModule:
         target_info = {'source': instance.agent_model.info.get('name'), 'type': 'agent'}
         input_keys = instance.input_keys()
         if "kwargs" in params:
-            params = params['kwargs']
+            params: dict = params['kwargs']
+            params = params.copy()
+            params.pop('output_stream') if 'output_stream' in params else params
         if not by_user:
             params = {key: params[key] for key in input_keys}
         self.add_trace_info(start_info, target_info, 'input', params, pair_id)
@@ -293,7 +298,8 @@ class ConversationMemoryModule:
             'output': "\n==============================\n".join(doc_data)
         }, pair_id)
 
-    def add_agent_result_info(self, agent_instance: 'Agent', agent_result: Optional[OutputObject|dict], target_info: dict,
+    def add_agent_result_info(self, agent_instance: 'Agent', agent_result: Optional[OutputObject | dict],
+                              target_info: dict,
                               pair_id: str, by_user: bool = False):
         if not self.activate:
             return
