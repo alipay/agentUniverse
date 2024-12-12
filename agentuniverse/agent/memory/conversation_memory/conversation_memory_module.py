@@ -52,6 +52,12 @@ def generate_relation_str(source: str, target: str, source_type: str, target_typ
         return f"用户向智能体 {target} 提出了一个问题"
     if source_type == 'agent' and target_type == 'user' and type == 'output':
         return f"智能体 {source} 回答了用户的问题"
+    elif type == 'input':
+        return f"{source} 向 {target} 询问了一个问题"
+    elif type == 'output':
+        return f"{source} 回答了 {target} 的问题"
+    elif type == 'summary':
+        return f"{source} 的摘要"
     return None
 
 
@@ -80,6 +86,12 @@ def generate_relation_str_en(source: str, target: str, source_type: str, target_
         return f"User asked a question to agent {target}"
     if source_type == 'agent' and target_type == 'user' and type == 'output':
         return f"Agent {source} answered the user's question"
+    if type == 'input':
+        return f"{source} asked a question to {target}"
+    elif type == 'output':
+        return f"{source} answered {target}'s question"
+    elif type == 'summary':
+        return f"{source} summary"
     return None
 
 
