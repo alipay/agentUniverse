@@ -22,7 +22,7 @@ readers:
 
 metadata:
   type: 'KNOWLEDGE'
-  module: 'sample_standard_app.app.core.knowledge.law_knowledge'
+  module: 'sample_standard_app.intelligence.agentic.knowledge.law_knowledge'
   class: 'LawKnowledge'
 ```
 

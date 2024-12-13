@@ -6,7 +6,7 @@ The directory structure provided below is only a suggestion, and you are free to
 
 ```
 /
-├── bootstrap/
+├── boostrap/
 │   ├── intelligence/
 │   │   └── server_application.py
 │   ├── platform/
@@ -39,7 +39,7 @@ The directory structure provided below is only a suggestion, and you are free to
 ```
 
 Here's what each package directory level means:
-* bootstrap: The entry layer for starting the web server
+* boostrap: The entry layer for starting the web server
   * intelligence - The entry layer for starting Intelligent web server
   * platform - The entry layer for productization web server
 * intelligence: Intelligent project layer, used for agent construction, component customization, and service implementation.
@@ -69,7 +69,7 @@ Here's what each package directory level means:
 ## Using Any Project Directory Structure
 You can adjust the project directory structure according to your preferences and actual circumstances, but please ensure you follow the rules below.
 
-### Bootstrap Startup Directory
+### Boostrap Startup Directory
 Regardless of the location of your project's startup script, except for testing, you should start the application service with the following statement:
 
 ```python
@@ -93,7 +93,7 @@ ServerApplication.start()
 `ServerApplication.start()` is the server startup method for this framework, which accepts a configuration path `config_path` as an input parameter. The default `config_path` points to a file named 'config.toml', located in the config directory under the project root path(`project_root_dir/config/config.toml`). Ensure that the config file path is correct; if you have further changed the directory of the config file, adjust the `config_path` accordingly.
 
 ### Config Directory
-As mentioned in the [Bootstrap Startup Directory](#bootstrap-startup-directory), the default config path for the project is `project_root_dir/config/config.toml`. If you have made any adjustments to this, please ensure that the correct config file path is provided to the startup method when the application server is launched.
+As mentioned in the [Boostrap Startup Directory](#boostrap-startup-directory), the default config path for the project is `project_root_dir/config/config.toml`. If you have made any adjustments to this, please ensure that the correct config file path is provided to the startup method when the application server is launched.
 
 ### Core Directory
 As shown in the recommended directory structure, the agentic directory within intelligence is primarily used to place domain components related to agents, knowledge, and LLMs. If you want to customize the location of core components, you can specify the paths of the domain components in the [CORE_PACKAGE] section of the main configuration file config/config.toml as follows:
