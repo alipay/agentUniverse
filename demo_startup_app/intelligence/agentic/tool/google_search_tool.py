@@ -11,7 +11,7 @@ from langchain_community.utilities.google_serper import GoogleSerperAPIWrapper
 from agentuniverse.agent.action.tool.tool import Tool, ToolInput
 from agentuniverse.base.util.env_util import get_from_env
 
-from au_sample_standard_app.intelligence.agentic.tool.mock_search_tool import MockSearchTool
+from demo_startup_app.intelligence.agentic.tool.mock_search_tool import MockSearchTool
 
 
 class GoogleSearchTool(Tool):

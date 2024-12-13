@@ -1,12 +1,12 @@
 # 文档说明
 为了让大家快速上手AU框架，我们提供了样板工程（可以直接运行）并配套详细的文字说明，在实际研发过程中直接基于其中的某些智能体结合自己业务进行一小部分代码/配置改写即可完成应用的搭建。
 
-样板工程地址：[au_sample_standard_app](../../../../au_sample_standard_app)
+样板工程地址：[au_sample_standard_app](../../../../demo_startup_app)
 
 样板工程拟定了业务是关于宠物险产品的智能顾问，对用户提出的产品问题进行解答。
 
 # 从一个智能体搭建开始
-[single_agent_case](../../../../au_sample_standard_app/intelligence/agentic/agent/agent_instance/single_agent_case)下构建一个宠物险顾问智能体，使用qwen72b模型，提供宠物医保的检索以及信息补充工具，react模式自行让模型选择工具帮助回答用户的问题。
+[single_agent_case](../../../../demo_startup_app/intelligence/agentic/agent/agent_instance/single_agent_case)下构建一个宠物险顾问智能体，使用qwen72b模型，提供宠物医保的检索以及信息补充工具，react模式自行让模型选择工具帮助回答用户的问题。
 
 从0开始搭建的整体流程如下：
 
@@ -15,12 +15,12 @@
 ## 构建agent所依赖的组件
 ### 构建tool
 **<配置封装>**
-[pet_insurance_search_context_tool.yaml](../../../../au_sample_standard_app/intelligence/agentic/tool/pet_ins/pet_insurance_search_context_tool.yaml)
+[pet_insurance_search_context_tool.yaml](../../../../demo_startup_app/intelligence/agentic/tool/pet_ins/pet_insurance_search_context_tool.yaml)
 
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/18056974/1733990583392-c4df1a8b-51d1-44a9-84e9-ebf7c4251c0b.png)
 
 **<代码实现>**
-[pet_insurance_search_context_tool.py](../../../../au_sample_standard_app/intelligence/agentic/tool/pet_ins/pet_insurance_search_context_tool.py)
+[pet_insurance_search_context_tool.py](../../../../demo_startup_app/intelligence/agentic/tool/pet_ins/pet_insurance_search_context_tool.py)
 
 所有的自定义工具都都继承自agentuniverse.agent.action.tool.tool的Tool基类，核心执行方法为execute（你需要overwrite的地方），入参类型为ToolInput（key-value经过封装后的结构）。
 
@@ -30,7 +30,7 @@ API适配AU样例可参考 [API适配样例文档.md](API适配样例文档.md)
 
 ### 构建llm
 #### 配置封装
-[pet_qwen_72b_stream.yaml](../../../../au_sample_standard_app/intelligence/agentic/llm/maya/pet_qwen_72b_stream.yaml)
+[pet_qwen_72b_stream.yaml](../../../../demo_startup_app/intelligence/agentic/llm/maya/pet_qwen_72b_stream.yaml)
 拓展字段ext_info中可以添加自定义参数，并在代码初始化方法中解析，成为PetInsuranceMayaLLM的属性。
 
 #### 代码实现
@@ -52,11 +52,11 @@ llm需要封装成langchain实例，实际调度过程中由该实例唤起执�
 
 ## 构建智能体
 #### 配置封装
-[pet_insurance_react_agent.yaml](../../../../au_sample_standard_app/intelligence/agentic/agent/agent_instance/single_agent_case/pet_insurance_react_agent.yaml)
+[pet_insurance_react_agent.yaml](../../../../demo_startup_app/intelligence/agentic/agent/agent_instance/single_agent_case/pet_insurance_react_agent.yaml)
 
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/18056974/1734003384746-701f2ff8-46b7-4d32-9cdb-0bb7594594b1.png)
 
-该智能体依赖的prompt定义 [pet_insurance_react_prompt.yaml](../../../../au_sample_standard_app/intelligence/agentic/prompt/pet_react_agent/pet_insurance_react_prompt.yaml)
+该智能体依赖的prompt定义 [pet_insurance_react_prompt.yaml](../../../../demo_startup_app/intelligence/agentic/prompt/pet_react_agent/pet_insurance_react_prompt.yaml)
 
 
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/18056974/1734071728918-f8608995-b782-4fdd-9374-072845c839d7.png)
@@ -89,7 +89,7 @@ react模式完全依赖llm自行思考问题，选择工具调度组装结果，
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/18056974/1734072518223-8d7966d4-cd3c-4268-8395-e572f1ae5432.png)
 
 ## 服务化
-[pet_insurance_react_service.yaml](../../../../au_sample_standard_app/intelligence/service/agent_service/pet_insurance_react_service.yaml)
+[pet_insurance_react_service.yaml](../../../../demo_startup_app/intelligence/service/agent_service/pet_insurance_react_service.yaml)
 
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/18056974/1734005968227-3039b182-09e2-49d2-982b-60e3df1e265e.png)
 
@@ -108,11 +108,11 @@ react模式完全依赖llm自行思考问题，选择工具调度组装结果，
 改写和策划两个子智能体不再单独介绍了，参考2.1进行构建
 
 改写智能体：
-[pet_question_rewrite_agent.yaml](../../../../au_sample_standard_app/intelligence/agentic/agent/agent_instance/multi_agent_case/pet_question_rewrite_agent.yaml)
+[pet_question_rewrite_agent.yaml](../../../../demo_startup_app/intelligence/agentic/agent/agent_instance/multi_agent_case/pet_question_rewrite_agent.yaml)
 
 
 策划智能体（拆解问题）：
-[pet_question_planning_agent.yaml](../../../../au_sample_standard_app/intelligence/agentic/agent/agent_instance/multi_agent_case/pet_question_planning_agent.yaml)
+[pet_question_planning_agent.yaml](../../../../demo_startup_app/intelligence/agentic/agent/agent_instance/multi_agent_case/pet_question_planning_agent.yaml)
 
 
 这里要注意的是出入参的定义和转换，要能和下个智能体衔接起来。这个可以在主智能体串接时适配。
@@ -120,7 +120,7 @@ react模式完全依赖llm自行思考问题，选择工具调度组装结果，
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/18056974/1734014843998-a826cd8b-3d4f-4fb4-9ef0-65e622983368.png)
 
 ## 主智能体
-[pet_insurance_consult_agent.yaml](../../../../au_sample_standard_app/intelligence/agentic/agent/agent_instance/multi_agent_case/pet_insurance_consult_agent.yaml)
+[pet_insurance_consult_agent.yaml](../../../../demo_startup_app/intelligence/agentic/agent/agent_instance/multi_agent_case/pet_insurance_consult_agent.yaml)
 
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/18056974/1734014662057-cbd2eae4-8d92-4a28-8717-fa42bf6229c0.png)
 
@@ -128,7 +128,7 @@ react模式完全依赖llm自行思考问题，选择工具调度组装结果，
 
 ## 运行测试
 
-运行 [pet_insurance_consult_pro_agent_test.py](../../../../au_sample_standard_app/intelligence/test/pet_insurance_consult_pro_agent_test.py)
+运行 [pet_insurance_consult_pro_agent_test.py](../../../../demo_startup_app/intelligence/test/pet_insurance_consult_pro_agent_test.py)
 
 
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/18056974/1734073361810-67db902b-4ede-4bbf-bd4d-c9f937434536.png)
@@ -163,7 +163,7 @@ react模式完全依赖llm自行思考问题，选择工具调度组装结果，
 # 封装智能体模版
 在上面的多智能体应用中我们会发现，三个智能体在实现上有很多相同的逻辑，甚至策划智能体继承自改写智能体。为了提升智能体的复用性，我们可以抽像出一些通用的逻辑和方法，封装成一个智能体模版AgentTemplate，大部分智能体基于这个模版做一些微小的调整，甚至只是yaml配置的改动即可实现多种智能体逻辑。
 
-参考 [pet_agent_template.py](../../../../au_sample_standard_app/intelligence/agentic/agent/agent_template/pet_agent_template.py)
+参考 [pet_agent_template.py](../../../../demo_startup_app/intelligence/agentic/agent/agent_template/pet_agent_template.py)
 
 ![](https://intranetproxy.alipay.com/skylark/lark/0/2024/png/18056974/1734016162848-dc15f8cf-c362-4834-b99b-abe9e0ba2cdc.png)
 

@@ -7,7 +7,7 @@
 from agentuniverse.agent.input_object import InputObject
 from agentuniverse.base.util.logging.logging_util import LOGGER
 
-from au_sample_standard_app.intelligence.agentic.agent.agent_instance.multi_agent_case.pet_question_rewrite_agent import \
+from demo_startup_app.intelligence.agentic.agent.agent_instance.multi_agent_case.pet_question_rewrite_agent import \
     PetInsuranceRewriteAgent
 
 

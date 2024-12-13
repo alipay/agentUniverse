@@ -18,7 +18,7 @@ from agentuniverse.llm.llm import LLM
 from agentuniverse.prompt.prompt import Prompt
 from langchain_core.output_parsers import StrOutputParser
 
-from au_sample_standard_app.intelligence.agentic.agent.agent_template.pet_agent_template import \
+from demo_startup_app.intelligence.agentic.agent.agent_template.pet_agent_template import \
     PetRagAgentTemplate
 
 

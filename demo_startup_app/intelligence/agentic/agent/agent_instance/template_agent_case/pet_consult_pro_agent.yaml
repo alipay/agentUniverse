@@ -1,5 +1,5 @@
 info:
-  name: 'pet_insurance_consult_agent'
+  name: 'pet_insurance_consult_pro_agent'
   description: '宠物险智能顾问，提供“宠物医保”产品的智能问答'
 profile:
   prompt_version: pet_insurance_multi_agent.cn
@@ -11,5 +11,5 @@ action:
     - search_context_tool
 metadata:
   type: 'AGENT'
-  module: 'au_sample_standard_app.intelligence.agentic.agent.agent_instance.multi_agent_case.pet_insurance_consult_agent'
-  class: 'PetInsuranceConsultAgent'
+  module: 'demo_startup_app.intelligence.agentic.agent.agent_instance.template_agent_case.pet_consult_pro_agent'
+  class: 'PetInsuranceConsultProAgent'

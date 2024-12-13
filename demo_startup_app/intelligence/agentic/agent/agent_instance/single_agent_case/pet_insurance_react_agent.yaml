@@ -14,5 +14,5 @@ action:
     - 'pet_insurance_search_context_tool'
 metadata:
   type: 'AGENT'
-  module: 'au_sample_standard_app.intelligence.agentic.agent.agent_instance.single_agent_case.pet_insurance_react_agent'
+  module: 'demo_startup_app.intelligence.agentic.agent.agent_instance.single_agent_case.pet_insurance_react_agent'
   class: 'PetInsuranceReactAgent'

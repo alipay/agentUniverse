@@ -6,7 +6,7 @@
 # @FileName: pet_insurance_tool.py
 from agentuniverse.agent.action.tool.tool import Tool, ToolInput
 
-from au_sample_standard_app.intelligence.utils.constant.prod_description import PROD_A_DESCRIPTION, PROD_B_DESCRIPTION
+from demo_startup_app.intelligence.utils.constant.prod_description import PROD_A_DESCRIPTION, PROD_B_DESCRIPTION
 
 
 class PetInsuranceInfoTool(Tool):

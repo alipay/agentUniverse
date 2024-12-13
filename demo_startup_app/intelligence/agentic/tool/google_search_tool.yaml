@@ -8,5 +8,5 @@ tool_type: 'api'
 input_keys: ['input']
 metadata:
   type: 'TOOL'
-  module: 'au_sample_standard_app.intelligence.agentic.tool.google_search_tool'
+  module: 'demo_startup_app.intelligence.agentic.tool.google_search_tool'
   class: 'GoogleSearchTool'

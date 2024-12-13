@@ -17,5 +17,5 @@ ext_info:
 request_timeout: 60
 metadata:
   type: 'LLM'
-  module: 'au_sample_standard_app.intelligence.agentic.llm.maya.pet_insurance_maya_llm'
+  module: 'demo_startup_app.intelligence.agentic.llm.maya.pet_insurance_maya_llm'
   class: 'PetInsuranceMayaLLM'

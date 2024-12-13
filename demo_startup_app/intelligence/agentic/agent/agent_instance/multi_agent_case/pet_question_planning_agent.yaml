@@ -8,5 +8,5 @@ profile:
     temperature: 0.3
 metadata:
   type: 'AGENT'
-  module: 'au_sample_standard_app.intelligence.agentic.agent.agent_instance.multi_agent_case.pet_question_planning_agent'
+  module: 'demo_startup_app.intelligence.agentic.agent.agent_instance.multi_agent_case.pet_question_planning_agent'
   class: 'PetInsurancePlanningAgent'
