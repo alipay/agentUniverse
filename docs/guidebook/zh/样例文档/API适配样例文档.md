@@ -126,7 +126,6 @@ class ParallelSearchDetailApi(ZxzTool):
     "full_return": false
   }
 }
-
 ```
 
 **必选参数：**
@@ -406,7 +405,7 @@ metadata:
   class: 'SearchContextTool'
 ```
 
-** 代码实现参考**
+**代码实现参考**
 
 ```text
 PRE_API_URL = "https://fincopilotcore.antgroup-inc.cn/api/copilot/runMxc/faq"
