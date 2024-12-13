@@ -217,11 +217,11 @@ metadata:
 In `xx_service.yaml`, we define a `demo_service` configuration. The `name` field defines the name of the service, the `description` field defines the description of the service, and the `agent` field defines which agent provides the service.
 
 ### Start the Service
-Start using the `server_application.py` file found in the `bootstrap` folder within your IDE,
+Start using the `server_application.py` file found in the `boostrap` folder within your IDE,
 or enter the following command in the terminal to start the service interface and begin listening:
 ```shell
-# under the bootstrap directory of the project
-cd `your bootstrap directory path`
+# under the boostrap directory of the project
+cd `your boostrap directory path`
 python server_application.py
 ```
 

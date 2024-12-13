@@ -97,6 +97,6 @@ sed -i '' 's/^#custom_key_path = '\''\.\/custom_key\.toml'\''/custom_key_path = 
 export PYTHONPATH=$PWD/../..
 
 # Start the service
-cd app/bootstrap
+cd boostrap/intelligence
 python -u server_application.py
 
