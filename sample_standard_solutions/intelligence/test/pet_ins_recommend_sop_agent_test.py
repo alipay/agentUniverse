@@ -12,9 +12,9 @@ AgentUniverse().start(config_path='../../config/config.toml', core_mode=True)
 
 
 def chat(question: str):
-    instance: Agent = AgentManager().get_instance_obj('pet_insurance_consult_agent')
-    return instance.run(input=question)
+    instance: Agent = AgentManager().get_instance_obj('pet_ins_recommend_sop_agent')
+    return instance.run(query=question)
 
 
 if __name__ == '__main__':
-    print(chat("医保怎么升级").get_data('output'))
+    print(chat("为我11岁猫咪订购保险").get_data('output'))

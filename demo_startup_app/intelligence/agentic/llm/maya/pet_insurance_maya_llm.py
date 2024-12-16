@@ -157,7 +157,7 @@ class PetInsuranceMayaLLM(LLM):
         # 同步http包发送http请求
         resp = requests.post(
             url=self.endpoint + suffix,
-            headers={"Content-Type": "application/json", "x-fincopilotcore-signature": "LmHJoTYJxDh3yq@2dQ"},
+            headers={"Content-Type": "application/json"},
             data=json.dumps(self.request_data(prompt, stop[0] if stop else ''), ensure_ascii=False).encode("utf-8"),
             timeout=self.request_timeout,
         )
@@ -185,7 +185,7 @@ class PetInsuranceMayaLLM(LLM):
                 data=json.dumps(self.request_stream_data(prompt, stop[0] if stop else ''), ensure_ascii=False).encode(
                     "utf-8"),
                 timeout=self.request_timeout,
-                headers={"Content-Type": "application/json", "x-fincopilotcore-signature": "LmHJoTYJxDh3yq@2dQ"},
+                headers={"Content-Type": "application/json"},
                 stream=True
         ) as resp:
             cursor = 0
