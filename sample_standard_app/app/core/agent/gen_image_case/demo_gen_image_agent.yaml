@@ -1,0 +1,10 @@
+info:
+  name: 'demo_gen_image_agent'
+  description: 'gen image agent'
+action:
+  tool:
+    - 'gen_image_tool'
+metadata:
+  type: 'AGENT'
+  module: 'sample_standard_app.app.core.agent.gen_image_case.demo_gen_image_agent'
+  class: 'GenImageAgent'

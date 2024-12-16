@@ -1,0 +1,9 @@
+name: 'gen_image_tool'
+description: '使用该工具可以通过输入一段描述来生成一张图片。
+        ```'
+tool_type: 'api'
+input_keys: ['input']
+metadata:
+  type: 'TOOL'
+  module: 'sample_standard_app.app.core.tool.gen_image_tool'
+  class: 'GenImageTool'
