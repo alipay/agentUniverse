@@ -6,7 +6,7 @@
 # @Email   : wangchongshi.wcs@antgroup.com
 # @FileName: search_context_tool.py
 from agentuniverse.agent.action.tool.tool import Tool, ToolInput
-from sample_standard_solutions.intelligence.utils.constant import product_a_info, product_b_info, product_c_info
+from sample_standard_solutions.intelligence.utils.constant import product_b_info, product_c_info
 
 
 class SearchProductInfoTool(Tool):
@@ -14,19 +14,16 @@ class SearchProductInfoTool(Tool):
     def execute(self, tool_input: ToolInput):
         product_info_item_list = tool_input.get_data('input')
 
-        product_a_description = product_a_info.BASE_PRODUCT_DESCRIPTION
         product_b_description = product_b_info.BASE_PRODUCT_DESCRIPTION
         product_c_description = product_c_info.BASE_PRODUCT_DESCRIPTION
         for item in product_info_item_list:
             if item == 'G':
                 continue
             if item == 'K':
-                product_a_description += product_a_info.PRODUCT_DESCRIPTION_MAP.get('L')
                 product_b_description += product_b_info.PRODUCT_DESCRIPTION_MAP.get('L')
                 product_c_description += product_c_info.PRODUCT_DESCRIPTION_MAP.get('L')
             else:
-                product_a_description += product_a_info.PRODUCT_DESCRIPTION_MAP.get(item)
                 product_b_description += product_b_info.PRODUCT_DESCRIPTION_MAP.get(item)
                 product_c_description += product_c_info.PRODUCT_DESCRIPTION_MAP.get(item)
 
-        return {'A': product_a_description, 'B': product_b_description, 'C': product_c_description}
+        return {'B': product_b_description, 'C': product_c_description}

@@ -17,4 +17,4 @@ def chat(question: str):
 
 
 if __name__ == '__main__':
-    print(chat("为我11岁猫咪订购保险").get_data('output'))
+    print(chat("为我重病的柴田犬买保险").get_data('output'))

@@ -78,7 +78,6 @@ class PetInsRecommendSopAgent(AgentTemplate):
         # invoke pet_ins_product_info_tool to get product info under items
         product_description_dict: dict = ToolManager().get_instance_obj('pet_ins_product_info_tool').run(
             input=product_info_item_list)
-        input_object.add_data('product_a_description', product_description_dict['A'])
         input_object.add_data('product_b_description', product_description_dict['B'])
         input_object.add_data('product_c_description', product_description_dict['C'])
 
@@ -90,29 +89,14 @@ class PetInsRecommendSopAgent(AgentTemplate):
         LOGGER.info(f"choose_product_agent_res: {choose_product_agent_res.to_dict()}")
         product_list = choose_product_agent_res.get_data('product_list')
         choose_product_reason = choose_product_agent_res.get_data('reason')
-        agent_input['is_company'] = choose_product_agent_res.get_data('company')
 
         # bottom line logic for product choice
-        if product_list and "A" in product_list and "C" in product_list:
-            product_list.remove("C")
-            choose_product_reason += "\n由于宠物医保和宠物医保大病医疗同时满足要求，选品中去掉宠物医保大病医疗\n"
         if not product_list:
-            product_list = ["A"]
-            choose_product_reason += "\n根据您的要求未能找到合适的产品，建议看看下面的产品宠物医保"
+            product_list = ["B"]
+            choose_product_reason += "\n根据您的要求未能找到合适的产品，建议看看下面的产品宠物责任险"
 
         # construct inputs for llm
         agent_input['reason'] = choose_product_reason
-        agent_input['notice'] = ''
-        if '宠物医疗险' in agent_input.get('query'):
-            agent_input['notice'] = ('注意，如果用户的问题中询问的是宠物医疗险，指代的是蚂蚁集团原来售卖的一款宠物保险产品，名称为"宠物医疗险"，'
-                                     '回答问题时提示用户："现在可以优先选择宠物医保，宠物医保相比于宠物医疗险在多个方面进行了升级，可以给您提供更全面的保障和服务。"\n')
-
-        if '体验' in agent_input.get('query'):
-            agent_input['notice'] = """
-            注意，如果用户的问题中询问的是宠物医保（体验版），指代的是蚂蚁集团当前售卖的一款宠物保险体验版产品，名称为"宠物医保（体验版）"，需要向用户推荐宠物医保（体验版）。
-            宠物医保（体验版）是免费体验版，仅有30天保障时间。宠物医保（体验版）体验30天后付费可升级成宠物医保升级版。
-            宠物医保（体验版）保障责任与宠物医保升级版相同。宠物医保（体验版）作为短期免费体验，旨在让用户试用后再决定是否购买正式版。
-            """
         product_names = ""
         product_description_list = ""
         product_recommendation = ""
@@ -147,10 +131,7 @@ class PetInsRecommendSopAgent(AgentTemplate):
                                                                   instruction=profile_instruction)
 
         # get the prompt by the prompt version
-        if agent_input['is_company']:
-            version_prompt: Prompt = PromptManager().get_instance_obj('pet_ins_recommend_sop_agent_company.cn')
-        else:
-            version_prompt: Prompt = PromptManager().get_instance_obj(self.prompt_version)
+        version_prompt: Prompt = PromptManager().get_instance_obj(self.prompt_version)
 
         if version_prompt is None and not profile_prompt_model:
             raise Exception("Either the `prompt_version` or `introduction & target & instruction`"
