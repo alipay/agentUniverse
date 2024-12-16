@@ -106,7 +106,7 @@ class ParallelSearchDetailApi(ZxzTool):
 
 # 谷歌酒店搜索api
 ## api接口描述
-该api调用谷歌的开放api接口https://serpapi.com/search中的google_hotels引擎服务查询酒店相关信息（该接口需要去谷歌api开放官网申请相应的api-key即可访问）。
+该api调用谷歌的开放api接口 https://serpapi.com/search 中的google_hotels引擎服务查询酒店相关信息（该接口需要去谷歌api开放官网申请相应的api-key即可访问）。
 
 ## 输入描述
 工具的输入input为json_markdown格式的字符串，内容是下面的结构
@@ -408,9 +408,6 @@ metadata:
 **代码实现参考**
 
 ```text
-PRE_API_URL = "https://fincopilotcore.antgroup-inc.cn/api/copilot/runMxc/faq"
-
-
 class SearchContextTool(Tool):
 
     def execute(self, tool_input: ToolInput):
