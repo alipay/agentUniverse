@@ -11,6 +11,7 @@ The directory structure provided below is only a suggestion, and you are free to
 │   │   └── server_application.py
 │   ├── platform/
 │   │   └── product_application.py
+├── config
 ├── intelligence/
 │   ├── agentic/
 │   │   ├── agent
@@ -33,7 +34,7 @@ The directory structure provided below is only a suggestion, and you are free to
 │   ├── utils/
 │   └── test/
 ├── platform/
-├── config
+│   ├── difizen/
 ├── pyproject.toml
 └── other project files...
 ```
@@ -42,6 +43,7 @@ Here's what each package directory level means:
 * boostrap: The entry layer for starting the web server
   * intelligence - The entry layer for starting Intelligent web server
   * platform - The entry layer for productization web server
+* config - Application configuration code
 * intelligence: Intelligent project layer, used for agent construction, component customization, and service implementation.
   * agentic: Intelligent domain layer, where related domain components of agentUniverse are placed.
     * agent - Agent layer, corresponding to the agent component of agentUniverse, which can be used to build agent templates and instances.
@@ -64,7 +66,7 @@ Here's what each package directory level means:
   * utils: Basic utility layer, providing small and general-purpose helper functions.
   * test: Unit tests.
 * platform: Platform project layer, handling platform capabilities outside intelligent project.
-* config - Application configuration code
+  * difizen: Canvas r&d platform in agentUniverse.
 
 ## Using Any Project Directory Structure
 You can adjust the project directory structure according to your preferences and actual circumstances, but please ensure you follow the rules below.

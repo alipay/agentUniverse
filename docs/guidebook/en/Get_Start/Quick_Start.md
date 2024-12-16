@@ -85,7 +85,7 @@ In this section, we will run the first example, choosing the law_chat_bot as our
 For instance, in the case of law_chat_bot (path: agentUniverse/sample_standard_app/app/examples/law_chat_bot.py), we first identify the corresponding agent_name in the script. For the law_chat_bot, it is law_rag_agent:
 ![demo_case_law_rag_agent](../../_picture/demo_case_law_rag_agent.png)
 
-After determining the agent used in the example, we go to the project agent directory (the directory path is: agentUniverse/sample_standard_app/app/core/agent) and find the corresponding agent configuration file law_rag_agent.yaml. Note that the name field in the agent configuration corresponds to the agent name in law_chat_bot.
+After determining the agent used in the example, we go to the project agent directory (the directory path is: agentUniverse/sample_standard_app/intelligence/agentic/agent) and find the corresponding agent configuration file law_rag_agent.yaml. Note that the name field in the agent configuration corresponds to the agent name in law_chat_bot.
 ![demo_case_law_rag_agent_yaml](../../_picture/demo_case_law_rag_agent_yaml.png)
 
 Let's further examine the other configuration details in the law_rag_agent.yaml file, focusing on the llm_model configuration item. This item specifies the LLM used by the agent. By default, law_rag_agent uses the qwen series, specifically qwen-max, as the model core. If you configured a different series model type during the key configuration stage, you'll need to replace it here. You can refer to the following common model replacements. You can copy the default settings, and if needed, you can replace the model_name according to the official model codes of the service provider.
