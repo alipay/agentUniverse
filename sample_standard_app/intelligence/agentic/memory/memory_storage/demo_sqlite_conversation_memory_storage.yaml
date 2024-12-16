@@ -1,8 +1,0 @@
-name: 'demo_sqlite_conversation_memory_storage'
-description: 'demo chroma memory storage'
-sqldb_path: 'mysql+pymysql://au_admin:aU_admin@localhost:3306/agentUniverse'
-sql_table_name: 'conversation_memory_execute'
-metadata:
-  type: 'MEMORY_STORAGE'
-  module: 'agentuniverse.agent.memory.conversation_memory.memory_storage.sqlite_conversation_memory_storage'
-  class: 'SqliteMemoryStorage'

@@ -259,6 +259,7 @@ class SqliteMemoryStorage(MemoryStorage):
             session_id (str): The session id of the memory to add.
             agent_id (str): The agent id of the memory to add.
         """
+        message_list = ConversationMessage.check_and_convert_message(message_list, session_id)
         if self.engine is None:
             self._init_db()
         if message_list is None:
@@ -317,9 +318,6 @@ class SqliteMemoryStorage(MemoryStorage):
 
                 conditions.append(agent_id_col)
             elif agent_id and "types" in kwargs:
-                # conditions.append(and_(source_col == agent_id,
-                #                        agent_type_col == ConversationMessageSourceType.AGENT.value,
-                #                        target_agent_type_col.in_(kwargs["types"])))
                 conditions.append(or_(
                     and_(source_col == agent_id,
                          agent_type_col == ConversationMessageSourceType.AGENT.value,
@@ -329,10 +327,15 @@ class SqliteMemoryStorage(MemoryStorage):
                          agent_type_col.in_(kwargs["types"])
                          )
                 ))
+            if 'memory_type' in kwargs:
+                memory_type_col = getattr(model_class, 'type')
+                if isinstance(kwargs['memory_type'], list):
+                    conditions.append(memory_type_col.in_(kwargs['memory_type']))
+                elif isinstance(kwargs['memory_type'], str):
+                    conditions.append(memory_type_col == kwargs['memory_type'])
             if trace_id:
                 trace_id_col = getattr(model_class, 'trace_id')
                 conditions.append(trace_id_col == trace_id)
-
             # build the query with dynamic conditions
             query = session.query(self.memory_converter.model_class)
             if conditions:

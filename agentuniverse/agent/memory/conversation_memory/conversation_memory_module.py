@@ -100,7 +100,7 @@ def sync_to_sub_agent_memory(message: ConversationMessage, session_id: str, memo
         agent_instance = AgentManager().get_instance_obj(agent_name)
         agent_memory = agent_instance.agent_model.memory.get('conversation_memory')
         collection_types = agent_instance.agent_model.memory.get('collection_types')
-        if collection_types and len(collection_types) and collect_type not in collection_types:
+        if collection_types and collect_type not in collection_types:
             return
         if agent_memory:
             memory_instance = MemoryManager().get_instance_obj(agent_memory)

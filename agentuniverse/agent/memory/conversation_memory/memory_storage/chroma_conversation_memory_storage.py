@@ -100,6 +100,7 @@ class ChromaConversationMemoryStorage(MemoryStorage):
             session_id (str): The session id of the memory to add.
             agent_id (str): The agent id of the memory to add.
         """
+        message_list = ConversationMessage.check_and_convert_message(message_list, session_id)
         if self._collection is None:
             self._init_collection()
         if not message_list:
@@ -186,6 +187,12 @@ class ChromaConversationMemoryStorage(MemoryStorage):
                     }
                 ]
             })
+
+        if 'memory_type' in kwargs:
+            if isinstance(kwargs['memory_type'], list):
+                filters["$and"].append({'type': {'$in': kwargs['memory_type']}})
+            elif isinstance(kwargs['memory_type'], str):
+                filters["$and"].append({'type': kwargs['memory_type']})
 
         if 'trace_id' in kwargs:
             filters["$and"].append({'trace_id': kwargs['trace_id']})

@@ -15,6 +15,7 @@ from langchain_core.prompts.chat import BaseStringMessagePromptTemplate
 
 from agentuniverse.agent.memory.conversation_memory.enum import ConversationMessageSourceType, ConversationMessageEnum
 from agentuniverse.agent.memory.message import Message
+from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 
 
 class ConversationMessage(Message):
@@ -75,3 +76,33 @@ class ConversationMessage(Message):
     def from_dict(cls, data: dict):
         """Convert the agentUniverse(aU) message class to the dict."""
         return cls(**data)
+
+    @classmethod
+    def from_message(cls, message: Message, session_id: str):
+        message.metadata['prefix'] = '之前对话的摘要：' if message.type == 'summarize' else ''
+        message.metadata['params'] = "{}"
+        trace_id = message.metadata.get('trace_id')
+        if not trace_id:
+            trace_id = FrameworkContextManager().get_context('trace_id')
+            message.metadata['trace_id'] = trace_id
+        return cls(
+            content=message.content,
+            metadata=message.metadata,
+            type=message.type,
+            source=message.source,
+            source_type='agent',
+            target=message.target,
+            target_type='agent',
+            trace_id=trace_id,
+            conversation_id=message.metadata.get('session_id') if not session_id else session_id,
+        )
+
+    @classmethod
+    def check_and_convert_message(cls, messages, session_id: str=None):
+        if len(messages) == 0:
+            return []
+        message = messages[0]
+        if isinstance(message, cls):
+            return messages
+        if isinstance(message, Message):
+            return [cls.from_message(m, session_id) for m in messages]

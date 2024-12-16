@@ -68,7 +68,7 @@ dir = './monitor'
 # Whether to activate conversation memory.
 activate = true
 # The name of the memory.
-instance_name = 'demo_conversation_memory'
+instance_name = 'global_conversation_memory'
 # Whether to enable logging.
 logging = true
 # The language of the memory cn/en.
