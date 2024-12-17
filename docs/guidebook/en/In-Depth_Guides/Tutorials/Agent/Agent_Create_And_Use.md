@@ -101,12 +101,12 @@ action:
 #    - 'knowledge_a'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.rag_agent_case.demo_rag_agent'
   class: 'DemoRagAgent'
 ```
 The above is an actual example of an agent configuration. Besides the standard configuration items introduced above, those of you who are observant may have noticed variables in the prompt, such as `{background}` and `{input}`. This is a very practical prompt replacement feature, which we will explain further in the section titled "[How to dynamically adjust settings based on user input](#How to dynamically adjust settings based on user input)".
 
-You can find more examples of agent configuration YAML files in our sample project, located under the path `sample_standard_app.app.core.agent`.
+You can find more examples of agent configuration YAML files in our sample project, located under the path `sample_standard_app.intelligence.agentic.agent`.
 
 In addition, agentUniverse does not restrict users from extending the YAML configuration content for agents. You can create any custom configuration keys according to your own requirements, but please ensure that you do not duplicate the default configuration keywords mentioned above.
 
@@ -252,7 +252,7 @@ Taking the configuration of the example project as a reference, it would look so
 ```yaml
 [CORE_PACKAGE]
 # Scan and register agent components for all paths under this list, with priority over the default.
-agent = ['sample_standard_app.app.core.agent']
+agent = ['sample_standard_app.intelligence.agentic.agent']
 ```
 
 ## Other techniques for agent development
@@ -265,7 +265,7 @@ In the [Creating Agent Domain Behavior Definitions](#Creating Agent Domain Behav
 
 In the [An actual example of an agent configuration](#An actual example of an agent configuration.) section of this document, the prompt includes variables like `{background}`,`{input}`, etc. This feature is the prompt variable template replacement function, aimed at dynamically influencing the prompt based on the user's input. One only needs to define the text using  `{variable}` format in the agent configuration settings section and then define the corresponding variables in the `agent_input` method's agent_input to dynamically replace the prompt based on the input portion.
 
-For example, in the sample agent `sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent.py`, there is the following `parse_input` method.
+For example, in the sample agent `sample_standard_app.intelligence.agentic.agent.agent_instance.rag_agent_case.demo_rag_agent.py`, there is the following `parse_input` method.
 
 ```text
 def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
@@ -273,7 +273,7 @@ def parse_input(self, input_object: InputObject, agent_input: dict) -> dict:
     return agent_input
 ```
 
-In its agent settings file `sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent.yaml`, in the `instruction` section, we can see the following configuration.
+In its agent settings file `sample_standard_app.intelligence.agentic.agent.agent_instance.rag_agent_case.demo_rag_agent.yaml`, in the `instruction` section, we can see the following configuration.
 
 ```text
 instruction: |

@@ -129,7 +129,7 @@ class RagPlanner(Planner):
         )
         res = asyncio.run(
             chain_with_history.ainvoke(input=planner_input, config={"configurable": {"session_id": "unused"}}))
-        return {**planner_input, self.output_key: res.content, 'chat_history': generate_memories(chat_history)}
+        return {**planner_input, self.output_key: res.content}
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> ChatPrompt:
         """Prompt module processing.
