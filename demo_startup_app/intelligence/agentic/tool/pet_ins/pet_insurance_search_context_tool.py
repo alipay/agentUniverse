@@ -12,7 +12,7 @@ import requests
 from agentuniverse.agent.action.tool.tool import Tool, ToolInput
 from agentuniverse.base.util.logging.logging_util import LOGGER
 
-PRE_API_URL = "https://fincopilotcore.antgroup-inc.cn/api/copilot/runMxc/faq"
+PRE_API_URL = "xxxx"
 
 
 class SearchContextTool(Tool):
@@ -21,27 +21,20 @@ class SearchContextTool(Tool):
         question = tool_input.get_data('input')
         try:
             headers = {
-                "Content-Type": "application/json",
-                "x-fincopilotcore-signature": "LmHJoTYJxDh3yq@2dQ",
+                "Content-Type": "application/json"
             }
             # 要发送的数据
             data = {
-                "chatId": "6bc634d8dbf049feb9b64c91e35832fc-c",
-                "sessionId": "e5cdeb076d5b40eda74071e8d33c3594-s",
-                "userId": "2088942002730533",
-                "sceneCode": "ant_fortune_insurance_property",
+                "chatId": "xxxx",
+                "sessionId": "xxxx",
+                "userId": "xxxxx",
+                "sceneCode": "xxxx",
                 "query": question,
-                "decoderType": "ins_slot_v2",
+                "decoderType": "xxxx",
                 "inputMethod": "user_input",
-                "userInfoMap": {
-                    "userId": "2088942002730533",
-                    "consultantSceneCode": "ant_fortune_insurance_property",
-                    "spNo": "36763",
-                    "prodNo": "36763",
-                },
                 "enterScene": {
-                    "sceneCode": "ant_fortune_insurance_property",
-                    "productNo": "36763",
+                    "sceneCode": "xxx",
+                    "productNo": "xxxx",
                 }
             }
             top_k = tool_input.get_data('top_k') if tool_input.get_data('top_k') else 2
@@ -63,16 +56,3 @@ class SearchContextTool(Tool):
         except Exception as e:
             LOGGER.error(f"invoke search context tool failed: {str(e)}")
             raise e
-
-
-def main():
-    tool = SearchContextTool()
-    tool_input_dict = {
-        "input": "宠物医保投保对宠物年龄的要求是多少？"
-    }
-    response = tool.run(**tool_input_dict)
-    print(response)
-
-
-if __name__ == '__main__':
-    main()

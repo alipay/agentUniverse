@@ -40,4 +40,4 @@ instruction: |
   你需要回答的答案是:
 metadata:
   type: 'PROMPT'
-  version: 'pet_insurance_multi_agent.cn'
+  version: 'pet_insurance_consult.cn'
