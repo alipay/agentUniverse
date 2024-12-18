@@ -18,7 +18,7 @@ from agentuniverse.agent.agent_manager import AgentManager
 
 from agentuniverse.agent.action.knowledge.store.document import Document
 from agentuniverse.agent.memory.conversation_memory.conversation_message import ConversationMessage
-from agentuniverse.agent.memory.conversation_memory.enum import  ConversationMessageSourceType
+from agentuniverse.agent.memory.conversation_memory.enum import ConversationMessageSourceType
 from agentuniverse.agent.memory.memory_manager import MemoryManager
 from agentuniverse.agent.output_object import OutputObject
 from agentuniverse.base.annotation.singleton import singleton
@@ -125,6 +125,7 @@ class ConversationMemoryModule:
         self.logging = conversation_memory_configer.get('logging', False)
         self.collection_types = conversation_memory_configer.get('collection_types', ['agent', 'user'])
         self.conversation_format = conversation_memory_configer.get('conversation_format', 'cn')
+        self.max_content_length = conversation_memory_configer.get('max_content_length', 2048)
         self.queue = queue.Queue(1000)
         Thread(target=self._consume_queue, daemon=True).start()
 
@@ -167,7 +168,6 @@ class ConversationMemoryModule:
                 content = json.dumps(params, ensure_ascii=False)
             except Exception as e:
                 content = str(e)
-
         try:
             params_json = json.dumps(params, ensure_ascii=False)
         except Exception as e:
@@ -180,6 +180,10 @@ class ConversationMemoryModule:
             prefix = generate_relation_str_en(source, target, source_type, target_type, type)
         if not prefix:
             return
+        if isinstance(content, str) and len(content) > self.max_content_length:
+            content = content[:self.max_content_length]
+        if len(params_json) > self.max_content_length:
+            params_json = params_json[:self.max_content_length]
         if self.logging:
             LOGGER.info(
                 f"{self.instance_name} | {kwargs.get('session_id')} | {kwargs.get('trace_id')}| {kwargs.get('pair_id')} |\n {prefix}:{content}")
@@ -288,10 +292,6 @@ class ConversationMemoryModule:
                                   auto: bool = True):
 
         if not self.collection_current_agent_memory(start_info, 'knowledge', auto):
-            return
-        if not self.activate:
-            return
-        if 'agent' not in self.collection_types:
             return
         target_info = {'source': target, 'type': 'knowledge'}
         doc_data = []
