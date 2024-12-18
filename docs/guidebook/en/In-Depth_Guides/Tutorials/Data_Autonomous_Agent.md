@@ -42,7 +42,7 @@ plan:
     dataset_evaluator: 'dataset_eval_agent'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.data_agent_case.data_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.data_agent_case.data_agent'
   class: 'DataAgent'
 ```
 [data_agent sample configuration file](../../../../../sample_standard_app/app/core/agent/data_agent_case/data_agent.yaml)
@@ -64,7 +64,7 @@ plan:
     candidate: 'demo_rag_agent'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.data_agent_case.dataset_build_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.data_agent_case.dataset_build_agent'
   class: 'DatasetBuildAgent'
 ```
 [dataset_build_agent sample configuration file](../../../../../sample_standard_app/app/core/agent/data_agent_case/dataset_build_agent.yaml)
@@ -88,7 +88,7 @@ profile:
     temperature: 0.1
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.data_agent_case.dataset_eval_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.data_agent_case.dataset_eval_agent'
   class: 'DatasetEvalAgent'
 ```
 [dataset_eval_agent sample configuration file](../../../../../sample_standard_app/app/core/agent/data_agent_case/dataset_eval_agent.yaml)

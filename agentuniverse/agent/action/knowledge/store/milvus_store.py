@@ -47,6 +47,7 @@ class MilvusStore(Store):
     connection_name: str = 'default_connection'
     embedding_model: Optional[str] = None
     similarity_top_k: Optional[int] = 10
+    query_embedding: bool = False
 
 
     def _connect_to_milvus(self, connection_args: dict):
@@ -90,6 +91,8 @@ class MilvusStore(Store):
             self.embedding_model = milvus_store_configer.embedding_model
         if hasattr(milvus_store_configer, "similarity_top_k"):
             self.similarity_top_k = milvus_store_configer.similarity_top_k
+        if hasattr(milvus_store_configer, "query_embedding"):
+            self.similarity_top_k = milvus_store_configer.query_embedding
         return self
 
     def _create_or_load_collection(self,
@@ -168,12 +171,16 @@ class MilvusStore(Store):
         if not search_args:
             search_args = self.search_args
         if len(embedding) > 0:
+            if self.query_embedding:
+                output_fields = ["id", "text", "embedding", "metadata"]
+            else:
+                output_fields = ["id", "text", "metadata"]
             query_result = self.collection.search(
                 data=embedding,
                 anns_field="embedding",
                 param=search_args,
                 limit=query.similarity_top_k if query.similarity_top_k else self.similarity_top_k,
-                output_fields=["id", "text", "embedding", "metadata"]
+                output_fields=output_fields
             )
         else:
             query_result = []

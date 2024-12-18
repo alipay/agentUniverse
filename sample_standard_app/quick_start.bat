@@ -82,5 +82,5 @@ rem Set PYTHONPATH to the parent directory of the current working directory
 set PYTHONPATH=%cd%\..\..
 
 rem Start the service
-cd app\bootstrap
+cd boostrap/intelligence
 python -u server_application.py

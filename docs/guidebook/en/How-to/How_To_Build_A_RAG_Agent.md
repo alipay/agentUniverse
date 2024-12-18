@@ -22,15 +22,15 @@ readers:
 
 metadata:
   type: 'KNOWLEDGE'
-  module: 'sample_standard_app.app.core.knowledge.law_knowledge'
+  module: 'sample_standard_app.intelligence.agentic.knowledge.law_knowledge'
   class: 'LawKnowledge'
 ```
 
 ## Building the Knowledge Index
 
 Origin docs：
-- [民法典.pdf](../../../../sample_standard_app/app/resources/民法典.pdf)
-- [刑法.pdf](../../../../sample_standard_app/app/resources/刑法.pdf)
+- [民法典.pdf](../../../../sample_standard_app/intelligence/agentic/knowledge/raw_knowledge_file/民法典.pdf)
+- [刑法.pdf](../../../../sample_standard_app/intelligence/agentic/knowledge/raw_knowledge_file/刑法.pdf)
 
 ### Extracting Text from PDFs
 Since the original documents in this case are in PDF format, we configured the Knowledge component as follows:

@@ -129,7 +129,7 @@ class RagPlanner(Planner):
         )
         res = asyncio.run(
             chain_with_history.ainvoke(input=planner_input, config={"configurable": {"session_id": "unused"}}))
-        return {**planner_input, self.output_key: res.content, 'chat_history': generate_memories(chat_history)}
+        return {**planner_input, self.output_key: res.content}
 
     def handle_prompt(self, agent_model: AgentModel, planner_input: dict) -> ChatPrompt:
         """Prompt module processing.
@@ -184,7 +184,7 @@ planner = ['sample_standard_app.app.core.planner']
 
 # How to Use the Planner Component
 ## Configuring Use in the Agent
-Following the [Creating and Using Agents guide](../Agent/Agent_Create_And_Use.md), you can set up any created Planner component in the agent's planner section. Refer to the example: `demo_rag_agent`, with the specific file path `sample_standard_app/app/core/agent/rag_agent_case/demo_rag_agent.yaml`.
+Following the [Creating and Using Agents guide](../Agent/Agent_Create_And_Use.md), you can set up any created Planner component in the agent's planner section. Refer to the example: `demo_rag_agent`, with the specific file path `sample_standard_app/intelligence/agentic/agent/agent_instance/rag_agent_case/demo_rag_agent.yaml`.
 
 ## Using the Planner Manager
 You can get the Planner instance corresponding to its name using the `.get_instance_obj(xx_planner_name)` method in the Planner Manager and call it using the `invoke` method.

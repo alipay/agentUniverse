@@ -44,7 +44,7 @@ appname = 'demo_app'
 
 [CORE_PACKAGE]
 # Perform a full component scan and registration for all the paths under this list.
-default = ['sample_standard_app.app.core']
+default = ['sample_standard_app.intelligence.agentic']
 # Further information is omitted here.
 
 [SUB_CONFIG_PATH]
@@ -106,7 +106,7 @@ action:
     - 'google_search_tool'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.rag_agent_case.demo_rag_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.rag_agent_case.demo_rag_agent'
   class: 'DemoRagAgent'
 ```
 In `xx_agent_case_a.yaml`, we define the configuration of a `DemoRagAgent`. The `info` part is the basic information setting of the agent, the `profile` part contains the setting of the agent using the llm model, the `plan` part contains the behavior planning setting of the agent (determining the working mode of the agent), the `action` part contains the setting of the tools and knowledge that the agent can use, and the `metadata` part contains the metadata setting of the agent object.
@@ -158,7 +158,7 @@ plan:
     reviewing: 'demo_reviewing_agent'
 metadata:
   type: 'AGENT'
-  module: 'sample_standard_app.app.core.agent.peer_agent_case.demo_peer_agent'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_instance.peer_agent_case.demo_peer_agent'
   class: 'DemoPeerAgent'
 ```
 In `xx_agent_case_b.yaml`, we define the configuration of a `DemoPeerAgent`. The `info` part is the basic information setting of the agent, the `plan` part contains the behavior planning setting of the agent (determining the working mode of the agent), and the `metadata` part contains the metadata setting of the agent object.
@@ -217,11 +217,11 @@ metadata:
 In `xx_service.yaml`, we define a `demo_service` configuration. The `name` field defines the name of the service, the `description` field defines the description of the service, and the `agent` field defines which agent provides the service.
 
 ### Start the Service
-Start using the `server_application.py` file found in the `bootstrap` folder within your IDE,
+Start using the `server_application.py` file found in the `boostrap` folder within your IDE,
 or enter the following command in the terminal to start the service interface and begin listening:
 ```shell
-# under the bootstrap directory of the project
-cd `your bootstrap directory path`
+# under the boostrap directory of the project
+cd `your boostrap directory path`
 python server_application.py
 ```
 

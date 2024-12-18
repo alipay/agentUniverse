@@ -7,6 +7,7 @@
 # @FileName: knowledge.py
 import os
 import re
+import traceback
 from typing import Optional, Dict, List, Any
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
 
@@ -70,6 +71,7 @@ class Knowledge(ComponentBase):
     stores: List[str] = []
     query_paraphrasers: List[str] = []
     insert_processors: List[str] = []
+    update_processors: List[str] = []
     rag_router: str = "base_router"
     post_processors: List[str] = []
     readers: Dict[str, str] = dict()
@@ -121,6 +123,12 @@ class Knowledge(ComponentBase):
             origin_docs = doc_processor.process_docs(origin_docs)
         return origin_docs
 
+    def _update_process(self, origin_docs: List[Document]) -> List[Document]:
+        for _processor_code in self.update_processors:
+            doc_processor: DocProcessor = DocProcessorManager().get_instance_obj(_processor_code)
+            origin_docs = doc_processor.process_docs(origin_docs)
+        return origin_docs
+
     def _rag_post_process(self, origin_docs: List[Document], query: Query):
         for _processor_code in self.post_processors:
             doc_processor: DocProcessor = DocProcessorManager().get_instance_obj(_processor_code)
@@ -156,8 +164,35 @@ class Knowledge(ComponentBase):
             try:
                 future.result()
             except Exception as e:
+                traceback.print_exc()
                 LOGGER.error(f"Exception occurred in knowledge insert: {e}")
         LOGGER.info("Knowledge insert complete.")
+
+    def update_knowledge(self, **kwargs) -> None:
+        """Update the knowledge.
+
+        Load data by the reader and update the documents into the store.
+        """
+        document_list: List[Document] = self._load_data(**kwargs)
+        document_list = self._update_process(document_list)
+        futures = []
+        if "stores" in kwargs:
+            stores = kwargs["stores"]
+        else:
+            stores = self.stores
+        for _store_code in stores:
+            futures.append(
+                self.insert_executor.submit(
+                    StoreManager().get_instance_obj(_store_code).update_document,
+                    document_list))
+        wait(futures, return_when=ALL_COMPLETED)
+        for future in futures:
+            try:
+                future.result()
+            except Exception as e:
+                traceback.print_exc()
+                LOGGER.error(f"Exception occurred in knowledge update: {e}")
+        LOGGER.info("Knowledge update complete.")
 
     def _route_rag(self, query: Query):
         return RagRouterManager().get_instance_obj(self.rag_router).rag_route(query, self.stores)
@@ -187,6 +222,7 @@ class Knowledge(ComponentBase):
                     if _doc.id not in retrieved_docs:
                         retrieved_docs[_doc.id] = _doc
             except Exception as e:
+                traceback.print_exc()
                 LOGGER.error(f"Exception occurred in knowledge query: {e}")
         retrieved_docs = list(retrieved_docs.values())
         retrieved_docs = self._rag_post_process(retrieved_docs, query)
@@ -218,6 +254,8 @@ class Knowledge(ComponentBase):
             self.query_paraphrasers = knowledge_configer.query_paraphrasers
         if hasattr(knowledge_configer, "insert_processors"):
             self.insert_processors = knowledge_configer.insert_processors
+        if hasattr(knowledge_configer, "update_processors"):
+            self.update_processors = knowledge_configer.update_processors
         if hasattr(knowledge_configer, "rag_router"):
             self.rag_router = knowledge_configer.rag_router
         if hasattr(knowledge_configer, "post_processors"):

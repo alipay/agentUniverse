@@ -6,45 +6,70 @@ The directory structure provided below is only a suggestion, and you are free to
 
 ```
 /
-├── app/
-│   ├── biz/
-│   ├── bootstarp/
+├── boostrap/
+│   ├── intelligence/
 │   │   └── server_application.py
-│   ├── core/
+│   ├── platform/
+│   │   └── product_application.py
+├── intelligence/
+│   ├── agentic/
 │   │   ├── agent
+│   │   │   └── agent_instance
+│   │   │   └── agent_template
 │   │   ├── knowledge
+│   │   │   └── store/
+│   │   │   └── rag_router/
+│   │   │   └── doc_processor/
 │   │   ├── llm
+│   │   ├── prompt
 │   │   ├── memory
-│   │   ├── planner
-│   │   ├── service
-│   │   └── tool
-│   ├── test/
-│   └── web/
+│   │   ├── tool
+│   │   └── work_pattern
+│   ├── service/
+│   │   └── agent_service
+│   │   └── classic_service
+│   ├── dal/
+│   ├── integration/
+│   ├── utils/
+│   └── test/
+├── platform/
 ├── config
 ├── pyproject.toml
 └── other project files...
 ```
 
 Here's what each package directory level means:
-* app - The main application program code
-  * biz - Your business code, where you can organize subdirectories as needed
-  * bootstrap - The entry layer for starting the web server, for starting details refer to server_application.py
-  * core - The core layer of LLM agent application components
-    * agent - Place the agents you build
-    * knowledge - The knowledge you customize and use
-    * llm - The LLM (Language Model) you customize and use
-    * memory - The memory sysytem you customize and use
-    * planner - The collaborative mode you customize and use
-    * service - Directory for service registration
-    * tool - The tools you customize and use
-  * test - Directory for tests
-  * web - TThe web layer, currently left empty for future development 
+* boostrap: The entry layer for starting the web server
+  * intelligence - The entry layer for starting Intelligent web server
+  * platform - The entry layer for productization web server
+* intelligence: Intelligent project layer, used for agent construction, component customization, and service implementation.
+  * agentic: Intelligent domain layer, where related domain components of agentUniverse are placed.
+    * agent - Agent layer, corresponding to the agent component of agentUniverse, which can be used to build agent templates and instances.
+      * agent_template - Agent template layer, abstracted from business understanding, to help users quickly build agents. After the template is built, users only need to configure specific attributes based on the template to execute the corresponding logic. 
+      * agent_instance - Agent instance layer.
+    * knowledge - Knowledge layer, corresponding to the knowledge component of agentUniverse, including knowledge injection and search capabilities.
+      * store - Knowledge store, corresponding to the store component of agentUniverse.
+      * rag_router - Knowledge RAG router, corresponding to the rag_router component of agentUniverse.
+      * doc_processor - Knowledge document processor, corresponding to the doc_processor component of agentUniverse.
+    * llm - LLM layer, corresponding to the llm component of agentUniverse, providing llm services such as ChatGPT/Qwen.
+    * prompt - Prompt layer, corresponding to the prompt component of agentUniverse, providing prompt templates and generation capabilities.
+    * memory - Memory layer, corresponding to the memory component of agentUniverse, providing agent memory capabilities, including memory compression and storage.
+    * tool - Tool layer, corresponding to the tool component of agentUniverse, providing auxiliary tools such as API services.
+    * work_pattern - Work pattern layer, providing typical single-agent and multi-agent collaboration patterns, including PEER/DOE/MAP, etc.
+  * service: Intelligent project service layer.
+    * agent_service - Intelligent service layer, corresponding to the service component of agentUniverse, associating agent instances and providing external services.
+    * classic_service - Traditional service layer, handling non-agent services such as file services and session services.
+  * dal: Data access layer, providing data source access interfaces.
+  * integration: Integration layer, used to connect and coordinate different systems, services, and components.
+  * utils: Basic utility layer, providing small and general-purpose helper functions.
+  * test: Unit tests.
+* platform: Platform project layer, handling platform capabilities outside intelligent project.
 * config - Application configuration code
 
 ## Using Any Project Directory Structure
 You can adjust the project directory structure according to your preferences and actual circumstances, but please ensure you follow the rules below.
 
-### Bootstrap Startup Directory
+### Boostrap Startup Directory
 Regardless of the location of your project's startup script, except for testing, you should start the application service with the following statement:
 
 ```python
@@ -68,31 +93,44 @@ ServerApplication.start()
 `ServerApplication.start()` is the server startup method for this framework, which accepts a configuration path `config_path` as an input parameter. The default `config_path` points to a file named 'config.toml', located in the config directory under the project root path(`project_root_dir/config/config.toml`). Ensure that the config file path is correct; if you have further changed the directory of the config file, adjust the `config_path` accordingly.
 
 ### Config Directory
-As mentioned in the [Bootstrap Startup Directory](#bootstrap-startup-directory), the default config path for the project is `project_root_dir/config/config.toml`. If you have made any adjustments to this, please ensure that the correct config file path is provided to the startup method when the application server is launched.
+As mentioned in the [Boostrap Startup Directory](#boostrap-startup-directory), the default config path for the project is `project_root_dir/config/config.toml`. If you have made any adjustments to this, please ensure that the correct config file path is provided to the startup method when the application server is launched.
 
 ### Core Directory
-The core directory, as recommended in the project's directory structure, is primarily used for placing custom domain components like agents, knowledge bases, LLMs, and other related items. You are free to place all core components wherever you like and not limited to the same main package. You only need to specify the core package path in the `[CORE_PACKAGE]` section of the main configuration file `config/config.toml`.
- 
+As shown in the recommended directory structure, the agentic directory within intelligence is primarily used to place domain components related to agents, knowledge, and LLMs. If you want to customize the location of core components, you can specify the paths of the domain components in the [CORE_PACKAGE] section of the main configuration file config/config.toml as follows:
 ```toml
 [CORE_PACKAGE]
 # Perform a full component scan and registration for all the paths under this list.
-default = ['sample_standard_app.app.core']
+default = ['sample_standard_app.intelligence.agentic']
 # Scan and register agent components for all paths under this list, with priority over the default.
-agent = ['sample_standard_app.app.core.agent']
-# Scan and register agent components for all paths under this list, with priority over the default.
-knowledge = ['sample_standard_app.app.core.knowledge']
+agent = ['sample_standard_app.intelligence.agentic.agent']
 # Scan and register knowledge components for all paths under this list, with priority over the default.
-llm = ['sample_standard_app.app.core.llm']
+knowledge = ['sample_standard_app.intelligence.agentic.knowledge']
 # Scan and register llm components for all paths under this list, with priority over the default.
-planner = ['sample_standard_app.app.core.planner']
-# Scan and register planner components for all paths under this list, with priority over the default.
-tool = ['sample_standard_app.app.core.tool']
+llm = ['sample_standard_app.intelligence.agentic.llm']
+# Scan and register tool components for all paths under this list, with priority over the default.
+tool = ['sample_standard_app.intelligence.agentic.tool']
 # Scan and register memory components for all paths under this list, with priority over the default.
-memory = ['sample_standard_app.app.core.memory']
+memory = ['sample_standard_app.intelligence.agentic.memory']
 # Scan and register service components for all paths under this list, with priority over the default.
-service = ['sample_standard_app.app.core.service']
+service = ['sample_standard_app.intelligence.service.agent_service']
 # Scan and register prompt components for all paths under this list, with priority over the default.
-prompt = []
+prompt = ['sample_standard_app.intelligence.agentic.prompt']
+# Scan and register store components for all paths under this list, with priority over the default.
+store = ['sample_standard_app.intelligence.agentic.knowledge.store']
+# Scan and register rag_router components for all paths under this list, with priority over the default.
+rag_router = ['sample_standard_app.intelligence.agentic.knowledge.rag_router']
+# Scan and register doc_processor components for all paths under this list, with priority over the default.
+doc_processor = ['sample_standard_app.intelligence.agentic.knowledge.doc_processor']
+# Scan and register query_paraphraser components for all paths under this list, with priority over the default.
+query_paraphraser = ['sample_standard_app.intelligence.agentic.knowledge.query_paraphraser']
+# Scan and register memory_compressor components for all paths under this list, with priority over the default.
+memory_compressor = ['sample_standard_app.intelligence.agentic.memory.memory_compressor']
+# Scan and register memory_storage components for all paths under this list, with priority over the default.
+memory_storage = ['sample_standard_app.intelligence.agentic.memory.memory_storage']
+# Scan and register product components for all paths under this list, with priority over the default.
+product = ['sample_standard_app.platform.difizen.product']
+# Scan and register workflow components for all paths under this list, with priority over the default.
+workflow = ['sample_standard_app.platform.difizen.workflow']
 ```
 The format for specifying package paths in the configuration follows the standard Python package path format. The framework will register, scan, and manage all types of component packages uniformly based on the defined package paths during startup.
 
