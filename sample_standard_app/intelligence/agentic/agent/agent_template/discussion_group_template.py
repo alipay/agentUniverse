@@ -145,7 +145,7 @@ class DiscussionGroupTemplate(AgentTemplate):
         prompt: ChatPrompt = self.process_prompt(agent_input)
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)
 
-        memory_messages = assemble_memory_input(memory, agent_input, self.get_memory_params())
+        memory_messages = assemble_memory_input(memory, agent_input, self.get_memory_params(agent_input))
 
         chain = prompt.as_langchain() | llm.as_langchain_runnable(self.agent_model.llm_params()) | StrOutputParser()
         res = self.invoke_chain(chain, agent_input, input_object)

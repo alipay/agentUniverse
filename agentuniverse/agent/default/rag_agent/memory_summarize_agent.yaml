@@ -8,9 +8,8 @@ profile:
 #    model_name: 'qwen2.5-72b-instruct'
     temperature: 0.7
 memory:
-  name: ''
   auto_trace: false
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.template.rag_agent_template'
-  class: 'RagAgentTemplate'
+  module: 'agentuniverse.agent.template.default_summarize_agent_template'
+  class: 'SummarizeRagAgentTemplate'

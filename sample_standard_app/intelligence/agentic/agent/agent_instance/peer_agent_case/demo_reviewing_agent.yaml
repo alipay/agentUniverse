@@ -7,6 +7,7 @@ profile:
     temperature: 0.5
 memory:
   name: ''
+  auto_trace: False
   conversation_memory: 'demo_conversation_memory'
   output_field: 'suggestion'
 metadata:

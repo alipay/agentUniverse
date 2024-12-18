@@ -9,10 +9,9 @@ profile:
 memory:
   conversation_memory: 'demo_execute_conversation_memory'
   auto_trace: False
-  memory_types: [ 'agent','tool' ]
-  collection_types: [ 'agent','tool']
   prune: True
   top_k: 50
+  agent_id: peer_agent_case
 action:
   knowledge:
     - ''

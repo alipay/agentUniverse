@@ -63,6 +63,10 @@ class ExecutingAgentTemplate(AgentTemplate):
         _context_values: dict = FrameworkContextManager().get_all_contexts()
         framework = agent_input.get('framework', [])
 
+        if len(framework) == 0:
+            return {'executing_result': [],
+                    'output_stream': input_object.get_data('output_stream', None)}
+
         with ThreadPoolExecutor(max_workers=min(len(framework), 10),
                                 thread_name_prefix="executing_agent_template") as thread_executor:
             futures = []
@@ -88,7 +92,7 @@ class ExecutingAgentTemplate(AgentTemplate):
                 instance=self,
                 params={'input': agent_input.get('framework')[index]},
                 pair_id=pair_id,
-                by_user=True
+                auto=False
             )
             # pass the framework context into the thread.
             # for var_name, var_value in self._context_values.items():
@@ -106,7 +110,7 @@ class ExecutingAgentTemplate(AgentTemplate):
             agent_input_copy['input'] = subtask
 
             process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input_copy)
-            assemble_memory_input(memory, agent_input_copy, self.get_memory_params())
+            assemble_memory_input(memory, agent_input_copy, self.get_memory_params(agent_input_copy))
 
             chain = prompt.as_langchain() | llm.as_langchain_runnable(
                 self.agent_model.llm_params()) | StrOutputParser()
@@ -120,7 +124,7 @@ class ExecutingAgentTemplate(AgentTemplate):
                 agent_result={'output': res},
                 target_info=input_object.get_data('memory_source_info'),
                 pair_id=pair_id,
-                by_user=True
+                auto=False
             )
             return {
                 'index': index,

@@ -86,19 +86,20 @@ class ConversationMessage(Message):
             trace_id = FrameworkContextManager().get_context('trace_id')
             message.metadata['trace_id'] = trace_id
         return cls(
+            id=uuid.uuid4().hex,
             content=message.content,
             metadata=message.metadata,
             type=message.type,
             source=message.source,
             source_type='agent',
-            target=message.target,
+            target=message.source,
             target_type='agent',
             trace_id=trace_id,
             conversation_id=message.metadata.get('session_id') if not session_id else session_id,
         )
 
     @classmethod
-    def check_and_convert_message(cls, messages, session_id: str=None):
+    def check_and_convert_message(cls, messages, session_id: str = None):
         if len(messages) == 0:
             return []
         message = messages[0]

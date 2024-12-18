@@ -25,6 +25,7 @@ from agentuniverse.base.config.application_configer.application_config_manager \
     import ApplicationConfigManager
 from agentuniverse.base.config.component_configer.configers.agent_configer \
     import AgentConfiger
+from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 from agentuniverse.base.util.logging.logging_util import LOGGER
 
 
@@ -211,3 +212,34 @@ class Agent(ComponentBase, ABC):
             func=self.langchain_run,
             description=self.agent_model.info.get("description") + args_description
         )
+
+    def get_memory_params(self, agent_input: dict) -> dict:
+        memory_info = self.agent_model.memory
+        memory_types = self.agent_model.memory.get('memory_types', None)
+        prune = self.agent_model.memory.get('prune', False)
+        top_k = self.agent_model.memory.get('top_k', 20)
+        session_id = agent_input.get('session_id')
+        agent_id = self.agent_model.info.get('name')
+        if not session_id:
+            session_id = FrameworkContextManager().get_context('session_id')
+        if "agent_id" in memory_info:
+            agent_id = memory_info.get('agent_id')
+        params = {
+            'session_id': session_id,
+            'agent_id': agent_id,
+            'types': memory_types,
+            'prune': prune,
+            'top_k': top_k
+        }
+        if agent_input.get('input'):
+            params['input'] = agent_input.get('input')
+        return params
+
+    def collect_current_memory(self, collect_type: str) -> bool:
+        collection_types = self.agent_model.memory.get('collection_types')
+        auto_trace = self.agent_model.memory.get('auto_trace', True)
+        if not auto_trace:
+            return False
+        if collection_types and collect_type not in collection_types:
+            return False
+        return True

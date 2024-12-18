@@ -58,7 +58,7 @@ class ReActAgentTemplate(AgentTemplate):
 
     def customized_execute(self, input_object: InputObject, agent_input: dict, memory: Memory, llm: LLM, prompt: Prompt,
                            **kwargs) -> dict:
-        assemble_memory_input(memory, agent_input, self.get_memory_params())
+        assemble_memory_input(memory, agent_input,self.get_memory_params(agent_input))
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)
         lc_tools: List[LangchainTool] = self._convert_to_langchain_tool()
         agent = self.create_react_agent(llm.as_langchain(), lc_tools, prompt.as_langchain(),
@@ -78,7 +78,7 @@ class ReActAgentTemplate(AgentTemplate):
 
     async def customized_async_execute(self, input_object: InputObject, agent_input: dict, memory: Memory,
                                        llm: LLM, prompt: Prompt, **kwargs) -> dict:
-        assemble_memory_input(memory, agent_input, self.get_memory_params())
+        assemble_memory_input(memory, agent_input,self.get_memory_params(agent_input))
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)
         lc_tools: List[LangchainTool] = self._convert_to_langchain_tool()
         agent = self.create_react_agent(llm.as_langchain(), lc_tools, prompt.as_langchain(),

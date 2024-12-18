@@ -18,7 +18,7 @@ from agentuniverse.agent.agent_manager import AgentManager
 
 from agentuniverse.agent.action.knowledge.store.document import Document
 from agentuniverse.agent.memory.conversation_memory.conversation_message import ConversationMessage
-from agentuniverse.agent.memory.conversation_memory.enum import ConversationMessageEnum, ConversationMessageSourceType
+from agentuniverse.agent.memory.conversation_memory.enum import  ConversationMessageSourceType
 from agentuniverse.agent.memory.memory_manager import MemoryManager
 from agentuniverse.agent.output_object import OutputObject
 from agentuniverse.base.annotation.singleton import singleton
@@ -223,8 +223,6 @@ class ConversationMemoryModule:
 
     def add_trace_info(self, start_info: dict, target_info: dict, type: str, params: dict, pair_id: str):
         """Add trace info to the memory."""
-        if not self.activate:
-            return
         trace_id = FrameworkContextManager().get_context('trace_id')
         if trace_id is None:
             trace_id = str(uuid.uuid4())
@@ -241,54 +239,59 @@ class ConversationMemoryModule:
 
         self.queue.put_nowait(add_trace)
 
-    def add_tool_input_info(self, start_info: dict, target: str, params: dict, pair_id: str):
+    def add_tool_input_info(self, start_info: dict, target: str, params: dict, pair_id: str, auto: bool = True):
         """Add trace info to the memory."""
-        if not self.activate:
+
+        if not self.collection_current_agent_memory(start_info, 'tool', auto):
             return
-        if 'tool' not in self.collection_types:
-            return
+
         target_info = {'source': target, 'type': 'tool'}
         self.add_trace_info(start_info, target_info, 'input', params, pair_id)
 
-    def add_tool_output_info(self, start_info: dict, target: str, params: dict, pair_id: str, by_user: bool = False):
+    def add_tool_output_info(self, start_info: dict, target: str, params: dict, pair_id: str, auto: bool = True):
         """Add trace info to the memory."""
-        if not self.activate:
+        if not self.collection_current_agent_memory(start_info, 'tool', auto):
             return
-        if 'tool' not in self.collection_types:
-            return
+
         target_info = {'source': target, 'type': 'tool'}
         self.add_trace_info(target_info, start_info, 'output', params, pair_id)
 
     def add_agent_input_info(self, start_info: dict, instance: 'Agent', params: dict, pair_id: str,
-                             by_user: bool = False):
+                             auto: bool = True):
+        if auto:
+            if not instance.collect_current_memory(start_info.get('type')):
+                return
         if not self.activate:
             return
         if 'agent' not in self.collection_types:
             return
-        if not instance.agent_model.memory.get('auto_trace', True) and not by_user:
-            return
+
         target_info = {'source': instance.agent_model.info.get('name'), 'type': 'agent'}
         input_keys = instance.input_keys()
         if "kwargs" in params:
             params: dict = params['kwargs']
             params = params.copy()
             params.pop('output_stream') if 'output_stream' in params else params
-        if not by_user:
+        if auto:
             params = {key: params[key] for key in input_keys}
         self.add_trace_info(start_info, target_info, 'input', params, pair_id)
 
-    def add_knowledge_input_info(self, start_info: dict, target: str, params: dict, pair_id: str):
-        if not self.activate:
+    def add_knowledge_input_info(self, start_info: dict, target: str, params: dict, pair_id: str, auto: bool = True):
+
+        if not self.collection_current_agent_memory(start_info, 'knowledge', auto):
             return
-        if 'knowledge' not in self.collection_types:
-            return
+
         target_info = {'source': target, 'type': 'knowledge'}
         self.add_trace_info(start_info, target_info, 'input', params, pair_id)
 
-    def add_knowledge_output_info(self, start_info: dict, target: str, params: List[Document], pair_id: str):
+    def add_knowledge_output_info(self, start_info: dict, target: str, params: List[Document], pair_id: str,
+                                  auto: bool = True):
+
+        if not self.collection_current_agent_memory(start_info, 'knowledge', auto):
+            return
         if not self.activate:
             return
-        if 'knowledge' not in self.collection_types:
+        if 'agent' not in self.collection_types:
             return
         target_info = {'source': target, 'type': 'knowledge'}
         doc_data = []
@@ -300,19 +303,18 @@ class ConversationMemoryModule:
 
     def add_agent_result_info(self, agent_instance: 'Agent', agent_result: Optional[OutputObject | dict],
                               target_info: dict,
-                              pair_id: str, by_user: bool = False):
-        if not self.activate:
-            return
-        if 'agent' not in self.collection_types:
-            return
+                              pair_id: str, auto: bool = True):
+
+        if auto:
+            if not agent_instance.collect_current_memory(target_info.get('type')):
+                return
+
         trace_id = FrameworkContextManager().get_context('trace_id')
         session_id = FrameworkContextManager().get_context('session_id')
-        if not agent_instance.agent_model.memory.get('auto_trace', True) and not by_user:
-            return
 
         def add_trace():
             output_keys = agent_instance.output_keys()
-            if not by_user:
+            if auto:
                 params = {key: agent_result.get_data(key) for key in output_keys}
             else:
                 params = agent_result
@@ -324,20 +326,36 @@ class ConversationMemoryModule:
 
         self.queue.put_nowait(add_trace)
 
-    def add_llm_input_info(self, start_info: dict, target: str, prompt: str, pair_id: str):
-        if not self.activate:
+    def add_llm_input_info(self, start_info: dict, target: str, prompt: str, pair_id: str, auto=True):
+        if not self.collection_current_agent_memory(start_info, 'llm', auto):
             return
-        if 'llm' not in self.collection_types:
-            return
+
         target_info = {'source': target, 'type': 'llm'}
         self.add_trace_info(start_info, target_info, 'input', {'input': prompt}, pair_id)
 
-    def add_llm_output_info(self, start_info: dict, target: str, output: str, pair_id: str):
-        if not self.activate:
-            return
-        if 'llm' not in self.collection_types:
+    def add_llm_output_info(self, start_info: dict, target: str, output: str, pair_id: str, auto=True):
+        if not self.collection_current_agent_memory(start_info, 'llm', auto):
             return
         target_info = {'source': target, 'type': 'llm'}
         self.add_trace_info(target_info, start_info, 'output', {
             'output': output
         }, pair_id)
+
+    def collection_current_agent_memory(self, info: dict, collection_type: str, auto: bool):
+        if not auto:
+            return True
+        if not self.activate:
+            return False
+        if info.get('type') == 'agent':
+            agent_id = info.get('source')
+            agent_instance = AgentManager().get_instance_obj(agent_id)
+            if agent_instance:
+                collection_types = agent_instance.agent_model.memory.get('collection_types')
+                res = agent_instance.collect_current_memory(collection_type)
+                if not res:
+                    return False
+                if collection_types:
+                    return res
+        if collection_type not in self.collection_types:
+            return False
+        return True

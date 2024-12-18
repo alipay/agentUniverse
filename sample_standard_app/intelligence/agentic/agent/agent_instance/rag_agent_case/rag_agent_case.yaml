@@ -2,9 +2,9 @@ info:
   name: 'rag_agent_case'
   description: 'rag agent case with conversation memory'
 profile:
-  prompt_version: demo_rag_agent.cn
+  prompt_version: rag_case_agent.cn
   llm_model:
-    name: 'qwen_llm'
+    name: 'deep_seek_llm'
 action:
   tool:
       - 'google_search_tool'
@@ -13,8 +13,10 @@ memory:
   conversation_memory: 'demo_conversation_memory'
   input_field: 'input'
   output_field: 'output'
+  top_k: 10
+  collection_types: ['user','agent','llm']
 
 metadata:
   type: 'AGENT'
-  module: 'agentuniverse.agent.template.rag_agent_template'
-  class: 'RagAgentTemplate'
+  module: 'sample_standard_app.intelligence.agentic.agent.agent_template.rag_agent_case_template'
+  class: 'RagAgentCaseTemplate'

@@ -275,7 +275,7 @@ class SqliteMemoryStorage(MemoryStorage):
                                                                    agent_id=agent_id, **kwargs))
             session.commit()
 
-    def get(self, session_id: str = None, agent_id: str = None, top_k=50, trace_id: str = None, **kwargs) -> List[
+    def get(self, session_id: str = None, agent_id: str = None, top_k=20, trace_id: str = None, **kwargs) -> List[
         ConversationMessage]:
         """Get messages from the memory db.
 
@@ -304,9 +304,15 @@ class SqliteMemoryStorage(MemoryStorage):
             agent_type_col = getattr(model_class, 'source_type')
             target_col = getattr(model_class, 'target')
             target_agent_type_col = getattr(model_class, 'target_type')
-
+            if agent_id and 'memory_type' in kwargs:
+                memory_type_col = getattr(model_class, 'type')
+                if isinstance(kwargs['memory_type'], list):
+                    conditions.append(memory_type_col.in_(kwargs['memory_type']))
+                elif isinstance(kwargs['memory_type'], str):
+                    conditions.append(type_col == kwargs['memory_type'])
+                conditions.append(source_col == agent_id)
             # conditionally add agent_id to the query
-            if agent_id and not kwargs.get("types"):
+            elif agent_id and not kwargs.get("types"):
                 source_type_col = and_(source_col == agent_id,
                                        type_col == ConversationMessageEnum.OUTPUT.value,
                                        agent_type_col == ConversationMessageSourceType.AGENT.value
@@ -327,12 +333,6 @@ class SqliteMemoryStorage(MemoryStorage):
                          agent_type_col.in_(kwargs["types"])
                          )
                 ))
-            if 'memory_type' in kwargs:
-                memory_type_col = getattr(model_class, 'type')
-                if isinstance(kwargs['memory_type'], list):
-                    conditions.append(memory_type_col.in_(kwargs['memory_type']))
-                elif isinstance(kwargs['memory_type'], str):
-                    conditions.append(memory_type_col == kwargs['memory_type'])
             if trace_id:
                 trace_id_col = getattr(model_class, 'trace_id')
                 conditions.append(trace_id_col == trace_id)

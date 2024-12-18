@@ -133,9 +133,12 @@ class Memory(ComponentBase):
     def summarize_memory(self, **kwargs) -> str:
         kwargs['prune'] = False
         messages = self.get(**kwargs)
+        summarize_messages = self.get(session_id=kwargs.get('session_id'), agent_id=kwargs.get('agent_id'),
+                                      memory_type='summarize')
+        summarize_content = summarize_messages[-1].content if summarize_messages and len(summarize_messages) > 0 else ''
         messages_str = get_memory_string(messages)
         agent: 'Agent' = AgentManager().get_instance_obj(self.summarize_agent_id)
-        output_object: OutputObject = agent.run(input=messages_str)
+        output_object: OutputObject = agent.run(input=messages_str, summarize_content=summarize_content)
         return output_object.get_data('output')
 
     def get_instance_code(self) -> str:
