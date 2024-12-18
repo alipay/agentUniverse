@@ -145,7 +145,7 @@ class DiscussionGroupTemplate(AgentTemplate):
         prompt: ChatPrompt = self.process_prompt(agent_input)
         process_llm_token(llm, prompt.as_langchain(), self.agent_model.profile, agent_input)
 
-        memory_messages = assemble_memory_input(memory, agent_input, self.get_memory_params(agent_input))
+        assemble_memory_input(memory, agent_input)
 
         chain = prompt.as_langchain() | llm.as_langchain_runnable(self.agent_model.llm_params()) | StrOutputParser()
         res = self.invoke_chain(chain, agent_input, input_object)
@@ -153,11 +153,11 @@ class DiscussionGroupTemplate(AgentTemplate):
         content = (f"human: {agent_input.get('input')}, "
                    f"ai: after several rounds of discussions among the participants, "
                    f"the host in the discussion group came to the conclusion:{res}")
-        if self.memory_name:
-            memory_messages = assemble_memory_output(memory, agent_input, content, '', memory_messages)
+
+        assemble_memory_output(memory, agent_input, content, '')
 
         LOGGER.info(f"Discussion summary is: {res}")
-        return {**agent_input, 'output': res, 'chat_history': memory_messages}
+        return {**agent_input, 'output': res}
 
     def initialize_by_component_configer(self, component_configer: AgentConfiger) -> 'DiscussionGroupTemplate':
         super().initialize_by_component_configer(component_configer)
