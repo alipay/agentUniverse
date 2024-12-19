@@ -28,6 +28,7 @@ from agentuniverse.agent_serve.web.request_task import RequestLibrary
 from agentuniverse.agent_serve.web.rpc.grpc.grpc_server_booster import set_grpc_config
 from agentuniverse.agent_serve.web.web_booster import ACTIVATE_OPTIONS
 from agentuniverse.agent_serve.web.post_fork_queue import POST_FORK_QUEUE
+from agentuniverse.agent_serve.web.web_util import FlaskServerManager
 
 
 @singleton
@@ -93,6 +94,9 @@ class AgentUniverse(object):
             set_grpc_config(configer)
 
         # Init gunicorn web server with config file.
+        sync_service_timeout = configer.value.get('HTTP_SERVER', {}).get('sync_service_timeout')
+        if sync_service_timeout:
+            FlaskServerManager().sync_service_timeout = sync_service_timeout
         gunicorn_activate = configer.value.get('GUNICORN', {}).get('activate')
         if gunicorn_activate and gunicorn_activate.lower() == 'true':
             ACTIVATE_OPTIONS["gunicorn"] = True
