@@ -39,7 +39,7 @@ class ExecutingPlanner(Planner):
 
         llm: LLM = self.handle_llm(agent_model)
         prompt: Prompt = self.handle_prompt(agent_model, planner_input)
-        (llm, prompt.as_langchain(), agent_model.profile, planner_input)
+        process_llm_token(llm, prompt.as_langchain(), agent_model.profile, planner_input)
 
         assemble_memory_input(memory, planner_input)
 
