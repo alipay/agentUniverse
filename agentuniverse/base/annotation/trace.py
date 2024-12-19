@@ -200,6 +200,37 @@ def trace_agent(func):
     """
 
     @functools.wraps(func)
+    async def wrapper_async(*args, **kwargs):
+        # get agent input from arguments
+        agent_input = _get_input(func, *args, **kwargs)
+        # check whether the tracing switch is enabled
+        source = func.__qualname__
+        self = agent_input.pop('self', None)
+
+        tracing = None
+        if isinstance(self, object):
+            agent_model = getattr(self, 'agent_model', None)
+            if isinstance(agent_model, object):
+                info = getattr(agent_model, 'info', None)
+                profile = getattr(agent_model, 'profile', None)
+                if isinstance(info, dict):
+                    source = info.get('name', None)
+                if isinstance(profile, dict):
+                    tracing = profile.get('tracing', None)
+
+        # add invocation chain to the monitor module.
+        Monitor.add_invocation_chain({'source': source, 'type': 'agent'})
+
+        if tracing is False:
+            return await func(*args, **kwargs)
+
+        # invoke function
+        result = await func(*args, **kwargs)
+        # add agent invocation info to monitor
+        Monitor().trace_agent_invocation(source=source, agent_input=agent_input, agent_output=result)
+        return result
+
+    @functools.wraps(func)
     def wrapper_sync(*args, **kwargs):
         Monitor.init_trace_id()
         Monitor.init_invocation_chain()
@@ -241,8 +272,12 @@ def trace_agent(func):
 
         return result
 
-    # sync function
-    return wrapper_sync
+    if asyncio.iscoroutinefunction(func):
+        # async function
+        return wrapper_async
+    else:
+        # sync function
+        return wrapper_sync
 
 
 def trace_tool(func):

@@ -6,10 +6,10 @@
 # @Email   : fanen.lhy@antgroup.com
 # @FileName: thread_with_result.py
 
+import threading
 from threading import Thread
 import weakref
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures.thread import _worker, _threads_queues
+from concurrent.futures.thread import ThreadPoolExecutor, _worker, _threads_queues
 
 from agentuniverse.base.context.framework_context_manager import FrameworkContextManager
 
@@ -59,8 +59,8 @@ class ThreadWithReturnValue(Thread):
         return self._return
 
 
+class ThreadPoolExecutorWithReturnValue(ThreadPoolExecutor):
 
-class ThreadPoolExecutorWithContext(ThreadPoolExecutor):
     def _adjust_thread_count(self):
         # if idle threads are available, don't spin new threads
         if self._idle_semaphore.acquire(timeout=0):

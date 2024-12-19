@@ -1,20 +1,9 @@
-# agentUniverse- 示例工程
-*****************************************************
-语言版本: [English](./README.md) | [中文](./README_zh.md)
-*****************************************************
-
+# agentUniverse- 标准应用工程
 ## 介绍
-本项目是agentUniverse的示例工程。
+本项目是agentUniverse的标准应用工程。
 
 ## 快速开始
-我们将向您展示如何：
-* 进行环境与应用工程准备
-* 构建一个简单的agent
-* 使用模式组件完成多agent协同
-* 对agent执行效果进行测试调优
-* 对agent进行快速服务化
-
-详情请阅读[快速开始](../docs/guidebook/zh/1_3_快速开始.md)。
+您可以基于 [快速开始](https://github.com/antgroup/agentUniverse/blob/master/docs/guidebook/zh/%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B.md) 运行第一个案例。
 
 ## 用户指南
-更多详细信息，请参阅[指南](../docs/guidebook/zh/0_目录.md)。
+更多详细信息，请参阅 [用户指南](https://github.com/antgroup/agentUniverse/blob/master/docs/guidebook/zh/%E7%9B%AE%E5%BD%95.md) 。

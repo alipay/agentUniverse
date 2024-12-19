@@ -11,10 +11,14 @@ from typing import Type, Callable
 from agentuniverse.agent.action.knowledge.knowledge_manager import KnowledgeManager
 from agentuniverse.agent.action.tool.tool_manager import ToolManager
 from agentuniverse.agent.agent_manager import AgentManager
+from agentuniverse.agent.memory.memory_compressor.memory_compressor_manager import MemoryCompressorManager
 from agentuniverse.agent.memory.memory_manager import MemoryManager
+from agentuniverse.agent.memory.memory_storage.memory_storage_manager import MemoryStorageManager
 from agentuniverse.agent.plan.planner.planner_manager import PlannerManager
+from agentuniverse.agent.work_pattern.work_pattern_manager import WorkPatternManager
 from agentuniverse.agent_serve.service_manager import ServiceManager
 from agentuniverse.agent_serve.service_configer import ServiceConfiger
+from agentuniverse.base.config.component_configer.configers.work_pattern_configer import WorkPatternConfiger
 from agentuniverse.base.config.component_configer.configers.workflow_configer import WorkflowConfiger
 from agentuniverse.database.sqldb_wrapper_manager import SQLDBWrapperManager
 from agentuniverse.base.config.component_configer.component_configer import ComponentConfiger
@@ -31,6 +35,7 @@ from agentuniverse.base.component.component_enum import ComponentEnum
 from agentuniverse.llm.llm_manager import LLMManager
 from agentuniverse.prompt.prompt_manager import PromptManager
 from agentuniverse.workflow.workflow_manager import WorkflowManager
+from agentuniverse.base.util.logging.log_sink.log_sink_manager import LogSinkManager
 
 from agentuniverse.agent.action.knowledge.embedding.embedding_manager import EmbeddingManager
 from agentuniverse.agent.action.knowledge.doc_processor.doc_processor_manager import DocProcessorManager
@@ -38,7 +43,6 @@ from agentuniverse.agent.action.knowledge.reader.reader_manager import ReaderMan
 from agentuniverse.agent.action.knowledge.query_paraphraser.query_paraphraser_manager import QueryParaphraserManager
 from agentuniverse.agent.action.knowledge.store.store_manager import StoreManager
 from agentuniverse.agent.action.knowledge.rag_router.rag_router_manager import RagRouterManager
-
 
 
 class ComponentConfigerUtil(object):
@@ -61,6 +65,10 @@ class ComponentConfigerUtil(object):
         ComponentEnum.STORE: ComponentConfiger,
         ComponentEnum.RAG_ROUTER: ComponentConfiger,
         ComponentEnum.QUERY_PARAPHRASER: ComponentConfiger,
+        ComponentEnum.MEMORY_COMPRESSOR: ComponentConfiger,
+        ComponentEnum.MEMORY_STORAGE: ComponentConfiger,
+        ComponentEnum.WORK_PATTERN: WorkPatternConfiger,
+        ComponentEnum.LOG_SINK: ComponentConfiger,
         ComponentEnum.DEFAULT: ComponentConfiger
     }
 
@@ -81,6 +89,10 @@ class ComponentConfigerUtil(object):
         ComponentEnum.STORE: StoreManager,
         ComponentEnum.RAG_ROUTER: RagRouterManager,
         ComponentEnum.QUERY_PARAPHRASER: QueryParaphraserManager,
+        ComponentEnum.MEMORY_COMPRESSOR: MemoryCompressorManager,
+        ComponentEnum.MEMORY_STORAGE: MemoryStorageManager,
+        ComponentEnum.WORK_PATTERN: WorkPatternManager,
+        ComponentEnum.LOG_SINK: LogSinkManager
     }
 
     @classmethod
