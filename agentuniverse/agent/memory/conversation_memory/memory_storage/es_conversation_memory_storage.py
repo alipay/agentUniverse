@@ -141,7 +141,7 @@ class ElasticsearchMemoryStorage(MemoryStorage):
             session_id (str): The session id of the memory to add.
             agent_id (str): The agent id of the memory to add.
         """
-        message_list = ConversationMessage.check_and_convert_message(message_list,session_id)
+        message_list = ConversationMessage.check_and_convert_message(message_list, session_id)
         actions = []
         for message in message_list:
             action = self.memory_converter.to_es_action(message, session_id=session_id, agent_id=agent_id, **kwargs)
@@ -181,7 +181,10 @@ class ElasticsearchMemoryStorage(MemoryStorage):
         }
         if session_id:
             query['query']['bool']['must'].append({"term": {"session_id": session_id}})
-        if agent_id and (kwargs.get('types') is None or len(kwargs.get('types')) == 0):
+        if agent_id and 'memory_type' not in kwargs:
+            query['query']['bool']['must'].append({"match": {"agent_id": agent_id}})
+            query['query']['bool']['must'].append({"match": {"type": kwargs.get('memory_type')}})
+        elif agent_id and (kwargs.get('types') is None or len(kwargs.get('types')) == 0):
             query['query']['bool']['must'].append({
                 "bool": {
                     "should": [

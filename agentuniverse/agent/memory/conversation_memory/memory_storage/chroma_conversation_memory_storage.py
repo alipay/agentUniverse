@@ -149,7 +149,11 @@ class ChromaConversationMemoryStorage(MemoryStorage):
         filters = {"$and": []}
         if session_id:
             filters["$and"].append({'session_id': session_id})
-        if agent_id and 'types' not in kwargs:
+
+        if agent_id and 'memory_type' in kwargs:
+            filters["$and"].append({'type': kwargs['memory_type']})
+            filters["$and"].append({'agent_id': agent_id})
+        elif agent_id and 'types' not in kwargs:
             filters["$and"].append({
                 "$or": [
                     {"$and": [
