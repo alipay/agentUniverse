@@ -51,6 +51,7 @@ class AgentUniverse(object):
         self.__system_default_memory_compressor_package = ['agentuniverse.agent.memory.memory_compressor']
         self.__system_default_memory_storage_package = ['agentuniverse.agent.memory.memory_storage']
         self.__system_default_work_pattern_package = ['agentuniverse.agent.work_pattern']
+        self.__system_default_log_sink_package = ['agentuniverse.base.util.logging.log_sink.log_sink']
 
     def start(self, config_path: str = None, core_mode: bool = False):
         """Start the agentUniverse framework.
@@ -157,6 +158,8 @@ class AgentUniverse(object):
                                             + self.__system_default_memory_storage_package)
         core_work_pattern_package_list = ((app_configer.core_work_pattern_package_list or app_configer.core_default_package_list)
                                             + self.__system_default_work_pattern_package)
+        core_log_sink_package_list = ((app_configer.core_log_sink_package_list or app_configer.core_default_package_list)
+                                          + self.__system_default_log_sink_package)
 
         component_package_map = {
             ComponentEnum.AGENT: core_agent_package_list,
@@ -177,7 +180,8 @@ class AgentUniverse(object):
             ComponentEnum.QUERY_PARAPHRASER: core_query_paraphraser_package_list,
             ComponentEnum.MEMORY_COMPRESSOR: core_memory_compressor_package_list,
             ComponentEnum.MEMORY_STORAGE: core_memory_storage_package_list,
-            ComponentEnum.WORK_PATTERN: core_work_pattern_package_list
+            ComponentEnum.WORK_PATTERN: core_work_pattern_package_list,
+            ComponentEnum.LOG_SINK: core_log_sink_package_list
         }
 
         component_configer_list_map = {}
